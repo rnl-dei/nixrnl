@@ -19,8 +19,17 @@
         dei = ./profiles/core/dei.nix;
       };
     };
-
   in {
+    nixosConfigurations = {
+      live = lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
+          profiles.core.rnl
+        ];
+      };
+    };
+
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
 }
