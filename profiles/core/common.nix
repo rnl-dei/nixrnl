@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  inputs,
+  ...
+}: let
 in {
   environment = {
     # Selection of sysadmin tools that can come in handy
@@ -24,11 +28,17 @@ in {
       dates = "03:15";
     };
 
+    registry = {
+      nixpkgs.flake = inputs.nixpkgs;
+      unstable.flake = inputs.unstable;
+    };
+
     # Generally useful nix option defaults
     extraOptions = ''
       keep-outputs = true
       keep-derivations = true
       fallback = true
+      experimental-features = nix-command flakes
     '';
   };
 }
