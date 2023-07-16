@@ -11,24 +11,17 @@
     unstable,
     ...
   } @ inputs: let
-    inherit (nixpkgs) lib;
+    lib = nixpkgs.lib.extend (self: super:
+      import ./lib {
+        inherit inputs profiles pkgs;
+        lib = self;
+      });
 
-    profiles = {
-      core = {
-        rnl = ./profiles/core/rnl.nix;
-        dei = ./profiles/core/dei.nix;
-      };
-    };
+    pkgs = import nixpkgs {system = "x86_64-linux";};
+    nixosConfigurations = lib.rnl.mkHosts ./hosts;
+    profiles = lib.rnl.mkProfiles ./profiles;
   in {
-    nixosConfigurations = {
-      live = lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
-          profiles.core.rnl
-        ];
-      };
-    };
+    inherit nixosConfigurations;
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
