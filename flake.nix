@@ -10,7 +10,17 @@
     nixpkgs,
     unstable,
     ...
-  } @ inputs: {
+  } @ inputs: let
+    inherit (nixpkgs) lib;
+
+    profiles = {
+      core = {
+        rnl = ./profiles/core/rnl.nix;
+        dei = ./profiles/core/dei.nix;
+      };
+    };
+
+  in {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
 }
