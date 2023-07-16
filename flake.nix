@@ -17,11 +17,12 @@
         lib = self;
       });
 
-    pkgs = import nixpkgs {system = "x86_64-linux";};
+    overlays = lib.rnl.mkOverlays ./overlays;
+    pkgs = lib.rnl.mkPkgs overlays;
     nixosConfigurations = lib.rnl.mkHosts ./hosts;
     profiles = lib.rnl.mkProfiles ./profiles;
   in {
-    inherit nixosConfigurations;
+    inherit nixosConfigurations overlays;
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
