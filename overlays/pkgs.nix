@@ -1,9 +1,9 @@
-self: super: rec {
+final: prev: rec {
   rnl =
-    super.lib.mapAttrs'
+    prev.lib.mapAttrs'
     (name: value:
-      super.lib.nameValuePair
-      (super.lib.removeSuffix ".nix" name)
-      (super.callPackage ../pkgs/${name} {}))
+      prev.lib.nameValuePair
+      (prev.lib.removeSuffix ".nix" name)
+      (prev.callPackage ../pkgs/${name} {}))
     (builtins.readDir ../pkgs);
 }
