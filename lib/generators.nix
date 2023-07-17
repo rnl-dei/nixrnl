@@ -40,7 +40,7 @@
     lib.nixosSystem {
       inherit system pkgs lib;
       specialArgs = {inherit profiles inputs;};
-      modules = [{networking.hostName = name;} hostPath];
+      modules = [{networking.hostName = name;} hostPath] ++ lib.rnl.listModulesRecursive ../modules;
     };
 
   mkHosts = hostsDir:
