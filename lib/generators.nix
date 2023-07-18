@@ -4,11 +4,11 @@
   profiles,
   inputs,
   ...
-}: let
+} @ args: let
   inherit (lib.rnl) rakeLeaves;
 
   mkPkgs = overlays: let
-    args = {
+    argsPkgs = {
       system = "x86_64-linux"; # FIXME: Allow other systems
       config.allowUnfree = true;
     };
@@ -17,12 +17,12 @@
         overlays =
           [
             (self: super: {
-              unstable = import inputs.unstable args;
+              unstable = import inputs.unstable argsPkgs;
             })
           ]
           ++ lib.attrValues overlays;
       }
-      // args);
+      // argsPkgs);
 
   mkOverlays = overlaysDir:
     builtins.listToAttrs (map
@@ -34,36 +34,44 @@
 
   mkProfiles = profilesDir: rakeLeaves profilesDir;
 
-  mkHost = name: {
+  mkHost = {
     system,
-    pkgs,
-    profiles,
+    hostname,
     hostPath,
+    extraModules,
     ...
   }:
     lib.nixosSystem {
       inherit system pkgs lib;
       specialArgs = {inherit profiles inputs;};
-      modules = [{networking.hostName = name;} hostPath] ++ lib.rnl.listModulesRecursive ../modules;
+      modules = [{networking.hostName = hostname;} hostPath] ++ extraModules ++ lib.rnl.listModulesRecursive ../modules;
     };
 
   mkHosts = hostsDir:
-    lib.mapAttrs
-    (name: config: mkHost name config)
-    (lib.mapAttrs' (name: type: let
-        defaultConfig = {
-          inherit pkgs profiles inputs;
-          hostPath = "${hostsDir}/${name}";
+    lib.listToAttrs (lib.lists.flatten (lib.mapAttrsToList (name: type: let
+      hostPath = hostsDir + "/${name}";
+      configPath = hostPath + "/configuration.nix";
+      hostname = lib.removeSuffix ".nix" (builtins.baseNameOf hostPath);
+      cfg =
+        {
+          inherit hostPath pkgs profiles inputs;
           system = "x86_64-linux";
-        };
-        extraConfig = lib.mkIf (type == "directoy" && builtins.pathExists "${hostsDir}/${name}/configuration.nix") {
-          imports = ["${hostsDir}/${name}/configuration.nix"];
-        };
-      in {
-        name = lib.removeSuffix ".nix" name;
-        value = defaultConfig // extraConfig;
+          aliases = [
+            {
+              inherit hostname;
+              extraModules = [];
+            }
+          ];
+        }
+        // (lib.optionalAttrs (type == "directory" && builtins.pathExists configPath) (import configPath args));
+      aliases' = cfg.aliases;
+      cfg' = lib.filterAttrs (name: value: name != "aliases") cfg;
+      aliases = builtins.map (alias: alias // cfg') aliases';
+    in (builtins.map (alias: {
+        name = alias.hostname;
+        value = alias;
       })
-      (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir)));
+      aliases)) (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))));
 in {
   inherit mkProfiles mkHosts mkPkgs mkOverlays;
 }
