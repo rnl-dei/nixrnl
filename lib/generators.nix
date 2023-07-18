@@ -7,18 +7,22 @@
 }: let
   inherit (lib.rnl) rakeLeaves;
 
-  mkPkgs = overlays:
-    import inputs.nixpkgs {
-      system = "x86_64-linux"; # FIXME: Allow multiple systems
+  mkPkgs = overlays: let
+    args = {
+      system = "x86_64-linux"; # FIXME: Allow other systems
       config.allowUnfree = true;
-      overlays =
-        [
-          (self: super: {
-            unstable = import inputs.unstable;
-          })
-        ]
-        ++ lib.attrValues overlays;
     };
+  in
+    import inputs.nixpkgs ({
+        overlays =
+          [
+            (self: super: {
+              unstable = import inputs.unstable args;
+            })
+          ]
+          ++ lib.attrValues overlays;
+      }
+      // args);
 
   mkOverlays = overlaysDir:
     builtins.listToAttrs (map
@@ -52,8 +56,8 @@
           hostPath = "${hostsDir}/${name}";
           system = "x86_64-linux";
         };
-        extraConfig = lib.mkIf (type == "directoy" && builtins.pathExists "${hostsDir}/${name}/config.nix") {
-          imports = ["${hostsDir}/${name}/configuration.nix" {hostPath = "${hostsDir}/default.nix";}];
+        extraConfig = lib.mkIf (type == "directoy" && builtins.pathExists "${hostsDir}/${name}/configuration.nix") {
+          imports = ["${hostsDir}/${name}/configuration.nix"];
         };
       in {
         name = lib.removeSuffix ".nix" name;
