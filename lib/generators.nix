@@ -38,7 +38,7 @@
     system,
     hostname,
     hostPath,
-    extraModules,
+    extraModules ? [],
     ...
   }:
     lib.nixosSystem {
@@ -69,9 +69,12 @@
       aliases = builtins.map (alias: alias // cfg') aliases';
     in (builtins.map (alias: {
         name = alias.hostname;
-        value = alias;
+        value = mkHost alias;
       })
       aliases)) (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))));
+
+  mkLabs = lab: num: builtins.map (x: "${lab}p${toString x}") (lib.range 1 num);
+
 in {
-  inherit mkProfiles mkHosts mkPkgs mkOverlays;
+  inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs;
 }
