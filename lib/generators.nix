@@ -3,6 +3,7 @@
   pkgs,
   profiles,
   inputs,
+  nixosConfigurations,
   ...
 } @ args: let
   inherit (lib.rnl) rakeLeaves;
@@ -43,7 +44,7 @@
   }:
     lib.nixosSystem {
       inherit system pkgs lib;
-      specialArgs = {inherit profiles inputs;};
+      specialArgs = {inherit profiles inputs nixosConfigurations;};
       modules = [{networking.hostName = hostname;} hostPath] ++ extraModules ++ lib.rnl.listModulesRecursive ../modules;
     };
 

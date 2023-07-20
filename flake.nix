@@ -13,7 +13,7 @@
   } @ inputs: let
     lib = nixpkgs.lib.extend (self: super:
       import ./lib {
-        inherit inputs profiles pkgs;
+        inherit inputs profiles pkgs nixosConfigurations;
         lib = self;
       });
 
