@@ -71,7 +71,11 @@
       })
       aliases)) (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))));
 
-  mkLabs = lab: num: builtins.map (x: "${lab}p${toString x}") (lib.range 1 num);
+  mkLabs = lab: num:
+    builtins.listToAttrs (builtins.map (x: {
+      name = "${lab}p${toString x}";
+      value = {};
+    }) (lib.range 1 num));
 in {
   inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs;
 }
