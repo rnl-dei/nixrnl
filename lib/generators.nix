@@ -35,9 +35,8 @@
 
   mkProfiles = profilesDir: rakeLeaves profilesDir;
 
-  mkHost = {
+  mkHost = hostname: {
     system,
-    hostname,
     hostPath,
     extraModules ? [],
     ...
@@ -57,25 +56,22 @@
         {
           inherit hostPath pkgs profiles inputs;
           system = "x86_64-linux";
-          aliases = [
-            {
-              inherit hostname;
-              extraModules = [];
-            }
-          ];
+          aliases = null;
         }
         // (lib.optionalAttrs (type == "directory" && builtins.pathExists configPath) (import configPath args));
-      aliases' = cfg.aliases;
-      cfg' = lib.filterAttrs (name: value: name != "aliases") cfg;
-      aliases = builtins.map (alias: alias // cfg') aliases';
-    in (builtins.map (alias: {
-        name = alias.hostname;
-        value = mkHost alias;
+      aliases' =
+        if (cfg.aliases != null)
+        then cfg.aliases
+        else {${hostname} = {extraModules = [];};};
+      cfg' = lib.filterAttrs (name: _: name != "aliases") cfg;
+      aliases = lib.mapAttrs (_: value: (value // cfg')) aliases';
+    in (lib.mapAttrsToList (hostname: alias: {
+        name = hostname;
+        value = mkHost hostname alias;
       })
       aliases)) (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))));
 
   mkLabs = lab: num: builtins.map (x: "${lab}p${toString x}") (lib.range 1 num);
-
 in {
   inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs;
 }
