@@ -29,7 +29,7 @@
     builtins.listToAttrs (map
       (module: {
         name = lib.removeSuffix ".nix" (builtins.baseNameOf module);
-        value = import module;
+        value = import module {rakeLeaves = lib.rnl.rakeLeaves;};
       })
       (lib.rnl.listModulesRecursive overlaysDir));
 
@@ -76,6 +76,13 @@
       name = "${lab}p${toString x}";
       value = {};
     }) (lib.range 1 num));
+
+  mkStaticConfigs = hosts: targets: extraLabels:
+    lib.mapAttrsToList (_: {config, ...}: {
+      targets = lib.lists.flatten (builtins.map (target: target config) targets);
+      labels = (lib.filterAttrs (_: v: v != null) config.rnl.labels) // (builtins.listToAttrs (builtins.map (label: label config) extraLabels));
+    })
+    hosts;
 in {
-  inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs;
+  inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs mkStaticConfigs;
 }
