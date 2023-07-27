@@ -1,9 +1,4 @@
-final: prev: rec {
-  rnl =
-    prev.lib.mapAttrs'
-    (name: value:
-      prev.lib.nameValuePair
-      (prev.lib.removeSuffix ".nix" name)
-      (prev.callPackage ../pkgs/${name} {}))
-    (builtins.readDir ../pkgs);
-}
+{rakeLeaves, ...}: final: prev:
+prev.lib.mapAttrsRecursive
+(_: path: (prev.callPackage path {}))
+(rakeLeaves ../pkgs)
