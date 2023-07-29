@@ -26,12 +26,9 @@
       // argsPkgs);
 
   mkOverlays = overlaysDir:
-    builtins.listToAttrs (map
-      (module: {
-        name = lib.removeSuffix ".nix" (builtins.baseNameOf module);
-        value = import module {rakeLeaves = lib.rnl.rakeLeaves;};
-      })
-      (lib.rnl.listModulesRecursive overlaysDir));
+    lib.mapAttrsRecursive
+    (_: module: import module {rakeLeaves = lib.rnl.rakeLeaves;})
+    (lib.rnl.rakeLeaves overlaysDir);
 
   mkProfiles = profilesDir: rakeLeaves profilesDir;
 
