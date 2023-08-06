@@ -3,7 +3,11 @@ A clear description of what this host will do.
 
 ## Profiles
 A list of which profiles should contain:
-- ...
+<!-- Choose one of the profiles bellows -->
+- Core: `rnl`/`dei`/`dsi`/`third-party`
+- Filesystem: `simple-uefi`/`zfs-raid6`/`unknown`
+- OS: `nixos`/`windows`/`ubuntu`/`gentoo`/`debian`/`unknown`
+- Type: `vm`/`hypervisor`/`physical`/`generic`
 - ...
 
 ## Services
