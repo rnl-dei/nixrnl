@@ -12,7 +12,7 @@ This directory contains core configuration options for various components.
 
 4. **Third-Party**: Configuration options for third-party hosts hosted by RNL but managed by others.
 
-**Each host should import a core profile only.**
+**Each host should import one core profile and only one.**
 
 Feel free to explore each core configuration option in its respective directory.
 Remember to combine options for a comprehensive configuration as needed.
