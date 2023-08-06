@@ -1,12 +1,32 @@
 {
   "nodes": {
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1691339339,
+        "narHash": "sha256-wNiTX1c3kZy7BSxWodbn+mem1zCx1wIsdDRDFcIfOkc=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "493b347d8fffa6912afb8d89b91703cd40ff6038",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1690370995,
-        "narHash": "sha256-9z//23jGegLJrf3ITStLwVf715O39dq5u48Kr/XW14U=",
+        "lastModified": 1691252436,
+        "narHash": "sha256-SKKPKYOnFcwqECehxoFBMLv29CZXC5qCDuETSuXd82g=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f3fbbc36b4e179a5985b9ab12624e9dfe7989341",
+        "rev": "9607b9149c9d81fdf3dc4f3bcc278da146ffbd77",
         "type": "github"
       },
       "original": {
@@ -23,21 +43,22 @@
         ]
       },
       "locked": {
-        "lastModified": 1690359330,
-        "narHash": "sha256-lzjl7a0M1MZaidw8U8eHzww3eGiqHpAEEbGCsCLw4zI=",
+        "lastModified": 1690674874,
+        "narHash": "sha256-TKj+0vqDsgR3PnzzeH+nkAcuX+xXY2wxmX8UUav/jFA=",
         "ref": "refs/heads/master",
-        "rev": "58f68deb7717d40fc924e2e1e6eae8d983f4b986",
-        "revCount": 1,
+        "rev": "8eb3fa6031fd8e12263740d99b2add42576c5606",
+        "revCount": 3,
         "type": "git",
-        "url": "ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config"
+        "url": "file:///home/nalves599/Documents/RNL/Infra/nixos-private-config/"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config"
+        "url": "file:///home/nalves599/Documents/RNL/Infra/nixos-private-config/"
       }
     },
     "root": {
       "inputs": {
+        "disko": "disko",
         "nixpkgs": "nixpkgs",
         "rnl-config": "rnl-config",
         "unstable": "unstable"
@@ -45,11 +66,11 @@
     },
     "unstable": {
       "locked": {
-        "lastModified": 1690272529,
-        "narHash": "sha256-MakzcKXEdv/I4qJUtq/k/eG+rVmyOZLnYNC2w1mB59Y=",
+        "lastModified": 1691276849,
+        "narHash": "sha256-RNnrzxhW38SOFIF6TY/WaX7VB3PCkYFEeRE5YZU+wHw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "ef99fa5c5ed624460217c31ac4271cfb5cb2502c",
+        "rev": "5faab29808a2d72f4ee0c44c8e850e4e6ada972f",
         "type": "github"
       },
       "original": {
