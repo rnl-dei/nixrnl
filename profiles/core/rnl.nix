@@ -14,8 +14,6 @@
     sha256 = "1dizakgfzr5khi73mpwr4iqhmbkc82x9jswfm8kgzysgqwn6cz6c";
   };
 in {
-  imports = [./common.nix];
-
   environment = {
     systemPackages = with pkgs; [
       # Editors
@@ -37,11 +35,11 @@ in {
 
   # Configure base network
   networking = {
-    domain = "rnl.tecnico.ulisboa.pt";
+    domain = config.rnl.domain;
     firewall.enable = true;
     useDHCP = false;
     nameservers = ["193.136.164.1" "193.136.164.2" "2001:690:2100:82::1" "2001:690:2100:82::2"];
-    search = ["rnl.tecnico.ulisboa.pt"];
+    search = [config.rnl.domain];
   };
 
   # Set issue message
@@ -63,7 +61,7 @@ in {
     ports = [22];
     settings = {
       # UseDNS = true;
-      PermitRootLogin = lib.mkForce "no";
+      PermitRootLogin = "without-password";
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
     };
@@ -92,12 +90,12 @@ in {
     enable = true;
     setSendmail = true;
     defaults = {
-      from = "%U@%C.rnl.tecnico.ulisboa.pt";
+      from = "%U@%C.${config.rnl.domain}";
     };
     accounts = {
       "default" = {
-        host = "comsat.rnl.tecnico.ulisboa.pt";
-        port = 25;
+        host = config.rnl.mailserver.host;
+        port = config.rnl.mailserver.port;
         tls = "off";
         tls_starttls = "off";
       };
@@ -107,37 +105,22 @@ in {
   # Add certificates
   security.pki.certificateFiles = ["${RNLCert}"];
 
+  # Disable sudo by default because it's not needed
+  security.sudo.enable = false;
+
   # Configure node exporter
   services.prometheus.exporters.node = {
     enable = lib.mkDefault true;
-    openFirewall = true;
+    openFirewall = true; # Open port 9100 (TCP)
   };
 
   # Configure bootloader
   boot.loader.systemd-boot = {
-    enable = true;
+    enable = lib.mkDefault true;
     editor = false;
     configurationLimit = 5;
   };
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Show diff of updates
-  system.activationScripts.diff = {
-    supportsDryActivation = true;
-    text = ''
-      ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
-    '';
-  };
-
-  fileSystems."/" = lib.mkDefault {
-    device = "/dev/disk/by-label/NIXOS";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = lib.mkDefault {
-    device = "/dev/disk/by-label/BOOT";
-    fsType = "vfat";
-  };
-
-  system.stateVersion = "23.05";
+  rnl.labels.core = lib.mkDefault "rnl";
 }
