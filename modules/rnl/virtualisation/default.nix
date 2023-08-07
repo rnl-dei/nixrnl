@@ -139,10 +139,11 @@ with lib; let
       ];
     };
 
-    installer = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = "Installer iso image";
+    cdroms = mkOption {
+      type = types.nullOr (types.listOf types.path);
+      default = [];
+      description = "List of CD-ROMs. Support up to 4 CD-ROMs.";
+      example = "[ \"/path/to/image.iso\" \"http://example.com/image2.iso\" ]";
     };
 
     interfaces = mkOption {
@@ -162,7 +163,10 @@ with lib; let
     device = mkOption {
       type = types.enum ["disk" "cdrom"];
       default = "disk";
-      description = "Disk device";
+      description = ''
+        Disk device
+        If you want to use a cdrom, you must use the cdroms option.
+      '';
     };
 
     type = mkOption {
@@ -179,13 +183,13 @@ with lib; let
 
     source = {
       file = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr types.path;
         default = null;
         description = "Disk source file";
       };
 
       dev = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr types.path;
         default = null;
         description = "Disk source device";
       };
@@ -193,8 +197,13 @@ with lib; let
 
     target = {
       dev = mkOption {
-        type = types.str;
-        description = "Disk target device";
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Disk target device
+          If not set, the device will be automatically assigned based on the
+          position in the list of disks and the disk device option.
+        '';
       };
 
       bus = mkOption {

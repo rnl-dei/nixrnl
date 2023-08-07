@@ -6,13 +6,13 @@
   arch,
   autostart,
   boot,
+  cdroms,
   cpu,
   createdBy,
   description,
   disks,
   features,
   graphics,
-  installer,
   interfaces,
   machine,
   maxMemoryDiff,
@@ -37,27 +37,42 @@
   mkDisk = options: ''
     <disk type='${options.type}' device='${options.device}'>
       <driver name='qemu' type='${options.driverType}'/>
-      ${lib.optionalString (options.type == "file") "<source file='${toString options.source.file}'/>"}
+      ${lib.optionalString (options.type == "file") "<source file='${options.source.file}'/>"}
       ${lib.optionalString (options.type == "block") "<source dev='${options.source.dev}'/>"}
       <target dev='${options.target.dev}' bus='${options.target.bus}'/>
       ${lib.optionalString (options.bootOrder != null && boot == []) "<boot order='${toString options.bootOrder}'/>"}
     </disk>
   '';
 
-  cdrom = lib.optionals (installer != null) [
-    {
-      device = "cdrom";
-      type = "file";
-      driverType = "raw";
-      readonly = true;
-      source.file = installer;
-      target.dev = "sda";
-      target.bus = "sata";
-      bootOrder = 99;
-    }
-  ];
+  mkCdrom = file: {
+    device = "cdrom";
+    type = "file";
+    driverType = "raw";
+    source.file = file;
+    target.bus = "sata";
+    target.dev = null;
+    bootOrder = 99;
+  };
 
-  disks' = disks ++ cdrom;
+  cdroms' = builtins.map mkCdrom cdroms;
+
+  disks' = lib.zipListsWith (disk: position: (
+    disk
+    // {
+      target = let
+        bus = disk.target.bus;
+        types = {
+          virtio = "vd";
+          ide = "hd";
+          sata = "sd";
+        };
+        dev =
+          if disk.target.dev == null
+          then ((types.${bus}) + position)
+          else disk.target.dev;
+      in {inherit bus dev;};
+    }
+  )) (disks ++ cdroms') ["a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p"]; # Support up to 16 disks
 
   xmlConfigFile = pkgs.writeText "libvirt-guest-${name}.xml" (''
       <domain type='kvm'>
@@ -72,7 +87,7 @@
           ${lib.optionalString uefi "<loader readonly='yes' type='pflash'>/run/libvirt/nix-ovmf/OVMF_CODE.fd</loader>"}
     ''
     + lib.concatMapStringsSep "\n" (option: "<boot dev='${option}' />") boot
-    + lib.optionalString (directKernel.kernel != null) "<kernel>${toString directKernel.kernel}</kernel>"
+    + lib.optionalString (directKernel.kernel != null) "<kernel>${directKernel.kernel}</kernel>"
     + lib.optionalString (directKernel.initrd != null) "<initrd>${directKernel.initrd}</initrd>"
     + lib.optionalString (directKernel.cmdline != null) "<cmdline>${directKernel.cmdline}</cmdline>"
     + ''
