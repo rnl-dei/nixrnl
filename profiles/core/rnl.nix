@@ -31,6 +31,10 @@ in {
       tree
       molly-guard # Prevents accidental shutdowns/reboots
     ];
+
+    variables = {
+      EDITOR = "nvim";
+    };
   };
 
   # Configure base network
