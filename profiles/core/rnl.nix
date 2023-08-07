@@ -34,6 +34,7 @@ in {
 
     variables = {
       EDITOR = "nvim";
+      HISTTIMEFORMAT = "%d/%m/%y %T ";
     };
   };
 
