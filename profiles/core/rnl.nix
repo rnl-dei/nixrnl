@@ -48,7 +48,15 @@ in {
 
   # Set issue message
   environment.etc."issue".text = lib.mkDefault ''
-    \e[1;31m« Welcome to ${config.networking.hostName} @ RNL »\e[0m
+    \e[1;31m« Welcome to \n @ RNL »\e[0m
+
+    System: \e[0;37m\s \m \r \e[0m
+    Users: \e[1;35m\U\e[0m
+
+    IPv4: \e[1;34m\4\e[0m
+    IPv6: \e[1;34m\6\e[0m
+
+
   '';
 
   # Configure shell
