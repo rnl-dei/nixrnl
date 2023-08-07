@@ -176,6 +176,46 @@
 
   /*
   *
+  Synopsis: mkSecrets secretsDir
+
+  Generate a set of secrets to be used by agenix.
+
+  Inputs:
+  - secretsDir: The path to the directory containing secrets.
+
+  Output Format:
+  An attribute set representing secrets.
+  The function scans the `secretsDir` directory recursively for secrets and
+  generates a set of secrets for each host.
+  The resulting attribute set maps paths to their corresponding secret file.
+
+  Example input:
+  ```
+  ./secrets/secrets.nix
+  ./secrets/key1.age
+  ./secrets/key2.nix
+  ./secrets/host-keys/key3.age
+  ```
+
+  Example output:
+  {
+   "key1".file = ./secrets/key1.age;
+   "key2".file = ./secrets/key2.age;
+   "host-keys/key3".file = ./secrets/host-keys/key3.age;
+  }
+  *
+  */
+  mkSecrets = secretsDir:
+    builtins.listToAttrs (builtins.map (file: let
+        name = lib.removePrefix (toString secretsDir + "/") (toString file);
+      in {
+        inherit name;
+        value = {inherit file;};
+      })
+      (builtins.filter (p: lib.hasSuffix ".age" p) (lib.filesystem.listFilesRecursive secretsDir)));
+
+  /*
+  *
   Synopsis: mkLabs lab num
 
   Generate a set of labs hosts.
@@ -247,5 +287,5 @@
     })
     hosts;
 in {
-  inherit mkProfiles mkHosts mkPkgs mkOverlays mkLabs mkStaticConfigs;
+  inherit mkProfiles mkHosts mkPkgs mkOverlays mkSecrets mkLabs mkStaticConfigs;
 }
