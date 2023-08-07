@@ -10,6 +10,14 @@
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    # NixOS Anywhere used by dev shell to deploy to remote machines
+    nixos-anywhere.url = "github:numtide/nixos-anywhere";
+    nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-anywhere.inputs.disko.follows = "disko";
+
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -29,6 +37,13 @@
     profiles = lib.rnl.mkProfiles ./profiles;
   in {
     inherit nixosConfigurations overlays;
+
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      buildInputs = with pkgs; [
+        inputs.agenix.packages.x86_64-linux.agenix
+        deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
+      ];
+    };
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };

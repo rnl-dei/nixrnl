@@ -58,7 +58,7 @@
   */
   mkOverlays = overlaysDir:
     lib.mapAttrsRecursive
-    (_: module: import module {inherit rakeLeaves;})
+    (_: module: import module {inherit rakeLeaves inputs;})
     (lib.rnl.rakeLeaves overlaysDir);
 
   /*
@@ -116,6 +116,7 @@
           hostPath
           inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
+          inputs.agenix.nixosModules.age
         ]
         ++ extraModules;
     };
