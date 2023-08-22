@@ -22,9 +22,6 @@
     "/dev/disk/by-id/ata-WDC_WD5000AZRX-00A8LB0_WD-WCC1U3744017"
   ];
 
-  # Use UEFI
-  boot.loader.grub.device = "nodev";
-
   # Networking
   networking.interfaces.enp2s0 = {
     ipv4 = {

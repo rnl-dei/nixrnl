@@ -3,7 +3,6 @@
   users.users.rnl = {
     isNormalUser = true;
     description = "RNL user to run chromium and other stuff";
-    extraGroups = ["audio" "video"];
   };
 
   services.xserver = {
