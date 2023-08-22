@@ -76,7 +76,8 @@ if [ $# -eq 3 ]; then
 
   # Decrypt your private key from the password store and copy it to the temporary directory
   pushd ./secrets
-  agenix -d $3 $agenix_args > "$temp/etc/ssh/ssh_host_ed25519_key"
+  HOST_KEY="host-keys/$3.age"
+  agenix -d $HOST_KEY $agenix_args > "$temp/etc/ssh/ssh_host_ed25519_key"
   popd
 
   # Set the correct permissions so sshd will accept the key

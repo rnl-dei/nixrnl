@@ -123,6 +123,8 @@ in {
     description = lib.mkForce "Root user to be used by RNL admins";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/rKlyYzFscsso96forbN2Y6IJ5yitGPS9Nci5n9vps @torvalds" # TODO: Replace with RNL key
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHQiRYpOfTpddexkndt7d3Bw2wS/wLKKjs4526pJOdM @doppler"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID4YDzrHDTCZdySD/xpvwcshJtE4hBiStLsHB1Yy3CR4 @dredd"
     ];
   };
 

@@ -52,13 +52,7 @@
     };
   };
 
-  root = builtins.listToAttrs (lib.imap0 (
-      i: device: {
-        name = "root-${toString i}";
-        value = mkRootDiskConfig device i;
-      }
-    )
-    disks.root);
+  root = mkRootDiskConfig (builtins.elemAt disks.root 0) 0;
 
   data = builtins.listToAttrs (lib.imap0 (
       i: device: {
@@ -68,5 +62,5 @@
     )
     disks.data);
 in {
-  disk = root // data;
+  disk = {inherit root;} // data;
 }
