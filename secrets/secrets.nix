@@ -9,6 +9,7 @@ let
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
 in {
   # Host keys only need to be accessible by the deploy machines
+  "host-keys/hagrid.age".publicKeys = deployMachines;
 
   # Secrets
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];

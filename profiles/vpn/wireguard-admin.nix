@@ -19,8 +19,8 @@ in {
   networking.nat.enable = true;
   assertions = [
     {
-      condition = "config.networking.nat.externalInterface == null";
-      message = "config.networking.nat.externalInterface must be set";
+      assertion = config.networking.nat.externalInterface != null;
+      message = "networking.nat.externalInterface must be set";
     }
   ];
   networking.nat.internalInterfaces = ["wg0"];
