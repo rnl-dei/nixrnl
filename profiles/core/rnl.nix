@@ -18,8 +18,6 @@ in {
     systemPackages = with pkgs; [
       # Editors
       nano
-      neovim
-      vim
 
       # Networking
       iproute2
@@ -27,15 +25,41 @@ in {
       tcpdump
 
       # Misc
-      tmux
-      tree
+      curl
+      file
+      git
+      jq
+      lsof
       molly-guard # Prevents accidental shutdowns/reboots
+      ripgrep
+      strace
+      tree
+      whois
     ];
 
     variables = {
-      EDITOR = "nvim";
       HISTTIMEFORMAT = "%d/%m/%y %T ";
     };
+  };
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
+
+  programs.htop = {
+    enable = true;
+    settings = {
+      show_program_path = false;
+      hide_kernel_threads = true;
+      hide_userland_threads = true;
+    };
+  };
+
+  programs.tmux = {
+    enable = true;
   };
 
   # Configure base network
@@ -46,6 +70,10 @@ in {
     nameservers = ["193.136.164.1" "193.136.164.2" "2001:690:2100:82::1" "2001:690:2100:82::2"];
     search = [config.rnl.domain];
   };
+
+  # Configure NTP
+  time.timeZone = "Europe/Lisbon";
+  networking.timeServers = ["ntp.rnl.tecnico.ulisboa.pt"];
 
   # Set issue message
   environment.etc."issue".text = lib.mkDefault ''
@@ -133,7 +161,7 @@ in {
     editor = false;
     configurationLimit = 5;
   };
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
   rnl.labels.core = lib.mkDefault "rnl";
 }

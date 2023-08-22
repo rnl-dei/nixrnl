@@ -3,21 +3,6 @@
   pkgs,
   ...
 }: {
-  environment = {
-    # Selection of sysadmin tools that can come in handy
-    systemPackages = with pkgs; [
-      curl
-      file
-      git
-      htop
-      jq
-      ripgrep
-      whois
-    ];
-  };
-
-  time.timeZone = "Europe/Lisbon";
-
   nix = {
     # Improve nix store disk usage
     gc = {
