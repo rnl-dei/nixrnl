@@ -7,9 +7,11 @@ let
 
   # Public SSH host keys of hosts
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
+  nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
 in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/hagrid.age".publicKeys = deployMachines;
+  "host-keys/nexus.age".publicKeys = deployMachines;
 
   # Secrets
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
