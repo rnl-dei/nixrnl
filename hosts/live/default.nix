@@ -1,11 +1,9 @@
 {
   lib,
-  modulesPath,
   profiles,
   ...
 }: {
   imports = with profiles; [
-    (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
     core.rnl
     filesystems.unknown
     os.nixos
