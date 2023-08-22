@@ -51,11 +51,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1691339339,
-        "narHash": "sha256-wNiTX1c3kZy7BSxWodbn+mem1zCx1wIsdDRDFcIfOkc=",
+        "lastModified": 1691743546,
+        "narHash": "sha256-nS2uWOeEmMgUBEMDCvwLlXBBCLkW7agDcMtOXuf9PDc=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "493b347d8fffa6912afb8d89b91703cd40ff6038",
+        "rev": "241c878d4b542fea7c61ed4421e9224af054ff56",
         "type": "github"
       },
       "original": {
@@ -136,11 +136,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1691224484,
-        "narHash": "sha256-0oodXqRRHXjUL7ssi1nIOKC8EzYD4f1e3eAaWexuF4M=",
+        "lastModified": 1691733701,
+        "narHash": "sha256-tg78zpjAzg7BanCvGhQ74vubZ3Qv5cEHxPB0ig/XRdQ=",
         "owner": "numtide",
         "repo": "nixos-anywhere",
-        "rev": "9df79870b04667f2d16f1a78a1ab87d124403fb7",
+        "rev": "f1a76e0ee92952e6aa0a9383ad565d133040a9eb",
         "type": "github"
       },
       "original": {
@@ -176,11 +176,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1691252436,
-        "narHash": "sha256-SKKPKYOnFcwqECehxoFBMLv29CZXC5qCDuETSuXd82g=",
+        "lastModified": 1691592289,
+        "narHash": "sha256-Lqpw7lrXlLkYra33tp57ms8tZ0StWhbcl80vk4D90F8=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9607b9149c9d81fdf3dc4f3bcc278da146ffbd77",
+        "rev": "9034b46dc4c7596a87ab837bb8a07ef2d887e8c7",
         "type": "github"
       },
       "original": {
@@ -197,11 +197,8 @@
         ]
       },
       "locked": {
-        "lastModified": 1690674874,
-        "narHash": "sha256-TKj+0vqDsgR3PnzzeH+nkAcuX+xXY2wxmX8UUav/jFA=",
-        "ref": "refs/heads/master",
-        "rev": "8eb3fa6031fd8e12263740d99b2add42576c5606",
-        "revCount": 3,
+        "lastModified": 1690479173,
+        "narHash": "sha256-POYZkRfH2F5MWME1barpjCVDvdADBrF0JEkvfEtVjc0=",
         "type": "git",
         "url": "file:///home/nalves599/Documents/RNL/Infra/nixos-private-config/"
       },
@@ -243,11 +240,11 @@
     },
     "unstable": {
       "locked": {
-        "lastModified": 1691276849,
-        "narHash": "sha256-RNnrzxhW38SOFIF6TY/WaX7VB3PCkYFEeRE5YZU+wHw=",
+        "lastModified": 1691654369,
+        "narHash": "sha256-gSILTEx1jRaJjwZxRlnu3ZwMn1FVNk80qlwiCX8kmpo=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5faab29808a2d72f4ee0c44c8e850e4e6ada972f",
+        "rev": "ce5e4a6ef2e59d89a971bc434ca8ca222b9c7f5e",
         "type": "github"
       },
       "original": {
