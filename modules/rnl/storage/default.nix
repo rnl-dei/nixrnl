@@ -9,12 +9,13 @@ with lib; let
   configs = {
     zfs-raid6 = import ./disko/zfs-raid6.nix args;
     simple-uefi = import ./disko/simple-uefi.nix args;
+    labs = import ./disko/labs.nix args;
   };
 in {
   options.rnl.storage = {
     enable = mkEnableOption "RNL Storage with disko and zfs";
     layout = mkOption {
-      type = types.enum ["zfs-raid6" "simple-uefi"];
+      type = types.enum ["zfs-raid6" "simple-uefi" "labs"];
       description = "Storage type";
     };
     disks = {
