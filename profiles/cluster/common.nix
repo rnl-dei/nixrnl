@@ -41,6 +41,8 @@
     '';
   };
 
+  environment.systemPackages = with pkgs; [mpi];
+
   # TODO: May be necessary to change kernel
 
   age.secrets."munge.key" = {

@@ -12,8 +12,6 @@ in {
 
   services.slurm.server.enable = true;
 
-  # TODO: Add mpi
-
   # Slurmctld port and srun batch ports
   networking.firewall = {
     allowedTCPPorts = [6817];
