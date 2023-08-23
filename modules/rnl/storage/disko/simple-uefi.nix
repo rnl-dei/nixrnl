@@ -18,7 +18,6 @@
             type = "filesystem";
             format = "vfat";
             mountpoint = "/boot";
-            mountOptions = ["defaults"];
           };
         };
         root = {
@@ -27,7 +26,6 @@
             type = "filesystem";
             format = "ext4";
             mountpoint = "/";
-            mountOptions = ["defaults"];
           };
         };
       };

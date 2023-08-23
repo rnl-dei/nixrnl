@@ -6,16 +6,14 @@
 with lib; let
   cfg = config.rnl.storage;
 
-  configs = {
-    zfs-raid6 = import ./disko/zfs-raid6.nix args;
-    simple-uefi = import ./disko/simple-uefi.nix args;
-    labs = import ./disko/labs.nix args;
-  };
+  configs = lib.mapAttrsToList (n: _: lib.removeSuffix ".nix" n) (builtins.readDir ./disko);
+
+  currentConfig = configs.${cfg.layout};
 in {
   options.rnl.storage = {
-    enable = mkEnableOption "RNL Storage with disko and zfs";
+    enable = mkEnableOption "RNL Storage with disko";
     layout = mkOption {
-      type = types.enum ["zfs-raid6" "simple-uefi" "labs"];
+      type = types.enum configs;
       description = "Storage type";
     };
     disks = {
@@ -40,6 +38,6 @@ in {
       }
     ];
 
-    disko.devices = configs.${cfg.layout};
+    disko.devices = import "./disko/${currentConfig}.nix" args;
   };
 }
