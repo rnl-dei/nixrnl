@@ -1,5 +1,5 @@
 {config, ...}: {
-  services.xserver.enable = true;
+  imports = [./common.nix];
 
   # RNL Wallpaper
   rnl.wallpaper = {
