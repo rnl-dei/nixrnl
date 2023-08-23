@@ -88,11 +88,11 @@
 
   # Get AFS ticket from Kerberos on login and ssh
   security.pam.services.login.text = lib.mkDefault (lib.mkAfter ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog
+    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
   '');
   security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog
+    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
   '');
 
