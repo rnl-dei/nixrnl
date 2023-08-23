@@ -43,7 +43,17 @@
 
   environment.systemPackages = with pkgs; [mpi];
 
-  # TODO: May be necessary to change kernel
+  # TODO: May be necessary to change kernel for cgroups swap support
+  # If so, set the MEMCG_SWAP kernel parameter to 1 and change the kernel
+  # Example:
+  # ```
+  # boot.kernelPackages = let
+  #   linuxRNL = prev.linuxPackagesFor (prev.linux_xanmod.override {
+  #     structuredExtraConfig = with prev.lib.kernel; { MEMCG_SWAP = yes; };
+  #     ignoreConfigErrors = true;
+  #   })
+  # in linuxRNL;
+  # ```
 
   age.secrets."munge.key" = {
     file = ../../secrets/munge-key.age;
