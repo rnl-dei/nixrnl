@@ -7,8 +7,6 @@ with lib; let
   cfg = config.rnl.storage;
 
   configs = lib.mapAttrsToList (n: _: lib.removeSuffix ".nix" n) (builtins.readDir ./disko);
-
-  currentConfig = configs.${cfg.layout};
 in {
   options.rnl.storage = {
     enable = mkEnableOption "RNL Storage with disko";
@@ -38,6 +36,6 @@ in {
       }
     ];
 
-    disko.devices = import "./disko/${currentConfig}.nix" args;
+    disko.devices = import (./disko + "/${cfg.layout}.nix") args;
   };
 }

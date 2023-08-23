@@ -44,8 +44,6 @@
     '';
   };
 
-  environment.systemPackages = with pkgs; [mpi];
-
   # TODO: May be necessary to change kernel for cgroups swap support
   # If so, set the MEMCG_SWAP kernel parameter to 1 and change the kernel
   # Example:
@@ -67,7 +65,8 @@
   };
 
   # Setup cirrus
-  environment.systemPackages = [pkgs.glusterfs];
+  environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
+
   fileSystems."/mnt/cirrus" = {
     device = lib.mkDefault "luz:/cirrus";
     fsType = "glusterfs";

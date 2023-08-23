@@ -31,6 +31,10 @@ in {
       description = "RNL Wallpaper";
       wantedBy = ["graphical.target"];
       startAt = "*-*-* 4:00:00"; # Run every day at 4am
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
       script = ''
         #!/usr/bin/env bash
         set -euo pipefail
