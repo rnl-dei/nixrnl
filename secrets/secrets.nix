@@ -1,7 +1,8 @@
 let
   # Public SSH keys of users
   torvalds = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/rKlyYzFscsso96forbN2Y6IJ5yitGPS9Nci5n9vps";
-  users = [torvalds];
+  aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBe+xU3BXFYFVoKNAFXG/amC0fhua6S5eK2g6Y+MkwYu";
+  users = [torvalds aurelius];
 
   deployMachines = users ++ [];
 
