@@ -75,6 +75,23 @@ in {
   time.timeZone = "Europe/Lisbon";
   networking.timeServers = ["ntp.rnl.tecnico.ulisboa.pt"];
 
+  # Configure locale
+  console.keyMap = "pt-latin9";
+  i18n = {
+    defaultLocale = "en_US.utf8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "pt_PT.utf8";
+      LC_IDENTIFICATION = "pt_PT.utf8";
+      LC_MEASUREMENT = "pt_PT.utf8";
+      LC_MONETARY = "pt_PT.utf8";
+      LC_NAME = "pt_PT.utf8";
+      LC_NUMERIC = "pt_PT.utf8";
+      LC_PAPER = "pt_PT.utf8";
+      LC_TELEPHONE = "pt_PT.utf8";
+      LC_TIME = "pt_PT.utf8";
+    };
+  };
+
   # Set issue message
   environment.etc."issue".text = lib.mkDefault ''
     \e[1;31m« Welcome to \n @ RNL »\e[0m
