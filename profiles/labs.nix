@@ -30,6 +30,8 @@
 
   # Clean subuids and gids on boot
   systemd.tmpfiles.rules = ["f+  /etc/subuid 0644 root root -" "f+  /etc/subgid 0644 root root -"];
+  users.users.root.hashedPassword =
+    "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
 
   # Disable Network Manager
   networking.networkmanager.enable = false;
