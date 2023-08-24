@@ -106,4 +106,38 @@
       GSSAPIAuthentication yes
       GSSAPIDelegateCredentials yes
   '';
+
+  # Ensure users can't overload the system
+  # These settings constrain resources consumed by *all* users, globally.
+  systemd.slices."user".sliceConfig = {
+    MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
+    # Note: CPUQuota is not set here because percentages are relative to one CPU, not the total amount of resources
+
+    CPUWeight = 50; # default is 100
+    IOWeight = 50; # default is 100
+  };
+
+  # Ensure one user can't prevent the others from working
+  # These settings constrain resources consumed by *each* user (each user-<UID>.slice),
+  # after applying constrains higher in the hierarchy
+  systemd.slices."user-".sliceConfig = {
+    # Set a low-ball soft limit on memory usage.
+    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
+    MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
+
+    # For the hard memory limit, we give more leeway.
+    MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
+  };
+
+  # The root user should be able to perform maintenance:
+  # we override the previous defaults with higher limits for this.
+  # Note that this only applies to processes created under login shells (through SSH, serial console, TTYs, etc.)
+  systemd.slices."user-0".sliceConfig = {
+    MemoryHigh = "infinity";
+    MemoryMax = "infinity";
+
+    # give more priority to root CPU/IO
+    CPUWeight = 200; # default is 100
+    IOWeight = 200; # default is 100
+  };
 }
