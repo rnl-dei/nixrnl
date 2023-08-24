@@ -125,6 +125,7 @@ in {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/rKlyYzFscsso96forbN2Y6IJ5yitGPS9Nci5n9vps @torvalds" # TODO: Replace with RNL key
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHQiRYpOfTpddexkndt7d3Bw2wS/wLKKjs4526pJOdM @doppler"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBe+xU3BXFYFVoKNAFXG/amC0fhua6S5eK2g6Y+MkwYu @aurelius"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n @raijin"
     ];
   };
 
