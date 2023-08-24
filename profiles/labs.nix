@@ -31,6 +31,9 @@
   # Clean subuids and gids on boot
   systemd.tmpfiles.rules = ["f+  /etc/subuid 0644 root root -" "f+  /etc/subgid 0644 root root -"];
 
+  # Disable Network Manager
+  networking.networkmanager.enable = false;
+
   # Enable DHCP
   networking.useDHCP = lib.mkForce true;
   networking.dhcpcd.extraConfig = ''
