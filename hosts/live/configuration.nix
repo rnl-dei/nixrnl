@@ -14,7 +14,12 @@
     live-netboot-dhcp = {
       extraModules = [
         (inputs.nixpkgs + "/nixos/modules/installer/netboot/netboot-minimal.nix")
-        {networking.useDHCP = lib.mkForce true;}
+        {
+          networking.useDHCP = lib.mkForce true;
+          networking.dhcpcd.extraConfig = ''
+            duid ll   # Allow DHCP server to assign a static IPv6 using the MAC address
+          '';
+        }
       ];
     };
   };
