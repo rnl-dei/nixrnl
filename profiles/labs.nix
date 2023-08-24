@@ -4,6 +4,8 @@
   ...
 }: {
   imports = [
+    # Required for command-not-found to work using flakes
+    inputs.flake-programs-sqlite.nixosModules.programs-sqlite
     ./ist-shell.nix
     ./cluster/client.nix
     ./graphical/labs.nix
