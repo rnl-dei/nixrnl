@@ -69,13 +69,14 @@
             set count=1
           elif [ "x''${count}" = "x1" ]; then
             set count=0
-          elif [ "x''${count}" != "x0" ]; then
+          else
             set count=0
             set entry=""
           fi
 
-          # Save the number of consecutive reboots.
+          # Save the number of consecutive reboots and the entry name.
           save_env --file /grub/grubenv count
+          save_env --file /grub/grubenv entry
 
           if [ "''${entry}" = "ipxe" ]; then
             menuentry --unrestricted "iPXE Boot" {
