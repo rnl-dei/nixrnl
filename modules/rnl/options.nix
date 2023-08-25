@@ -55,7 +55,7 @@ with lib; {
       };
 
       aliases = mkOption {
-        type = attrsOf (either (listOf types.string) types.string);
+        type = attrsOf (either (listOf types.str) types.str);
         description = ''
           An attribute set of aliases to be added to the mailserver.
           The keys are the alias names, the values are either a list of

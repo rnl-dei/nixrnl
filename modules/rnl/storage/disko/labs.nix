@@ -22,6 +22,7 @@
         };
         windows = {
           size = "200G";
+          type = "0700"; # for Microsoft basic data
         };
         linux = {
           size = "100%";
