@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
@@ -32,8 +33,7 @@
   # Clean subuids and gids on boot
   systemd.tmpfiles.rules = ["f+  /etc/subuid 0644 root root -" "f+  /etc/subgid 0644 root root -"];
 
-  users.users.root.hashedPassword =
-    "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
+  users.users.root.hashedPassword = "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
 
   # Disable Network Manager
   networking.networkmanager.enable = false;
@@ -48,66 +48,49 @@
   environment.systemPackages = with pkgs; [rnl-virt];
   virtualisation.libvirtd.enable = true;
 
-  environment.shellAliases = {
-    reboot2Win = "${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set count=1 && reboot"; # TODO receive count as an argument
-    reboot2PXE = "${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set entry=ipxe && reboot";
-  };
-
   # Bootloader
   boot = {
+    supportedFilesystems = ["ntfs"];
     plymouth.enable = true;
     loader = {
       efi.canTouchEfiVariables = lib.mkForce true;
       grub = {
         efiInstallAsRemovable = false;
+        configurationName = "Linux";
         extraConfig = ''
-          # If count != 0 and isn't an empty string.
-          if [ "x''${count}" != "x0" -a "x''${count}" != "x"]; then
-            set default=1
-          else
-            set default=0
-          fi
-
           # Count down the number of consecutive reboots.
-          # FIXME do this in a proper way (with decrementation)
-          if [ "x''${count}" = "x6" ]; then
-            set count=5
-            save_env --file /grub/grubenv count
-          elif [ "x''${count}" = "x5" ]; then
+          if [ "x''${count}" = "x5" ]; then
             set count=4
-            save_env --file /grub/grubenv count
           elif [ "x''${count}" = "x4" ]; then
             set count=3
-            save_env --file /grub/grubenv count
           elif [ "x''${count}" = "x3" ]; then
             set count=2
-            save_env --file /grub/grubenv count
           elif [ "x''${count}" = "x2" ]; then
             set count=1
-            save_env --file /grub/grubenv count
           elif [ "x''${count}" = "x1" ]; then
             set count=0
-            save_env --file /grub/grubenv count
           elif [ "x''${count}" != "x0" ]; then
             set count=0
-            save_env --file /grub/grubenv count
+            set entry=""
           fi
 
+          # Save the number of consecutive reboots.
+          save_env --file /grub/grubenv count
+
           if [ "''${entry}" = "ipxe" ]; then
-            set entry=""
-            save_env --file /grub/grubenv entry
             menuentry --unrestricted "iPXE Boot" {
               chainloader /ipxe.efi
+            }
+          elif [ "''${entry}" = "windows" ]; then
+            menuentry --unrestricted "Windows 10" {
+              chainloader /EFI/Microsoft/Boot/bootmgfw.efi
             }
           fi
         '';
 
-        extraFiles = { "ipxe.efi" = "${pkgs.ipxe}/ipxe.efi"; };
+        extraFiles = {"ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";};
         extraEntries = ''
           menuentry --unrestricted "Windows 10" {
-            insmod part_gpt
-            insmod fat
-            search --fs-uuid --set=root $FS_UUID
             chainloader /EFI/Microsoft/Boot/bootmgfw.efi
           }
 
@@ -116,19 +99,62 @@
           menuentry "iPXE Boot" {
             chainloader /ipxe.efi
           }
+
+          # Easy way to clean the counter
+          menuentry "Clean counter" {
+            set count=0
+            save_env --file /grub/grubenv count
+          }
         '';
 
         extraInstallCommands = ''
-          sed -i 's/ - Default//g' /boot/grub/grub.cfg
-          sed -i 's/NixOS/Linux/g' /boot/grub/grub.cfg
+          # Workaround to change default entry name
+          # See issue: https://github.com/NixOS/nixpkgs/issues/15416
+          sed -i 's/"NixOS - Default"/"${config.boot.loader.grub.configurationName}"/g' /boot/grub/grub.cfg
+
+          # Workaround to hide old NixOS entries in Administration submenu
           echo "}" >> /boot/grub/grub.cfg
         '';
 
         splashImage = null;
 
-        users.root.hashedPassword =
-          "grub.pbkdf2.sha512.10000.616F635FFE748E06FC697DCC79BE6E5CF4923F8055B8776C70CE25FE89B0ACC10B27507B67CEED52A902609FEF8A91FA18A41D7A51E66FEFB199B6FBEF4E0ADA.5F1AA5C420F8AD6535E48F414955F22F64151DB9DCD5C5B2283D2507B7C3992A87EB8A08B6C6BD7CCB9F4E20F1A470EFC350E9592010E663E39BE34852DB2C24";
+        users.root.hashedPassword = "grub.pbkdf2.sha512.10000.616F635FFE748E06FC697DCC79BE6E5CF4923F8055B8776C70CE25FE89B0ACC10B27507B67CEED52A902609FEF8A91FA18A41D7A51E66FEFB199B6FBEF4E0ADA.5F1AA5C420F8AD6535E48F414955F22F64151DB9DCD5C5B2283D2507B7C3992A87EB8A08B6C6BD7CCB9F4E20F1A470EFC350E9592010E663E39BE34852DB2C24";
       };
     };
+  };
+
+  # Reboot2
+  environment.shellAliases = let
+    reboot2 = pkgs.writeScript "reboot2" ''
+      #!/usr/bin/env bash
+
+      if [ $# -eq 0 ]; then
+        echo "Usage: reboot2 <entry> [count]"
+        exit 1
+      fi
+
+      entry=$1
+      count=''${2:-1}
+
+      # If entry is clean, reset count
+      if [ "''${entry}" = "clean" ]; then
+        count=0
+        entry=""
+
+      # Else, check if count is between 0 and 5
+      elif [ $count -lt 1 ] || [ $count -gt 5 ]; then
+        echo "Count must be between 1 and 5"
+        exit 1
+      fi
+
+      ${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set entry=$entry
+      ${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set count=$count
+
+      echo "Rebooting to $entry in $count reboots"
+    '';
+  in {
+    reboot2Win = "${reboot2} windows";
+    reboot2PXE = "${reboot2} ipxe";
+    reboot2Clean = "${reboot2} clean";
   };
 }
