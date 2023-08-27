@@ -1,4 +1,8 @@
-{profiles, ...}: {
+{
+  config,
+  profiles,
+  ...
+}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -46,7 +50,7 @@
 
   # Prevent users from using up all the compute
   # reserves 10% of compute power for system processes
-  systemd.slices."user".sliceConfig.CPUQuota = "${rnl.virtualisation.guest.vcpu * 100 / 90}%";
+  systemd.slices."user".sliceConfig.CPUQuota = "${toString (config.rnl.virtualisation.guest.vcpu * 100 / 90)}%";
 
   rnl.labels.location = "zion";
 

@@ -52,7 +52,7 @@
 
   # Crack down on compute-heavy tasks from users
   # reserves ~50% of compute-power for system processes
-  systemd.slices."user".sliceConfig.CPUQuota = "${rnl.virtualisation.guest.vcpu * 100 / 50}%";
+  systemd.slices."user".sliceConfig.CPUQuota = "${toString (config.rnl.virtualisation.guest.vcpu * 100 / 50)}%";
 
   # Disallow IST users from using nix shell
   nix.settings.allowed-users = ["root"];
