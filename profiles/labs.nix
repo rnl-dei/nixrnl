@@ -45,8 +45,8 @@
     duid ll   # Allow DHCP server to assign a static IPv6 using the MAC address
   '';
 
-  # RNL Virt
-  environment.systemPackages = with pkgs; [rnl-virt];
+  # RNL Virt / Reboot2
+  environment.systemPackages = with pkgs; [rnl-virt reboot2];
   virtualisation.libvirtd.enable = true;
 
   # Bootloader
@@ -123,41 +123,6 @@
         users.root.hashedPassword = "grub.pbkdf2.sha512.10000.616F635FFE748E06FC697DCC79BE6E5CF4923F8055B8776C70CE25FE89B0ACC10B27507B67CEED52A902609FEF8A91FA18A41D7A51E66FEFB199B6FBEF4E0ADA.5F1AA5C420F8AD6535E48F414955F22F64151DB9DCD5C5B2283D2507B7C3992A87EB8A08B6C6BD7CCB9F4E20F1A470EFC350E9592010E663E39BE34852DB2C24";
       };
     };
-  };
-
-  # Reboot2
-  environment.shellAliases = let
-    reboot2 = pkgs.writeScript "reboot2" ''
-      #!/usr/bin/env bash
-
-      if [ $# -eq 0 ]; then
-        echo "Usage: reboot2 <entry> [count]"
-        exit 1
-      fi
-
-      entry=$1
-      count=''${2:-1}
-
-      # If entry is clean, reset count
-      if [ "''${entry}" = "clean" ]; then
-        count=0
-        entry=""
-
-      # Else, check if count is between 0 and 5
-      elif [ $count -lt 1 ] || [ $count -gt 5 ]; then
-        echo "Count must be between 1 and 5"
-        exit 1
-      fi
-
-      ${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set entry=$entry
-      ${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv set count=$count
-
-      echo "Rebooting to $entry in $count reboots"
-    '';
-  in {
-    reboot2Win = "${reboot2} windows";
-    reboot2PXE = "${reboot2} ipxe";
-    reboot2Clean = "${reboot2} clean";
   };
 
   # Windows Deploy

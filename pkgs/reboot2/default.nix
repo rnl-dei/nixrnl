@@ -11,8 +11,8 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./src;
-  buildInputs = [ bash grub2 ];
-  nativeBuildInputs = [ makeWrapper ];
+  buildInputs = [bash grub2];
+  nativeBuildInputs = [makeWrapper];
 
   installPhase = ''
     mkdir -p $out/bin
