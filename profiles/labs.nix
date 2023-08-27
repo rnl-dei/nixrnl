@@ -8,6 +8,7 @@
   imports = [
     # Required for command-not-found to work using flakes
     inputs.flake-programs-sqlite.nixosModules.programs-sqlite
+    ./fail2ban.nix
     ./ist-shell.nix
     ./cluster/client.nix
     ./graphical/labs.nix
