@@ -6,7 +6,7 @@
 }:
 with lib; {
   options.rnl = {
-    privateServer = mkEnableOption "Enable this if machine is a private server"; # TODO: Rename this to something more descriptive
+    internalHost = mkEnableOption "Enable this if host is unaccessible from the outside";
 
     domain = mkOption {
       type = types.str;
@@ -152,36 +152,20 @@ with lib; {
       };
     };
 
-    cluster = {
-      mungeKeyFile = mkOption {
-        type = types.nullOr types.path;
-        default = pkgs.emptyFile;
-        description = "Path to the munge key file";
-      };
-    };
-
-    vpn = {
-      wireguard-admin = {
-        privateKeyFile = mkOption {
-          type = types.path;
-          description = "Wireguard private key file for admin VPN";
+    vpn.wireguard-admin.hosts = mkOption {
+      default = [];
+      type = types.listOf (types.submodule {
+        options = {
+          publicKey = mkOption {
+            type = types.str;
+            description = "Public key of the host";
+          };
+          lastOctect = mkOption {
+            type = types.int;
+            description = "Last octect of the host IP";
+          };
         };
-        hosts = mkOption {
-          default = [];
-          type = types.listOf (types.submodule {
-            options = {
-              publicKey = mkOption {
-                type = types.str;
-                description = "Public key of the host";
-              };
-              lastOctect = mkOption {
-                type = types.int;
-                description = "Last octect of the host IP";
-              };
-            };
-          });
-        };
-      };
+      });
     };
   };
 }
