@@ -16,16 +16,16 @@
   rnl.storage = {
     disks = {
       root = [
-        "/dev/disk/by-id/ata-ADATA_SU900_2J1020057939" # sdf
-        "/dev/disk/by-id/ata-ADATA_SU900_2J1020053177" # sdd
+        "/dev/disk/by-id/ata-ADATA_SU900_2J1020057939"
+        "/dev/disk/by-id/ata-ADATA_SU900_2J1020053177"
       ];
       data = [
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M1KGZVF" # sdg
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M7KK9PF" # sdh
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M9KEZAF" # sde
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17MQK05LF" # sdk
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0HF" # sdj
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0IF" # sdi
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M1KGZVF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M7KK9PF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M9KEZAF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17MQK05LF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0HF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0IF"
       ];
     };
   };
