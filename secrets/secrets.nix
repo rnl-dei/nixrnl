@@ -10,15 +10,18 @@ let
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
+  papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
 in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/borg.age".publicKeys = deployMachines;
   "host-keys/hagrid.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
+  "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
 
   # Secrets
   "munge-key.age".publicKeys = users ++ [borg];
+  "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
 }
