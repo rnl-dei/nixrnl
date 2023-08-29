@@ -34,7 +34,39 @@
       # Change default background
       [org.cinnamon.desktop.background]
       picture-uri='file://${config.rnl.wallpaper.path}'
+
+      [org.cinnamon]
+      favorite-apps=['firefox.desktop', 'org.gnome.Terminal.desktop', 'nemo.desktop', 'code.desktop']
+      enabled-applets=['panel1:left:0:menu@cinnamon.org:0', 'panel1:left:1:separator@cinnamon.org:1', 'panel1:left:2:grouped-window-list@cinnamon.org:2', 'panel1:right:0:systray@cinnamon.org:3', 'panel1:right:1:xapp-status@cinnamon.org:4', 'panel1:right:2:notifications@cinnamon.org:5', 'panel1:right:4:removable-drives@cinnamon.org:7', 'panel1:right:5:keyboard@cinnamon.org:8', 'panel1:right:8:sound@cinnamon.org:11', 'panel1:right:10:calendar@cinnamon.org:13', 'panel1:right:11:cornerbar@cinnamon.org:14']
+
+      [org.cinnamon.theme]
+      name='Mint-Y-Dark-Aqua'
+
+      [org.cinnamon.desktop.interface]
+      cursor-theme='Adwaita'
+      gtk-theme='Mint-Y-Dark-Aqua'
+      icon-theme='Mint-Y-Dark-Aqua'
+
+      [org.nemo.desktop]
+      home-icon-visible=true
+      trash-icon-visible=true
     '';
+  };
+
+  xdg.mime.defaultApplications = {
+    # Web
+    "text/html" = "firefox.desktop";
+    "x-scheme-handler/http" = "firefox.desktop";
+    "x-scheme-handler/https" = "firefox.desktop";
+    # Images
+    "image/jpeg" = "xviewer.desktop";
+    "image/jpg" = "xviewer.desktop";
+    "image/png" = "xviewer.desktop";
+    "image/gif" = "xviewer.desktop";
+    # Documents
+    "inode/directory" = "nemo.desktop";
+    "application/pdf" = "xreader.desktop";
+    "text/plain" = "xed.desktop";
   };
 
   programs.dconf.enable = true;
