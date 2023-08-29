@@ -1,4 +1,9 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [./common.nix];
 
   # RNL Wallpaper
@@ -14,6 +19,11 @@
     extraConfig = "user-authority-in-system-dir=true";
     background = config.rnl.wallpaper.path;
   };
+
+  environment.cinnamon.excludePackages = with pkgs; [
+    networkmanagerapplet
+  ];
+  programs.nm-applet.enable = lib.mkForce false;
 
   # Desktop Manager: Cinnamon
   services.xserver.desktopManager.cinnamon = {
