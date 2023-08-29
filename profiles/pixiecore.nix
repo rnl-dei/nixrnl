@@ -12,4 +12,8 @@ in {
     cmdLine = "init=${build.toplevel}/init loglevel=4";
     debug = true;
   };
+
+  # Enable this to fix this issue:
+  # https://github.com/NixOS/nixpkgs/issues/252116
+  networking.firewall.allowedUDPPorts = [4011];
 }
