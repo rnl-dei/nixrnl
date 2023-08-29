@@ -5,7 +5,7 @@
   ...
 }: {
   services.slurm = {
-    controlMachine = "borg";
+    controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
     nodeName = lib.mkDefault [
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
