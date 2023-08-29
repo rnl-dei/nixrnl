@@ -157,4 +157,16 @@
     reboot2PXE = "${reboot2} ipxe";
     reboot2Clean = "${reboot2} clean";
   };
+
+  # Windows Deploy
+  rnl.windows-labs = {
+    enable = true;
+    keyFile = config.age.secrets."windows-labs-image.key".path;
+  };
+
+  age.secrets."windows-labs-image.key" = {
+    file = ../secrets/windows-labs-image-key.age;
+    owner = "root";
+    mode = "0400";
+  };
 }

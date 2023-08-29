@@ -32,5 +32,6 @@ in {
   "munge-key.age".publicKeys = users ++ [borg labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
+  "windows-labs-image-key.age".publicKeys = users ++ [labs];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
 }
