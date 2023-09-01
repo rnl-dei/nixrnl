@@ -79,7 +79,7 @@
           save_env --file /grub/grubenv count
           save_env --file /grub/grubenv entry
 
-          if [ "''${entry}" = "ipxe" ]; then
+          if [ "''${entry}" = "pxe" ]; then
             menuentry --unrestricted "iPXE Boot" {
               chainloader /ipxe.efi
             }
