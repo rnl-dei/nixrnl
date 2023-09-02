@@ -1,0 +1,47 @@
+pageInfo:
+  title: RNL
+  description: Welcome to RNL!
+  navLinks:
+    - title: Website
+      path: https://rnl.tecnico.ulisboa.pt
+appConfig:
+  theme: one-dark
+  language: en
+  webSearch:
+    disableWebSearch: false
+    searchEngine: google
+    openingMethod: newtab
+    searchBangs: {}
+  enableFontAwesome: true
+  hideComponents:
+    hideFooter: true
+  preventWriteToDisk: true
+sections:
+  - name: General
+    icon: fas fa-bookmark
+    items:
+      - title: Mattermost
+        description: Chat
+        icon: hl-mattermost
+        url: https://papyrus.rnl.tecnico.ulisboa.pt
+      - title: GitLab
+        description: Remote source control
+        icon: hl-gitlab
+        url: https://gitlab.rnl.tecnico.ulisboa.pt
+  - name: Documentation
+    icon: fas fa-book
+    items:
+      - title: Wiki
+        icon: hl-dokuwiki
+        url: https://weaver.rnl.tecnico.ulisboa.pt/wiki
+      - title: Netbox
+        icon: hl-netbox
+        url: https://netbox.rnl.tecnico.ulisboa.pt
+  - name: System Monitoring
+    icon: fas fa-monitor-heart-rate
+    items:
+      - title: Grafana
+        description: Data visualised on dashboards
+        icon: hl-grafana
+        url: https://tardis.rnl.tecnico.ulisboa.pt/grafana
+
