@@ -23,7 +23,10 @@
     extraConfig = ''
       SrunPortRange=60001-63000 # Don't forget to enable these ports in your firewall on slurm server
 
-      ReturnToService=1
+      # TODO: nodes are currently re-added to the cluster automatically, regardless of the reason that caused them to be kicked out.
+      # set ReturnToService=1 to avoid this. However, this requires rebooting nodes using slurm, always.
+      # So the system must use this facility to reboot: requires internal tooling to make `reboot` use slurm internally, changing DE behavior (dunno how).
+      ReturnToService=2
       TaskPlugin=task/cgroup,task/affinity
       TreeWidth=10 # Square root of the number of nodes
       SelectType=select/cons_tres
