@@ -8,7 +8,6 @@
   imports = [
     # Required for command-not-found to work using flakes
     inputs.flake-programs-sqlite.nixosModules.programs-sqlite
-    ./fail2ban.nix
     ./ist-shell.nix
     ./cluster/client.nix
     ./graphical/labs.nix
@@ -44,6 +43,9 @@
   networking.dhcpcd.extraConfig = ''
     duid ll   # Allow DHCP server to assign a static IPv6 using the MAC address
   '';
+
+  # Disable firewall, to simplify everyone's life
+  networking.firewall.enable = lib.mkForce false;
 
   # RNL Virt / Reboot2
   environment.systemPackages = with pkgs; [rnl-virt reboot2];
