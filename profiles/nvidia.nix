@@ -33,4 +33,13 @@
   # Use the -bin version of packages which require cuda support instead.
   environment.systemPackages = with pkgs; [cudatoolkit];
   environment.variables."CUDA_PATH" = "${pkgs.cudatoolkit}";
+
+  # Slurm needs to know how to detect GPUs
+  # TODO: consider using oneapi for all nodes, as it should detect *any* GPU
+  services.slurm.extraConfigPaths = [
+    (pkgs.writeText "gres.conf"''
+      # Automatically detect NVIDIA GPUs with NVIDIA Management Library
+      AutoDetect=nvml
+    '')
+  ];
 }
