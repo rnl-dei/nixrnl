@@ -35,6 +35,7 @@
       PrologFlags=Contain
       DefMemPerCPU=1024
       DefMemPerGPU=1024
+      GresTypes=gpu,mps
     '';
     extraCgroupConfig = ''
       ConstrainCores=yes
