@@ -122,8 +122,8 @@
 
     if [[ "$USER" =~ ^ist[0-9]+$ ]]; then
         # Format: /mnt/cirrus/users/Y/Z/istxxxxyz
-        Y=${USER:(-2):1}
-        Z=${USER:(-1):1}
+        Y=''${USER:(-2):1}
+        Z=''${USER:(-1):1}
         GLUSTER_HOME="/mnt/cirrus/users/$Y/$Z/$USER"
 
         for file in $GLUSTER_HOME/.ssh/authorized_keys{,2}; do
