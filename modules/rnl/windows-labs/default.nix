@@ -61,7 +61,7 @@ in {
       }
     ];
 
-    # Use this files on extra entries
+    # Use these files on extra entries
     boot.loader.grub = {
       extraPrepareConfig = ''
         mkdir -p /boot/EFI/Microsoft/Boot
@@ -80,9 +80,9 @@ in {
         #!/usr/bin/env bash
         set -euo pipefail
 
-        # Check if partition have filesystem
+        # Check if partition has filesystem
         if [ ! -z `${pkgs.util-linux}/bin/blkid -s TYPE -o value ${cfg.partition}` ]; then
-          echo "Partition ${cfg.partition} possibly have Windows installed."
+          echo "Partition ${cfg.partition} may already have Windows installed."
           echo "If you want to reinstall Windows, please format the partition"
           echo "using the following command: wipefs -a ${cfg.partition}"
           echo "and then restart the service."
