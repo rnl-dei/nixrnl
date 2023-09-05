@@ -16,6 +16,7 @@
     extraConfig = {
       TeamSettings = {
         CustomBrandText = "Welcome to RNL!";
+        MaxUsersPerTeam = 100;
       };
       SqlSettings = {
         DriverName = "mysql";
