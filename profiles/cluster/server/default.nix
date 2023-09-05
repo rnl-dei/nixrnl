@@ -12,6 +12,13 @@ in {
 
   services.slurm.server.enable = true;
 
+  # Ensure slurmctld does not run without /mnt/cirrus being mounted
+  systemd.services.slurmctld = {
+    requires = ["mnt-cirrus.mount"];
+    after = ["mnt-cirrus.mount"];
+    partOf = ["mnt-cirrus.mount"];
+  };
+
   # Slurmctld port and srun batch ports
   networking.firewall = {
     allowedTCPPorts = [6817];
