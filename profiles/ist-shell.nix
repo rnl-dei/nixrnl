@@ -115,8 +115,8 @@
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
     # Note: CPUQuota is not set here because percentages are relative to one CPU, not the total amount of resources
 
-    CPUWeight = 50; # default is 100
-    IOWeight = 50; # default is 100
+    CPUWeight = 90; # default is 100
+    IOWeight = 90; # default is 100
   };
 
   # The root user should be able to perform maintenance:
@@ -127,7 +127,7 @@
     MemoryMax = "infinity";
 
     # give more priority to root CPU/IO
-    CPUWeight = 200; # default is 100
-    IOWeight = 200; # default is 100
+    CPUWeight = 110; # default is 100
+    IOWeight = 110; # default is 100
   };
 }
