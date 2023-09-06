@@ -56,6 +56,8 @@
     loginPam = false;
   };
 
+  environment.systemPackages = with pkgs; [openldap];
+
   services.sssd = {
     enable = true;
     config = ''
