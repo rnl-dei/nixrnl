@@ -122,13 +122,18 @@
   # Ensure one user can't prevent the others from working
   # These settings constrain resources consumed by *each* user (each user-<UID>.slice),
   # after applying constrains higher in the hierarchy
-  systemd.slices."user-".sliceConfig = {
-    # Set a low-ball soft limit on memory usage.
-    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
-    MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
+  systemd.slices."user-" = {
+    sliceConfig = {
+      # Set a low-ball soft limit on memory usage.
+      # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
+      MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
 
-    # For the hard memory limit, we give more leeway.
-    MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
+      # For the hard memory limit, we give more leeway.
+      MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
+    };
+
+    # user-.slice does not exist, the settings must be stored under user-.slice.d/overrides.conf (a "drop-in" file) for this to work.
+    overrideStrategy = "asDropin";
   };
 
   # The root user should be able to perform maintenance:
