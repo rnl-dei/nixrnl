@@ -75,6 +75,24 @@ in {
   time.timeZone = "Europe/Lisbon";
   networking.timeServers = ["ntp.rnl.tecnico.ulisboa.pt"];
 
+  # Configure locale
+  console.keyMap = "pt-latin9";
+  services.xserver.layout = "pt,us";
+  i18n = {
+    defaultLocale = "en_US.utf8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "pt_PT.utf8";
+      LC_IDENTIFICATION = "pt_PT.utf8";
+      LC_MEASUREMENT = "pt_PT.utf8";
+      LC_MONETARY = "pt_PT.utf8";
+      LC_NAME = "pt_PT.utf8";
+      LC_NUMERIC = "pt_PT.utf8";
+      LC_PAPER = "pt_PT.utf8";
+      LC_TELEPHONE = "pt_PT.utf8";
+      LC_TIME = "pt_PT.utf8";
+    };
+  };
+
   # Set issue message
   environment.etc."issue".text = lib.mkDefault ''
     \e[1;31m« Welcome to \n @ RNL »\e[0m
@@ -124,7 +142,8 @@ in {
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/rKlyYzFscsso96forbN2Y6IJ5yitGPS9Nci5n9vps @torvalds" # TODO: Replace with RNL key
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHQiRYpOfTpddexkndt7d3Bw2wS/wLKKjs4526pJOdM @doppler"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID4YDzrHDTCZdySD/xpvwcshJtE4hBiStLsHB1Yy3CR4 @dredd"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBe+xU3BXFYFVoKNAFXG/amC0fhua6S5eK2g6Y+MkwYu @aurelius"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n @raijin"
     ];
   };
 

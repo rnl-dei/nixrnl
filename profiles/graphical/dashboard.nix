@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  imports = [./common.nix];
+
   # Create RNL user without full permissions
   users.users.rnl = {
     isNormalUser = true;
@@ -6,7 +8,6 @@
   };
 
   services.xserver = {
-    enable = true;
     windowManager.openbox.enable = true;
     displayManager.autoLogin = {
       enable = true;
@@ -27,15 +28,6 @@
   environment.etc.autostartChromium = {
     source = "${pkgs.chromium}/share/applications/chromium-browser.desktop";
     target = "xdg/autostart/chromium-browser.desktop";
-  };
-
-  # Setup audio
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
   };
 
   environment.systemPackages = with pkgs; [chromium];

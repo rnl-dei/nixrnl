@@ -1,0 +1,421 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import random
+import re
+import signal
+import shlex
+import shutil
+import stat
+import subprocess
+import sys
+
+# TODO Replace these definitions with a rnl-virt.conf file
+runtime_dir = os.environ.get("XDG_RUNTIME_DIR", "/run/user/{0}".format(os.getuid()))
+session_id = os.environ.get("XDG_SESSION_ID")
+
+disk_template_dir = "/var/lib/rnl-virt/disk/templates"
+vm_template_dir = "/var/lib/rnl-virt/vm/templates"
+cd_dir = "/var/lib/rnl-virt/cd"
+
+# Initialize runtime dir
+if os.path.isdir(runtime_dir):
+    if session_id:
+        new_runtime_dir = os.path.join(runtime_dir, "rnl-virt-" + session_id)
+    else:
+        new_runtime_dir = os.path.join(runtime_dir, "rnl-virt-")
+
+    if not os.path.isdir(new_runtime_dir):
+        os.mkdir(new_runtime_dir)
+
+    runtime_dir = new_runtime_dir
+else:
+    sys.exit("Error: Runtime folder {0} does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>".format(runtime_dir))
+
+# Initialize sockets and socket folders
+switch_socket_dir = os.path.join(runtime_dir, "net")
+
+if not os.path.isdir(switch_socket_dir):
+    os.mkdir(switch_socket_dir)
+
+libvirt_pid_file = os.path.join(runtime_dir, "libvirtd.pid")
+libvirt_socket = os.path.join(runtime_dir, "libvirt-sock")
+libvirt_connection = "qemu:///session?socket={0}".format(libvirt_socket)
+
+# Initialize libivrt folders
+libvirt_dir = os.path.join(runtime_dir, "libvirt")
+
+if not os.path.isdir(libvirt_dir):
+    os.mkdir(libvirt_dir)
+    os.mkdir(os.path.join(libvirt_dir, "config"))
+    os.mkdir(os.path.join(libvirt_dir, "cache"))
+
+libvirt_config_file = os.path.join(runtime_dir, "libvirtd.conf")
+if not os.path.isfile(libvirt_config_file):
+    with open(libvirt_config_file,"a+") as f:
+        f.write("unix_sock_dir = \"{0}\"".format(runtime_dir))
+
+qemu_dummy_script_file = os.path.join(runtime_dir, "qemu_net.sh")
+if not os.path.isfile(qemu_dummy_script_file):
+    with open(qemu_dummy_script_file,"a+") as f:
+        f.write("#!/bin/sh")
+
+    st = os.stat(qemu_dummy_script_file)
+    os.chmod(qemu_dummy_script_file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+# Start a libvirt user session
+libvirt_env = os.environ.copy()
+libvirt_env["XDG_CONFIG_HOME"] = os.path.join(libvirt_dir, "config")
+libvirt_env["XDG_CACHE_HOME"] = os.path.join(libvirt_dir, "cache")
+
+libvirt_call = "libvirtd -d -p {0} -f {1}".format(libvirt_pid_file, libvirt_config_file)
+if not os.path.isfile(libvirt_pid_file):
+    subprocess.call(shlex.split(libvirt_call), env=libvirt_env)
+
+###############################################################################
+
+def gen_mac():
+    mac = [ 0x52, 0x54, 0x00, 0xd9,
+            random.randint(0x00, 0xff), random.randint(0x00, 0xff) ]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
+
+###############################################################################
+
+def virt_clean(args):
+    if args.force:
+        kill_sig = signal.SIGKILL
+    else:
+        kill_sig = signal.SIGTERM
+
+    if os.path.isfile(libvirt_pid_file):
+        with open(libvirt_pid_file, 'r+') as f:
+            pid = int(f.read())
+
+        os.kill(pid, kill_sig)
+
+    vde_pid_files = [ os.path.join(switch_socket_dir, f) for f in os.listdir(switch_socket_dir) if re.match(".*\.pid$", f) ]
+    for vde_pid_file in vde_pid_files:
+        with open(vde_pid_file, 'r+') as f:
+            pid = int(f.read())
+
+        os.kill(pid, kill_sig)
+
+    shutil.rmtree(runtime_dir)
+
+def virt_virsh(args):
+    virsh_call = "virsh -c {0}".format(libvirt_connection)
+    subprocess.call(shlex.split(virsh_call))
+
+def virt_manager(args):
+    virt_call = "virt-manager -c {0}".format(libvirt_connection)
+    subprocess.call(shlex.split(virt_call))
+
+###############################################################################
+
+# Creates a disk based on a template
+# Required arguments:
+# args.template: Name of the template to use
+# args.name: Name of the file to create
+# Optional arguments:
+# args.path: Place where to create the file
+def disk_create(args):
+    if args.path:
+        new_disk = os.path.join(args.path, args.name + '.qcow2')
+    else:
+        new_disk = args.name + '.qcow2'
+
+    if os.path.exists(new_disk):
+        sys.exit("Cannot create new disk " + new_disk + ". File or folder " + new_disk + " already exists.")
+
+    if os.path.isdir(disk_template_dir):
+        templates = [ f for f in os.listdir(disk_template_dir) if os.path.isfile(os.path.join(disk_template_dir, f)) ]
+        matches = [ i for i in templates if re.match(args.template, i) ]
+
+        if matches:
+            qemu_call = "qemu-img create -f qcow2 -F qcow2 -b {0} {1}".format(os.path.join(disk_template_dir, matches[0]), new_disk)
+            subprocess.call(shlex.split(qemu_call))
+        else:
+            sys.exit("No template exists with that name")
+    else:
+        sys.exit("Error: Template folder does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>")
+
+# Lists all templates which can be used to create a disk
+def disk_list_templates(args):
+    if os.path.isdir(disk_template_dir):
+        files = [ f for f in os.listdir(disk_template_dir) if os.path.isfile(os.path.join(disk_template_dir, f)) ]
+        templates = [ os.path.splitext(file)[0] for file in files ]
+        print("\n".join(templates))
+        print("Disk templates are stored in " + disk_template_dir)
+    else:
+        sys.exit("Error: Template folder does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>")
+
+###############################################################################
+
+# Creates a new VDE Switch
+def switch_create(args):
+    socket_permissions = "666"
+    socket_path = os.path.join(switch_socket_dir, args.name)
+    mgmt_socket_path = os.path.join(switch_socket_dir, args.name + ".mgmt")
+    pid_file = os.path.join(switch_socket_dir, args.name + ".pid")
+
+    if args.hub:
+        hub_arg = "--hub"
+    else:
+        hub_arg = ""
+
+    if args.tap:
+        tap_arg = "--tap rnltap"
+    else:
+        tap_arg = ""
+
+    vde_call = "vde_switch --daemon {3} {4} --sock {0} --mgmt {1} --pidfile {2}".format(socket_path, mgmt_socket_path, pid_file, hub_arg, tap_arg)
+
+    subprocess.call(shlex.split(vde_call))
+
+# Lists all templates which can be used to create a disk
+def switch_list(args):
+    if os.path.isdir(switch_socket_dir):
+        files = [ f for f in os.listdir(switch_socket_dir) if not os.path.splitext(f)[1] ]
+        print("\n".join(files))
+    else:
+        sys.exit("There are no virtual switches")
+
+def switch_manage(args):
+    mgmt_socket_path = os.path.join(switch_socket_dir, args.name + ".mgmt")
+    if os.path.exists(mgmt_socket_path):
+        vde_call = "vdeterm {0}".format(mgmt_socket_path)
+
+        subprocess.call(shlex.split(vde_call))
+    else:
+        sys.exit("There is no switch called " + args.name)
+
+###############################################################################
+
+def vm_list(args):
+    virsh_call = "virsh -c {0} list --all".format(libvirt_connection)
+    subprocess.call(shlex.split(virsh_call))
+
+def vm_list_templates(args):
+    if os.path.isdir(vm_template_dir):
+        files = [ f for f in os.listdir(vm_template_dir) if os.path.isfile(os.path.join(vm_template_dir, f)) ]
+        templates = [ os.path.splitext(file)[0] for file in files ]
+        print("\n".join(templates))
+        print("Disk templates are stored in " + vm_template_dir)
+    else:
+        sys.exit("Error: Template folder does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>")
+
+def vm_create(args):
+    if os.path.isdir(vm_template_dir):
+        templates = [ f for f in os.listdir(vm_template_dir) if os.path.isfile(os.path.join(vm_template_dir, f)) ]
+        matches = [ i for i in templates if re.match(args.template, i) ]
+
+        qemu_args = ""
+        if args.sw:
+            for vde in args.sw:
+                mac = gen_mac()
+                qemu_args += "    <qemu:arg value='-netdev' />\n"
+                qemu_args += "    <qemu:arg value='vde,id={0},sock={1}' />\n".format(vde, os.path.join(switch_socket_dir, vde))
+                qemu_args += "    <qemu:arg value='-device' />\n"
+                qemu_args += "    <qemu:arg value='e1000,netdev={0},mac={1}' />\n".format(vde, mac)
+
+        net_args = ""
+        if args.nat:
+            net_args += "    <interface type='user'></interface>\n"
+
+        if args.tap:
+            net_args += "    <interface type='ethernet'>\n"
+            net_args += "        <target dev='rnltap' />\n"
+            net_args += "        <script path='{0}' />\n".format(qemu_dummy_script_file)
+            net_args += "    </interface>\n"
+
+        if args.cdrom:
+            if os.path.isdir(cd_dir):
+                isos = [ f for f in os.listdir(cd_dir) if os.path.isfile(os.path.join(cd_dir, f)) ]
+                iso_matches = [ i for i in isos if re.match(args.cdrom, i) ]
+                if iso_matches:
+                    cdrom = os.path.join(cd_dir, iso_matches[0])
+                else:
+                    cdrom = os.path.join(os.getcwd(), args.cdrom)
+            else:
+                cdrom = os.path.join(os.getcwd(), args.cdrom)
+        else:
+            cdrom = ""
+
+        if (not cdrom == "") and (not os.path.isfile(cdrom)):
+            sys.exit("The cdrom file {cdrom} does not exist".format(cdrom=cdrom))
+
+        disks = [ os.path.join(os.getcwd(), d) for d in args.disk[0] ]
+
+        if matches:
+            template_file = os.path.join(vm_template_dir, matches[0])
+            with open(template_file, 'r') as f:
+                template = f.read()
+                domain_xml = template.format(name=args.name, disks=disks, qemu_args=qemu_args, net_args=net_args, cdrom=cdrom)
+
+            domain_xml_path = os.path.join(runtime_dir, "domain.xml")
+            if os.path.isfile(domain_xml_path):
+                os.remove(domain_xml_path)
+
+            with open(domain_xml_path, 'a+') as f:
+                f.write(domain_xml)
+
+            virsh_call = "virsh -c {0} define {1}".format(libvirt_connection, domain_xml_path)
+            subprocess.call(shlex.split(virsh_call))
+        else:
+            sys.exit("No template exists with that name")
+    else:
+        sys.exit("Error: Template folder does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>")
+
+def vm_remove(args):
+    virsh_call = "virsh -c {0} undefine {1}".format(libvirt_connection, args.name)
+    subprocess.call(shlex.split(virsh_call))
+
+def vm_start(args):
+    virsh_call = "virsh -c {0} start {1}".format(libvirt_connection, args.name)
+    subprocess.call(shlex.split(virsh_call))
+
+def vm_open(args):
+    virt_call = "virt-viewer -c {0} {1}".format(libvirt_connection, args.name)
+    subprocess.call(shlex.split(virt_call))
+
+def vm_stop(args):
+    if args.force:
+        command = "destroy"
+    else:
+        command = "shutdown"
+
+    virsh_call = "virsh -c {0} {1} {2}".format(libvirt_connection, command, args.name)
+    subprocess.call(shlex.split(virsh_call))
+
+def vm_list_cds(args):
+    if os.path.isdir(cd_dir):
+        files = [ f for f in os.listdir(cd_dir) if os.path.isfile(os.path.join(cd_dir, f)) ]
+        templates = [ os.path.splitext(file)[0] for file in files ]
+        print("\n".join(templates))
+        print("CD images are stored in " + cd_dir)
+    else:
+        sys.exit("Error: CD images folder does not exist, contact RNL Administration <rnl@tecnico.ulisboa.pt>")
+
+def vm_insert(args):
+    if os.path.isdir(cd_dir):
+        isos = [ f for f in os.listdir(cd_dir) if os.path.isfile(os.path.join(cd_dir, f)) ]
+        iso_matches = [ i for i in isos if re.match(args.cdrom, i) ]
+        if iso_matches:
+            cdrom = os.path.join(cd_dir, iso_matches[0])
+        else:
+            cdrom = os.path.join(os.getcwd(), args.cdrom)
+    else:
+        cdrom = os.path.join(os.getcwd(), args.cdrom)
+
+    if not os.path.isfile(cdrom):
+        sys.exit("The cdrom file {cdrom} does not exist".format(cdrom=cdrom))
+
+    virsh_call = "virsh -c {0} attach-disk {name} {cdrom} hdc --type cdrom".format(libvirt_connection, name=args.name,
+                                                                                    cdrom=cdrom)
+    subprocess.call(shlex.split(virsh_call))
+
+def vm_eject(args):
+    virsh_call = "virsh -c {0} attach-disk {name} \"\" hdc --type cdrom".format(libvirt_connection, name=args.name)
+    subprocess.call(shlex.split(virsh_call))
+
+
+###############################################################################
+
+# Define arguments
+parser = argparse.ArgumentParser(description="Manage RNL Virtual Machines")
+
+subparsers = parser.add_subparsers()
+
+parser_clean = subparsers.add_parser("clean", help="Clean all settings if there are problems")
+parser_clean.set_defaults(action=virt_clean)
+parser_clean.add_argument("-f", "--force", help="Force the cleanup")
+
+parser_virsh = subparsers.add_parser("virsh", help="Open virsh (advanced users)")
+parser_virsh.set_defaults(action=virt_virsh)
+
+parser_man = subparsers.add_parser("manager", help="Open Virt Manager (advanced users)")
+parser_man.set_defaults(action=virt_manager)
+
+parser_disk = subparsers.add_parser("disk", aliases=['d'], help="Manage virtual machine disks")
+subparsers_disk = parser_disk.add_subparsers(title="Disk commands")
+
+parser_disk_create = subparsers_disk.add_parser("create", help="Create a new virtual machine disk")
+parser_disk_create.set_defaults(action=disk_create)
+parser_disk_create.add_argument("name", help="The name of the disk to create")
+parser_disk_create.add_argument("template", help="The template to use as base")
+parser_disk_create.add_argument("-p", "--path", help="The path where to store the disk")
+
+parser_disk_list_templates = subparsers_disk.add_parser("list-templates", aliases=['t'], help="List all available templates")
+parser_disk_list_templates.set_defaults(action=disk_list_templates)
+
+parser_switch  = subparsers.add_parser("switch", aliases=['sw'], help="Manage virtual switches")
+subparsers_switch = parser_switch.add_subparsers(title="Virtual switches commands")
+
+parser_switch_create = subparsers_switch.add_parser("create", help="Create a new virtual switch")
+parser_switch_create.set_defaults(action=switch_create)
+parser_switch_create.add_argument("name", help="The name of the virtual switch")
+parser_switch_create.add_argument("--hub", action="store_true", help="Create a virtual hub instead of a virtual switch")
+parser_switch_create.add_argument("--tap", action="store_true", help="Add tap network for communication between workstations")
+
+parser_switch_list = subparsers_switch.add_parser("list", help="List existing virtual switches")
+parser_switch_list.set_defaults(action=switch_list)
+
+parser_switch_manage = subparsers_switch.add_parser("manage", help="Open the management console of a virtual switch")
+parser_switch_manage.set_defaults(action=switch_manage)
+parser_switch_manage.add_argument("name", help="The name of the virtual switch")
+
+parser_vm   = subparsers.add_parser("vm", aliases=['v'], help="Manage virtual machines")
+subparsers_vm = parser_vm.add_subparsers(title="Virtual machine commands")
+
+parser_vm_list = subparsers_vm.add_parser("list", aliases=['l'], help="List virtual machines")
+parser_vm_list.set_defaults(action=vm_list)
+
+parser_vm_list_templates = subparsers_vm.add_parser("list-templates", aliases=['t'], help="List virtual machine templates")
+parser_vm_list_templates.set_defaults(action=vm_list_templates)
+
+parser_vm_create = subparsers_vm.add_parser("create", help="Create virtual machine")
+parser_vm_create.set_defaults(action=vm_create)
+parser_vm_create.add_argument("name", help="The name of the virtual machine")
+parser_vm_create.add_argument("template", help="The template to use to create the virtual machine")
+parser_vm_create.add_argument("disk", action="append", nargs="+", help="The disk to use in the virtual machine")
+parser_vm_create.add_argument("--sw", "--switch", nargs="+", help="Specify virtual switches to add as interfaces, this should be after name and template")
+parser_vm_create.add_argument("--nat", action="store_true", help="Add nat networking for external access")
+parser_vm_create.add_argument("--tap", action="store_true", help="Add tap network for communication between workstations")
+parser_vm_create.add_argument("--cdrom", help="List an iso to add to the machine. It should either be a full path or the name of an iso in the cd's folder")
+
+parser_vm_remove = subparsers_vm.add_parser("remove", help="Remove a virtual machine")
+parser_vm_remove.set_defaults(action=vm_remove)
+parser_vm_remove.add_argument("name", help="The name of the virtual machine")
+
+parser_vm_start = subparsers_vm.add_parser("start", help="Launch virtual machine")
+parser_vm_start.set_defaults(action=vm_start)
+parser_vm_start.add_argument("name", help="The name of the virtual machine")
+
+parser_vm_open = subparsers_vm.add_parser("open", help="Open the virtual machine window")
+parser_vm_open.set_defaults(action=vm_open)
+parser_vm_open.add_argument("name", help="The name of the virtual machine")
+
+parser_vm_stop = subparsers_vm.add_parser("stop", help="Stop a running virtual machine")
+parser_vm_stop.set_defaults(action=vm_stop)
+parser_vm_stop.add_argument("name", help="The name of the virtual machine")
+parser_vm_stop.add_argument("-f", "--force", action="store_true", help="Force the machine to poweroff instead of gracefully shutting it down")
+
+parser_vm_list_cd = subparsers_vm.add_parser("list-cds", help="List the available isos which can be used")
+parser_vm_list_cd.set_defaults(action=vm_list_cds)
+
+parser_vm_insert = subparsers_vm.add_parser("insert-cd", help="Insert a cdrom in the virtual machine")
+parser_vm_insert.set_defaults(action=vm_insert)
+parser_vm_insert.add_argument("name", help="The name of the virtual machine")
+parser_vm_insert.add_argument("cdrom", help="The file of the cdrom to use")
+
+parser_vm_eject = subparsers_vm.add_parser("eject", help="Eject the cdrom from the virtual machine")
+parser_vm_eject.set_defaults(action=vm_eject)
+parser_vm_eject.add_argument("name", help="The name of the virtual machine")
+
+# Parse the arguments
+args = parser.parse_args()
+if 'action' in args:
+    args.action(args)
+else:
+    sys.exit("No action provided, run with -h or --help to get a list of actions")

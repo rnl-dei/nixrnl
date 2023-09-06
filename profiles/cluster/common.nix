@@ -5,7 +5,7 @@
   ...
 }: {
   services.slurm = {
-    controlMachine = "borg";
+    controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
     nodeName = lib.mkDefault [
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
@@ -35,6 +35,7 @@
       PrologFlags=Contain
       DefMemPerCPU=1024
       DefMemPerGPU=1024
+      GresTypes=gpu,mps
     '';
     extraCgroupConfig = ''
       ConstrainCores=yes
@@ -43,8 +44,6 @@
       ConstrainSwapSpace=yes
     '';
   };
-
-  environment.systemPackages = with pkgs; [mpi];
 
   # TODO: May be necessary to change kernel for cgroups swap support
   # If so, set the MEMCG_SWAP kernel parameter to 1 and change the kernel
@@ -67,7 +66,8 @@
   };
 
   # Setup cirrus
-  environment.systemPackages = [pkgs.glusterfs];
+  environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
+
   fileSystems."/mnt/cirrus" = {
     device = lib.mkDefault "luz:/cirrus";
     fsType = "glusterfs";
