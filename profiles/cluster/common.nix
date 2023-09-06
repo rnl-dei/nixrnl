@@ -92,46 +92,52 @@
   # Cluster users rarely need AFS to work.
   # TODO: this is somewhat destructive, as only one authorizedKeysCommand can be specified.
   # Consider building some sort of configurable authorizedKeysCommand and using it everywhere instead.
-  services.openssh.authorizedKeysCommand = pkgs.writeShellScript "cat-cirrus-authorized-keys.sh" ''
-    #!${pkgs.bash}/bin/bash
-    # Outputs authorized_keys for a user from their cirrus (GlusterFS) home
-    # Arguments: <username>
+  services.openssh.authorizedKeysCommand = "/etc/ssh/cat-cirrus-authorized-keys.sh %u";
 
-    # This script is meant to be run as root by OpenSSH using the AuthorizedKeyCommand option
-    # It will be run **after** the usual authorized_keys files are checked,
-    # and its output (stdout) is interpreted as the contents of yet another authorized_keys file
+  environment.etc."ssh/cat-cirrus-authorized-keys.sh" = {
+    mode = "0555";
+    source = pkgs.writeShellScript "cat-cirrus-authorized-keys.sh" ''
+      #!${pkgs.bash}/bin/bash
+      # Outputs authorized_keys for a user from their cirrus (GlusterFS) home
+      # Arguments: <username>
 
-    # WARNING: THE USER WAS NOT AUTHENTICATED AT ALL YET, THAT'S THE WHOLE POINT
-    # ...so careful with what you do here
+      # This script is meant to be run as root by OpenSSH using the AuthorizedKeyCommand option
+      # It will be run **after** the usual authorized_keys files are checked,
+      # and its output (stdout) is interpreted as the contents of yet another authorized_keys file
 
-    if [ "$#" -ne 1 ]; then
-        echo "Usage: $0 <username>" 1>&2
-        exit 1
-    fi
+      # WARNING: THE USER WAS NOT AUTHENTICATED AT ALL YET, THAT'S THE WHOLE POINT
+      # ...so careful with what you do here
 
-    # users can login using "name.lastname" or something instead of istxxxxx
-    USER="$(id -u --name "$1")" || exit 1
+      if [ "$#" -ne 1 ]; then
+          echo "Usage: $0 <username>" 1>&2
+          exit 1
+      fi
 
-    check_file_perms() {
-        local file="$1"
+      # users can login using "name.lastname" or something instead of istxxxxx
+      USER="$(${pkgs.coreutils}/bin/id -u --name "$1")" || exit 1
 
-        [ -f "$file" ] \
-                && [ "$(stat -c '%U' "$1")" = "$USER" ] \
-                && [ "$(stat -c '%a' "$1")" = "600" ]
-    }
+      check_file_perms() {
+          local file="$1"
 
-    if [[ "$USER" =~ ^ist[0-9]+$ ]]; then
-        # Format: /mnt/cirrus/users/Y/Z/istxxxxyz
-        Y=''${USER:(-2):1}
-        Z=''${USER:(-1):1}
-        GLUSTER_HOME="/mnt/cirrus/users/$Y/$Z/$USER"
+          [ -f "$file" ] \
+                  && [ "$(${pkgs.coreutils}/bin/stat -c '%U' "$1")" = "$USER" ] \
+                  && [ "$(${pkgs.coreutils}/bin/stat -c '%a' "$1")" = "600" ]
+      }
 
-        for file in $GLUSTER_HOME/.ssh/authorized_keys{,2}; do
-                if check_file_perms "$file"; then
-                        cat "$file"
-                fi
-        done
-    fi
-  '';
+      if [[ "$USER" =~ ^ist[0-9]+$ ]]; then
+          # Format: /mnt/cirrus/users/Y/Z/istxxxxyz
+          Y=''${USER:(-2):1}
+          Z=''${USER:(-1):1}
+          GLUSTER_HOME="/mnt/cirrus/users/$Y/$Z/$USER"
+
+          for file in $GLUSTER_HOME/.ssh/authorized_keys{,2}; do
+                  if check_file_perms "$file"; then
+                          ${pkgs.coreutils}/bin/cat "$file"
+                  fi
+          done
+      fi
+    '';
+  };
+
   services.openssh.authorizedKeysCommandUser = "root";
 }
