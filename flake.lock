@@ -218,11 +218,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1692699014,
-        "narHash": "sha256-4JYRlWIM2s4+cTW/TUjB/uGZLsENC6Mme1qK79pNovo=",
+        "lastModified": 1693919944,
+        "narHash": "sha256-1KWcK0HgW4Cf3r9H0K70H/PJmy/9dT1RmBF3qM5EgG8=",
         "ref": "refs/heads/master",
-        "rev": "62fdf122b2054502bbc7b6736bd133a6a4412eeb",
-        "revCount": 3,
+        "rev": "2db88595c7ae81ca845d3ffa27d130386b6e394f",
+        "revCount": 4,
         "type": "git",
         "url": "ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config"
       },
