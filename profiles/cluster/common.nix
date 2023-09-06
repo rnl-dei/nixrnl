@@ -140,4 +140,15 @@
   };
 
   services.openssh.authorizedKeysCommandUser = "root";
+
+  # Likewise, have the openssh *client* use keys stored in cirrus
+  programs.ssh.extraConfig = ''
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_rsa
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_ecdsa
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_ecdsa_sk
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_ed25519
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_ed25519_sk
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_xmss
+    IdentityFile ''${CLUSTER_HOME}/.ssh/id_dsa
+  '';
 }
