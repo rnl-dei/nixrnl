@@ -11,7 +11,7 @@
     ./ist-shell.nix
     ./cluster/client.nix
     ./graphical/labs.nix
-    ./containers/podman.nix
+    ./containers/podman/rootless.nix
     ./software/labs.nix
   ];
 

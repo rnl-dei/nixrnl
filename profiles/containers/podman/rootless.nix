@@ -2,7 +2,6 @@
   imports = [./common.nix];
 
   virtualisation = {
-    oci-containers.backend = "podman";
     containers.storage.settings = {
       storage = {
         driver = "overlay";
@@ -13,10 +12,7 @@
       };
     };
 
-    podman = {
-      enable = true;
-      dockerCompat = true;
-    };
+    podman.dockerCompat = true;
   };
 
   # Allow podman if not root
