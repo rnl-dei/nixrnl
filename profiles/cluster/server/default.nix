@@ -58,18 +58,18 @@ in {
 
   # Limit individual user's memory usage agressively
   # This is a heavily shared machine
+  # Overrides limits from profile/ist-shell
   # TODO: move to somewhere where it can be shared with nexus and other heavily shared machines.
-  systemd.slices."user-" = {
-    sliceConfig = {
-      # Set a low-ball soft limit on memory usage.
-      # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
-      MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
+  systemd.slices."user-".sliceConfig = {
+    # Set a low-ball soft limit on memory usage.
+    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
+    MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
 
-      # For the hard memory limit, we give more leeway.
-      MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
-    };
+    # For the hard memory limit, we give more leeway.
+    MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
 
-    # user-.slice does not exist, the settings must be stored under user-.slice.d/overrides.conf (a "drop-in" file) for this to work.
-    overrideStrategy = "asDropin";
+    # Prevent fork-bombs
+    TasksMax = 384; # 4096 is too much in a low-spec machine
+    # If the value is set too high, OOM killer will kick in first and leave the machine sluggish (not impossible to recover, but still annoying).
   };
 }
