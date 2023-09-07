@@ -126,7 +126,7 @@
     sliceConfig = {
       # @ist189409's computer had ~1600 tasks in /user.slice
       # This ought to be enough to accomodate any not-too-unreasonable workload, while stopping fork bombs.
-      TasksMax = 4096;
+      TasksMax = lib.mkDefault 4096;
     };
 
     # user-.slice does not exist, the settings must be stored under user-.slice.d/overrides.conf (a "drop-in" file) for this to work.
