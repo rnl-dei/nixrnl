@@ -29,4 +29,20 @@
     ################################################################################
 
   '';
+
+  # This machine sees more users, and is low-spec. Must tighten resource limits.
+  # Overrides limits from profile/ist-shell
+  # TODO: move to somewhere where it can be shared with borg(cluster server) and other heavily shared machines.
+  systemd.slices."user-".sliceConfig = {
+    # Set a low-ball soft limit on memory usage.
+    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
+    MemoryHigh = "6%"; # 8GB * 5% ≃ 400MB
+
+    # For the hard memory limit, we give more leeway.
+    MemoryMax = "15%"; # 8GB * 15% ≃ 1.2GB
+
+    # Prevent fork-bombs
+    TasksMax = 1024; # 4096 is too much in a low-spec machine
+    # If the value is set too high, OOM killer will kick in first and leave the machine sluggish (not impossible to recover, but still annoying).
+  };
 }

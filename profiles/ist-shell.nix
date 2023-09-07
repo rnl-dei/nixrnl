@@ -128,7 +128,7 @@
       # This ought to be enough to accomodate any not-too-unreasonable workload, while stopping fork bombs.
       TasksMax = 4096;
     };
-    
+
     # user-.slice does not exist, the settings must be stored under user-.slice.d/overrides.conf (a "drop-in" file) for this to work.
     overrideStrategy = "asDropin";
   };
