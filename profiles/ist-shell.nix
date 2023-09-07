@@ -114,21 +114,23 @@
   systemd.slices."user".sliceConfig = {
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
     # Note: CPUQuota is not set here because percentages are relative to one CPU, not the total amount of resources
+    # Also, DO NOT SET CPUQUOTA WITHOUT TESTING IT. It made borg slow down to unacceptable levels.
+    # See https://papyrus.rnl.tecnico.ulisboa.pt/rnl/pl/kuen4nzcd3dsx8f1tqugsg5fba for context.
 
-    CPUWeight = 50; # default is 100
-    IOWeight = 50; # default is 100
+    CPUWeight = 90; # default is 100
+    IOWeight = 90; # default is 100
   };
 
-  # Ensure one user can't prevent the others from working
-  # These settings constrain resources consumed by *each* user (each user-<UID>.slice),
-  # after applying constrains higher in the hierarchy
-  systemd.slices."user-".sliceConfig = {
-    # Set a low-ball soft limit on memory usage.
-    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
-    MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
-
-    # For the hard memory limit, we give more leeway.
-    MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
+  # Prevent fork bombs
+  systemd.slices."user-" = {
+    sliceConfig = {
+      # @ist189409's computer had ~1600 tasks in /user.slice
+      # This ought to be enough to accomodate any not-too-unreasonable workload, while stopping fork bombs.
+      TasksMax = 4096;
+    };
+    
+    # user-.slice does not exist, the settings must be stored under user-.slice.d/overrides.conf (a "drop-in" file) for this to work.
+    overrideStrategy = "asDropin";
   };
 
   # The root user should be able to perform maintenance:
@@ -139,7 +141,7 @@
     MemoryMax = "infinity";
 
     # give more priority to root CPU/IO
-    CPUWeight = 200; # default is 100
-    IOWeight = 200; # default is 100
+    CPUWeight = 110; # default is 100
+    IOWeight = 110; # default is 100
   };
 }
