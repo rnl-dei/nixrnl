@@ -114,6 +114,8 @@
   systemd.slices."user".sliceConfig = {
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
     # Note: CPUQuota is not set here because percentages are relative to one CPU, not the total amount of resources
+    # Also, DO NOT SET CPUQUOTA WITHOUT TESTING IT. It made borg slow down to unacceptable levels.
+    # See https://papyrus.rnl.tecnico.ulisboa.pt/rnl/pl/kuen4nzcd3dsx8f1tqugsg5fba for context.
 
     CPUWeight = 90; # default is 100
     IOWeight = 90; # default is 100

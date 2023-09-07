@@ -50,10 +50,6 @@
 
   rnl.labels.location = "zion";
 
-  # Crack down on compute-heavy tasks from users
-  # reserves ~50% of compute-power for system processes
-  systemd.slices."user".sliceConfig.CPUQuota = "${toString (config.rnl.virtualisation.guest.vcpu * 100 / 50)}%";
-
   rnl.virtualisation.guest = {
     description = "Cluster Server";
     createdBy = "nuno.alves";

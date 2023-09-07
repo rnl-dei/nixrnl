@@ -48,10 +48,6 @@
     };
   };
 
-  # Prevent users from using up all the compute
-  # reserves 10% of compute power for system processes
-  systemd.slices."user".sliceConfig.CPUQuota = "${toString (config.rnl.virtualisation.guest.vcpu * 100 / 90)}%";
-
   rnl.labels.location = "zion";
 
   rnl.virtualisation.guest = {
