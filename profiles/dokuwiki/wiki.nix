@@ -51,6 +51,7 @@
       ditaa
       edittable
       move
+      note
       wrap
     ];
     acl = [
