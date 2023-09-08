@@ -45,7 +45,13 @@
       # Plugins
     };
     templates = with pkgs.dokuwikiTemplates; [bootstrap3];
-    plugins = with pkgs.dokuwikiPlugins; [blockquote columns edittable wrap];
+    plugins = with pkgs.dokuwikiPlugins; [
+      blockquote
+      columns
+      edittable
+      move
+      wrap
+    ];
     acl = [
       {
         page = "*";
