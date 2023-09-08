@@ -50,6 +50,7 @@
       columns
       ditaa
       edittable
+      graphviz
       move
       note
       wrap
