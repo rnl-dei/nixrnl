@@ -48,6 +48,7 @@
     plugins = with pkgs.dokuwikiPlugins; [
       blockquote
       columns
+      ditaa
       edittable
       move
       wrap
