@@ -67,6 +67,7 @@
         requests
         virtualenv
       ]))
+    conda
   ];
 
   # The following two lines are needed for the C++ headers to be found outside a
