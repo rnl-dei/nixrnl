@@ -11,6 +11,7 @@ The infrastructure is designed to support the various components and services re
 
 - [Table of Contents](#table-of-contents)
 - [Goals](#goals)
+- [How to create a live USB/ISO?](#how-to-create-a-live-usbiso)
 - [How to add a new host?](#how-to-add-a-new-host)
 - [How to deploy a new NixOS machine?](#how-to-deploy-a-new-nixos-machine)
 - [How to update a machine configuration?](#how-to-update-a-machine-configuration)
@@ -29,7 +30,24 @@ The infrastructure is designed to support the various components and services re
 - **Secure**: The infrastructure should be secure and secrets should be encrypted.
 - **Scalable**: The infrastructure should be scalable and easy to extend.
 
-## How to add a new host?
+## How to create a live USB/ISO?
+
+To create an ISO from a host configuration, you should run the following command:
+```bash
+nix build .#nixosConfigurations.<nixosConfiguration>.config.system.build.isoImage
+```
+
+Description of the arguments:
+- `<nixosConfiguration>`: The name of the NixOS configuration to deploy. This is the name of the nixosConfiguration output in the `flake.nix` file.
+
+You may want to use a nixosConfiguration from the `hosts/live` directory, as these configurations are designed to be used in live environments.
+
+After the ISO is built, you can write it to a USB drive using the following command:
+```bash
+dd if=result/iso/<nixosConfiguration>.iso of=/dev/sdX status=progress
+```
+
+# How to add a new host?
 
 To add a new host, you should create a new file in the `hosts` directory with the hostname of the machine (e.g. if the hostname is `example` the file should be named `example.nix`). \
 _This file should import one profile of each category (`core`, `filesystems`, `os`, `type`)._
