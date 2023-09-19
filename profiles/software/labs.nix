@@ -55,6 +55,7 @@
 
     # OC
     papi
+    gnuplot
 
     # PAva
     julia
