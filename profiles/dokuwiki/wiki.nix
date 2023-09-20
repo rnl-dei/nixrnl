@@ -48,6 +48,7 @@
     plugins = with pkgs.dokuwikiPlugins; [
       blockquote
       columns
+      color
       ditaa
       edittable
       graphviz
