@@ -37,7 +37,7 @@
   # Slurm needs to know how to detect GPUs
   # TODO: consider using oneapi for all nodes, as it should detect *any* GPU
   services.slurm.extraConfigPaths = [
-    (pkgs.writeText "gres.conf" ''
+    (pkgs.writeTextDir "gres.conf" ''
       # Automatically detect NVIDIA GPUs with NVIDIA Management Library
       AutoDetect=nvml
     '')
