@@ -35,6 +35,9 @@
 
   users.users.root.hashedPassword = "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
 
+  # Disable immediate shutdown when power button is pressed
+  services.logind.extraConfig = "HandlePowerKey=ignore";
+
   # Disable Network Manager
   networking.networkmanager.enable = false;
 
