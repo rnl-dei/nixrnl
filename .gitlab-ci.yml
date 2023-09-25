@@ -1,0 +1,9 @@
+---
+image:
+  name: "nixos/nix"
+
+syntax:
+  script:
+    - nix flake check --extra-experimental-features "nix-command flakes"
+
+
