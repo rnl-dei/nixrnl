@@ -8,6 +8,8 @@
     labs
   ];
 
+  networking.enableIPv6 = false;
+
   rnl.storage.disks.root = ["/dev/nvme0n1"];
   rnl.windows-labs.partition = "/dev/nvme0n1p2";
 
