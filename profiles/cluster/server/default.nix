@@ -61,12 +61,8 @@ in {
   # Overrides limits from profile/ist-shell
   # TODO: move to somewhere where it can be shared with nexus and other heavily shared machines.
   systemd.slices."user-".sliceConfig = {
-    # Set a low-ball soft limit on memory usage.
-    # When this limit is exceeded, memory used by user processes will be reclaimed aggressively
-    MemoryHigh = "6%"; # 2GB * 5% ≃ 100MB
-
-    # For the hard memory limit, we give more leeway.
-    MemoryMax = "15%"; # 2GB * 15% ≃ 300MB
+    # MemoryHigh triggers aggressive memory reclamation, and only seems to work well with bursty workloads.
+    MemoryMax = "13%"; # 2GB * 12% ≃ 260MB
 
     # Prevent fork-bombs
     TasksMax = 384; # 4096 is too much in a low-spec machine
