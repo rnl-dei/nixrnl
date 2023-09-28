@@ -31,6 +31,14 @@ in {
       enableACME = lib.mkDefault true;
       forceSSL = lib.mkDefault true;
     };
+    poolConfig = {
+      "pm" = "dynamic";
+      "pm.max_children" = 75;
+      "pm.start_servers" = 10;
+      "pm.min_spare_servers" = 5;
+      "pm.max_spare_servers" = 20;
+      "pm.max_requests" = 500;
+    };
   };
 
   services.phpfpm.pools.moodle.group = lib.mkForce config.services.nginx.group;
