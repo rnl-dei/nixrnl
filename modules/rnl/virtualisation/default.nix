@@ -143,7 +143,7 @@ with lib; let
       type = types.nullOr (types.listOf types.path);
       default = [];
       description = "List of CD-ROMs. Support up to 4 CD-ROMs.";
-      example = "[ \"/path/to/image.iso\" \"http://example.com/image2.iso\" ]";
+      example = [ "/path/to/image.iso" config.rnl.virtualisation.images.nixos-live ];
     };
 
     interfaces = mkOption {
