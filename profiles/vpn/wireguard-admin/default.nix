@@ -7,7 +7,7 @@
   listenPort = 34266;
 
   outInterface = config.networking.nat.externalInterface;
-  hosts = config.rnl.vpn.wireguard-admin.hosts;
+  hosts = import ./hosts.nix;
 
   # Allowed IPs will look like this:
   # 192.168.20.<lastOctect> fd92:3315:9e43:c490::<lastOctect>/128 (plus extra ips for multicast)
@@ -29,7 +29,7 @@ in {
   };
 
   age.secrets."wireguard-admin-private.key" = {
-    file = ../../secrets/wireguard-admin-private-key.age;
+    file = ../../../secrets/wireguard-admin-private-key.age;
     mode = "0400";
     owner = "root";
   };
