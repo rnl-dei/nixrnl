@@ -114,7 +114,7 @@
         ++ [
           {networking.hostName = hostname;}
           hostPath
-          inputs.rnl-config.nixosModules.rnl
+          #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
           inputs.agenix.nixosModules.age
         ]

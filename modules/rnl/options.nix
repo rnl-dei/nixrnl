@@ -151,21 +151,5 @@ with lib; {
         description = "VLAN for Portateis network";
       };
     };
-
-    vpn.wireguard-admin.hosts = mkOption {
-      default = [];
-      type = types.listOf (types.submodule {
-        options = {
-          publicKey = mkOption {
-            type = types.str;
-            description = "Public key of the host";
-          };
-          lastOctect = mkOption {
-            type = types.int;
-            description = "Last octect of the host IP";
-          };
-        };
-      });
-    };
   };
 }
