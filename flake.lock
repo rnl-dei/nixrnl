@@ -211,26 +211,6 @@
         "type": "github"
       }
     },
-    "rnl-config": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1693919944,
-        "narHash": "sha256-1KWcK0HgW4Cf3r9H0K70H/PJmy/9dT1RmBF3qM5EgG8=",
-        "ref": "refs/heads/master",
-        "rev": "2db88595c7ae81ca845d3ffa27d130386b6e394f",
-        "revCount": 4,
-        "type": "git",
-        "url": "ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config"
-      }
-    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -238,7 +218,6 @@
         "flake-programs-sqlite": "flake-programs-sqlite",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs",
-        "rnl-config": "rnl-config",
         "unstable": "unstable"
       }
     },
