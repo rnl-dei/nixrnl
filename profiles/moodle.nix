@@ -33,7 +33,14 @@ in {
     };
   };
 
-  services.phpfpm.pools.moodle.group = lib.mkForce config.services.nginx.group;
+  services.phpfpm.pools.moodle = {
+    phpOptions = ''
+      # Increase the maximum upload size
+      upload_max_filesize = 100M
+      post_max_size = 100M
+    '';
+    group = lib.mkForce config.services.nginx.group;
+  };
 
   services.nginx.virtualHosts.moodle = {
     default = lib.mkDefault true;
