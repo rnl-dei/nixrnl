@@ -14,6 +14,9 @@
     syntaxhighlighter
     mergeusers
   ];
+
+  # Max upload size
+  maxUploadSize = "100M";
 in {
   imports = with profiles; [webserver];
 
@@ -36,8 +39,8 @@ in {
   services.phpfpm.pools.moodle = {
     phpOptions = ''
       # Increase the maximum upload size
-      upload_max_filesize = 100M
-      post_max_size = 100M
+      upload_max_filesize = ${maxUploadSize}
+      post_max_size = ${maxUploadSize}
     '';
     group = lib.mkForce config.services.nginx.group;
   };
@@ -48,6 +51,10 @@ in {
     serverAliases = [config.networking.fqdn];
     root = "${config.services.moodle.package}/share/moodle";
     inherit (config.services.moodle.virtualHost) enableACME forceSSL addSSL onlySSL;
+
+    extraConfig = ''
+      client_max_body_size ${maxUploadSize};
+    '';
 
     locations = {
       "/".index = "index.php";
