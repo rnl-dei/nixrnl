@@ -15,6 +15,8 @@
     ./software/labs.nix
   ];
 
+  programs.nix-ld.enable = true;
+
   programs.chromium = {
     enable = true;
     extraOpts = {
