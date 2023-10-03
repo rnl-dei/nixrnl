@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octect used: 70
+# Last octect used: 71
 [
   {
     # André Aparício
@@ -350,5 +350,10 @@
     # André Romão - macbook
     publicKey = "oK4JjEb1VdKEWT+M0KJzmIJlGJlIf6xrunJuulTwCDM=";
     lastOctect = 70;
+  }
+  {
+    # Rodrigo Bruno
+    publicKey = "IGDTJCCI0NlvsuxFwTGD9wSItdhDc0XSA2xxC0IMeAA=";
+    lastOctect = 71;
   }
 ]
