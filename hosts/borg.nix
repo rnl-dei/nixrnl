@@ -54,6 +54,7 @@
     description = "Cluster Server";
     createdBy = "nuno.alves";
 
+    memory = 8192; # 8GiB
     interfaces = [{source = "dmz";}];
     disks = [{source.dev = "/dev/zvol/dpool/volumes/borg";}];
   };
