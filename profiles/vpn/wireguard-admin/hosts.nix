@@ -312,8 +312,8 @@
     lastOctect = 59;
   }
   {
-    # Diogo Santos - laptop (windows)
-    publicKey = "EFMFmXOSbsnu7XzWtDkzoKmDo5PCFVzBorxBf71AmEg=";
+    # Diogo Santos - laptop
+    publicKey = "MflsLrG7sqJq2pAfKvwI7BgExHeGYqCYhGzHdOGEqWA=";
     lastOctect = 60;
   }
   {
