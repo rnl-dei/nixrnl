@@ -28,6 +28,7 @@ in {
   "host-keys/lga.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
+  "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
 
   # Secrets
