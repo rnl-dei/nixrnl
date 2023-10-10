@@ -23,6 +23,10 @@
     # Required for command-not-found
     flake-programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
     flake-programs-sqlite.inputs.nixpkgs.follows = "nixpkgs";
+
+    # IST Delegate Election
+    ist-delegate-election.url = "github:diogotcorreia/ist-delegate-election";
+    ist-delegate-election.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {

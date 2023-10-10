@@ -1,8 +1,4 @@
-{
-  profiles,
-  config,
-  ...
-}: {
+{profiles, ...}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -10,6 +6,7 @@
     type.vm
 
     webserver
+    ist-delegate-election
   ];
 
   # Networking
