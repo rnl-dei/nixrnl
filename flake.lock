@@ -106,6 +106,24 @@
         "type": "github"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1694529238,
+        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -124,6 +142,27 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "ist-delegate-election": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1696939105,
+        "narHash": "sha256-5komcFSr6ZiybIHFlYT7pAcERDT9ljclDQRDdWgSxwU=",
+        "owner": "diogotcorreia",
+        "repo": "ist-delegate-election",
+        "rev": "e89e5d89f9396008dffc8015a7a62b3d9da61d4d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "diogotcorreia",
+        "repo": "ist-delegate-election",
         "type": "github"
       }
     },
@@ -216,9 +255,25 @@
         "agenix": "agenix",
         "disko": "disko",
         "flake-programs-sqlite": "flake-programs-sqlite",
+        "ist-delegate-election": "ist-delegate-election",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs",
         "unstable": "unstable"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     },
     "treefmt-nix": {
