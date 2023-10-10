@@ -38,6 +38,8 @@ in {
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
   "munge-key.age".publicKeys = users ++ [borg labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
+  "vault-cer.age".publicKeys = users ++ [vault];
+  "vault-key.age".publicKeys = users ++ [vault];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "windows-labs-image-key.age".publicKeys = users ++ [labs];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];

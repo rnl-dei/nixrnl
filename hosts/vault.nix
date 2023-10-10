@@ -57,6 +57,26 @@
 
   services.vault.extraSettingsPaths = [config.age.secrets."vault-storage.hcl".path];
 
+  # Set Vault TLS certs
+  age.secrets."vault.cer" = {
+    file = ../secrets/vault-cer.age;
+    mode = "0400";
+    owner = config.services.nginx.user;
+    group = config.services.nginx.group;
+  };
+
+  age.secrets."vault.key" = {
+    file = ../secrets/vault-key.age;
+    mode = "0400";
+    owner = config.services.nginx.user;
+    group = config.services.nginx.group;
+  };
+
+  services.nginx.virtualHosts.vault = {
+    sslCertificate = config.age.secrets."vault.cer".path;
+    sslCertificateKey = config.age.secrets."vault.key".path;
+  };
+
   # Disable this since we're not using it yet
   services.keepalived.enable = false;
 
