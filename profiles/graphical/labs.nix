@@ -70,4 +70,27 @@
   };
 
   programs.dconf.enable = true;
+
+  environment.shellInit = ''
+    # When users first login into the new NixOS in the labs,
+    # clean up their home configurations.
+    if echo "$USER" | grep -E "^ist[0-9]+$" 2>&1 >/dev/null; then
+      if ! [ -e ~/.config/rnl-home-config-1.0 ]; then
+        (
+            set -e # bail on first error
+
+            echo "Old config detected"
+            echo "Backing up old ~/.config"
+            mv ~/.config ~/".config-$(date +"%F").bak"
+
+            echo "Resetting dconf parameters"
+            dconf reset -f /org/
+
+            echo "Saving state"
+            mkdir -p ~/.config
+            touch ~/.config/rnl-home-config-1.0
+        ) > ~/"rnl-config-migrate-$(date +"%F").log" 2>&1
+      fi
+    fi
+  '';
 }
