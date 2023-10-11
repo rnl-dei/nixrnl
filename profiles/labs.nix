@@ -53,8 +53,14 @@
   # Disable firewall, to simplify everyone's life
   networking.firewall.enable = lib.mkForce false;
 
+  age.secrets."netrc" = {
+    file = ../secrets/open-sessions-key.age;
+    mode = "0400";
+    path = "/etc/open-sessions/netrc"; 
+  };
+
   # RNL Virt / Reboot2
-  environment.systemPackages = with pkgs; [rnl-virt reboot2];
+  environment.systemPackages = with pkgs; [rnl-virt reboot2 opensessions-scripts];
   virtualisation.libvirtd.enable = true;
 
   # Bootloader

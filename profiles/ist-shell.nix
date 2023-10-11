@@ -92,10 +92,12 @@
   security.pam.services.login.text = lib.mkDefault (lib.mkAfter ''
     session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
   '');
   security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter ''
     session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
   '');
 
   # Allow SSH using istID

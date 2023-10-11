@@ -36,7 +36,8 @@ in {
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
-  "munge-key.age".publicKeys = users ++ [borg labs];
+  "munge-key.age".publicKeys = users ++ [borg labs]; 
+  "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "windows-labs-image-key.age".publicKeys = users ++ [labs];
