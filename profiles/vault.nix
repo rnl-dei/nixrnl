@@ -25,9 +25,7 @@
 
   services.nginx.virtualHosts.vault = {
     serverName = lib.mkDefault "${config.networking.fqdn}";
-    # FIXME: This should be enabled when the CA is ready
-    #enableACME = true;
-    #addSSL = true;
+    addSSL = true;
     locations."/" = {
       proxyPass = "http://vault";
     };
