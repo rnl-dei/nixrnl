@@ -153,11 +153,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1697301051,
-        "narHash": "sha256-9G9Wnn6qgMH7mLMXWuNfxFJqU7yYhxiaK6FP/RgjRCo=",
+        "lastModified": 1698274071,
+        "narHash": "sha256-H0AIdajMW61P6gMt/cbr0DAwhvnNrRlc1yOhPhjKxSI=",
         "owner": "diogotcorreia",
         "repo": "ist-delegate-election",
-        "rev": "a658be3b2b4e8d4ed7703e2dfac2c7ff579c485c",
+        "rev": "d26aa6d58b3398bc93cc0787a4e027fcefd49614",
         "type": "github"
       },
       "original": {
