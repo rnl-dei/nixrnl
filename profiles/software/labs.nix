@@ -107,6 +107,8 @@
         })
         pylint
         lizard
+        pygame
+        pysimplegui       
 
         # PRI
         nltk
