@@ -83,7 +83,20 @@
       krb5_server = ${config.krb5.realms.${config.krb5.libdefaults.default_realm}.default_domain}
     '';
   };
-
+  
+  systemd.services."sessioncontrol" = {
+    description = "RNL session control";
+    requires = ["network-online.target"];
+    after = ["network.target" "network-online.target"];
+    serviceConfig = {
+      Type = "simple";
+      RemainAfterExit = true;      
+      ExecStart = "${pkgs.opensessions-scripts}/bin/session-control.sh boot";
+      ExecStop = "${pkgs.opensessions-scripts}/bin/session-control.sh shutdown";
+    };   
+    wantedBy = ["multi-user.target"]; 
+  };
+ 
   # Setup PAM login
   security.pam.services.login.startSession = true;
   security.pam.krb5.enable = false; # Use SSSD instead

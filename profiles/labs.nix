@@ -60,7 +60,7 @@
   };
 
   # RNL Virt / Reboot2
-  environment.systemPackages = with pkgs; [rnl-virt reboot2 opensessions-scripts];
+  environment.systemPackages = with pkgs; [rnl-virt reboot2];
   virtualisation.libvirtd.enable = true;
 
   # Bootloader
