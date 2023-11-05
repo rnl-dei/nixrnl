@@ -5,6 +5,9 @@
   logger,
   system-sendmail,
   curl,
+  makeWrapper,
+  hostname,
+  iputils,
   ...
 }:
 stdenv.mkDerivation rec {
@@ -17,13 +20,19 @@ stdenv.mkDerivation rec {
     bash
     logger
     system-sendmail
-    curl    
+    curl 
+    hostname
+    iputils   
   ];
+  
+  nativeBuildInputs = [makeWrapper];  
 
   installPhase = ''
     mkdir -p $out/bin
     cp session-control.sh $out/bin
     chmod +x $out/bin/session-control.sh
+    wrapProgram $out/bin/session-control.sh \
+	--prefix PATH : ${lib.makeBinPath buildInputs}
   '';
 
   meta = with lib; {

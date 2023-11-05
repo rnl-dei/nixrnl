@@ -172,13 +172,13 @@ pwd
 if test "$1" = "boot"; then
     logInfo "on boot"
     wait_net
-    send_request boot
+    send_request "boot"
 elif test "$1" = "shutdown"; then
     logInfo "on shutdown"
-    send_request shutdown
+    send_request "shutdown"
 elif test "$1" = "clean"; then
     logInfo "clean"
-    send_request clean
+    send_request "clean"
 else
     echo "$VAR_VALUES"
 
