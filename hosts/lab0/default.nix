@@ -6,10 +6,9 @@
     type.physical
 
     labs
-    cluster.tests
   ];
 
   rnl.storage.disks.root = ["/dev/sda"];
 
-  rnl.labels.location = "inf1-p01-estaleiro";
+  rnl.labels.location = "inf1-p2-lab0";
 }
