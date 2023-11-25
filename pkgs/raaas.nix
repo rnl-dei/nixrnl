@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
 
   src = fetchzip {
     url = "https://ftp.rnl.tecnico.ulisboa.pt/pub/rnl-pkgs/${pname}/v${version}.zip";
-    hash = "";
+    hash = "sha256-LYSb2TvDGyATl2f/VTmRXkb8k20JZIA0Y6UDPY5LUTQ=";
   };
 
   installPhase = ''
