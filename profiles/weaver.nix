@@ -13,7 +13,7 @@
   # Weaver
   services.nginx.virtualHosts.weaver = {
     default = true;
-    serverName = lib.mkDefault "weaver.${config.rnl.domain}";
+    serverName = "weaver.${config.rnl.domain}";
     enableACME = true;
     addSSL = true;
     root = "/var/www";
@@ -24,11 +24,20 @@
           dashy = pkgs.dashy.override {inherit configFile;};
         in "${dashy}/share/dashy";
       };
-      "~ /(doku)?wiki" = {return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}";};
-      "/raaas" = {tryFiles = "$uri $uri/ /index.php";};
+      "~ ^/(doku)?wiki" = {return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}";};
+      "~ ^/raaas" = {return = "301 $scheme://${config.services.nginx.virtualHosts.raaas.serverName}";};
     };
   };
 
+  # RAaaS
+  services.nginx.virtualHosts.raaas = {
+    serverName = "raaas.weaver.${config.rnl.domain}";
+    enableACME = true;
+    addSSL = true;
+    locations."/".root = "${pkgs.raaas}/share/raaas";
+  };
+
+  # Wiki
   services.nginx.virtualHosts.wiki = {
     serverName = "wiki.${config.rnl.domain}";
     enableACME = true;
