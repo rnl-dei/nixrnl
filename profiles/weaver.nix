@@ -24,13 +24,15 @@
           dashy = pkgs.dashy.override {inherit configFile;};
         in "${dashy}/share/dashy";
       };
-      "~ ^/(doku)?wiki" = {return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}";};
+      "~ ^/(doku)?wiki([^\\r\\n]*)$" = {
+        return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}$2$is_args$args";
+      };
       "~ ^/raaas" = {return = "301 $scheme://${config.services.nginx.virtualHosts.raaas.serverName}";};
-      "~ /zeus(.*)$" = {
+      "~ ^/zeus(.*)$" = {
         # TODO: Move srx-status-page to a package
         alias = "/var/www/zeus/htdocs/$1";
         extraConfig = ''
-          location ~ /zeus/submit {
+          location ~ ^/zeus/submit {
             alias /var/www/zeus/submit.php;
             fastcgi_pass php;
           }
