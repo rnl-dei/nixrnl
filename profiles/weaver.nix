@@ -7,6 +7,7 @@
 }: {
   imports = with profiles; [
     webserver
+    phpfpm
     dokuwiki.wiki
   ];
 
@@ -16,7 +17,6 @@
     serverName = "weaver.${config.rnl.domain}";
     enableACME = true;
     addSSL = true;
-    root = "/var/www";
     locations = {
       "/" = {
         root = let
@@ -26,8 +26,28 @@
       };
       "~ ^/(doku)?wiki" = {return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}";};
       "~ ^/raaas" = {return = "301 $scheme://${config.services.nginx.virtualHosts.raaas.serverName}";};
+      "~ /zeus(.*)$" = {
+        # TODO: Move srx-status-page to a package
+        alias = "/var/www/zeus/htdocs/$1";
+        extraConfig = ''
+          location ~ /zeus/submit {
+            alias /var/www/zeus/submit.php;
+            fastcgi_pass php;
+          }
+        '';
+      };
     };
   };
+
+  services.phpfpm.pools.default.phpEnv.PATH = lib.makeBinPath [
+    # Packages required by SRX-Status-Page (/zeus)
+    pkgs.bash
+    pkgs.gnumake
+    pkgs.gnum4
+    pkgs.gawk
+    pkgs.coreutils
+    pkgs.diffutils
+  ];
 
   # RAaaS
   services.nginx.virtualHosts.raaas = {
