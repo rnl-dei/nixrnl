@@ -76,3 +76,16 @@ sections:
         icon: fas fa-keyboard
         url: https://rnl.tecnico.ulisboa.pt/labs-matrix/
         id: 2_1739_labmatrix
+  - name: Misc
+    icon: fas fa-microchip
+    items:
+      - title: Zeus Configuration
+        description: Zeus - RNL Router and Firewall configuration
+        icon: fas fa-network-wired
+        url: https://weaver.rnl.tecnico.ulisboa.pt/zeus
+        id: 0_1468_zeus
+      - title: RAaaS
+        description: RNL Artwork as a Service
+        icon: fas fa-palette
+        url: https://raaas.weaver.rnl.tecnico.ulisboa.pt
+        id: 1_1468_raaas
