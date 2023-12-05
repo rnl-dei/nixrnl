@@ -15,6 +15,9 @@
     };
   };
 
+  # Allow users to access the machine from outside the network
+  networking.firewall.enable = lib.mkForce false;
+
   users.motd = ''
 
     ################################################################################
