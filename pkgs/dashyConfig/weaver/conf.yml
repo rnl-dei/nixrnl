@@ -58,6 +58,11 @@ sections:
         icon: fab fa-google-drive
         url: https://drive.google.com/drive/u/1/folders/0AGzUuHnmfISrUk9PVA
         id: 2_1370_googledrive
+      - title: Vault
+        description: Secret manager
+        icon: si-vault
+        url: https://vault.rnl.tecnico.ulisboa.pt/
+        id: 3_1370_vault
   - name: System Monitoring
     icon: fas fa-monitor-heart-rate
     items:
