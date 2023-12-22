@@ -56,7 +56,7 @@
   age.secrets."netrc" = {
     file = ../secrets/open-sessions-key.age;
     mode = "0400";
-    path = "/etc/open-sessions/netrc"; 
+    path = "/etc/open-sessions/netrc";
   };
 
   # RNL Virt / Reboot2
