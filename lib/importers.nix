@@ -33,7 +33,7 @@
     *
     */
     dirPath: let
-      seive = file: type:
+      sieve = file: type:
       # Only rake `.nix` files or directories
         (type == "regular" && lib.hasSuffix ".nix" file) || (type == "directory");
 
@@ -50,7 +50,7 @@
           else rakeLeaves path;
       };
 
-      files = lib.filterAttrs seive (builtins.readDir dirPath);
+      files = lib.filterAttrs sieve (builtins.readDir dirPath);
     in
       lib.filterAttrs (n: v: v != {}) (lib.mapAttrs' collect files);
 in {
