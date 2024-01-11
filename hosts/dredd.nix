@@ -102,4 +102,18 @@
   };
 
   users.users.root.hashedPassword = "$6$q5qLU8WwsJfRTYGI$IlbfIYFhGS.Lozdd5Cund.7iKgGgdJzXMUCzitl4V.Q5VLR.Ow7sUsZda9hVwYpLHnFcVRGMG6V71omooyRI80";
+
+  # NFS
+  systemd.tmpfiles.rules = [
+    "d /mnt/data/cirrus/users 0775 nobody nogroup -"
+  ];
+  services.nfs.server = {
+    enable = true;
+    # allow borg and labs to mount cirrus
+    exports = ''
+      /mnt/data/cirrus 193.136.164.138(rw,sync,no_subtree_check,no_root_squash) 2001:690:2100:83::138(rw,sync,no_subtree_check,no_root_squash) 193.136.154.0/25(rw,sync,no_subtree_check) 2001:690:2100:84::0/64(rw,sync,no_subtree_check)
+    '';
+  };
+
+  networking.firewall.allowedTCPPorts = [2049];
 }

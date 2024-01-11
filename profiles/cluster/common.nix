@@ -69,9 +69,8 @@
   environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
 
   fileSystems."/mnt/cirrus" = {
-    device = lib.mkDefault "luz:/cirrus";
-    fsType = "glusterfs";
-    options = ["defaults" "backup-volfile-servers=lampada:meninx" "acl"];
+    device = lib.mkDefault "dredd:/mnt/data/cirrus";
+    fsType = "nfs";
   };
 
   environment.shellInit = ''
