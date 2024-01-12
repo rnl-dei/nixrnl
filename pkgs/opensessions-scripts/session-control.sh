@@ -184,6 +184,11 @@ else
 
     case "$PAM_TYPE" in
         "open_session")
+            # Ignore root logins via ssh
+            if [ "$USER_ID" = "root" ] && [ "$PAM_SERVICE" = "sshd" ]; then
+                exit 0
+            fi
+
             test -n "$HOME" && ls "$HOME" &> /dev/null
             if test -z "$HOME" || test -d "$HOME"; then
                 # 2018-11: send the request anyway if HOME is empty (happens on ttys on ubuntu -.-)

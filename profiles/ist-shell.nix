@@ -84,33 +84,18 @@
     '';
   };
 
-  systemd.services."sessioncontrol" = {
-    description = "RNL session control";
-    requires = ["network-online.target"];
-    after = ["network.target" "network-online.target"];
-    serviceConfig = {
-      Type = "simple";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.opensessions-scripts}/bin/session-control.sh boot";
-      ExecStop = "${pkgs.opensessions-scripts}/bin/session-control.sh shutdown";
-    };
-    wantedBy = ["multi-user.target"];
-  };
-
   # Setup PAM login
   security.pam.services.login.startSession = true;
   security.pam.krb5.enable = false; # Use SSSD instead
 
   # Get AFS ticket from Kerberos on login and ssh
-  security.pam.services.login.text = lib.mkDefault (lib.mkAfter ''
+  security.pam.services.login.text = lib.mkDefault (lib.mkOrder 1500 ''
     session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
   '');
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter ''
+  security.pam.services.sshd.text = lib.mkDefault (lib.mkOrder 1500 ''
     session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
     session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
   '');
 
   # Allow SSH using istID

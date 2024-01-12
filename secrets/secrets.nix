@@ -37,7 +37,7 @@ in {
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
   "munge-key.age".publicKeys = users ++ [borg labs];
-  "open-sessions-key.age".publicKeys = users ++ [labs borg nexus];
+  "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];

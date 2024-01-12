@@ -139,6 +139,28 @@
     };
   };
 
+  # Open Sessions
+  systemd.services."sessioncontrol" = {
+    description = "RNL session control";
+    requires = ["network-online.target"];
+    after = ["network.target" "network-online.target"];
+    serviceConfig = {
+      Type = "simple";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.opensessions-scripts}/bin/session-control.sh boot";
+      ExecStop = "${pkgs.opensessions-scripts}/bin/session-control.sh shutdown";
+    };
+    wantedBy = ["multi-user.target"];
+  };
+
+  # Add after run ist-shell scripts
+  security.pam.services.login.text = lib.mkDefault (lib.mkOrder 2000 ''
+    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
+  '');
+  security.pam.services.sshd.text = lib.mkDefault (lib.mkOrder 2000 ''
+    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
+  '');
+
   # Windows Deploy
   rnl.windows-labs = {
     enable = true;
