@@ -283,7 +283,7 @@
   }
   {
     # Diogo Cardoso - oppenheimer (desktop)
-    publicKey = "8ciJuqRgdAjljSeFQEhG7mp6jg4NshtDTHcx06llnHw=";
+    publicKey = "C/uHKderjPpKytJwFIe1l9CtEA0+JaGvnziFRKXwgR4=";
     lastOctect = 52;
   }
   {
