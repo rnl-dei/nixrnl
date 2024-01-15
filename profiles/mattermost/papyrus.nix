@@ -20,6 +20,7 @@
         EnableBotAccountCreation = true;
         EnablePostUsernameOverride = true;
         EnablePostIconOverride = true;
+        EnableEmailInvitations = true;
       };
       TeamSettings = {
         CustomBrandText = "Welcome to RNL!";
