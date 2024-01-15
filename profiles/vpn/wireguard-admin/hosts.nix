@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octect used: 71
+# Last octect used: 72
 [
   {
     # André Aparício
@@ -355,5 +355,10 @@
     # Rodrigo Bruno
     publicKey = "IGDTJCCI0NlvsuxFwTGD9wSItdhDc0XSA2xxC0IMeAA=";
     lastOctect = 71;
+  }
+  {
+    # Lucas Pinto
+    publicKey = "W+t0Cq0OU7LO+oxHEjsRmAgoEwt1Hf0NUftPdsCBgjo=";
+    lastOctect = 72;
   }
 ]
