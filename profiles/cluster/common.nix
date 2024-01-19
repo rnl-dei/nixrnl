@@ -69,8 +69,13 @@
   environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
 
   fileSystems."/mnt/cirrus" = {
-    device = lib.mkDefault "dredd:/mnt/data/cirrus";
+    # for some reason NFS doesn't work properly on labs when using ipv6
+    # spent 6 hours trying to debug, reached no conclusion
+    # issue could be somewhere in the firewall, if firewall.enable = false it mounts
+    # but still doesnt work properly (network issue?)
+    device = lib.mkDefault "193.136.164.66:/mnt/data/cirrus";
     fsType = "nfs";
+    options = ["noauto" "x-systemd.automount" "nfsvers=4.2"];
   };
 
   environment.shellInit = ''

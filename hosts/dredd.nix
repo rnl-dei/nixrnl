@@ -1,6 +1,7 @@
 {
   config,
   profiles,
+  lib,
   ...
 }: {
   imports = with profiles; [
@@ -111,9 +112,11 @@
     enable = true;
     # allow borg and labs to mount cirrus
     exports = ''
-      /mnt/data/cirrus 193.136.164.138(rw,sync,no_subtree_check,no_root_squash) 2001:690:2100:83::138(rw,sync,no_subtree_check,no_root_squash) 193.136.154.0/25(rw,sync,no_subtree_check) 2001:690:2100:84::0/64(rw,sync,no_subtree_check)
+      /mnt/data/cirrus 193.136.164.138(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/data/cirrus 2001:690:2100:83::138(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/data/cirrus 193.136.154.0/25(rw,sync,no_subtree_check)
+      /mnt/data/cirrus 2001:690:2100:84::/64(rw,sync,no_subtree_check)
     '';
   };
-
   networking.firewall.allowedTCPPorts = [2049];
 }
