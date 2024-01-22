@@ -119,4 +119,8 @@
     '';
   };
   networking.firewall.allowedTCPPorts = [2049];
+  boot.kernel.sysctl = {
+    "net.ipv6.conf.all.accept_ra" = 0;
+    "net.ipv6.conf.priv.accept_ra" = 1;
+  };
 }
