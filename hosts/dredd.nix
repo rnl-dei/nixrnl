@@ -128,7 +128,7 @@
   };
   networking.firewall.allowedTCPPorts = [2049];
   boot.kernel.sysctl = {
-    "net.ipv6.conf.all.accept_ra" = 0;
+    "net.ipv6.conf.default.accept_ra" = 0;
     "net.ipv6.conf.pub.accept_ra" = 1;
   };
 

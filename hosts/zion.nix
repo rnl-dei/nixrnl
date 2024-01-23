@@ -108,7 +108,7 @@
   users.users.root.hashedPassword = "$6$zhD1fBAElFJswbcs$d4Ib0y33S2cywpgHXKj9Pd3TOn9R5a0pSmannqVXzjaG10hipMgvhKcapRXBMLvYrgLZUAh9vLBw3co61vdV2/";
 
   boot.kernel.sysctl = {
-    "net.ipv6.conf.all.accept_ra" = 0;
+    "net.ipv6.conf.default.accept_ra" = 0;
     "net.ipv6.conf.priv.accept_ra" = 1;
   };
 }
