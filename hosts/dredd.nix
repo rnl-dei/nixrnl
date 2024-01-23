@@ -68,11 +68,15 @@
       portateis = {interfaces = ["portateis-vlan"];};
     };
 
-    interfaces.priv = {
+    interfaces.pub = {
       ipv4 = {
         addresses = [
           {
-            address = "193.136.164.66";
+            address = "193.136.164.5";
+            prefixLength = 26;
+          }
+          {
+            address = "193.136.164.4";
             prefixLength = 26;
           }
         ];
@@ -80,14 +84,18 @@
           {
             address = "0.0.0.0";
             prefixLength = 0;
-            via = "193.136.164.126";
+            via = "193.136.164.62";
           }
         ];
       };
       ipv6 = {
         addresses = [
           {
-            address = "2001:690:2100:81::66";
+            address = "2001:690:2100:80::5";
+            prefixLength = 64;
+          }
+          {
+            address = "2001:690:2100:80::4";
             prefixLength = 64;
           }
         ];
@@ -95,7 +103,7 @@
           {
             address = "::";
             prefixLength = 0;
-            via = "2001:690:2100:81::ffff:1";
+            via = "2001:690:2100:80::ffff:1";
           }
         ];
       };
@@ -121,6 +129,17 @@
   networking.firewall.allowedTCPPorts = [2049];
   boot.kernel.sysctl = {
     "net.ipv6.conf.all.accept_ra" = 0;
-    "net.ipv6.conf.priv.accept_ra" = 1;
+    "net.ipv6.conf.pub.accept_ra" = 1;
   };
+
+  #NTP
+  services.ntp = {
+    enable = true;
+    servers = ["hora.rediris.es" "ntp1.software.imdea.org" "ntp04.oal.ul.pt" "servers ntp01.fccn.pt"];
+    extraConfig = ''
+      interface listen 193.136.164.4
+      interface listen 2001:690:2100:80::4
+    '';
+  };
+  networking.firewall.allowedUDPPorts = [123];
 }
