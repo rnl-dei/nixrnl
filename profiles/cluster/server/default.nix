@@ -49,6 +49,13 @@ in {
       Processes consuming excessive ammounts of RAM/CPU on this machine will be
       terminated without warning.
 
+      ------------------------------------------------
+      [1;31mIMPORTANT NOTICE:[0m
+      Users' workspaces have been cleaned. If you need any files that were previously under
+      your $CLUSTER_HOME, please send us an e-mail with your istid.
+      [1;34mcluster@rnl.tecnico.ulisboa.pt[0m
+      ------------------------------------------------
+
     ################################################################################
 
   '';
