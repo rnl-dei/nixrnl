@@ -3,7 +3,30 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  slurmProlog = pkgs.writeShellScript "slurm-prolog.sh" ''
+    #!/bin/sh
+    set -e
+    # Ensure subuid/subgid assignments exist for job user for container usage
+    PAM_USER=$SLURM_JOB_USER ${pkgs.subidappend}/bin/subidappend
+
+    # Make systemd create /run/user/<uid> (for container usage)
+    ${pkgs.systemd}/bin/loginctl enable-linger $SLURM_JOB_USER
+  '';
+  slurmTaskProlog = pkgs.writeShellScript "slurm-taskprolog.sh" ''
+    #!/bin/sh
+    set -e
+    # set DOCKER_HOST for container usage
+    echo export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+  '';
+  slurmEpilog = pkgs.writeShellScript "slurm-epilog.sh" ''
+    #!/bin/sh
+    set -e
+    # systemd can now clear up /run/user/<uid> and other resources
+    # TODO: fix race condition with other jobs from same user in same node
+    ${pkgs.systemd}/bin/loginctl disable-linger $SLURM_JOB_USER
+  '';
+in {
   services.slurm = {
     controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
@@ -36,6 +59,10 @@
       DefMemPerCPU=1024
       DefMemPerGPU=1024
       GresTypes=gpu,mps
+
+      Prolog=${slurmProlog}
+      TaskProlog=${slurmTaskProlog}
+      Epilog=${slurmEpilog}
     '';
     extraCgroupConfig = ''
       ConstrainCores=yes
