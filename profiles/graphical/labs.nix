@@ -89,7 +89,7 @@
             echo "Saving state"
             mkdir -p ~/.config
             touch ~/.config/rnl-home-config-1.0
-        ) > ~/"rnl-config-migrate-$(date +"%F").log" 2>&1
+        ) > ~/"rnl-config-migrate-$(date +"%F").log" 2>&1 || true
       fi
     fi
   '';
