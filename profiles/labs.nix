@@ -33,6 +33,9 @@
     };
   };
 
+  # Allow the using of smartcards
+  services.pcscd.enable = true;
+
   # Clean subuids and gids on boot
   systemd.tmpfiles.rules = ["f+  /etc/subuid 0644 root root -" "f+  /etc/subgid 0644 root root -"];
 
