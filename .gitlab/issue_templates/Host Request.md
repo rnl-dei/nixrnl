@@ -5,7 +5,7 @@ A clear description of what this host will do.
 A list of which profiles should contain:
 <!-- Choose one of the profiles bellows -->
 - Core: `rnl`/`dei`/`dsi`/`third-party`
-- Filesystem: `simple-uefi`/`zfs-raid6`/`unknown`
+- Filesystem: `simple-uefi`/`zfs-mirror`/`zfs-raid6`/`zfs-raid6-full`/`unknown`
 - OS: `nixos`/`windows`/`ubuntu`/`gentoo`/`debian`/`unknown`
 - Type: `vm`/`hypervisor`/`physical`/`generic`
 - ...
