@@ -1,4 +1,8 @@
-{profiles, pkgs, ...}: {
+{
+  profiles,
+  pkgs,
+  ...
+}: {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-raid6-full
@@ -64,7 +68,7 @@
     interfaces.bond0 = {
       ipv4 = {
         addresses = [
-         {
+          {
             #address = "193.136.164.6"; # FTP
             address = "193.136.164.113"; # FTP
             prefixLength = 26;
@@ -98,7 +102,7 @@
 
   users.users.root.hashedPassword = "$6$kfeh.NIncaHBjal.$hBW1BCxftekx0bcwCkt3Hps2MFvMdSCk2rfTQ3Nj3nO4Xj2D7.EqwVWk9UgYqS/iGWak6d0HumgaUkQZKaNoQ1";
 
-  environment.systemPackages = with pkgs; [ archvsync ];
+  environment.systemPackages = with pkgs; [archvsync];
 
   # Enable FTP server with imported mirrors profiles
   rnl.ftp-server.enable = true;
