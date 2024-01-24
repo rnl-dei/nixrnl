@@ -7,10 +7,21 @@
 
     mirrors.archlinux
     mirrors.cygwin
+    mirrors.gentoo.distfiles
+    mirrors.gentoo.portage
+    mirrors.linuxmint.isos
+    mirrors.linuxmint.packages
+    mirrors.mxlinux.isos
+    mirrors.mxlinux.packages
+    mirrors.openbsd
+    mirrors.opensuse
+    mirrors.qubesos
     mirrors.slackware
-    mirrors.zorinos
     mirrors.ubuntu.archive
     mirrors.ubuntu.releases
+    mirrors.videolan
+    mirrors.voidlinux
+    mirrors.zorinos
   ];
 
   rnl.labels.location = "inf1-p01-a2";
