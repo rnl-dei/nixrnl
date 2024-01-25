@@ -2,10 +2,12 @@
   config,
   lib,
   pkgs,
+  profiles,
   ...
 }:
 with lib; let
   cfg = config.rnl.ftp-server;
+  inherit (config.security.acme) certs;
 
   mirrorOptions = {
     config,
@@ -97,6 +99,8 @@ with lib; let
     })
     cfg.mirrors;
 in {
+  #imports = lists.optional cfg.enableFTP profiles.certicates or lists.optional cfg.enableHTTPS profiles.webserver;
+  imports = [profiles.webserver];
   options.rnl.ftp-server = {
     enable = mkEnableOption "FTP server";
     rootDirectory = mkOption {
@@ -151,7 +155,6 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services = services;
-
     users.users.mirror = {
       isSystemUser = true;
       group = "mirror";
@@ -182,6 +185,25 @@ in {
 
     services.vsftpd = {
       enable = cfg.enableFTP;
+      anonymousUser = true;
+      anonymousUserHome = cfg.rootDirectory;
+      rsaCertFile = "${certs.${config.networking.fqdn}.directory}/fullchain.pem";
+      rsaKeyFile = "${certs.${config.networking.fqdn}.directory}/key.pem";
+      extraConfig = ''
+        allow_anon_ssl=YES
+        ftpd_banner=OLÄ AMIGOS E AMIGAS BEM VINDOS AO SERVIDOR DE FTP DA RNL!!!! ENJOY E CARRREGA NO SININHO!
+      '';
+    };
+
+    services.nginx.virtualHosts.ftp = {
+      serverName = lib.mkDefault "${config.networking.fqdn}";
+      enableACME = true;
+      forceSSL = true;
+      locations = {
+        "/pub/" = {
+          alias = cfg.rootDirectory;
+        };
+      };
     };
 
     networking.firewall.allowedTCPPorts = (lib.lists.optional cfg.enableRsync config.services.rsyncd.port) ++ (lib.lists.optional cfg.enableFTP 21);
