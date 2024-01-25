@@ -74,6 +74,11 @@ with lib; let
         description = "Extra arguments to pass to the script";
         default = [];
       };
+      extraServiceConfig = mkOption {
+        type = types.attrs;
+        description = "Extra service configuration";
+        default = {};
+      };
       script = mkOption {
         type = types.str;
         description = "Script to use to sync the mirror";
@@ -87,15 +92,17 @@ with lib; let
   services =
     lib.mapAttrs' (name: value: {
       name = "rnl-mirror-${name}";
-      value = {
-        description = "RNL mirror - ${value.mirrorName}";
-        serviceConfig = {
-          User = value.user;
-          Group = value.group;
-        };
-        startAt = value.timer;
-        script = value.script;
-      };
+      value =
+        attrsets.recursiveUpdate {
+          description = "RNL mirror - ${value.mirrorName}";
+          serviceConfig = {
+            User = value.user;
+            Group = value.group;
+          };
+          startAt = value.timer;
+          script = value.script;
+        }
+        value.extraServiceConfig;
     })
     cfg.mirrors;
 in {

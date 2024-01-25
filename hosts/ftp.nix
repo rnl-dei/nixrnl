@@ -11,6 +11,9 @@
 
     mirrors.archlinux
     mirrors.cygwin
+    mirrors.debian.archive
+    mirrors.debian.cd
+    mirrors.debian.security
     mirrors.gentoo.distfiles
     mirrors.gentoo.portage
     mirrors.linuxmint.isos
@@ -24,7 +27,6 @@
     mirrors.ubuntu.archive
     mirrors.ubuntu.releases
     mirrors.videolan
-#    mirrors.voidlinux
     mirrors.zorinos
   ];
 

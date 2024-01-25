@@ -1,7 +1,10 @@
 {
-  stdenv,
+  hostname,
   lib,
   makeWrapper,
+  stdenv,
+  system-sendmail,
+  rsync,
   ...
 }:
 stdenv.mkDerivation rec {
@@ -13,10 +16,25 @@ stdenv.mkDerivation rec {
     sha256 = "sha256:0kbmabx1vh75nwxgk44np8lrdi014447kdjw8if8l9mvaszcz707";
   };
 
+  buildInputs = [hostname system-sendmail rsync];
   nativeBuildInputs = [makeWrapper];
-  installPhase = ''
-    mkdir -p $out
+  installPhase = let
+    config = builtins.toFile "ftpsync.conf" ''
+      MAILTO="infra-robots@rnl.tecnico.ulisboa.pt"
+
+      INFO_MAINTAINER="RNL <rnl@rnl.tecnico.ulisboa.pt>"
+      INFO_COUNTRY=PT
+      INFO_LOCATION="Instituto Superior Técnico, Lisboa, Portugal"
+      INFO_THROUGHPUT=1Gb
+
+      LOGDIR=/tmp
+    '';
+  in ''
+    mkdir -p $out/etc
     cp -r bin doc $out
+    cp ${config} $out/etc/.ftpsync-wrapped.conf
+    wrapProgram $out/bin/ftpsync \
+      --prefix PATH : "${lib.makeBinPath buildInputs}"
   '';
 
   meta = with lib; {
