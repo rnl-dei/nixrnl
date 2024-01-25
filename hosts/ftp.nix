@@ -24,7 +24,7 @@
     mirrors.ubuntu.archive
     mirrors.ubuntu.releases
     mirrors.videolan
-    mirrors.voidlinux
+#    mirrors.voidlinux
     mirrors.zorinos
   ];
 
