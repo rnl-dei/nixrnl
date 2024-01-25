@@ -99,6 +99,36 @@ with lib; let
 in {
   options.rnl.ftp-server = {
     enable = mkEnableOption "FTP server";
+    rootDirectory = mkOption {
+      type = types.str;
+      description = "Directory to serve via rsync";
+      default = "/mnt/data/ftp/pub";
+    };
+    motd = mkOption {
+      type = types.str;
+      description = "Message of the day to use";
+      default = "/etc/motd";
+    };
+    enableFTP = mkOption {
+      type = types.bool;
+      description = "Enable FTP access to the mirror";
+      default = true;
+    };
+    enableRsync = mkOption {
+      type = types.bool;
+      description = "Enable rsync access to the mirror";
+      default = true;
+    };
+    enableHTTP = mkOption {
+      type = types.bool;
+      description = "Enable HTTP access to the mirror";
+      default = true;
+    };
+    enableHTTPS = mkOption {
+      type = types.bool;
+      description = "Enable HTTPS access to the mirror";
+      default = true;
+    };
     user = mkOption {
       type = types.str;
       description = "User to run the script as";
@@ -129,5 +159,32 @@ in {
       home = cfg.stateDir;
     };
     users.groups.mirror = {};
+
+    services.rsyncd = {
+      enable = cfg.enableRsync;
+      settings = {
+        pub = {
+          comment = "RNL FTP mirror";
+          path = cfg.rootDirectory;
+
+          "use chroot" = true;
+          "read only" = true;
+          "max connections" = 100;
+          "motd file" = cfg.motd;
+          "uid" = "nobody";
+          "gid" = "nobody";
+          "transfer logging" = false;
+          "log format" = "%t %a %m %f %b";
+          "timeout" = 300;
+        };
+      };
+    };
+
+    services.vsftpd = {
+      enable = cfg.enableFTP;
+    };
+
+    networking.firewall.allowedTCPPorts =  (lib.lists.optional cfg.enableRsync config.services.rsyncd.port) ++ (lib.lists.optional cfg.enableFTP 21);
+
   };
 }
