@@ -184,7 +184,6 @@ in {
       enable = cfg.enableFTP;
     };
 
-    networking.firewall.allowedTCPPorts =  (lib.lists.optional cfg.enableRsync config.services.rsyncd.port) ++ (lib.lists.optional cfg.enableFTP 21);
-
+    networking.firewall.allowedTCPPorts = (lib.lists.optional cfg.enableRsync config.services.rsyncd.port) ++ (lib.lists.optional cfg.enableFTP 21);
   };
 }

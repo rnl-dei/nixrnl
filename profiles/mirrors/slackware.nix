@@ -11,6 +11,7 @@
     /slackware-11.*
     /slackware-12.*
     /slackware-13.*
+    /slackware64-13.*
     /slackware-iso/slackware-13.*
     /slackware-iso/slackware64-13.*
     /slackware-pre-1.0-beta
