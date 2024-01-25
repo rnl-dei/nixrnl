@@ -1,0 +1,96 @@
+pageInfo:
+  title: RNL
+  description: Welcome to RNL!
+  navLinks:
+    - title: Website
+      path: https://rnl.tecnico.ulisboa.pt
+appConfig:
+  theme: one-dark
+  language: en
+  webSearch:
+    disableWebSearch: false
+    searchEngine: google
+    openingMethod: newtab
+    searchBangs: {}
+  enableFontAwesome: true
+  hideComponents:
+    hideFooter: true
+  preventWriteToDisk: true
+sections:
+  - name: General
+    icon: fas fa-bookmark
+    items:
+      - title: Mattermost
+        description: Chat
+        icon: hl-mattermost
+        url: https://papyrus.rnl.tecnico.ulisboa.pt
+        id: 0_702_mattermost
+      - title: GitLab
+        description: Remote source control
+        icon: hl-gitlab
+        url: https://gitlab.rnl.tecnico.ulisboa.pt
+        id: 1_702_gitlab
+      - title: Tickets
+        description: Shows requests sent to RNL
+        icon: fas fa-ticket
+        url: https://tickets.tecnico.ulisboa.pt
+        id: 2_702_tickets
+      - title: TVs
+        icon: fas fa-tv
+        url: https://tv.rnl.pt
+        id: 3_702_tvs
+      - title: RNL Webmail
+        icon: fas fa-envelope fa-xl
+        url: https://rnl.tecnico.ulisboa.pt/webmail/
+        id: 4_702_rnlwebmail
+  - name: Documentation
+    icon: fas fa-book
+    items:
+      - title: Wiki
+        icon: hl-dokuwiki
+        url: https://weaver.rnl.tecnico.ulisboa.pt/wiki
+        id: 0_1370_wiki
+      - title: Netbox
+        icon: hl-netbox
+        url: https://netbox.rnl.tecnico.ulisboa.pt
+        id: 1_1370_netbox
+      - title: Google Drive
+        icon: fab fa-google-drive
+        url: https://drive.google.com/drive/u/1/folders/0AGzUuHnmfISrUk9PVA
+        id: 2_1370_googledrive
+      - title: Vault
+        description: Secret manager
+        icon: si-vault
+        url: https://vault.rnl.tecnico.ulisboa.pt/
+        id: 3_1370_vault
+  - name: System Monitoring
+    icon: fas fa-monitor-heart-rate
+    items:
+      - title: Grafana
+        description: Data visualised on dashboards
+        icon: hl-grafana
+        url: https://tardis.rnl.tecnico.ulisboa.pt/grafana
+        id: 0_1739_grafana
+      - title: OpenSessions
+        description: Shows lab status and who is logged in
+        icon: fas fa-desktop
+        url: https://rnl.tecnico.ulisboa.pt/pvt/opensessions/
+        id: 1_1739_opensessions
+      - title: Lab Matrix
+        description: Shows schedule of classes in each lab
+        icon: fas fa-keyboard
+        url: https://rnl.tecnico.ulisboa.pt/labs-matrix/
+        id: 2_1739_labmatrix
+  - name: Misc
+    icon: fas fa-microchip
+    items:
+      - title: Zeus Configuration
+        description: Zeus - RNL Router and Firewall configuration
+        icon: fas fa-network-wired
+        url: https://weaver.rnl.tecnico.ulisboa.pt/zeus
+        id: 0_1468_zeus
+      - title: RAaaS
+        description: RNL Artwork as a Service
+        icon: fas fa-palette
+        url: https://raaas.weaver.rnl.tecnico.ulisboa.pt
+        id: 1_1468_raaas
