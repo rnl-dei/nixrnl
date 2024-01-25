@@ -161,6 +161,9 @@ in {
     services.rsyncd = {
       enable = cfg.enableRsync;
       settings = {
+        global = {
+          "motd file" = cfg.motd;
+        };
         pub = {
           comment = "RNL FTP mirror";
           path = cfg.rootDirectory;
@@ -168,7 +171,6 @@ in {
           "use chroot" = true;
           "read only" = true;
           "max connections" = 100;
-          "motd file" = cfg.motd;
           "uid" = "nobody";
           "gid" = "nobody";
           "transfer logging" = false;

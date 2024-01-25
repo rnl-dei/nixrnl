@@ -4,7 +4,29 @@
   profiles,
   pkgs,
   ...
-}: {
+}: let
+  motd = ''
+          _____  _   _ _
+         |  __ \| \ | | |
+         | |__) |  \| | |
+         |  _  /| . ` | |
+         | | \ \| |\  | |___
+         |_|  \_\_| \_|_____|
+
+         RNL FTP/Rsync Server
+
+      ftp.rnl.tecnico.ulisboa.pt
+
+      IP Address: 193.136.164.6
+    IPv6 Address: 2001:690:2100:80::6
+
+     Rede das Novas Licenciaturas
+           Tecnico Lisboa
+          Lisboa - Portugal
+
+    Email: rnl@rnl.tecnico.ulisboa.pt
+  '';
+in {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-raid6-full
@@ -111,8 +133,13 @@
 
   environment.systemPackages = with pkgs; [archvsync];
 
+  users.motd = motd;
+
   # Enable FTP server with imported mirrors profiles
-  rnl.ftp-server.enable = true;
+  rnl.ftp-server = {
+    enable = true;
+    motd = builtins.toFile "motd" motd;
+  };
 
   services.nginx.virtualHosts.ftp = {
     default = true;
@@ -125,10 +152,10 @@
       autoindex_exact_size off;
     '';
     locations = {
-      "~ ^/pub" = { alias = config.rnl.ftp-server.rootDirectory; };
-      "~ ^/debian" = { alias = "/mnt/data/ftp/pub/debian/"; }; # Recommended by Debian
+      "~ ^/pub" = {alias = config.rnl.ftp-server.rootDirectory;};
+      "~ ^/debian" = {alias = "/mnt/data/ftp/pub/debian/";}; # Recommended by Debian
 
-      "~ ^/dei" = { alias = "/mnt/data/ftp/dei"; };
+      "~ ^/dei" = {alias = "/mnt/data/ftp/dei";};
       # TODO: We probably want to add /dei-share with password protection
       "~ ^/labs" = {
         alias = "/mnt/data/ftp/labs";
@@ -147,7 +174,10 @@
       };
 
       # Public but not listed, to share temporary files
-      "~ ^/tmp" = { alias = "/mnt/data/ftp/tmp"; extraConfig = "autoindex off;"; };
+      "~ ^/tmp" = {
+        alias = "/mnt/data/ftp/tmp";
+        extraConfig = "autoindex off;";
+      };
       "~ ^/priv" = {
         alias = "/mnt/data/ftp/priv";
         extraConfig = ''
@@ -161,5 +191,4 @@
       };
     };
   };
-
 }
