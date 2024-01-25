@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   profiles,
   pkgs,
   ...
@@ -9,6 +11,9 @@
     os.nixos
     type.physical
 
+    webserver
+
+    # Mirrors
     mirrors.archlinux
     mirrors.cygwin
     mirrors.debian.archive
@@ -108,4 +113,53 @@
 
   # Enable FTP server with imported mirrors profiles
   rnl.ftp-server.enable = true;
+
+  services.nginx.virtualHosts.ftp = {
+    default = true;
+    serverName = lib.mkDefault "${config.networking.fqdn}";
+    # FIXME: Configure firewall to enable ACME
+    #enableACME = true;
+    #addSSL = true;
+    extraConfig = ''
+      autoindex on;
+      autoindex_exact_size off;
+    '';
+    locations = {
+      "~ ^/pub" = { alias = config.rnl.ftp-server.rootDirectory; };
+      "~ ^/debian" = { alias = "/mnt/data/ftp/pub/debian/"; }; # Recommended by Debian
+
+      "~ ^/dei" = { alias = "/mnt/data/ftp/dei"; };
+      # TODO: We probably want to add /dei-share with password protection
+      "~ ^/labs" = {
+        alias = "/mnt/data/ftp/labs";
+        extraConfig = ''
+          autoindex off;
+          location ~ ^/labs/(windows|software) {
+            autoindex on;
+            allow 193.136.164.192/27; # admin v4
+            allow 2001:690:2100:82::/64; # admin v6
+            allow 193.136.154.0/25; # labs v4
+            allow 193.136.154.128/26;# labs2 v4
+            allow 2001:690:2100:84::/64; # labs v6
+            deny all;
+          }
+        '';
+      };
+
+      # Public but not listed, to share temporary files
+      "~ ^/tmp" = { alias = "/mnt/data/ftp/tmp"; extraConfig = "autoindex off;"; };
+      "~ ^/priv" = {
+        alias = "/mnt/data/ftp/priv";
+        extraConfig = ''
+          # Allow access only from the RNL networks
+          allow 193.136.164.0/24;
+          allow 193.136.154.0/24;
+          allow 10.16.80.0/24;
+          allow 2001:690:2100:80::/58;
+          deny all;
+        '';
+      };
+    };
+  };
+
 }
