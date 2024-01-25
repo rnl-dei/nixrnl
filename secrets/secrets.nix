@@ -17,6 +17,7 @@ let
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
   dolly = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUCwy4EIMsdjFtfRI0F78+WDgA7g0/5W1ZdiFcri7v2";
+  ftp = "";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
   lga = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvmznnQfLbA1Jw3EPuXf48JHojUXR7tLEb/ikTG2QFB";
@@ -33,6 +34,7 @@ in {
   "host-keys/dealer.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;
   "host-keys/dolly.age".publicKeys = deployMachines;
+  "host-keys/ftp.age".publicKeys = deployMachines;
   "host-keys/hagrid.age".publicKeys = deployMachines;
   "host-keys/labs.age".publicKeys = deployMachines;
   "host-keys/lga.age".publicKeys = deployMachines;
@@ -49,6 +51,7 @@ in {
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
+  "gentoo-distfiles-ssh-key.age".publicKeys = users ++ [ftp];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];

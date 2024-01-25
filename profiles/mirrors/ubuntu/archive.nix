@@ -38,8 +38,8 @@
 in {
   rnl.ftp-server.mirrors.ubuntu-archive = {
     #source = "rsync://archive.ubuntu.com/ubuntu";
-    source = "rsync://193.136.164.6/pub/ubuntu/archive";
-    target = "/mnt/data/ftp/pub/ubuntu/archive";
+    source = "rsync://193.136.164.6/pub/ubuntu/archive/";
+    target = "/mnt/data/ftp/pub/ubuntu/archive/";
     timer = "*-*-* 5..23/6:20:00"; # Every day at 20 minutes past the hour, 6 in 6 hours
     script = script;
   };

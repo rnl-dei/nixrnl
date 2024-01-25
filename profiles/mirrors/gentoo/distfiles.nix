@@ -1,7 +1,7 @@
 {...}: {
   rnl.ftp-server.mirrors.gentoo-distfiles = {
     #source = "gentoo@masterdistfiles.gentoo.org::gentoo";
-    source = "rsync://193.136.164.6/pub/gentoo/gentoo-distfiles";
+    source = "rsync://193.136.164.6/pub/gentoo/gentoo-distfiles/";
     target = "/mnt/data/ftp/pub/gentoo/gentoo-distfiles";
     timer = "*-*-* 0..23:00:00"; # Every 30 minutes
     extraArgs = [
