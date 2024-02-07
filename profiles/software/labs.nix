@@ -106,7 +106,7 @@
           ];
         })
         pylint
-        lizard
+        # lizard # Broken (23.11)
         pygame
         pysimplegui
 
