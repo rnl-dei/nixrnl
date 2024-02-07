@@ -51,6 +51,9 @@
   # Setup storage
   rnl.storage.enable = true;
 
+  # Open firewall to keepalived by default
+  services.keepalived.openFirewall = true;
+
   system.stateVersion = "23.05";
   rnl.labels.os = "nixos";
 }

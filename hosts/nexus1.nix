@@ -48,6 +48,12 @@
     };
   };
 
+  # Set as master
+  services.keepalived.vrrpInstances = {
+    nexusIP4.priority = 255;
+    nexusIP6.priority = 255;
+  };
+
   rnl.labels.location = "zion";
 
   rnl.virtualisation.guest = {
