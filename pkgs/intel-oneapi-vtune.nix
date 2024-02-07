@@ -7,6 +7,7 @@
   electron,
   expat,
   fetchurl,
+  ffmpeg,
   gtk3,
   kmod,
   lib,
@@ -70,7 +71,10 @@ stdenv.mkDerivation rec {
     zlib
   ];
 
-  runtimeDependencies = [udev]; # Will crash on launch without udev.
+  runtimeDependencies = [
+    ffmpeg
+    udev # Will crash on launch without udev.
+  ];
 
   autoPatchelfIgnoreMissingDeps = [
     "libffi.so.6"
