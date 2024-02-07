@@ -11,7 +11,6 @@
   };
 
   services.mattermost = {
-    package = pkgs.unstable.mattermost; # Version >7.10
     environmentFile = config.age.secrets."papyrus-private.env".path;
 
     # Reference: https://docs.mattermost.com/configure/configuration-settings.html
