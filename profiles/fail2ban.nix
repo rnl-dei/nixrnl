@@ -28,37 +28,39 @@ in {
 
     extraPackages = [pkgs.system-sendmail];
 
-    extraSettings = {};
-
     # TODO: Configure abuseipdb action
     # TODO: Configure email action
 
     jails = {
       # postfix
-      postfix = mkIf services.postfix.enable ''
-        enabled = true
-        filter = postfix
-      '';
+      postfix = mkIf services.postfix.enable {
+        settings = {
+          filter = "postfix";
+        };
+      };
       # courier
 
       # nginx-botsearch
-      nginx-botsearch = mkIf services.nginx.enable ''
-        enabled = true
-        filter = nginx-botsearch
-      '';
+      nginx-botsearch = mkIf services.nginx.enable {
+        settings = {
+          filter = "nginx-botsearch";
+        };
+      };
 
       # php-url-fopen
-      php-url-fopen = mkIf services.nginx.enable ''
-        enabled = true
-        filter = php-url-fopen
-        maxretry = 1
-      '';
+      php-url-fopen = mkIf services.nginx.enable {
+        settings = {
+          filter = "php-url-fopen";
+          maxretry = 1;
+        };
+      };
 
       # sshd
-      sshd = mkIf services.openssh.enable ''
-        enabled = true
-        filter = sshd
-      '';
+      sshd = mkIf services.openssh.enable {
+        settings = {
+          filter = "sshd";
+        };
+      };
     };
   };
 
