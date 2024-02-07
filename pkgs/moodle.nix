@@ -7,7 +7,7 @@
   nixosTests,
   ...
 }: let
-  version = "4.1.3";
+  version = "4.3.1";
 
   versionParts = lib.take 2 (lib.splitVersion version);
   # 4.2 -> 402, 3.11 -> 311
@@ -87,7 +87,7 @@ in
 
     src = fetchurl {
       url = "https://download.moodle.org/stable${stableVersion}/${pname}-${version}.tgz";
-      hash = "sha256-JMK+nGgeBryC6I9cg1DD52gIGcPMAJ/xZxrC4a1R5Ps=";
+      hash = "sha256-4AFKD6lIir8VGgS+ZTifFHHrjtraxZlp6X143W9eEkM=";
     };
 
     phpConfig = writeText "config.php" ''
