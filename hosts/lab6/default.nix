@@ -13,7 +13,8 @@
     nvidia
   ];
 
-  rnl.storage.disks.root = ["/dev/sda"];
+  rnl.storage.disks.root = ["/dev/nvme0n1"];
+  rnl.windows-labs.partition = "/dev/nvme0n1p2";
 
   # To be able to use VNC we need to connect the monitor to the motherboard
   # instead of the graphics card. So we need to disable the NVIDIA drivers.
