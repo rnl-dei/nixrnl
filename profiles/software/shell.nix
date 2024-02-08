@@ -60,13 +60,12 @@
     gradle
     maven
 
-    # Python FIXME: This is in conflict with the python3 in the labs profiles
-    # (python3.withPackages (ps:
-    #   with ps; [
-    #     # General
-    #     requests
-    #     virtualenv
-    #   ]))
+    (python3.withPackages (ps:
+      with ps; [
+        # General
+        requests
+        virtualenv
+      ]))
     conda
   ];
 

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [./shell.nix];
 
   environment.systemPackages = with pkgs; [
@@ -69,7 +73,7 @@
     # QS
     dafny
 
-    (python3.withPackages (ps:
+    (lib.hiPrio (python3.withPackages (ps:
       with ps; [
         # General
         pip
@@ -241,6 +245,6 @@
             })
           ];
         })
-      ]))
+      ])))
   ];
 }
