@@ -66,11 +66,6 @@
       user = "staging_moodle_dei";
       passwordFile = config.age.secrets."moodle-agl-db.password".path;
     };
-    virtualHost = {
-      # FIXME: Change this
-      forceSSL = false;
-      enableACME = false;
-    };
   };
 
   rnl.labels.location = "zion";
