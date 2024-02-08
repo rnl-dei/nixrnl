@@ -6,7 +6,7 @@
 
   services.nginx = {
     # TODO https://nixos.wiki/wiki/FAQ/Private_Cache_Proxy
-    virtualHosts."dollars.rnl.tecnico.ulisboa.pt" = {
+    virtualHosts."labs.cache.rnl.tecnico.ulisboa.pt" = {
       enableACME = true;
       forceSSL = true;
       locations = {
