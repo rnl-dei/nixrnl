@@ -32,6 +32,7 @@ in {
       lsof
       molly-guard # Prevents accidental shutdowns/reboots
       ripgrep
+      rsync
       strace
       tree
       whois
@@ -133,10 +134,12 @@ in {
       Match Address 193.136.164.192/27,2001:690:2100:82::/64,192.168.20.0/24
         PermitRootLogin without-password
     '';
-    hostKeys = [{
-      path = "/etc/ssh/ssh_host_ed25519_key";
-      type = "ed25519";
-    }];
+    hostKeys = [
+      {
+        path = "/etc/ssh/ssh_host_ed25519_key";
+        type = "ed25519";
+      }
+    ];
   };
 
   # Configure users
