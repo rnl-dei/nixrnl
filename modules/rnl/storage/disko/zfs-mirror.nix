@@ -108,22 +108,23 @@ in {
     };
 
   zpool.dpool =
-    zfsDefaultOptions
-    // {
-      type = "zpool";
-      mode = "mirror"; # RAID 1
-      datasets = {
-        data = {
-          type = "zfs_fs";
-          mountpoint = "/mnt/data";
+    lib.mkIf (config.rnl.storage.disks.data != [])
+    (zfsDefaultOptions
+      // {
+        type = "zpool";
+        mode = "mirror"; # RAID 1
+        datasets = {
+          data = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/data";
+          };
+          volumes = {
+            type = "zfs_fs";
+          };
+          reserved = {
+            type = "zfs_fs";
+            options.refreservation = "10G";
+          };
         };
-        volumes = {
-          type = "zfs_fs";
-        };
-        reserved = {
-          type = "zfs_fs";
-          options.refreservation = "10G";
-        };
-      };
-    };
+      });
 }
