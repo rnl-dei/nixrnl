@@ -22,6 +22,8 @@
     "/dev/disk/by-id/ata-WDC_WD10EZEX-00RKKA0_WD-WCC1S3606587"
   ];
 
+  rnl.internalHost = true;
+
   # Networking
   networking = {
     hostId = "b0234a5e";
