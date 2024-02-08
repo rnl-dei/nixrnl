@@ -10,7 +10,7 @@
     os.nixos
     type.physical
 
-    binaryCache
+    binary-cache
     webserver
   ];
 
