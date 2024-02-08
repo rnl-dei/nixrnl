@@ -139,7 +139,7 @@
         extraInstallCommands = ''
           # Workaround to change default entry name
           # See issue: https://github.com/NixOS/nixpkgs/issues/15416
-          sed -i 's/"NixOS - Default"/"${config.boot.loader.grub.configurationName}"/g' /boot/grub/grub.cfg
+          ${pkgs.gnused}/bin/sed -i 's/"NixOS - Default"/"${config.boot.loader.grub.configurationName}"/g' /boot/grub/grub.cfg
 
           # Workaround to hide old NixOS entries in Administration submenu
           echo "}" >> /boot/grub/grub.cfg
