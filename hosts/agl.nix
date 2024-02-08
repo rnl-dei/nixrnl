@@ -68,6 +68,8 @@
     };
   };
 
+  rnl.internalHost = true;
+
   rnl.labels.location = "zion";
 
   rnl.storage.disks.data = ["/dev/vdb"];
