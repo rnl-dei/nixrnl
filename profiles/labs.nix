@@ -18,6 +18,16 @@
 
   programs.nix-ld.enable = true;
 
+  nix.settings = {
+    substituters = [
+      "https://labs.cache.rnl.tecnico.ulisboa.pt?priority=39"
+    ];
+
+    trusted-public-keys = [
+      "labs.cache.rnl.tecnico.ulisboa.pt:nqg28rqC5jNdevtd7DLIpvUPDBmv2D8hhWy0REBh5lU="
+    ];
+  };
+
   programs.chromium = {
     enable = true;
     extraOpts = {
