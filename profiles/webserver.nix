@@ -16,7 +16,7 @@
     # Enable recommended settings
     recommendedOptimisation = true;
     recommendedTlsSettings = true;
-    # recommendedZstdSettings = true;
+    recommendedZstdSettings = true;
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
 
