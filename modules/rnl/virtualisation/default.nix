@@ -125,6 +125,12 @@ with lib; let
       };
     };
 
+    qemuGuestAgent = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable QEMU Guest Agent";
+    };
+
     disks = mkOption {
       type = types.listOf (types.submodule {options = diskOptions;});
       default = [];

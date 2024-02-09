@@ -14,5 +14,7 @@
 
   rnl.storage.disks.root = lib.mkDefault ["/dev/vda"];
 
+  services.qemuGuest.enable = true;
+
   rnl.labels.type = "vm";
 }

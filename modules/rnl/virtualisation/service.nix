@@ -22,6 +22,7 @@
   uefi,
   vcpu,
   directKernel,
+  qemuGuestAgent,
   ...
 }: let
   mkInterface = options: ''
@@ -102,6 +103,12 @@
       <on_crash>restart</on_crash>
       <devices>
         <emulator>/run/libvirt/nix-emulators/qemu-system-${arch}</emulator>
+    ''
+    + lib.optionalString qemuGuestAgent ''
+      <channel type='unix'>
+        <source mode='bind'/>
+        <target type='virtio' name='org.qemu.guest_agent.0'/>
+      </channel>
     ''
     + (lib.concatMapStringsSep "\n" mkInterface interfaces)
     + (lib.concatMapStringsSep "\n" mkDisk disks')
