@@ -19,8 +19,6 @@
     # set DOCKER_HOST for container usage
     echo export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
     echo export HOME=$CLUSTER_HOME
-    echo print Setting \$HOME to \$CLUSTER_HOME \($CLUSTER_HOME\)...
-
   '';
   slurmEpilog = pkgs.writeShellScript "slurm-epilog.sh" ''
     #!/bin/sh

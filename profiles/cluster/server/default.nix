@@ -43,6 +43,8 @@ in {
 
           also available in the $CLUSTER_HOME environment variable
 
+      Jobs launched with [1;34msrun[0m will have their $HOME set to $CLUSTER_HOME.
+
       [1;31mSafeguard[0m your work by saving to AFS or your computer before logging out.
 
       Please [1;31mdo not perform computation on this machine.[0m Use the cluster instead.
