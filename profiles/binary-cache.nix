@@ -1,4 +1,8 @@
-{...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   # Generate a public/private key pair like this:
   # $ nix-store --generate-binary-cache-key cache.yourdomain.tld-1 /var/lib/secrets/harmonia.secret /var/lib/secrets/harmonia.pub
   services.harmonia.enable = true;
@@ -6,7 +10,8 @@
 
   services.nginx = {
     # TODO https://nixos.wiki/wiki/FAQ/Private_Cache_Proxy
-    virtualHosts."labs.cache.rnl.tecnico.ulisboa.pt" = {
+    virtualHosts.binary-cache = {
+      serverName = lib.mkDefault config.networking.fqdn;
       enableACME = true;
       forceSSL = true;
       locations = {

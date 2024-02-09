@@ -70,4 +70,6 @@
   };
 
   services.harmonia.signKeyPath = config.age.secrets."dollars-binary-cache-key".path;
+
+  services.nginx.virtualHosts.binary-cache.serverName = "labs.cache.rnl.tecnico.ulisboa.pt";
 }
