@@ -10,7 +10,22 @@
 in {
   imports = [../common.nix];
 
-  services.slurm.server.enable = true;
+  # Fix to allow slurmdbd with external database
+  systemd.services.slurmdbd.requires = lib.mkForce ["munged.service"];
+
+  services.slurm = {
+    server.enable = true;
+    dbdserver = {
+      enable = true;
+      extraConfig = ''
+        StorageHost=${config.rnl.database.host}
+        StoragePort=${toString config.rnl.database.port}
+        StorageLoc=slurm_acct_db # Default name
+
+        PrivateData=accounts,events,usage,users
+      '';
+    };
+  };
 
   # Ensure slurmctld does not run without /mnt/cirrus being mounted
   systemd.services.slurmctld = {
@@ -21,7 +36,7 @@ in {
 
   # Slurmctld port and srun batch ports
   networking.firewall = {
-    allowedTCPPorts = [6817];
+    allowedTCPPorts = [6817 6819];
     allowedTCPPortRanges = [
       {
         from = 60001;

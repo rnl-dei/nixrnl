@@ -48,6 +48,13 @@
     };
   };
 
+  services.slurm.dbdserver.storagePassFile = config.age.secrets."slurmdbd-borg-db.password".path;
+
+  age.secrets."slurmdbd-borg-db.password" = {
+    file = ../secrets/slurmdbd-borg-db-password.age;
+    owner = "slurm";
+  };
+
   rnl.labels.location = "zion";
 
   rnl.virtualisation.guest = {
