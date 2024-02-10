@@ -31,6 +31,7 @@ in {
   services.slurm = {
     controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
+    dbdserver.dbdHost = lib.mkDefault "borg";
     nodeName = lib.mkDefault [
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
       "lab2p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab2"
@@ -60,6 +61,10 @@ in {
       DefMemPerCPU=1024
       DefMemPerGPU=1024
       GresTypes=gpu,mps
+
+      AccountingStorageType=accounting_storage/slurmdbd
+      AccountingStorageHost=${config.services.slurm.dbdserver.dbdHost}
+      AccountingStoreFlags=job_comment
 
       Prolog=${slurmProlog}
       TaskProlog=${slurmTaskProlog}

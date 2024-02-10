@@ -2,6 +2,7 @@
   # Use labX for tests
   services.slurm = {
     controlMachine = "borg2";
+    dbdserver.dbdHost = "borg2";
     clusterName = "RNL-Cluster-Tests";
     nodeName = [
       "labXp[1-5] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=labX"

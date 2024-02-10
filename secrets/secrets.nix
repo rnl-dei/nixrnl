@@ -42,6 +42,7 @@ in {
   "munge-key.age".publicKeys = users ++ [borg labs];
   "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
+  "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
