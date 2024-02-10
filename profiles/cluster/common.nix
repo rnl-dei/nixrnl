@@ -62,6 +62,8 @@ in {
       DefMemPerGPU=1024
       GresTypes=gpu,mps
 
+      MpiDefault=pmix
+
       AccountingStorageType=accounting_storage/slurmdbd
       AccountingStorageHost=${config.services.slurm.dbdserver.dbdHost}
       AccountingStoreFlags=job_comment
@@ -76,11 +78,6 @@ in {
       ConstrainRAMSpace=yes
       ConstrainSwapSpace=yes
     '';
-  };
-
-  environment.sessionVariables = {
-    # Allow running MPI programs through Slurm.
-    SLURM_MPI_TYPE = "pmix";
   };
 
   # TODO: May be necessary to change kernel for cgroups swap support
