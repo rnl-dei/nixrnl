@@ -18,10 +18,8 @@ build:
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - head -n1 "$CACHE_PRIVATE_SSH_KEY"
-    - echo "$CACHE_PRIVATE_SSH_KEY" > ~/.ssh/id_ed25519
+    - cp "$CACHE_PRIVATE_SSH_KEY" ~/.ssh/id_ed25519
     - chmod 400 ~/.ssh/id_ed25519
-    # - echo "dollars.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
     - echo "labs.cache.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
     - echo "proxy.cache.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
 
