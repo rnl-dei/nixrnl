@@ -10,6 +10,7 @@
     type.physical
 
     binary-cache
+    proxy-cache
     webserver
   ];
 
@@ -72,4 +73,5 @@
   services.harmonia.signKeyPath = config.age.secrets."dollars-binary-cache-key".path;
 
   services.nginx.virtualHosts.binary-cache.serverName = "labs.cache.rnl.tecnico.ulisboa.pt";
+  services.nginx.virtualHosts.proxy-cache.serverName = "proxy.cache.rnl.tecnico.ulisboa.pt";
 }
