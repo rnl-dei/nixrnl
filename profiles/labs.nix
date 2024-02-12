@@ -20,6 +20,7 @@
 
   nix.settings = {
     substituters = [
+      "https://proxy.cache.rnl.tecnico.ulisboa.pt?priority=38"
       "https://labs.cache.rnl.tecnico.ulisboa.pt?priority=39"
     ];
 
