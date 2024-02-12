@@ -25,6 +25,6 @@ build:
 
     - mkdir -p ~/.config/nix
     - echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-    - echo "substituters = ssh://proxy.cache.rnl.tecnico.ulisboa.pt ssh://labs.cache.rnl.tecnico.ulisboa.pt" >> ~/.config/nix/nix.conf
+    - echo "substituters = ssh://ci@proxy.cache.rnl.tecnico.ulisboa.pt ssh://ci@labs.cache.rnl.tecnico.ulisboa.pt" >> ~/.config/nix/nix.conf
     - nix build .#nixosConfigurations.hagrid.config.system.build.toplevel
-    - nix copy --to ssh://labs.cache.rnl.tecnico.ulisboa.pt result/
+    - nix copy --to ssh://ci@labs.cache.rnl.tecnico.ulisboa.pt result/
