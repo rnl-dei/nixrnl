@@ -54,6 +54,12 @@
   # Open firewall to keepalived by default
   services.keepalived.openFirewall = true;
 
+  # Set the system configuration revision to the current git revision
+  # If the repository is dirty, set it to "dirty"
+  # This is useful for tracking which version of the configuration is deployed
+  # How to check the system configuration revision: `nixos-version --configuration-revision`
+  system.configurationRevision = inputs.self.shortRev or "dirty";
+
   system.stateVersion = "23.05";
   rnl.labels.os = "nixos";
 }
