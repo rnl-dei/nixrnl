@@ -6,7 +6,7 @@
   # Generate a public/private key pair like this:
   # $ nix-store --generate-binary-cache-key cache.yourdomain.tld-1 /var/lib/secrets/harmonia.secret /var/lib/secrets/harmonia.pub
   services.harmonia.enable = true;
-  nix.settings.allowed-users = ["harmonia"];
+  nix.settings.allowed-users = ["ci" "harmonia"];
 
   services.nginx.virtualHosts.binary-cache = {
     serverName = lib.mkDefault "binary-cache.${config.networking.fqdn}";
@@ -26,5 +26,14 @@
         zstd_types application/x-nix-archive;
       '';
     };
+  };
+
+  users.users.ci = {
+    isNormalUser = true;
+    # This is the public key with the corresponding private key set as a
+    # CI/CD variable `CACHE_PRIVATE_SSH_KEY` in Settings > CI/CD > Variables.
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlxG17I5UmosWQZINGFg5rX2jnj0RX1tkoFvxbxVnXE"
+    ];
   };
 }
