@@ -58,7 +58,7 @@
   # If the repository is dirty, set it to "dirty"
   # This is useful for tracking which version of the configuration is deployed
   # How to check the system configuration revision: `nixos-version --configuration-revision`
-  system.configurationRevision = inputs.self.shortRev or "dirty";
+  system.configurationRevision = inputs.self.rev or "dirty";
 
   system.stateVersion = "23.05";
   rnl.labels.os = "nixos";
