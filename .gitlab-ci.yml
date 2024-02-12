@@ -12,3 +12,17 @@ stages:
 lint:
   stage: check
   script: nix fmt -- -c --quiet .
+
+build:
+  stage: build
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$CACHE_PRIVATE_SSH_KEY" > ~/.ssh/id_ed25519
+    - chmod 400 ~/.ssh/id_ed25519
+    - echo "labs.cache.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
+
+    - mkdir -p ~/.config/nix
+    - echo "substituters = https://proxy.cache.rnl.tecnico.ulisboa.pt https://labs.cache.rnl.tecnico.ulisboa.pt" > ~/.config/nix/nix.conf
+    - nix build .#nixosConfigurations.hagrid.config.system.build.toplevel
+    - nix copy --to ssh://labs.cache.rnl.tecnico.ulisboa.pt result/
