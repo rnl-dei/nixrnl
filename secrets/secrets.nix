@@ -24,6 +24,7 @@ let
 in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
+  "host-keys/blatta.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;
   "host-keys/hagrid.age".publicKeys = deployMachines;
