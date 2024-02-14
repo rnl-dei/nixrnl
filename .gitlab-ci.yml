@@ -28,5 +28,5 @@ build:
     - echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
     - echo "substituters = https://proxy.cache.rnl.tecnico.ulisboa.pt https://labs.cache.rnl.tecnico.ulisboa.pt" >> ~/.config/nix/nix.conf
     - echo "trusted-public-keys = labs.cache.rnl.tecnico.ulisboa.pt:nqg28rqC5jNdevtd7DLIpvUPDBmv2D8hhWy0REBh5lU= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> ~/.config/nix/nix.conf
-    - nix build .#nixosConfigurations.hagrid.config.system.build.toplevel
+    - nix build .#nixosConfigurations.lab1p1.config.system.build.toplevel
     - nix copy --to ssh://ci@labs.cache.rnl.tecnico.ulisboa.pt result/
