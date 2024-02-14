@@ -16,15 +16,21 @@ lint:
 build:
   stage: build
   script:
+    # Because this is a link to a file in the nix store,
+    # we want to dereference and then append to it.
+    - cp -L /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt.tmp
+    - rm /etc/ssl/certs/ca-bundle.crt
+    - mv /etc/ssl/certs/ca-bundle.crt.tmp /etc/ssl/certs/ca-bundle.crt
+    - curl https://rnl.tecnico.ulisboa.pt/ca/cacert/cacert.crt >> /etc/ssl/certs/ca-bundle.crt
+
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - cp "$CACHE_PRIVATE_SSH_KEY" ~/.ssh/id_ed25519
     - chmod 400 ~/.ssh/id_ed25519
     - echo "labs.cache.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
-    - echo "proxy.cache.rnl.tecnico.ulisboa.pt ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw" >> ~/.ssh/known_hosts
 
     - mkdir -p ~/.config/nix
     - echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-    - echo "substituters = ssh://ci@proxy.cache.rnl.tecnico.ulisboa.pt ssh://ci@labs.cache.rnl.tecnico.ulisboa.pt" >> ~/.config/nix/nix.conf
+    - echo "substituters = https://proxy.cache.rnl.tecnico.ulisboa.pt https://labs.cache.rnl.tecnico.ulisboa.pt" >> ~/.config/nix/nix.conf
     - nix build .#nixosConfigurations.hagrid.config.system.build.toplevel
     - nix copy --to ssh://ci@labs.cache.rnl.tecnico.ulisboa.pt result/
