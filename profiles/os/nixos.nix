@@ -1,12 +1,13 @@
 {
   inputs,
+  lib,
   pkgs,
   ...
 }: {
   nix = {
     # Improve nix store disk usage
     gc = {
-      automatic = true;
+      automatic = lib.mkDefault true;
       randomizedDelaySec = "30min";
       dates = "03:15";
     };

@@ -8,6 +8,9 @@
   services.harmonia.enable = true;
   nix.settings.allowed-users = ["ci" "harmonia"];
 
+  # Disable automatic garbage-collection which would delete CI/CD artifacts.
+  nix.gc.automatic = false;
+
   services.nginx.virtualHosts.binary-cache = {
     serverName = lib.mkDefault "binary-cache.${config.networking.fqdn}";
     enableACME = true;
