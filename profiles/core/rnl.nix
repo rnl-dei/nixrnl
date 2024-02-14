@@ -185,6 +185,13 @@ in {
     openFirewall = true; # Open port 9100 (TCP)
   };
 
+  programs.ssh.knownHosts = {
+    gitlab-rnl-ed25519 = {
+      hostNames = ["gitlab.rnl.tecnico.ulisboa.pt"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMGaP0hqVNDA7CPiPC4zd75JKaNpR2kefJ7qmVEiPtCK";
+    };
+  };
+
   # Configure bootloader
   boot.loader.systemd-boot = {
     enable = lib.mkDefault true;
