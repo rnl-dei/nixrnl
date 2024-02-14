@@ -16,11 +16,6 @@ lint:
 build:
   stage: build
   script:
-    # Because this is a link to a file in the nix store,
-    # we want to dereference and then append to it.
-    - cp -L /etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt.tmp
-    - rm /etc/ssl/certs/ca-bundle.crt
-    - mv /etc/ssl/certs/ca-bundle.crt.tmp /etc/ssl/certs/ca-bundle.crt
     - curl https://rnl.tecnico.ulisboa.pt/ca/cacert/cacert.crt >> /etc/ssl/certs/ca-bundle.crt
 
     - mkdir -p ~/.ssh
