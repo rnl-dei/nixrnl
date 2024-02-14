@@ -1,4 +1,8 @@
 ---
+cache:
+  paths:
+    - /nix/
+
 image:
   name: "nixos/nix"
 
