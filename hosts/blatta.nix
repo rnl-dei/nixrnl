@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   profiles,
   ...
 }: {
@@ -66,7 +67,28 @@
     ];
   };
 
-  rnl.internalHost = true;
+  rnl.internalHost = true; # Use Vault to generate certificates
+
+  services.nginx.virtualHosts = {
+    blatta = {
+      serverName = "${config.networking.fqdn}";
+      enableACME = true;
+      forceSSL = true;
+      locations."/". root = pkgs.writeTextDir "index.html" ''
+        <html>
+          <body>
+            <h1>Welcome to Blatta</h1>
+            <a href="https://rnl.tecnico.ulisboa.pt/ca" target="_blank">Entidade certificadora da RNL</a>
+            <br>
+            <h2>Links</h2>
+            <ul>
+              <li><a href="https://dms.blatta.rnl.tecnico.ulisboa.pt">DMS (Staging)</a></li>
+            </ul>
+          </body>
+        </html>
+      '';
+    };
+  };
 
   # Services
   dei.dms = {
@@ -75,9 +97,32 @@
     ];
     sites = {
       staging = {
-        enable = true;
         serverName = "dms.${config.networking.fqdn}";
       };
     };
+  };
+
+  dei.phdms.sites = {
+    staging = {
+      serverName = "phdms.${config.networking.fqdn}";
+    };
+  };
+
+  rnl.githook = {
+    enable = true;
+    hooks = {
+      phdms-staging = {
+        url = "git@gitlab.rnl.tecnico.ulisboa.pt:/dei/PhDMS.git";
+        path = config.dei.phdms.sites.staging.stateDir;
+        directoryMode = "0755";
+      };
+    };
+  };
+
+  systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
+  age.secrets."root-at-blatta-ssh.key" = {
+    file = ../secrets/root-at-blatta-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+    owner = "root";
   };
 }

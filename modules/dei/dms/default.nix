@@ -18,7 +18,11 @@ with lib; let
     ...
   }: {
     options = {
-      enable = mkEnableOption "DEI Management System application";
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable DEI Management System application";
+      };
 
       stateDir = mkOption {
         type = types.path;
