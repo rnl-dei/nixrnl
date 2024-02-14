@@ -8,6 +8,9 @@
   services.harmonia.enable = true;
   nix.settings.allowed-users = ["ci" "harmonia"];
 
+  # Allow importing nix store paths with the ci user.
+  nix.settings.trusted-users = ["ci"];
+
   # Disable automatic garbage-collection which would delete CI/CD artifacts.
   nix.gc.automatic = false;
 
