@@ -7,5 +7,7 @@
     podman = {
       enable = true;
     };
+
+    docker.enable = false;
   };
 }

@@ -36,6 +36,7 @@ in {
 
   # Secrets
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
+  "gitlab-runner-lab2-env.age".publicKeys = users ++ [labs];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
