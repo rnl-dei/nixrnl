@@ -25,6 +25,16 @@ with lib; let
         description = "Enable PhD DEI Management System application";
       };
 
+      serviceName = mkOption {
+        type = types.str;
+        description = "Name of the PhDMS site";
+        default =
+          if name == "default"
+          then "phdms"
+          else "phdms-${name}";
+        readOnly = true;
+      };
+
       stateDir = mkOption {
         type = types.path;
         default = "/var/lib/dei/phdms/${name}";
@@ -45,7 +55,7 @@ with lib; let
 
       socket = mkOption {
         type = types.str;
-        default = "${uwsgi.runDir}/phdms-${name}.sock";
+        default = "${uwsgi.runDir}/${config.serviceName}.sock";
         description = "Path to the uWSGI socket";
       };
 
@@ -80,7 +90,7 @@ in {
       enable = true;
       virtualHosts =
         mapAttrs' (siteName: siteCfg: {
-          name = "phdms-${siteName}";
+          name = siteCfg.serviceName;
           value = {
             serverName = mkDefault "${siteCfg.serverName}";
             serverAliases = mkDefault siteCfg.serverAliases;
@@ -88,7 +98,7 @@ in {
             forceSSL = mkDefault true;
             locations = {
               "/".extraConfig = ''
-                uwsgi_pass unix:${uwsgi.instance.vassals."phdms-${siteName}".socket};
+                uwsgi_pass unix:${uwsgi.instance.vassals."${siteCfg.serviceName}".socket};
                 include ${config.services.nginx.package}/conf/uwsgi_params;
               '';
               "/static".root = "${siteCfg.stateDir}/deic";
@@ -107,7 +117,7 @@ in {
         type = "emperor";
         vassals =
           mapAttrs' (siteName: siteCfg: {
-            name = "phdms-${siteName}";
+            name = siteCfg.serviceName;
             value = {
               type = "normal";
               chdir = "${siteCfg.stateDir}/deic";

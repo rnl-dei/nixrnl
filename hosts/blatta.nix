@@ -95,25 +95,17 @@
     builds.authorizedKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICSDnfYmzk0zCktsKjRAphZavsDwXG/ymq+STFff1Zy/" # GitLab CI
     ];
-    sites = {
-      staging = {
-        serverName = "dms.${config.networking.fqdn}";
-      };
-    };
+    sites.default.serverName = "dms.${config.networking.fqdn}";
   };
 
-  dei.phdms.sites = {
-    staging = {
-      serverName = "phdms.${config.networking.fqdn}";
-    };
-  };
+  dei.phdms.sites.default.serverName = "phdms.${config.networking.fqdn}";
 
   rnl.githook = {
     enable = true;
     hooks = {
-      phdms-staging = {
+      phdms = {
         url = "git@gitlab.rnl.tecnico.ulisboa.pt:/dei/PhDMS.git";
-        path = config.dei.phdms.sites.staging.stateDir;
+        path = config.dei.phdms.sites.default.stateDir;
         directoryMode = "0755";
       };
     };
@@ -125,4 +117,29 @@
     path = "/root/.ssh/id_ed25519";
     owner = "root";
   };
+
+  services.postgresql = {
+    enable = true;
+    authentication = ''
+      local phdms phdms trust
+    '';
+    ensureDatabases = ["phdms"];
+    ensureUsers = [
+      {
+        name = "root";
+        ensureClauses.superuser = true;
+      }
+      {
+        name = "phdms";
+        ensureDBOwnership = true;
+      }
+    ];
+  };
+
+  environment.systemPackages = [
+    (pkgs.writeScriptBin "random-logout-message" ''
+      # Select random string from list
+      ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f "$(ls ${pkgs.cowsay}/share/cowsay/cows | ${pkgs.gnugrep}/bin/grep ".cow$" | ${pkgs.toybox}/bin/shuf -n 1)" | ${pkgs.lolcat}/bin/lolcat -f -a -d 3
+    '')
+  ];
 }

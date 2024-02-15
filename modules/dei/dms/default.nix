@@ -24,6 +24,16 @@ with lib; let
         description = "Enable DEI Management System application";
       };
 
+      serviceName = mkOption {
+        type = types.str;
+        description = "Name of the DMS service";
+        default =
+          if name == "default"
+          then "dms"
+          else "dms-${name}";
+        readOnly = true;
+      };
+
       stateDir = mkOption {
         type = types.path;
         default = "/var/lib/dei/dms/${name}";
@@ -189,7 +199,7 @@ with lib; let
       fi
 
       # Stop service
-      ${pkgs.systemd}/bin/systemctl stop "dms-${site}.service"
+      ${pkgs.systemd}/bin/systemctl stop "${cfg.sites."${site}".serviceName}.service"
 
 
       # Delete old build
@@ -200,7 +210,7 @@ with lib; let
       ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$STATE_DIR/www"
 
       # Start service
-      ${pkgs.systemd}/bin/systemctl start "dms-${site}.service"
+      ${pkgs.systemd}/bin/systemctl start "${cfg.sites."${site}".serviceName}.service"
 
       echo -e "''${GRN}DMS ${site} successfully deployed.''${CLR}"
     '';
@@ -249,9 +259,9 @@ in {
       enable = true;
       virtualHosts =
         mapAttrs' (siteName: siteCfg: {
-          name = "dms-${siteName}";
+          name = siteCfg.serviceName;
           value = {
-            serverName = mkDefault "${siteCfg.serverName}";
+            serverName = mkDefault siteCfg.serverName;
             serverAliases = mkDefault siteCfg.serverAliases;
             root = "${siteCfg.stateDir}/www";
             enableACME = mkDefault true;
@@ -279,7 +289,7 @@ in {
 
     systemd.services =
       mapAttrs' (siteName: siteCfg: {
-        name = "dms-${siteName}";
+        name = siteCfg.serviceName;
         value = {
           description = "DEI Management System Backend (${siteName})";
           after = ["network.target"];
@@ -304,7 +314,7 @@ in {
       (mkIf (user == "dms") {
         dms = {
           isNormalUser = true;
-          home = "/var/lib/dms";
+          home = "/var/lib/dei/dms";
           group = webserver.group;
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
         };
