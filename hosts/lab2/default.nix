@@ -21,12 +21,12 @@
   rnl.labels.location = "inf1-p2-lab2";
 
   services.gitlab-runner.services.default = {
-    registrationConfigFile = config.age.secrets."gitlab-runner-lab2.env".path;
+    registrationConfigFile = config.age.secrets."gl-runner-lab2.env".path;
     description = "gitlab-runner-lab2";
   };
 
-  age.secrets."gitlab-runner-lab2.env" = {
-    file = ../../secrets/gitlab-runner-lab2-env.age;
+  age.secrets."gl-runner-lab2.env" = {
+    file = ../../secrets/gitlab-runners/lab2-env.age;
     owner = "root";
     mode = "0400";
   };

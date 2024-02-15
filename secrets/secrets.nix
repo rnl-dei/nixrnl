@@ -33,10 +33,13 @@ in {
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
+  
+  # GitLab runners tokens
+  "gitlab-runners/lab2-env.age".publicKeys = users ++ [labs];
+  "gitlab-runners/lab5-env.age".publicKeys = users ++ [labs];  
 
   # Secrets
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
-  "gitlab-runner-lab2-env.age".publicKeys = users ++ [labs];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
