@@ -11,7 +11,7 @@
 
     cluster.server
     fail2ban
-    ist-shell
+    ist.shell
   ];
 
   # Networking

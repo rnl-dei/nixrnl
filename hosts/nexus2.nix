@@ -6,7 +6,7 @@
     type.vm
 
     fail2ban
-    ist-shell
+    ist.shell
     nexus
   ];
 
