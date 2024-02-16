@@ -136,10 +136,24 @@
     ];
   };
 
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureDatabases = ["dms"];
+    ensureUsers = [
+      {
+        name = "dms";
+        ensurePermissions = {
+          "dms.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   environment.systemPackages = [
     (pkgs.writeScriptBin "random-logout-message" ''
       # Select random string from list
-      ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f "$(ls ${pkgs.cowsay}/share/cowsay/cows | ${pkgs.gnugrep}/bin/grep ".cow$" | ${pkgs.toybox}/bin/shuf -n 1)" | ${pkgs.lolcat}/bin/lolcat -f -a -d 3
+      ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f "$(ls ${pkgs.cowsay}/share/cowsay/cows | ${pkgs.gnugrep}/bin/grep ".cow$" | ${pkgs.toybox}/bin/shuf -n 1)" | ${pkgs.lolcat}/bin/lolcat -f
     '')
   ];
 }

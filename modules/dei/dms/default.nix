@@ -99,7 +99,7 @@ with lib; let
 
         jar = mkOption {
           type = types.path;
-          default = "${config.stateDir}/backend/dms.jar";
+          default = "${config.stateDir}/dms.jar";
           description = "Path to the DMS JAR file";
         };
 
@@ -111,8 +111,14 @@ with lib; let
 
         command = mkOption {
           type = types.str;
-          default = "${config.backend.java} -jar ${config.backend.jar} --server.port=${toString config.backend.port}";
+          default = "${config.backend.java} -jar ${config.backend.jar} --server.port=${toString config.backend.port} " + (concatStringsSep " " config.backend.extraArgs);
           description = "Command to start the DMS backend";
+        };
+
+        extraArgs = mkOption {
+          type = types.listOf types.str;
+          default = [];
+          description = "Extra arguments to pass to the backend server";
         };
 
         environment = mkOption {
@@ -142,7 +148,7 @@ with lib; let
   };
 
   mkDeployScript = site:
-    pkgs.writeScriptBin "deploy-dms-${site}" ''
+    pkgs.writeScriptBin "deploy-${cfg.sites."${site}".serviceName}" ''
       set -e # stop on error
 
       # Colors
@@ -187,10 +193,11 @@ with lib; let
       check_build_dir $BUILD
 
       if [ -f "$STATE_DIR/dms.jar" ]; then
-        echo "Running build is $(${pkgs.toybox}/bin/readlink $STATE_DIR/dms.jar)"
+        echo -e "''${YEL}Running build is $(${pkgs.toybox}/bin/readlink $STATE_DIR/dms.jar)''${CLR}"
       fi
 
-      read -p "Are you sure you want to deploy build $BUILD, created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)? " -n1 -r
+      echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)? "
+      read -n1 -r
       echo
 
       if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -252,6 +259,7 @@ in {
         ])
         sites)
       ++ [
+        "d /var/lib/dei/dms 0750 ${user} ${webserver.group} - -"
         "d ${cfg.builds.directory} 0750 ${user} ${webserver.group} - -"
       ];
 
@@ -267,14 +275,16 @@ in {
             enableACME = mkDefault true;
             forceSSL = mkDefault true;
             locations = {
-              "/" = {};
+              "/" = {
+                tryFiles = "$uri $uri/ /index.html";
+              };
               "/raa/" = {
                 extraConfig = ''
                   add_header Access-Control-Allow-Origin 'https://rnl.tecnico.ulisboa.pt/';
                 '';
               };
               "/api/" = {
-                proxyPass = "http://127.0.0.1:${toString siteCfg.backend.port}";
+                proxyPass = "http://127.0.0.1:${toString siteCfg.backend.port}/";
                 proxyWebsockets = true;
               };
               "/public/" = {
@@ -305,6 +315,7 @@ in {
             Group = webserver.group;
             EnvironmentFile = siteCfg.backend.environmentFile;
             Restart = "on-failure";
+            RestartSec = "5s";
           };
         };
       })
