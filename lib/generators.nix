@@ -35,6 +35,7 @@
           [
             (self: super: {
               unstable = import inputs.unstable argsPkgs;
+              allowOpenSSL = import inputs.nixpkgs (argsPkgs // {config.permittedInsecurePackages = ["openssl-1.1.1w"];});
             })
           ]
           ++ lib.attrValues overlays;
