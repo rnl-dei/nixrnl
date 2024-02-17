@@ -161,7 +161,7 @@ in {
     enable = true;
     setSendmail = true;
     defaults = {
-      from = "%U@%C.${config.rnl.domain}";
+      from = "%U@%C";
     };
     accounts = {
       "default" = {
