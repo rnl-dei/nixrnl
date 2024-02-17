@@ -84,6 +84,8 @@
   programs.bash.shellAliases = {
     ansible-infra = "ANSIBLE_CONFIG=${config.rnl.githook.hooks.ansible-infra.path}/ansible.cfg ansible";
     ansible-windows = "ANSIBLE_CONFIG=${config.rnl.githook.hooks.ansible-windows.path}/ansible.cfg ansible";
+
+    ssh-windows-labs = "ssh -p 2222 -o User='Admin'";
   };
 
   age.secrets."root-at-dealer-ssh.key" = {
