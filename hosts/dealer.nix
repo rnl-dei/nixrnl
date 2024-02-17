@@ -1,4 +1,9 @@
-{profiles, ...}: {
+{
+  config,
+  pkgs,
+  profiles,
+  ...
+}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -59,4 +64,39 @@
       }
     ];
   };
+
+  rnl.githook = {
+    enable = true;
+    hooks.ansible-infra.url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/infra/ansible.git";
+    hooks.ansible-windows.url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/windows/ansible.git";
+  };
+
+  age.secrets."ansible-infra-vault-pass.txt" = {
+    file = ../secrets/ansible-infra-vault-pass-txt.age;
+    path = config.rnl.githook.hooks.ansible-infra.path + "/.vault_pass.txt";
+  };
+
+  age.secrets."ansible-windows-vault-pass.txt" = {
+    file = ../secrets/ansible-windows-vault-pass-txt.age;
+    path = config.rnl.githook.hooks.ansible-windows.path + "/.vault_pass.txt";
+  };
+
+  programs.bash.shellAliases = {
+    ansible-infra = "ANSIBLE_CONFIG=${config.rnl.githook.hooks.ansible-infra.path}/ansible.cfg ansible";
+    ansible-windows = "ANSIBLE_CONFIG=${config.rnl.githook.hooks.ansible-windows.path}/ansible.cfg ansible";
+  };
+
+  age.secrets."root-at-dealer-ssh.key" = {
+    file = ../secrets/root-at-dealer-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+    owner = "root";
+  };
+
+  environment.systemPackages = let
+    ansible = pkgs.ansible.override {
+      windowsSupport = true;
+    };
+  in [
+    ansible
+  ];
 }

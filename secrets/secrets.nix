@@ -41,6 +41,8 @@ in {
   "host-keys/vault.age".publicKeys = deployMachines;
 
   # Secrets
+  "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
+  "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
@@ -50,6 +52,7 @@ in {
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
+  "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
