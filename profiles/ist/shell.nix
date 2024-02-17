@@ -61,9 +61,6 @@
       GSSAPIDelegateCredentials yes
   '';
 
-  # To avoid mpirun hanging, have the cluster server and the labs know each other beforehand.
-  programs.ssh.knownHosts."lab*p*".publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
-
   # Ensure users can't overload the system
   # These settings constrain resources consumed by *all* users, globally.
   systemd.slices."user".sliceConfig = {

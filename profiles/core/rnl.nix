@@ -187,8 +187,12 @@ in {
 
   programs.ssh.knownHosts = {
     gitlab-rnl-ed25519 = {
-      hostNames = ["gitlab.rnl.tecnico.ulisboa.pt"];
+      hostNames = ["gitlab.${config.rnl.domain}"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMGaP0hqVNDA7CPiPC4zd75JKaNpR2kefJ7qmVEiPtCK";
+    };
+    labs-rnl-ed25519 = {
+      hostNames = ["lab*p*" "lab*p*.${config.rnl.domain}"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
     };
   };
 
