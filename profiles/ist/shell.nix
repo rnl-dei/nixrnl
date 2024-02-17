@@ -4,59 +4,11 @@
   config,
   ...
 }: {
-  # Setup AFS
-  services.openafsClient = {
-    enable = true;
-    mountPoint = "/afs";
-    cellName = "ist.utl.pt";
-    cellServDB = [
-      {
-        ip = "193.136.128.33";
-        dnsname = "afs01.ist.utl.pt";
-      }
-      {
-        ip = "193.136.128.34";
-        dnsname = "afs02.ist.utl.pt";
-      }
-      {
-        ip = "193.136.128.35";
-        dnsname = "afs03.ist.utl.pt";
-      }
-      {
-        ip = "193.136.128.36";
-        dnsname = "afs04.ist.utl.pt";
-      }
-    ];
-  };
-
-  # Setup Kerberos
-  krb5 = {
-    enable = true;
-    libdefaults = {
-      default_realm = "IST.UTL.PT";
-      dns_fallback = true;
-      forwardable = true;
-
-      # Required for SSH authentication into sigma
-      dns_canonicalize_hostname = true;
-      rnds = true;
-    };
-
-    realms = {
-      "IST.UTL.PT" = {default_domain = "kerberos.tecnico.ulisboa.pt";};
-    };
-  };
-
-  # Setup LDAP
-  users.ldap = {
-    enable = true;
-    base = "dc=ist,dc=utl,dc=pt";
-    server = "ldaps://ldap.tecnico.ulisboa.pt";
-    nsswitch = false;
-    loginPam = false;
-  };
-
-  environment.systemPackages = with pkgs; [openldap];
+  imports = [
+    ./afs.nix
+    ./ldap.nix
+    ./kerberos.nix
+  ];
 
   services.sssd = {
     enable = true;
@@ -108,9 +60,6 @@
       GSSAPIAuthentication yes
       GSSAPIDelegateCredentials yes
   '';
-
-  # To avoid mpirun hanging, have the cluster server and the labs know each other beforehand.
-  programs.ssh.knownHosts."lab*p*".publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
 
   # Ensure users can't overload the system
   # These settings constrain resources consumed by *all* users, globally.

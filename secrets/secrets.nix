@@ -14,6 +14,7 @@ let
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
+  dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
@@ -28,6 +29,7 @@ in {
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
+  "host-keys/dealer.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;
   "host-keys/hagrid.age".publicKeys = deployMachines;
   "host-keys/labs.age".publicKeys = deployMachines;
@@ -39,6 +41,8 @@ in {
   "host-keys/vault.age".publicKeys = deployMachines;
 
   # Secrets
+  "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
+  "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
@@ -48,6 +52,7 @@ in {
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
+  "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
