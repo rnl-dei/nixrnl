@@ -192,6 +192,8 @@ in {
     };
   };
 
+  rnl.githook.emailDestination = "robots@${config.rnl.domain}";
+
   # Configure bootloader
   boot.loader.systemd-boot = {
     enable = lib.mkDefault true;

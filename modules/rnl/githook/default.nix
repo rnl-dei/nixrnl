@@ -24,7 +24,7 @@ with lib; let
       };
       emailDestination = mkOption {
         type = types.str;
-        default = "robots@localhost";
+        default = cfg.emailDestination;
         description = "The email address to send the notification to";
       };
       secretFile = mkOption {
@@ -84,6 +84,11 @@ in {
       type = types.bool;
       default = true;
       description = "Open firewall for the port";
+    };
+    emailDestination = mkOption {
+      type = types.str;
+      default = "robots@localhost";
+      description = "The email address to send the notification to";
     };
     urlPrefix = mkOption {
       type = types.str;
