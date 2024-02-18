@@ -56,6 +56,7 @@ in {
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
+  "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];

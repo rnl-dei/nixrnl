@@ -14,6 +14,7 @@
     ./graphical/labs.nix
     ./containers/podman/rootless.nix
     ./software/labs.nix
+    ./transmission/labs.nix
   ];
 
   programs.nix-ld.enable = true;

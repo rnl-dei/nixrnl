@@ -12,6 +12,7 @@
     binary-cache
     proxy-cache
     webserver
+    transmission.labs
   ];
 
   rnl.labels.location = "inf1-p2-c1";

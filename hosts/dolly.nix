@@ -1,5 +1,5 @@
 {
-  pkgs,
+  config,
   profiles,
   ...
 }: {
@@ -10,6 +10,8 @@
     type.physical
 
     pixiecore
+    opentracker
+    transmission.labs
   ];
 
   rnl.labels.location = "inf1-p01-a3";
@@ -54,4 +56,8 @@
   };
 
   users.users.root.hashedPassword = "$6$fBxN95kuNpq4Nxhq$Rev.mpIltLW7keZoT/LLtuamiggGTpBtfs.Z.8ztxin9TI9ZksIUNYeOvc4RgQF.n.nlGAlXRI4IBxyFj3VSa/";
+
+  environment.shellAliases = {
+    create-torrent = "transmission-create -p -t udp://tracker.${config.rnl.domain}:31000";
+  };
 }
