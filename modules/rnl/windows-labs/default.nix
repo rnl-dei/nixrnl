@@ -10,9 +10,8 @@ in {
   options.rnl.windows-labs = {
     enable = mkEnableOption "RNL Windows Labs";
     package = mkOption {
-      type = types.package;
-      default = pkgs.rnl-windows-labs;
-      description = "The package to deploy with Windows Image and GRUB files";
+      type = types.path;
+      description = "The path to deploy with Windows Image and GRUB files";
     };
     image = mkOption {
       type = types.path;
@@ -66,7 +65,6 @@ in {
       extraPrepareConfig = ''
         mkdir -p /boot/EFI/Microsoft/Boot
       '';
-      extraFiles = cfg.extraFiles;
     };
 
     systemd.services."rnl-windows-labs" = {
@@ -89,6 +87,12 @@ in {
           exit 0
         fi
 
+        # Check if image exists
+        if [ ! -f ${cfg.image} ]; then
+          echo "Image ${cfg.image} does not exist"
+          exit 1
+        fi
+
         # Write image to partition
         echo "Writing image to partition ${cfg.partition}"
 
@@ -102,6 +106,12 @@ in {
         else
           dd if=${cfg.image} of=${cfg.partition} bs=${cfg.bs} status=progress
         fi
+
+        # Copy extra files to EFI partition
+        for file in ${lib.concatStringsSep " " (mapAttrsToList (name: path: path) cfg.extraFiles)}; do
+          echo "Copying $file to EFI partition"
+          cp $file /boot/EFI/Microsoft/Boot
+        done
 
         echo "Windows image successfully deployed to partition ${cfg.partition}"
         exit 0
