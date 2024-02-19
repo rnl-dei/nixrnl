@@ -18,4 +18,10 @@
       watch-dir-enabled = true;
     };
   };
+
+  users.users.root.packages = [
+    (pkgs.writeScriptBin "reset-transmission-config" ''
+      rm -rf ${config.services.transmission.home}/.config && systemctl restart transmission"
+    '')
+  ];
 }
