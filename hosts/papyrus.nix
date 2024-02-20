@@ -47,11 +47,24 @@
     };
   };
 
-  # TODO: Add wheatley bot
-
-  # Bind mount /var/lib/mattermost to /mnt/data/mattermost
+  # Bind mount /mnt/data/mattermost to /var/lib/mattermost
   fileSystems."${config.services.mattermost.statePath}" = {
     device = "/mnt/data/mattermost";
+    options = ["bind"];
+  };
+
+  # Wheatley Bot
+  rnl.wheatley = {
+    enable = true;
+    instances.default = {
+      mattermost.url = config.services.mattermost.siteUrl;
+      configFile = "/etc/wheatley/config.yml";
+    };
+  };
+
+  # Bind mount /mnt/data/wheatley to /etc/wheatley
+  fileSystems."/etc/wheatley" = {
+    device = "/mnt/data/wheatley";
     options = ["bind"];
   };
 
