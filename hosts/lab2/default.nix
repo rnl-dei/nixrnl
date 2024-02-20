@@ -1,8 +1,4 @@
-{
-  config,
-  profiles,
-  ...
-}: {
+{profiles, ...}: {
   imports = with profiles; [
     core.rnl
     filesystems.labs
@@ -10,7 +6,7 @@
     type.physical
 
     labs
-    gitlab-runner
+    gitlab-runner.es
   ];
 
   networking.enableIPv6 = false;
@@ -19,15 +15,4 @@
   rnl.windows-labs.partition = "/dev/nvme0n1p2";
 
   rnl.labels.location = "inf1-p2-lab2";
-
-  services.gitlab-runner.services.default = {
-    registrationConfigFile = config.age.secrets."gl-runner-lab2.env".path;
-    description = "gitlab-runner-lab2";
-  };
-
-  age.secrets."gl-runner-lab2.env" = {
-    file = ../../secrets/gitlab-runners/lab2-env.age;
-    owner = "root";
-    mode = "0400";
-  };
 }

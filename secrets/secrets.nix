@@ -33,10 +33,9 @@ in {
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
-  
+
   # GitLab runners tokens
-  "gitlab-runners/lab2-env.age".publicKeys = users ++ [labs];
-  "gitlab-runners/lab5-env.age".publicKeys = users ++ [labs];  
+  "gitlab-runners/es-24-env.age".publicKeys = users ++ [labs];
 
   # Secrets
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
