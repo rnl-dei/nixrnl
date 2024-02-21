@@ -50,9 +50,6 @@
 
   rnl.labels.location = "zion";
 
-  # Add dei's keys to root's authorized_keys
-  users.users.root.openssh.authorizedKeys.keys = config.users.users.dei.openssh.authorizedKeys.keys;
-
   services.nginx.virtualHosts.deinew = {
     default = true;
     serverName = lib.mkDefault "deinew.${config.rnl.domain}";
