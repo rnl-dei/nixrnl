@@ -196,7 +196,7 @@ in {
     };
   };
 
-  rnl.githook.emailDestination = "robots@${config.rnl.domain}";
+  rnl.githook.emailDestination = lib.mkDefault "robots@${config.rnl.domain}";
 
   # Configure bootloader
   boot.loader.systemd-boot = {
