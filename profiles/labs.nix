@@ -14,6 +14,7 @@
     ./graphical/labs.nix
     ./containers/podman/rootless.nix
     ./software/labs.nix
+    ./transmission/labs.nix
   ];
 
   programs.nix-ld.enable = true;
@@ -178,6 +179,7 @@
   # Windows Deploy
   rnl.windows-labs = {
     enable = true;
+    package = config.services.transmission.settings.download-dir + "/rnl-windows-labs";
     keyFile = config.age.secrets."windows-labs-image.key".path;
   };
 
