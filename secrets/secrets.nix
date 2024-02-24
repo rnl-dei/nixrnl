@@ -40,6 +40,9 @@ in {
   "host-keys/thomas.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
 
+  # GitLab runners tokens
+  "gitlab-runners/es-24-env.age".publicKeys = users ++ [labs];
+
   # Secrets
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];

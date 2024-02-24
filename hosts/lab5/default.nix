@@ -6,6 +6,7 @@
     type.physical
 
     labs
+    gitlab-runner.es
   ];
 
   rnl.storage.disks.root = ["/dev/nvme0n1"];
