@@ -7,7 +7,6 @@
 with lib; let
   cfg = config.dei.phdms;
   sites = filterAttrs (_: v: v.enable) cfg.sites;
-  user = config.dei.phdms.user;
   webserver = config.services.nginx;
   uwsgi = config.services.uwsgi;
 
@@ -64,6 +63,7 @@ with lib; let
         default =
           {
             PATH_WKHTMLTOPDF = "${pkgs.allowOpenSSL.wkhtmltopdf-bin}/bin/wkhtmltopdf";
+            PATH = makeBinPath ([pkgs.pdftk] ++ config.extraPackages);
           }
           // config.extraEnvironment;
         description = "Environment variables to the uWSGI socket";
@@ -73,6 +73,12 @@ with lib; let
         type = types.attrsOf types.str;
         default = {};
         description = "Extra environment variables to the uWSGI socket";
+      };
+
+      extraPackages = mkOption {
+        type = types.listOf types.package;
+        default = [];
+        description = "Extra packages to install";
       };
     };
   };
@@ -107,6 +113,12 @@ in {
         })
         sites;
     };
+
+    systemd.tmpfiles.rules = flatten (mapAttrsToList (_: siteCfg: [
+        "d ${siteCfg.stateDir}/deic/media 0750 ${webserver.user} ${webserver.group} - -"
+        "d ${siteCfg.stateDir}/deic/media/uploads 0750 ${webserver.user} ${webserver.group} - -"
+      ])
+      sites);
 
     services.uwsgi = {
       enable = true;
