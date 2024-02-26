@@ -175,6 +175,7 @@ in {
           "gid" = "nobody";
           "transfer logging" = false;
           "log format" = "%t %a %m %f %b";
+
           "timeout" = 300;
         };
       };
@@ -188,7 +189,7 @@ in {
       #rsaKeyFile = "${certs.${config.networking.fqdn}.directory}/key.pem";
       extraConfig = ''
         allow_anon_ssl=YES
-        ftpd_banner=OLÄ AMIGOS E AMIGAS BEM VINDOS AO SERVIDOR DE FTP DA RNL!!!! ENJOY E CARRREGA NO SININHO!
+        banner_file=${cfg.motd}
       '';
     };
 
