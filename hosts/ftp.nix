@@ -150,15 +150,16 @@ in {
     extraConfig = ''
       autoindex on;
       autoindex_exact_size off;
+
     '';
     locations = {
-      "~ ^/pub" = {alias = config.rnl.ftp-server.rootDirectory;};
+      "~ ^/pub" = {alias = config.rnl.ftp-server.rootDirectory + "/";};
       "~ ^/debian" = {alias = "/mnt/data/ftp/pub/debian/";}; # Recommended by Debian
 
-      "~ ^/dei" = {alias = "/mnt/data/ftp/dei";};
+      "~ ^/dei" = {alias = "/mnt/data/ftp/dei/";};
       # TODO: We probably want to add /dei-share with password protection
       "~ ^/labs" = {
-        alias = "/mnt/data/ftp/labs";
+        alias = "/mnt/data/ftp/labs/";
         extraConfig = ''
           autoindex off;
           location ~ ^/labs/(windows|software) {
@@ -175,11 +176,11 @@ in {
 
       # Public but not listed, to share temporary files
       "~ ^/tmp" = {
-        alias = "/mnt/data/ftp/tmp";
+        alias = "/mnt/data/ftp/tmp/";
         extraConfig = "autoindex off;";
       };
       "~ ^/priv" = {
-        alias = "/mnt/data/ftp/priv";
+        alias = "/mnt/data/ftp/priv/";
         extraConfig = ''
           # Allow access only from the RNL networks
           allow 193.136.164.0/24;
