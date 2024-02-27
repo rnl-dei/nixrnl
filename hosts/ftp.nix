@@ -141,9 +141,22 @@ in {
     motd = builtins.toFile "motd" motd;
   };
 
+  rnl.githook = {
+    enable = true;
+    hooks.ftp-site.url = "git@gitlab.rnl.tecnico.ulisboa.pt:rnl/infra/ftp-site.git";
+  };
+
+  systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
+  age.secrets."root-at-ftp-ssh.key" = {
+    file = ../secrets/root-at-ftp-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+    owner = "root";
+  };
+
   services.nginx.virtualHosts.ftp = {
     default = true;
     serverName = lib.mkDefault "${config.networking.fqdn}";
+    root = config.rnl.githook.hooks.ftp-site.path;
     # FIXME: Configure firewall to enable ACME
     #enableACME = true;
     #addSSL = true;
