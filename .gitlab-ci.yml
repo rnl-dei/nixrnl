@@ -2,6 +2,9 @@
 image:
   name: "nixos/nix"
 
+variables:
+  NIX_CONFIG: "experimental-features = nix-command flakes"
+
 stages:
   - check
   - build
