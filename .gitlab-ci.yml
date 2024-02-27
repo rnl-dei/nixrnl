@@ -2,8 +2,10 @@
 image:
   name: "nixos/nix"
 
-syntax:
-  script:
-    - nix flake check --extra-experimental-features "nix-command flakes"
+stages:
+  - check
+  - build
 
-
+lint:
+  stage: check
+  script: nix fmt -- -c --quiet .
