@@ -32,6 +32,7 @@
       htmlmail = false;
       # Advanced
       updatecheck = false;
+      dontlog = ["debug" "error" "deprecated"]; # Set this to [] if you want logs
       # Templates
       tpl = {
         bootstrap3 = {
