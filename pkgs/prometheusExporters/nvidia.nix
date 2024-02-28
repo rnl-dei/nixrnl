@@ -29,6 +29,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "NVIDIA GPU exporter for prometheus using nvidia-smi binary";
     license = licenses.mit;
-    maintainers = ["nuno.alves"];
+    maintainers = ["martim.monis"];
   };
 }
