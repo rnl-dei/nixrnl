@@ -6,7 +6,7 @@ email_dest="$3"
 hook_script="$4"
 
 pull_hook="${repo_path}/.pull_hooks.sh"
-hooks_file=${hook_script:-$hooks_file}
+hooks_file=${hook_script:-$pull_hook}
 email_dest="${email_dest:-root}"
 
 email_subject="[git-hook] ${HOSTNAME}:${repo_path}"
