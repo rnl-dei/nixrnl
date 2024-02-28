@@ -42,4 +42,21 @@
       AutoDetect=nvml
     '')
   ];
+
+  systemd.services."nvidia_gpu_exporter" = {
+    description="NVIDIA GPU Exporter";
+    serviceConfig = {
+      Type="simple";
+      User="nvidia_gpu_exporter";
+      Group="nvidia_gpu_exporter";
+      DynamicUser = true;
+
+      ExecStart="${pkgs.prometheusExporters.nvidia}/bin/nvidia_gpu_exporter";
+      SyslogIdentifier="nvidia_gpu_exporter";
+      Restart="always";
+      RestartSec="1";
+    };
+    wantedBy=[ "multi-user.target" ];
+    after=[ "network-online.target" ];
+  };
 }
