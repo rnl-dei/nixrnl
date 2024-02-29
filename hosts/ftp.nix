@@ -143,7 +143,30 @@ in {
 
   rnl.githook = {
     enable = true;
-    hooks.ftp-site.url = "git@gitlab.rnl.tecnico.ulisboa.pt:rnl/infra/ftp-site.git";
+    hooks.ftp-site = {
+      url = "git@gitlab.rnl.tecnico.ulisboa.pt:rnl/infra/ftp-site.git";
+      directoryMode = "755";
+    };
+  };
+
+  systemd.services."remake-ftp-site" = {
+    description = "Remake FTP homepage";
+    startAt = "*-*-* 02:14:00";
+    path = [
+      pkgs.bash
+      pkgs.gnum4
+      pkgs.gnumake
+      pkgs.gawk
+      (pkgs.python3.withPackages (ps: [
+        ps.jinja2
+        ps.pyyaml
+      ]))
+    ];
+    script = ''
+      #!/usr/bin/env bash
+      cd ${config.rnl.githook.hooks.ftp-site.path}
+      make
+    '';
   };
 
   systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
@@ -156,7 +179,7 @@ in {
   services.nginx.virtualHosts.ftp = {
     default = true;
     serverName = lib.mkDefault "${config.networking.fqdn}";
-    root = config.rnl.githook.hooks.ftp-site.path;
+    root = config.rnl.githook.hooks.ftp-site.path + "/htdocs";
     # FIXME: Configure firewall to enable ACME
     #enableACME = true;
     #addSSL = true;
