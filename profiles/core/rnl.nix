@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -180,9 +181,17 @@ in {
   security.sudo.enable = false;
 
   # Configure node exporter
-  services.prometheus.exporters.node = {
+  services.prometheus.exporters.node = let
+    writeRevisionMetric = pkgs.writeTextFile {
+      name = "rev.prom";
+      text = ''        node_host_rev ${inputs.self.rev or "NaN"}
+      '';
+      destination = "/metrics/rev.prom";
+    };
+  in {
     enable = lib.mkDefault true;
     openFirewall = true; # Open port 9100 (TCP)
+    extraFlags = ["--collector.textfile.directory ${writeRevisionMetric}/metrics"];
   };
 
   programs.ssh.knownHosts = {
