@@ -8,6 +8,8 @@
     filesystems.zfs-mirror
     os.nixos
     type.physical
+
+    monitoring.grafana
   ];
 
   rnl.labels.location = "inf1-p01-a2";
@@ -79,6 +81,21 @@
       };
     };
   };
+
+  # Bind mount /mnt/data/grafana to /var/lib/grafana
+  fileSystems."${config.services.grafana.dataDir}" = {
+    device = "/mnt/data/grafana";
+    options = ["bind"];
+  };
+
+  # Add Grafana secrets (GitLab Client ID and Secret, Admin Password)
+  systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets."tardis-grafana.env".path;
+  age.secrets."tardis-grafana.env" = {
+    file = ../secrets/tardis-grafana-env.age;
+    owner = "grafana";
+  };
+
+  services.nginx.virtualHosts.grafana.serverName = "grafana.${config.rnl.domain}";
 
   # VLANs
   networking.vlans = {
