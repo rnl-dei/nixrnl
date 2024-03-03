@@ -15,6 +15,8 @@
     location = null;
   };
 
+  rnl.monitoring.ping = false;
+
   # Disable root SSH via password
   services.openssh.settings.PermitRootLogin = lib.mkForce "without-password";
 
