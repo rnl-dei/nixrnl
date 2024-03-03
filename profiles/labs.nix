@@ -56,6 +56,12 @@
   # Disable immediate shutdown when power button is pressed
   services.logind.extraConfig = "HandlePowerKey=ignore";
 
+  # Allow profiling of system metrics (Required to the CPD course)
+  boot.kernel.sysctl = {
+    "kernel.perf_event_paranoid" = 0;
+    "kernel.kptr_restrict" = 0;
+  };
+
   # Disable Network Manager
   networking.networkmanager.enable = false;
 
