@@ -10,6 +10,7 @@
     type.physical
 
     monitoring.grafana
+    monitoring.prometheus
   ];
 
   rnl.labels.location = "inf1-p01-a2";
@@ -96,6 +97,7 @@
   };
 
   services.nginx.virtualHosts.grafana.serverName = "grafana.${config.rnl.domain}";
+  services.nginx.virtualHosts.prometheus.serverName = "prometheus.${config.rnl.domain}";
 
   # VLANs
   networking.vlans = {
