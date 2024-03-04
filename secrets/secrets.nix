@@ -15,6 +15,7 @@ let
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
+  dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
   dolly = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUCwy4EIMsdjFtfRI0F78+WDgA7g0/5W1ZdiFcri7v2";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
@@ -31,6 +32,7 @@ in {
   "host-keys/blatta.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
   "host-keys/dealer.age".publicKeys = deployMachines;
+  "host-keys/dei.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;
   "host-keys/dolly.age".publicKeys = deployMachines;
   "host-keys/hagrid.age".publicKeys = deployMachines;
@@ -56,6 +58,7 @@ in {
   "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
+  "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
