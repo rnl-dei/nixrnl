@@ -72,6 +72,12 @@
     x11vnc
   ];
 
+  # ARPwatch (Admin)
+  services.arpwatch = {
+    enable = true;
+    interfaces.enp2s0 = {};
+  };
+
   # Setup spotifyd to play music on TV
   # FIXME: This is not working
   # services.spotifyd = {
