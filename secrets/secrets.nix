@@ -43,6 +43,7 @@ in {
   "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/thomas.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
+  "host-keys/weaver.age".publicKeys = deployMachines;
 
   # GitLab runners tokens
   "gitlab-runners/es-24-env.age".publicKeys = users ++ [labs];

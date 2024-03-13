@@ -88,4 +88,23 @@
       }
     ];
   };
+
+  # Sync wiki pages to GitLab
+  systemd.services.dokuwiki-sync-gitlab = {
+    description = "Sync DokuWiki pages to GitLab";
+    wantedBy = ["multi-user.target"];
+    startAt = "*-*-* 2:00:00"; # Run at 2am every day
+    serviceConfig = {
+      Type = "oneshot";
+      User = "dokuwiki";
+      Group = "nginx";
+    };
+    script = ''
+      cd ${config.services.dokuwiki.sites.wiki.stateDir}/pages
+      ${pkgs.git}/bin/git pull
+      ${pkgs.git}/bin/git add .
+      ${pkgs.git}/bin/git commit -m "Sync $(date +%Y-%m-%d_%H-%M-%S)"
+      ${pkgs.git}/bin/git push
+    '';
+  };
 }
