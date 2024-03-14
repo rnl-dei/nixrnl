@@ -37,6 +37,7 @@
 
     # Misc
     atool
+    bc
     curl
     ffmpeg
     file
