@@ -33,6 +33,7 @@ in {
     clusterName = lib.mkDefault "RNL-Cluster";
     dbdserver.dbdHost = lib.mkDefault "borg";
     nodeName = lib.mkDefault [
+      "lab0p[1-6] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab0"
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
       "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=10240 Features=lab2"
       "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=10240 Features=lab3"
@@ -42,7 +43,7 @@ in {
       "lab7p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab7"
     ];
     partitionName = lib.mkDefault [
-      "compute Nodes=lab1p[1-12],lab2p[1-20],lab3p[1-10],lab4p[1-10],lab5p[1-20],lab6p[1-9],lab7p[1-9] Default=YES MaxTime=20160 DefaultTime=30 State=UP"
+      "compute Nodes=lab0p[1-6],lab1p[1-12],lab2p[1-20],lab3p[1-10],lab4p[1-10],lab5p[1-20],lab6p[1-9],lab7p[1-9] Default=YES MaxTime=20160 DefaultTime=30 State=UP"
     ];
     procTrackType = "proctrack/cgroup";
     extraConfig = ''
