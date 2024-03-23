@@ -52,6 +52,7 @@ in {
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
+  "helios-env.age".publicKeys = users ++ [selene];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
@@ -62,6 +63,7 @@ in {
   "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
+  "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
