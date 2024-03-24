@@ -9,6 +9,8 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+
+    ist.afs
   ];
 
   # Networking
@@ -100,5 +102,25 @@
     };
   in [
     ansible
+  ];
+
+  # Discoverafsd
+  systemd.services.discoverafsd = {
+    description = "DiscoverAFS daemon";
+    after = ["network.target"];
+    wantedBy = ["multi-user.target"];
+
+    environment = {
+      DISCOVERAFSD_DIR = "/var/lib/discoverafsd";
+    };
+
+    serviceConfig = {
+      ExecStart = "${pkgs.discoverafsd}/bin/discoverafsd.sh";
+      Restart = "on-failure";
+    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d ${config.systemd.services.discoverafsd.environment.DISCOVERAFSD_DIR} 0755 root root"
   ];
 }
