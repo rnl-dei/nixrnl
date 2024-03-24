@@ -13,6 +13,7 @@
 
     webserver
     ist-delegate-election
+    fail2ban
   ];
 
   # Networking
@@ -47,6 +48,16 @@
         }
       ];
     };
+  };
+
+  # Nginx Catch-All
+  services.nginx.virtualHosts.ist-delegate-election.serverName = "delegados.${config.rnl.domain}";
+  services.nginx.virtualHosts.catch-all = {
+    serverName = config.networking.fqdn;
+    default = true;
+    enableACME = true;
+    addSSL = true;
+    locations."/".return = "301 https://helios.${config.rnl.domain}$request_uri";
   };
 
   # Helios Voting System
