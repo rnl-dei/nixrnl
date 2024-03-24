@@ -93,7 +93,7 @@
   systemd.services.dokuwiki-sync-gitlab = {
     description = "Sync DokuWiki pages to GitLab";
     wantedBy = ["multi-user.target"];
-    startAt = "*-*-* 2:00:00"; # Run at 2am every day
+    startAt = "*-*-* *:00:00"; # Run every hour
     serviceConfig = {
       Type = "oneshot";
       User = "dokuwiki";
