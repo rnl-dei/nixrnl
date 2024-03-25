@@ -26,6 +26,7 @@ let
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
   thomas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/SxiOeNV93iXm91x8MIEc9SW8TiksqDWQtaqnbmC6D";
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
+  weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
 in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
@@ -57,6 +58,8 @@ in {
   "moodle-agl-db-password.age".publicKeys = users ++ [agl];
   "moodle-lga-db-password.age".publicKeys = users ++ [lga];
   "munge-key.age".publicKeys = users ++ [borg labs];
+  "netbox-weaver-env-py.age".publicKeys = users ++ [weaver];
+  "netbox-weaver-secret-key.age".publicKeys = users ++ [weaver];
   "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
