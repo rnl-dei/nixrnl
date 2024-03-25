@@ -33,14 +33,14 @@ in {
     clusterName = lib.mkDefault "RNL-Cluster";
     dbdserver.dbdHost = lib.mkDefault "borg";
     nodeName = lib.mkDefault [
-      "lab0p[1-6] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab0"
-      "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
-      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab2"
-      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab3"
-      "lab4p[1-10] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab4"
-      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab5"
-      "lab6p[1-9] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab6"
-      "lab7p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab7"
+      "lab0p[1-6] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=16384 Features=lab0,i5-4460" 
+      "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=16384 Features=lab1,i5-7500"
+      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=16384 Features=lab2,i5-11500"
+      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=16384 Features=lab3,i5-10500,rtx3060ti"
+      "lab4p[1-10] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=16384 Features=lab4,i5-7500"
+      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=16384 Features=lab5,i5-12500T"
+      "lab6p[1-9] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=16384 Features=lab6,i5-8500"
+      "lab7p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=16384 Features=lab7,i5-7500"
     ];
     partitionName = lib.mkDefault [
       "compute Nodes=lab0p[1-6],lab1p[1-12],lab2p[1-20],lab3p[1-10],lab4p[1-10],lab5p[1-20],lab6p[1-9],lab7p[1-9] Default=YES MaxTime=20160 DefaultTime=30 State=UP"
@@ -59,7 +59,7 @@ in {
       SelectTypeParameters=CR_CPU_Memory
       JobAcctGatherType=jobacct_gather/cgroup
       PrologFlags=Contain
-      DefMemPerCPU=1024
+      DefMemPerCPU=0  
       DefMemPerGPU=1024
       GresTypes=gpu,mps
 
