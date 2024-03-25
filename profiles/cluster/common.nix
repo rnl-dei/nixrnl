@@ -35,10 +35,10 @@ in {
     nodeName = lib.mkDefault [
       "lab0p[1-6] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab0"
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab1"
-      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=10240 Features=lab2"
-      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=10240 Features=lab3"
+      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab2"
+      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab3"
       "lab4p[1-10] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab4"
-      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=2 RealMemory=10240 Features=lab5"
+      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab5"
       "lab6p[1-9] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=10240 Features=lab6"
       "lab7p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=10240 Features=lab7"
     ];
