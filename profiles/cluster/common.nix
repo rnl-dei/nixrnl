@@ -54,7 +54,7 @@ in {
       # So the system must use this facility to reboot: requires internal tooling to make `reboot` use slurm internally, changing DE behavior (dunno how).
       ReturnToService=2
       TaskPlugin=task/cgroup,task/affinity
-      TreeWidth=10 # Square root of the number of nodes
+      TreeWidth=120 # Each slurmd daemon can communicate with up to 120 other slurmd daemons
       SelectType=select/cons_tres
       SelectTypeParameters=CR_CPU_Memory
       JobAcctGatherType=jobacct_gather/cgroup
