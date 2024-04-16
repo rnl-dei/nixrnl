@@ -53,6 +53,19 @@
     '';
   };
 
+  # Automatically log users out after 4 hours of inactivity
+  services.xserver.xautolock = {
+    enable = true;
+
+    time = 240; # 4 hours
+    locker = "${pkgs.systemd}/bin/loginctl terminate-session $XDG_SESSION_ID";
+
+    enableNotifier = true;
+    notify = 60;
+    # Requires double escaping the quotes otherwise it breaks the systemd unit file and the service won't start
+    notifier = "${pkgs.libnotify}/bin/notify-send \\'Logging out for inactivity in 60 seconds...\\'";
+  };
+
   xdg.mime.defaultApplications = {
     # Web
     "text/html" = "firefox.desktop";
