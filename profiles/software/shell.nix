@@ -49,6 +49,7 @@
     unzip
     wget
     zip
+    coq
 
     # C/C++
     boost
