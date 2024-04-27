@@ -34,6 +34,7 @@
     cargo
     sbcl
     nodejs
+    coq
 
     # Misc
     atool
@@ -49,7 +50,6 @@
     unzip
     wget
     zip
-    coq
 
     # C/C++
     boost
