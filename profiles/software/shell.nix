@@ -34,6 +34,7 @@
     cargo
     sbcl
     nodejs
+    coq
 
     # Misc
     atool
