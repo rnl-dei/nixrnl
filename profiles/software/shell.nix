@@ -17,6 +17,7 @@
     flex
     nasm
     yasm
+    doxygen
 
     # Debugger
     gdb
