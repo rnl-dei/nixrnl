@@ -1,0 +1,158 @@
+{
+  "id": 3,
+  "uid": "dZf1Zsp4k",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "DiskSpace",
+  "title": "PredictedDiskInodesLow2Weeks",
+  "condition": "E",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "code",
+        "exemplar": false,
+        "expr": "predict_linear(node_filesystem_files_free{fstype!~\"fuse.glusterfs|nfs4|vfat|ramfs|fuse.portal|fuse.gvfsd-fuse\", device!~\"AFS|(/dev/loop[0-9]+)|ramfs\"}[2w], 14 * 24 * 3600)",
+        "hide": false,
+        "instant": true,
+        "interval": "30m",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "range": false,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "code",
+        "exemplar": false,
+        "expr": "node_filesystem_files{fstype!~\"fuse.glusterfs|nfs4|vfat|ramfs|fuse.portal|fuse.gvfsd-fuse\", device!~\"AFS|(/dev/loop[0-9]+)|ramfs\"}",
+        "hide": false,
+        "instant": true,
+        "interval": "",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "range": false,
+        "refId": "C"
+      }
+    },
+    {
+      "refId": "D",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "C",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "D",
+        "settings": {
+          "mode": "dropNN"
+        },
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "E",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "$A < 16*1024 && (is_null($D) || $A/$D < 0.15)",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "E",
+        "type": "math"
+      }
+    }
+  ],
+  "updated": "2024-04-23T10:39:35+01:00",
+  "noDataState": "NoData",
+  "execErrState": "OK",
+  "for": "3d",
+  "annotations": {
+    "description": "Filesystem {{ $labels.instance }}:{{ $labels.mountpoint }} ({{ $labels.fstype }}, {{ $labels.type }}) running out inodes.\nIt is predicted to have as little as {{ $values.A.Value }} free inodes 2 weeks from now.",
+    "summary": "{{ $labels.instance }}:{{ $labels.mountpoint }} ({{ $labels.fstype }}, {{ $labels.type }}) running out of inodes"
+  },
+  "labels": {
+    "prio": "low",
+    "team": "rnl-infra-nr"
+  },
+  "isPaused": false
+}

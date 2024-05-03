@@ -1,0 +1,171 @@
+{
+  "id": 5,
+  "uid": "C_mR_fu4z",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "Daily Stats",
+  "title": "Cert Expiry lt 2 Weeks",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "code",
+        "expr": "(probe_ssl_earliest_cert_expiry - time())/ 86400",
+        "intervalMs": 1000,
+        "legendFormat": "{{endpoint}}",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                14
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "C"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "B",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "threshold"
+      }
+    },
+    {
+      "refId": "D",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 0,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "floor ($B)",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "D",
+        "type": "math"
+      }
+    }
+  ],
+  "updated": "2024-05-01T14:34:01+01:00",
+  "noDataState": "NoData",
+  "execErrState": "OK",
+  "for": "6h",
+  "annotations": {
+    "__dashboardUid__": "EmUBHUFGk",
+    "__panelId__": "17",
+    "summary": "SSL Certificate for **{{ $labels.endpoint }}** is expiring in **{{ index $values \"D\" }} days**"
+  },
+  "labels": {
+    "severity": "warning",
+    "team": "rnl-infra"
+  },
+  "isPaused": false
+}

@@ -47,7 +47,15 @@
     };
     provision = {
       enable = true;
-      # TODO: Add provisioning of datasources, alerting and dashboards
+      datasources.settings = import ./datasources;
+      dashboards.settings.providers."RNL-Dashboards" = {
+        name = "RNL-Dashboards";
+        options.path = ./dashboards;
+      };
+      alerts.settings.providers."RNL-Alerting" = {
+        name = "RNL-Alerting";
+        options.path = ./alertrules;
+      };
     };
   };
 

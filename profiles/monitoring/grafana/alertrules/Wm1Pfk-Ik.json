@@ -1,0 +1,199 @@
+{
+  "id": 24,
+  "uid": "Wm1Pfk-Ik",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "Slower Stats",
+  "title": "Suspicious CPU Usage",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "E",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "editorMode": "code",
+        "expr": "sum by (instance) (rate(node_cpu_seconds_total{mode!=\"idle\", team=\"rnl-labs\"}[5m]))",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "E"
+      }
+    },
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "code",
+        "expr": "sum by (instance) (rate(node_cpu_seconds_total{mode=\"idle\", team=\"rnl-labs\"}[5m]))",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "D",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.3
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "C"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "B",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "threshold"
+      }
+    },
+    {
+      "refId": "D",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "$E / $A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "D",
+        "type": "math"
+      }
+    }
+  ],
+  "updated": "2024-04-22T15:39:12+01:00",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "1h",
+  "annotations": {
+    "__dashboardUid__": "77vs6Tf4k",
+    "__panelId__": "2",
+    "description": "**{{ $labels.instance }}** has suspicious CPU usage (relatively high for a long time) (**{{ index $values \"B\" }}%**)",
+    "summary": "**{{ $labels.instance }}** has suspicious CPU usage (**{{ index $values \"B\" }}%**)"
+  },
+  "labels": {
+    "severity": "warning",
+    "team": "rnl-alerts"
+  },
+  "isPaused": false
+}

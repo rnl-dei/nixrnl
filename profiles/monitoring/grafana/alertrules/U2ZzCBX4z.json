@@ -1,0 +1,132 @@
+{
+  "id": 6,
+  "uid": "U2ZzCBX4z",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "Real Time Stats",
+  "title": "Alive Physical",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "code",
+        "expr": "up{job=~\"machines\", type=\"physical\", team!=\"rnl-labs\"}",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "{{instance}}",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1,
+                0
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "B",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "threshold"
+      }
+    }
+  ],
+  "updated": "2024-04-12T09:54:50+01:00",
+  "noDataState": "NoData",
+  "execErrState": "OK",
+  "for": "1m",
+  "annotations": {
+    "Resolved": "**{{ $labels.instance }}** is up",
+    "__dashboardUid__": "-Sdm90riz",
+    "__panelId__": "12",
+    "summary": "**{{ $labels.instance }}** is down"
+  },
+  "labels": {
+    "service": "alive",
+    "severity": "warning",
+    "team": "rnl-alerts"
+  },
+  "isPaused": false
+}

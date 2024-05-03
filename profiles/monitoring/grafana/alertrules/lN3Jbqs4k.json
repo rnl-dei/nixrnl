@@ -1,0 +1,132 @@
+{
+  "id": 4,
+  "uid": "lN3Jbqs4k",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "Daily Stats",
+  "title": "SSH",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 300,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "editorMode": "builder",
+        "expr": "ssh_success",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "{{instance}}:{{module}}",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 300,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "A",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "B",
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 300,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "C"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "type": "__expr__",
+          "uid": "-100"
+        },
+        "expression": "B",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "threshold"
+      }
+    }
+  ],
+  "updated": "2024-05-01T14:34:01+01:00",
+  "noDataState": "OK",
+  "execErrState": "Error",
+  "for": "6h",
+  "annotations": {
+    "__dashboardUid__": "7-fmgGFMz",
+    "__panelId__": "184",
+    "description": "SSH on **{{ $labels.instance }}** using {{ reReplaceAll \"test\" \"Test User (ist90834)\" $labels.module }}",
+    "summary": "SSH on **{{ $labels.instance }}** is failing"
+  },
+  "labels": {
+    "service": "ssh",
+    "team": "rnl-infra"
+  },
+  "isPaused": false
+}

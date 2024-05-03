@@ -1,0 +1,1604 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "$$hashKey": "object:13",
+          "builtIn": 1,
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "description": "General stats dashboard with node selector, uses metrics from wmi_exporter",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "gnetId": 8781,
+    "graphTooltip": 1,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "aliasColors": {
+          "idle": "#0A50A1"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 10,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 4,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 0,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "sum by (mode) (rate(wmi_cpu_time_total{instance=~\"$server\",mode!=\"idle\"}[5m]))",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "interval": "",
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "{{mode}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "CPU load",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 12,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "wmi_system_threads{instance=~\"$server\"}",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "system_threads",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "system_threads",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 13,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "rate(wmi_system_exception_dispatches_total{instance=~\"$server\"}[$interval])",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "exceptions",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "System exception dispatches",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 10,
+          "x": 0,
+          "y": 9
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 10,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "irate(wmi_net_packets_outbound_discarded{instance=~\"$server\", nic!~\"isatap.+\"}[$interval]) + irate(wmi_net_packets_outbound_errors{instance=~\"$server\"}[$interval])",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Sent {{nic}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "B",
+            "step": 15
+          },
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "irate(wmi_net_packets_received_discarded{instance=~\"$server\", nic!~\"isatap.+\"}[$interval]) + irate(wmi_net_packets_received_errors{instance=~\"$server\"}[$interval])",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Received {{nic}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 15
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Network discarded/error packets",
+        "tooltip": {
+          "shared": false,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "pps",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 14,
+          "x": 10,
+          "y": 9
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 11,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "rate(wmi_net_bytes_sent_total{instance=~\"$server\"}[$interval]) >0",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Sent {{nic}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "B",
+            "step": 10
+          },
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "- rate(wmi_net_bytes_received_total{instance=~\"$server\"}[$interval]) <0",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Received {{nic}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Network",
+        "tooltip": {
+          "shared": false,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "Bps",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "decbytes",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 2,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 0,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 8,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "irate(wmi_logical_disk_write_bytes_total{instance=~\"$server\", volume !~\"HarddiskVolume.+\"}[$interval])",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Write {{volume}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          },
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "- irate(wmi_logical_disk_read_bytes_total{instance=~\"$server\", volume !~\"HarddiskVolume.+\"}[$interval])",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Read {{volume}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "B",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Hard drive load",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "decbytes",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 8,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 9,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "rate(wmi_logical_disk_split_ios_total{instance=~\"$server\", volume !~\"HarddiskVolume.+\"}[30s])",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "i/o {{volume}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Hard disk i/o ops total",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "iops",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "iops",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 16,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 15,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "wmi_logical_disk_free_bytes{instance=~\"$server\", volume !~\"HarddiskVolume.+\"}",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "free {{volume}}",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Hard disk free space",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "decbytes",
+            "logBase": 1,
+            "min": "0",
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 27
+        },
+        "hiddenSeries": false,
+        "hideTimeOverride": false,
+        "id": 14,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": true,
+          "max": true,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "wmi_os_virtual_memory_bytes{instance=~\"$server\"}",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Virtual memory",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 5
+          },
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "wmi_cs_physical_memory_bytes{instance=~\"$server\"}",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Physical memory",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "B",
+            "step": 5
+          },
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "wmi_os_physical_memory_free_bytes{instance=~\"$server\"}",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "hide": false,
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "Free physical memory",
+            "metric": "mysql_global_status_questions",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "C",
+            "step": 5
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Memory",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "decbytes",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {
+          "Received mysqld-exporter:9104": "#0A50A1",
+          "stopped": "#2F575E"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fill": 10,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 33
+        },
+        "hiddenSeries": false,
+        "id": 7,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 0,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "9.3.2",
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "application": {
+              "filter": ""
+            },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "expr": "sum(wmi_service_state{instance=~\"$server\"}) by (state)",
+            "format": "time_series",
+            "functions": [],
+            "group": {
+              "filter": ""
+            },
+            "host": {
+              "filter": ""
+            },
+            "intervalFactor": 1,
+            "item": {
+              "filter": ""
+            },
+            "legendFormat": "{{state}}",
+            "mode": 0,
+            "options": {
+              "showDisabledItems": false
+            },
+            "refId": "A",
+            "step": 5
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Services by state",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-GrYlRd"
+            },
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "red",
+                    "index": 1,
+                    "text": "❌"
+                  },
+                  "1": {
+                    "color": "green",
+                    "index": 0,
+                    "text": "✅"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 9,
+          "y": 39
+        },
+        "id": 17,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.3.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "expr": "probe_success{instance=~\"$server\", job=\"tcp\"}",
+            "legendFormat": "{{service}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Services",
+        "type": "stat"
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [
+      "windows",
+      "wmi_exporter",
+      "prometheus"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "definition": "label_values(wmi_system_system_up_time{job=\"win-machines\"}, team)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "team",
+          "options": [],
+          "query": {
+            "query": "label_values(wmi_system_system_up_time{job=\"win-machines\"}, team)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "definition": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\"}, group)",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Group",
+          "multi": true,
+          "name": "group",
+          "options": [],
+          "query": {
+            "query": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\"}, group)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 5,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "definition": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\", group=~\"$group\"}, location)",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Location",
+          "multi": true,
+          "name": "location",
+          "options": [],
+          "query": {
+            "query": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\", group=~\"$group\"}, location)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "cartman",
+            "value": "cartman"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "definition": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\", group=~\"$group\", location=~\"$location\"}, instance)",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Instance",
+          "multi": false,
+          "name": "server",
+          "options": [],
+          "query": {
+            "query": "label_values(wmi_system_system_up_time{job=\"win-machines\", team=~\"$team\", group=~\"$group\", location=~\"$location\"}, instance)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 5,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "auto": false,
+          "auto_count": 500,
+          "auto_min": "30s",
+          "current": {
+            "selected": false,
+            "text": "60s",
+            "value": "60s"
+          },
+          "hide": 2,
+          "label": "Interval",
+          "name": "interval",
+          "options": [
+            {
+              "selected": true,
+              "text": "60s",
+              "value": "60s"
+            }
+          ],
+          "query": "60s",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "Windows Node",
+    "uid": "4UePATWRk",
+    "version": 8,
+    "weekStart": ""
+  },
+  "folderUid": "AyTobLtVz",
+  "overwrite": true
+}

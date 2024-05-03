@@ -1,0 +1,495 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 7,
+        "panels": [],
+        "title": "Labs",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "min": 0,
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "text",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 5,
+          "x": 0,
+          "y": 1
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "last"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.3.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum(min((count(probe_success{team=\"rnl-labs\", group!=\"lab0\"}) by (job,group)) - (sum(round(avg_over_time(probe_success{team=\"rnl-labs\"}[1m]), 1)) by (job,group))) by (group))",
+            "instant": false,
+            "legendFormat": "Offline hosts",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Offline",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 5,
+          "x": 5,
+          "y": 1
+        },
+        "id": 13,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "last"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.3.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "count(abs(probe_icmp_reply_hop_limit{team=\"rnl-labs\", group!=\"lab0\", job=\"ping4\"} - 64) < 5) or vector(0)",
+            "instant": false,
+            "legendFormat": "Linux hosts",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Linux",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-blue",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 5,
+          "x": 10,
+          "y": 1
+        },
+        "id": 11,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "last"
+            ],
+            "fields": "/^Value$/",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.3.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "count(abs(probe_icmp_reply_hop_limit{team=\"rnl-labs\", group!=\"lab0\", job=\"ping4\"} - 128) < 5) or vector(0)",
+            "format": "table",
+            "instant": false,
+            "interval": "",
+            "legendFormat": "Windows hosts",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Windows",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "noValue": "0",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "yellow",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 5,
+          "x": 15,
+          "y": 1
+        },
+        "id": 15,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "last"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.3.2",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "count(abs(probe_icmp_reply_hop_limit{team=\"rnl-labs\", group!=\"lab0\", job=\"ping4\"} - 32) < 5) or vector(0)",
+            "instant": false,
+            "legendFormat": "Rescue",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Rescue",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "description": "Laboratory status",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-YlBl"
+            },
+            "links": [
+              {
+                "targetBlank": true,
+                "title": "AMT",
+                "url": "http://${__field.name}-mgmt.rnl.tecnico.ulisboa.pt:16992"
+              },
+              {
+                "targetBlank": true,
+                "title": "Power on",
+                "url": "https://labswatch.rnl.tecnico.ulisboa.pt/api/poweron?v=${__field.name}"
+              },
+              {
+                "targetBlank": true,
+                "title": "Power off",
+                "url": "https://labswatch.rnl.tecnico.ulisboa.pt/api/poweroff?v=${__field.name}"
+              },
+              {
+                "targetBlank": true,
+                "title": "Reboot",
+                "url": "https://labswatch.rnl.tecnico.ulisboa.pt/action/reboot?v=${__field.name}"
+              }
+            ],
+            "mappings": [
+              {
+                "options": {
+                  "0": {
+                    "color": "red",
+                    "index": 5,
+                    "text": "Offline"
+                  },
+                  "1": {
+                    "color": "semi-dark-orange",
+                    "index": 4,
+                    "text": "Powered Off"
+                  },
+                  "127": {
+                    "color": "light-blue",
+                    "index": 1,
+                    "text": "Windows (no AMT)"
+                  },
+                  "31": {
+                    "color": "super-light-yellow",
+                    "index": 3,
+                    "text": "Rescue (no AMT)"
+                  },
+                  "32": {
+                    "color": "semi-dark-yellow",
+                    "index": 2,
+                    "text": "Rescue"
+                  },
+                  "63": {
+                    "color": "light-green",
+                    "index": 0,
+                    "text": "Linux (no AMT)"
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 6
+        },
+        "id": 3,
+        "links": [
+          {
+            "targetBlank": true,
+            "title": "Power on",
+            "url": "https://labswatch.rnl.tecnico.ulisboa.pt/action/poweron?v=${lab}"
+          }
+        ],
+        "maxPerRow": 4,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {
+            "titleSize": 15,
+            "valueSize": 14
+          },
+          "textMode": "value_and_name"
+        },
+        "pluginVersion": "9.3.2",
+        "repeatDirection": "h",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "(probe_success{job=\"labs-amt\", group!=\"lab0\"}) == 0",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "__auto",
+            "range": false,
+            "refId": "AMT Probe"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "((probe_success{job=\"labs-amt\", team=\"rnl-labs\"} + on(instance) probe_icmp_reply_hop_limit{job=\"ping4\", team=\"rnl-labs\"}) % 64) != 0",
+            "instant": true,
+            "legendFormat": "{{ instance }}",
+            "range": false,
+            "refId": "Ping v4"
+          }
+        ],
+        "title": "Offline Labs",
+        "transformations": [
+          {
+            "id": "joinByLabels",
+            "options": {
+              "value": "instance"
+            }
+          }
+        ],
+        "type": "stat"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Home Test Dashboard",
+    "uid": "YDn3YqGSk",
+    "version": 8,
+    "weekStart": ""
+  },
+  "folderUid": "",
+  "overwrite": true
+}

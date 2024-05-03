@@ -1,0 +1,208 @@
+{
+  "id": 20,
+  "uid": "VxK0lPhIk",
+  "orgID": 1,
+  "folderUID": "AyTobLtVz",
+  "ruleGroup": "DiskSpace",
+  "title": "WindowsPredictedDiskSpaceLow2Weeks",
+  "condition": "F",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 3600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "editorMode": "code",
+        "expr": "predict_linear(wmi_logical_disk_free_bytes{volume !~\"HarddiskVolume.+\"}[2w], 14 * 24 * 3600) / 1000000",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "PBFA97CFB590B2093",
+      "model": {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "editorMode": "code",
+        "expr": "wmi_logical_disk_free_bytes{volume !~\"HarddiskVolume.+\"} / 1000000",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "C"
+      }
+    },
+    {
+      "refId": "D",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 600,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "C",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "D",
+        "settings": {
+          "mode": "dropNN"
+        },
+        "type": "reduce"
+      }
+    },
+    {
+      "refId": "E",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 0,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "$A < 256 && (is_null($D) || $A/$D < 0.15)",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "E",
+        "type": "math"
+      }
+    },
+    {
+      "refId": "F",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 0,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": []
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "E",
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "reducer": "last",
+        "refId": "F",
+        "settings": {
+          "mode": ""
+        },
+        "type": "reduce"
+      }
+    }
+  ],
+  "updated": "2024-04-23T10:39:35+01:00",
+  "noDataState": "NoData",
+  "execErrState": "Error",
+  "for": "3d",
+  "annotations": {
+    "description": "Filesystem {{ $labels.instance }}:{{ $labels.mountpoint }} ({{ $labels.fstype }}, {{ $labels.type }}) running out of space.\nIt is predicted to have as little as {{ $values.D.Value }} free bytes 2 weeks from now.",
+    "summary": "{{ $labels.instance }}:{{ $labels.mountpoint }} ({{ $labels.fstype }}, {{ $labels.type }}) running out of space"
+  },
+  "labels": {
+    "prio": "low",
+    "team": "rnl-infra"
+  },
+  "isPaused": false
+}
