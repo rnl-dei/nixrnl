@@ -48,8 +48,9 @@
     templates = with pkgs.dokuwikiTemplates; [bootstrap3];
     plugins = with pkgs.dokuwikiPlugins; [
       blockquote
-      columns
       color
+      columns
+      comment
       ditaa
       edittable
       graphviz
