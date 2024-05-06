@@ -78,13 +78,15 @@ in {
 
   services.nginx.upstreams.prometheus.servers = {
     "localhost:${toString config.services.prometheus.port}" = {};
-    # TODO: Add proxy to blackbox exporter
   };
 
   services.nginx.virtualHosts.prometheus = {
     serverName = lib.mkDefault "${config.networking.fqdn}";
     enableACME = true;
     addSSL = true;
-    locations."/".proxyPass = "http://prometheus";
+    locations = {
+      "/".proxyPass = "http://prometheus";
+      "/blackbox".proxyPass = "http://localhost:9115";
+    };
   };
 }
