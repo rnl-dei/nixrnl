@@ -12,6 +12,7 @@
 
     webserver
     weaver
+    netbox
   ];
 
   # Networking
@@ -46,6 +47,26 @@
         }
       ];
     };
+  };
+
+  # Netbox
+  services.nginx.virtualHosts.netbox.serverName = "netbox.weaver.${config.rnl.domain}";
+  services.netbox = {
+    secretKeyFile = config.age.secrets."netbox-weaver-secret.key".path;
+    extraConfig = ''
+      # Load file
+      with open("${config.age.secrets."netbox-weaver-env.py".path}") as f:
+        exec(f.read())
+    '';
+  };
+
+  age.secrets."netbox-weaver-secret.key" = {
+    file = ../secrets/netbox-weaver-secret-key.age;
+    owner = "netbox";
+  };
+  age.secrets."netbox-weaver-env.py" = {
+    file = ../secrets/netbox-weaver-env-py.age;
+    owner = "netbox";
   };
 
   # Bind mount /var/lib/dokuwiki/wiki/data to /mnt/data/dokuwiki
@@ -87,5 +108,24 @@
         source.file = "/mnt/data/weaver1_shared.img";
       }
     ];
+  };
+
+  # Sync wiki pages to GitLab
+  systemd.services.dokuwiki-sync-gitlab = {
+    description = "Sync DokuWiki pages to GitLab";
+    wantedBy = ["multi-user.target"];
+    startAt = "*-*-* *:00:00"; # Run every hour
+    serviceConfig = {
+      Type = "oneshot";
+      User = "dokuwiki";
+      Group = "nginx";
+    };
+    script = ''
+      cd ${config.services.dokuwiki.sites.wiki.stateDir}/pages
+      ${pkgs.git}/bin/git pull
+      ${pkgs.git}/bin/git add .
+      ${pkgs.git}/bin/git commit -m "Sync $(date +%Y-%m-%d_%H-%M-%S)" || true
+      ${pkgs.git}/bin/git push
+    '';
   };
 }

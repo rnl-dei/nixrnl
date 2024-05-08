@@ -284,6 +284,9 @@ in {
                 '';
               };
               "/api/" = {
+                extraConfig = ''
+                  client_max_body_size 512M;
+                '';
                 proxyPass = "http://127.0.0.1:${toString siteCfg.backend.port}/";
                 proxyWebsockets = true;
               };

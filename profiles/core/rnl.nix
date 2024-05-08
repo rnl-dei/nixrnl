@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   lib,
   config,
@@ -183,7 +184,12 @@ in {
   services.prometheus.exporters.node = {
     enable = lib.mkDefault true;
     openFirewall = true; # Open port 9100 (TCP)
+    extraFlags = ["--collector.textfile.directory=/etc/node-exporter-textfiles"];
   };
+
+  environment.etc."node-exporter-textfiles/rev.prom".text = ''
+    node_host_rev ${inputs.self.rev or "NaN"}
+  '';
 
   programs.ssh.knownHosts = {
     gitlab-rnl-ed25519 = {

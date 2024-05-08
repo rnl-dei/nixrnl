@@ -25,7 +25,6 @@
 
   services.nginx.virtualHosts.ist-delegate-election = {
     serverName = lib.mkDefault "${config.networking.fqdn}";
-    serverAliases = ["delegados.rnl.tecnico.ulisboa.pt"];
     enableACME = true;
     forceSSL = true;
     locations."/" = {

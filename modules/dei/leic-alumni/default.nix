@@ -5,8 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.dei.phdms;
+  cfg = config.dei.leic-alumni;
   sites = filterAttrs (_: v: v.enable) cfg.sites;
+  user = config.dei.leic-alumni.user;
   webserver = config.services.nginx;
   uwsgi = config.services.uwsgi;
 
@@ -21,23 +22,23 @@ with lib; let
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = "Enable PhD DEI Management System application";
+        description = "Enable LEIC-Alumni application";
       };
 
       serviceName = mkOption {
         type = types.str;
-        description = "Name of the PhDMS site";
+        description = "Name of the LEIC-Alumni site";
         default =
           if name == "default"
-          then "phdms"
-          else "phdms-${name}";
+          then "leic-alumni"
+          else "leic-alumni-${name}";
         readOnly = true;
       };
 
       stateDir = mkOption {
         type = types.path;
-        default = "/var/lib/dei/phdms/${name}";
-        description = "Location of the PhDMS directory";
+        default = "/var/lib/dei/leic-alumni/${name}";
+        description = "Location of the LEIC-Alumni directory";
       };
 
       serverName = mkOption {
@@ -60,12 +61,7 @@ with lib; let
 
       environment = mkOption {
         type = types.attrsOf types.str;
-        default =
-          {
-            PATH_WKHTMLTOPDF = "${pkgs.allowOpenSSL.wkhtmltopdf-bin}/bin/wkhtmltopdf";
-            PATH = makeBinPath ([pkgs.pdftk] ++ config.extraPackages);
-          }
-          // config.extraEnvironment;
+        default = {} // config.extraEnvironment;
         description = "Environment variables to the uWSGI socket";
       };
 
@@ -74,20 +70,14 @@ with lib; let
         default = {};
         description = "Extra environment variables to the uWSGI socket";
       };
-
-      extraPackages = mkOption {
-        type = types.listOf types.package;
-        default = [];
-        description = "Extra packages to install";
-      };
     };
   };
 in {
-  options.dei.phdms = {
+  options.dei.leic-alumni = {
     sites = mkOption {
       type = types.attrsOf (types.submodule siteOpts);
       default = {};
-      description = "Specification of one or more PhDMS sites to serve";
+      description = "Specification of one or more LEIC-Alumni sites to serve";
     };
   };
 
@@ -107,18 +97,12 @@ in {
                 uwsgi_pass unix:${uwsgi.instance.vassals."${siteCfg.serviceName}".socket};
                 include ${config.services.nginx.package}/conf/uwsgi_params;
               '';
-              "/static".root = "${siteCfg.stateDir}/deic";
+              "/static".root = "${siteCfg.stateDir}/leicalumni/leicalumni";
             };
           };
         })
         sites;
     };
-
-    systemd.tmpfiles.rules = flatten (mapAttrsToList (_: siteCfg: [
-        "d ${siteCfg.stateDir}/deic/media 0750 ${webserver.user} ${webserver.group} - -"
-        "d ${siteCfg.stateDir}/deic/media/uploads 0750 ${webserver.user} ${webserver.group} - -"
-      ])
-      sites);
 
     services.uwsgi = {
       enable = true;
@@ -132,8 +116,8 @@ in {
             name = siteCfg.serviceName;
             value = {
               type = "normal";
-              chdir = "${siteCfg.stateDir}/deic";
-              wsgi-file = "${siteCfg.stateDir}/deic/deic/wsgi.py";
+              chdir = "${siteCfg.stateDir}/leicalumni";
+              wsgi-file = "${siteCfg.stateDir}/leicalumni/leicalumni/wsgi.py";
               socket = siteCfg.socket;
               virtualenv = "${siteCfg.stateDir}/venv";
               env = mapAttrsToList (n: v: "${n}=${v}") siteCfg.environment;

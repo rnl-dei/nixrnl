@@ -160,6 +160,30 @@
     };
   };
 
+  # Extra users
+  users.users = {
+    # welcome = {
+    #   isNormalUser = true;
+    #   description = "Welcome user for the RNL";
+    #   password = "welcome";
+    #   extraGroups = ["volatile" "no-ssh"];
+    # };
+  };
+
+  users.groups = {
+    no-ssh = {}; # Group for users that should not have SSH access
+    volatile = {}; # Group for volatile home directories
+  };
+
+  services.openssh.settings.DenyGroups = [config.users.groups.no-ssh.name];
+  security.pam.mount = {
+    enable = true;
+    extraVolumes = [
+      # Volatile home directories
+      "<volume sgrp=\"${config.users.groups.volatile.name}\" fstype=\"tmpfs\" mountpoint=\"/home/%(USER)\" options=\"size=2048M,uid=%(USERUID),gid=%(USERGID),mode=0700\" />"
+    ];
+  };
+
   # Open Sessions
   systemd.services."sessioncontrol" = {
     description = "RNL session control";

@@ -69,25 +69,23 @@
 
   rnl.internalHost = true; # Use Vault to generate certificates
 
-  services.nginx.virtualHosts = {
-    blatta = {
-      serverName = "${config.networking.fqdn}";
-      enableACME = true;
-      forceSSL = true;
-      locations."/". root = pkgs.writeTextDir "index.html" ''
-        <html>
-          <body>
-            <h1>Welcome to Blatta</h1>
-            <a href="https://rnl.tecnico.ulisboa.pt/ca" target="_blank">Entidade certificadora da RNL</a>
-            <br>
-            <h2>Links</h2>
-            <ul>
-              <li><a href="https://dms.blatta.rnl.tecnico.ulisboa.pt">DMS (Staging)</a></li>
-            </ul>
-          </body>
-        </html>
-      '';
-    };
+  services.nginx.virtualHosts.blatta = {
+    serverName = "${config.networking.fqdn}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/". root = pkgs.writeTextDir "index.html" ''
+      <html>
+        <body>
+          <h1>Welcome to Blatta</h1>
+          <a href="https://rnl.tecnico.ulisboa.pt/ca" target="_blank">Entidade certificadora da RNL</a>
+          <br>
+          <h2>Links</h2>
+          <ul>
+            <li><a href="https://dms.blatta.rnl.tecnico.ulisboa.pt">DMS (Staging)</a></li>
+          </ul>
+        </body>
+      </html>
+    '';
   };
 
   # Services
@@ -148,6 +146,18 @@
         };
       }
     ];
+  };
+
+  # MaiilHog
+  services.mailhog.enable = true;
+  services.nginx.virtualHosts.mailhog = {
+    serverName = "mailhog.${config.networking.fqdn}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString config.services.mailhog.uiPort}";
+      proxyWebsockets = true;
+    };
   };
 
   environment.systemPackages = [
