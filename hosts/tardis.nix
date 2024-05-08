@@ -96,6 +96,13 @@
     owner = "grafana";
   };
 
+  # Add Prometheus SNMP Exporter secrets
+  age.secrets."tardis-snmp-exporter.env" = {
+    file = ../secrets/tardis-snmp-exporter-env.age;
+    owner = "snmp-exporter";
+  };
+
+
   services.nginx.virtualHosts.grafana.serverName = "grafana.${config.rnl.domain}";
   services.nginx.virtualHosts.prometheus.serverName = "prometheus.${config.rnl.domain}";
 
