@@ -4,9 +4,10 @@ let
   aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBe+xU3BXFYFVoKNAFXG/amC0fhua6S5eK2g6Y+MkwYu";
   doppler = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHQiRYpOfTpddexkndt7d3Bw2wS/wLKKjs4526pJOdM";
   raijin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n";
+  raidou = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif";
   thor = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsoczTbGY6mg9+Ti7LzMMkLvRriMjn1fbD4fTbS2VpR";
 
-  users = [torvalds aurelius doppler raijin thor];
+  users = [torvalds aurelius doppler raijin raidou thor];
 
   deployMachines = users ++ [];
 
