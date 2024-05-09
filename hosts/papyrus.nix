@@ -71,6 +71,8 @@
       path = "/etc/wheatley";
       directoryMode = "0755";
       hookScript = pkgs.writeText "wheatley-config-hook" ''
+        # TODO: This should be done in githook
+        ${pkgs.git}/bin/git pull origin master
         ${pkgs.systemdMinimal}/bin/systemctl restart wheatley.service
       '';
     };
