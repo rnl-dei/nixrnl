@@ -1,6 +1,7 @@
 {
   config,
   profiles,
+  pkgs,
   ...
 }: {
   imports = with profiles; [
@@ -58,14 +59,31 @@
     enable = true;
     instances.default = {
       mattermost.url = config.services.mattermost.siteUrl;
-      configFile = "/etc/wheatley/config.yml";
+      mattermost.tokenFile = config.age.secrets."papyrus-wheatley.token".path;
+      configFile = "${config.rnl.githook.hooks.wheatley-config.path}/config.yml";
     };
   };
 
-  # Bind mount /mnt/data/wheatley to /etc/wheatley
-  fileSystems."/etc/wheatley" = {
-    device = "/mnt/data/wheatley";
-    options = ["bind"];
+  rnl.githook = {
+    enable = true;
+    hooks.wheatley-config = {
+      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/wheatley-config.git";
+      path = "/etc/wheatley";
+      directoryMode = "0755";
+      hookScript = pkgs.writeText "wheatley-config-hook" ''
+        ${pkgs.systemdMinimal}/bin/systemctl restart wheatley.service
+      '';
+    };
+  };
+
+  age.secrets."root-at-papyrus-ssh.key" = {
+    file = ../secrets/root-at-papyrus-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+  };
+
+  age.secrets."papyrus-wheatley.token" = {
+    file = ../secrets/papyrus-wheatley-token.age;
+    owner = config.rnl.wheatley.user;
   };
 
   rnl.labels.location = "chapek";

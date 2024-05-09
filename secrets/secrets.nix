@@ -63,12 +63,14 @@ in {
   "netbox-weaver-secret-key.age".publicKeys = users ++ [weaver];
   "open-sessions-key.age".publicKeys = users ++ [labs];
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
+  "papyrus-wheatley-token.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
-  "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
+  "root-at-papyrus-ssh-key.age".publicKeys = users ++ [papyrus];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
+  "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];

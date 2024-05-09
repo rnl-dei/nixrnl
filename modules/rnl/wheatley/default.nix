@@ -103,7 +103,7 @@ in {
 
           script =
             (optionalString (instanceCfg.mattermost.tokenFile != null) ''
-              MATTERMOST_TOKEN=$(cat ${instanceCfg.mattermost.tokenFile})
+              export MATTERMOST_TOKEN=$(cat ${instanceCfg.mattermost.tokenFile})
             '')
             + ''
               exec ${instanceCfg.command}
