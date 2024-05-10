@@ -188,7 +188,7 @@ in {
   };
 
   environment.etc."node-exporter-textfiles/rev.prom".text = ''
-    node_host_rev ${inputs.self.rev or "NaN"}
+    node_host_rev{rev="${inputs.self.shortRev or "dirty"}"} 1
   '';
 
   programs.ssh.knownHosts = {
