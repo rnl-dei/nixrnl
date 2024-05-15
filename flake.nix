@@ -55,6 +55,11 @@
       ];
     };
 
+    packages.x86_64-linux = {
+      deploy-anywhere = pkgs.deploy-anywhere;
+      secrets-check = pkgs.secrets-check;
+    };
+
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
   };
 }
