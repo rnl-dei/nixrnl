@@ -51,6 +51,7 @@
       buildInputs = with pkgs; [
         inputs.agenix.packages.x86_64-linux.agenix
         deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
+        secrets-check
       ];
     };
 
