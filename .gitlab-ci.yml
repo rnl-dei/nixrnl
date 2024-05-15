@@ -12,3 +12,7 @@ stages:
 lint:
   stage: check
   script: nix fmt -- -c --quiet .
+
+secrets-check:
+  stage: check
+  script: nix run .#secrets-check -- secrets
