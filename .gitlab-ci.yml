@@ -11,7 +11,10 @@ stages:
 
 lint:
   stage: check
-  script: nix fmt -- -c --quiet .
+  script:
+    - nix fmt -- -c --quiet .
+    - find . -type f -name "*.nix" -exec nix run nixpkgs#nil -- diagnostics {} \; > /tmp/nil.log
+    - if [ -s /tmp/nil.log ]; then cat /tmp/nil.log && exit 1; fi
 
 secrets-check:
   stage: check
