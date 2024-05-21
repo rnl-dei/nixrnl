@@ -10,6 +10,7 @@
     type.physical
 
     labs
+    cluster.client
     nvidia
   ];
 

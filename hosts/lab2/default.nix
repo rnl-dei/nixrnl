@@ -6,6 +6,7 @@
     type.physical
 
     labs
+    cluster.client
     gitlab-runner.es
   ];
 
