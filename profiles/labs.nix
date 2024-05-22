@@ -125,23 +125,26 @@
         '';
 
         extraFiles = {"ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";};
-        extraEntries = ''
-          menuentry --unrestricted "Windows 10" {
-            chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-          }
+        extraEntries =
+          (lib.optionalString config.rnl.windows-labs.enable ''
+            menuentry --unrestricted "Windows 10" {
+              chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+            }
+          '')
+          + ''
 
-          # Intentianlly missing bracket so the configurations submenu is also inside Administration
-          submenu "Administration" {
-          menuentry "iPXE Boot" {
-            chainloader /ipxe.efi
-          }
+            # Intentianlly missing bracket so the configurations submenu is also inside Administration
+            submenu "Administration" {
+            menuentry "iPXE Boot" {
+              chainloader /ipxe.efi
+            }
 
-          # Easy way to clean the counter
-          menuentry "Clean counter" {
-            set count=0
-            save_env --file /grub/grubenv count
-          }
-        '';
+            # Easy way to clean the counter
+            menuentry "Clean counter" {
+              set count=0
+              save_env --file /grub/grubenv count
+            }
+          '';
 
         extraInstallCommands = ''
           # Workaround to change default entry name
@@ -198,12 +201,12 @@
   };
 
   # Add after run ist-shell scripts
-  security.pam.services.login.text = lib.mkDefault (lib.mkOrder 2000 ''
+  security.pam.services.login.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (lib.mkDefault (lib.mkOrder 2000 ''
     session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
-  '');
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkOrder 2000 ''
+  ''));
+  security.pam.services.sshd.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (lib.mkDefault (lib.mkOrder 2000 ''
     session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
-  '');
+  ''));
 
   # Windows Deploy
   rnl.windows-labs = {
