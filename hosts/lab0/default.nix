@@ -6,6 +6,7 @@
     type.physical
 
     labs
+    cluster.client
   ];
 
   rnl.storage.disks.root = ["/dev/sda"];
