@@ -9,6 +9,7 @@
     webserver
     phpfpm
     dokuwiki.wiki
+    containers.docker
   ];
 
   # Weaver
@@ -51,12 +52,30 @@
     pkgs.diffutils
   ];
 
+  # Watchtower
+  virtualisation.oci-containers.containers."watchtower" = {
+    image = "containrrr/watchtower:1.7.1";
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock"];
+    environment = {
+      "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
+      "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
+    };
+  };
+
   # RAaaS
   services.nginx.virtualHosts.raaas = {
     serverName = "raaas.weaver.${config.rnl.domain}";
     enableACME = true;
     addSSL = true;
-    locations."/".root = "${pkgs.raaas}/share/raaas";
+    locations."/".proxyPass = "http://localhost:3000";
+  };
+
+  virtualisation.oci-containers.containers."raaas" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/rnl/raaas:latest";
+    ports = ["3000:80"];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
   };
 
   # Wiki
