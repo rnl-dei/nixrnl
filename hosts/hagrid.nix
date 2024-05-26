@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   profiles,
   ...
@@ -79,7 +78,8 @@
   };
 
   # Setup spotifyd to play music on TV
-  # FIXME: This is not working
+  # FIXME: This is not working due to a bug in spotifyd
+  #        that do not allow more than one IPv4 on the same interface
   # services.spotifyd = {
   #   enable = true;
   #   settings = {
