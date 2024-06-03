@@ -98,6 +98,21 @@
     options = ["bind"];
   };
 
+  # Local database
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureDatabases = ["dms"];
+    ensureUsers = [
+      {
+        name = "dms";
+        ensurePermissions = {
+          "dms.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   # PhDMS
   dei.phdms.sites.default.serverName = "deic.dei.tecnico.ulisboa.pt";
 
