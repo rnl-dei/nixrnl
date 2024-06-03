@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octect used: 74
+# Last octect used: 75
 [
   {
     # André Aparício
@@ -370,5 +370,10 @@
     # Diogo Rodrigues
     publicKey = "1yzRFSLHMDcDdbkmDofwAVSEHXR3hwE42q0k1F7WZEc=";
     lastOctect = 74;
+  }
+  {
+    # Rafael Girão
+    publicKey = "JNlD0pE/d3NBfc+cpynf8xOA6oMlNrdCN+449mBHhUc=";
+    lastOctect = 75;
   }
 ]
