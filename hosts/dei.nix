@@ -128,7 +128,7 @@
     description = "Backup DMS production database";
     script = ''
       set -eu
-      ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ~/dms_backups/dms_backup_$(date +%F).sql
+      ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > /root/dms_backups/dms_backup_$(date +%F).sql
     '';
     serviceConfig = {
       Type = "oneshot";
