@@ -114,14 +114,14 @@
     ];
   };
 
-   # Backups
+  # Backups
   systemd.timers."backup-prod-db" = {
     description = "Backup DMS production database timer";
-    wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnCalendar = "*-*-* 02:00:00";
-        Unit = "backup-prod-db.service";
-      };
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 02:00:00";
+      Unit = "backup-prod-db.service";
+    };
   };
 
   systemd.services."backup-prod-db" = {
