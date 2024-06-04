@@ -1,6 +1,7 @@
 {
   config,
   profiles,
+  pkgs,
   ...
 }: {
   imports = with profiles; [
@@ -113,6 +114,29 @@
     ];
   };
 
+   # Backups
+  systemd.timers."backup-prod-db" = {
+    description = "Backup DMS production database timer";
+    wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "*-*-* 02:00:00";
+        Unit = "backup-prod-db.service";
+      };
+  };
+
+  systemd.services."backup-prod-db" = {
+    description = "Backup DMS production database";
+    script = ''
+      set -eu
+      ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ~/dms_backups/dms_backup_$(date +%F).sql
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      EnvironmentFile = config.age.secrets."dms-prod-db-password".path;
+    };
+  };
+
   # PhDMS
   dei.phdms.sites.default.serverName = "deic.dei.tecnico.ulisboa.pt";
 
@@ -179,5 +203,9 @@
   age.secrets."root-at-dei-ssh.key" = {
     file = ../secrets/root-at-dei-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
+  };
+
+  age.secrets."dms-prod-db-password" = {
+    file = ../secrets/dms-prod-db-password.age;
   };
 }

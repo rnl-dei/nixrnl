@@ -77,4 +77,5 @@ in {
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "windows-labs-image-key.age".publicKeys = users ++ [labs];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
+  "dms-prod-db-password.age".publicKeys = users ++ [dei];
 }
