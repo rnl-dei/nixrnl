@@ -21,7 +21,7 @@ in {
     };
     defaultWallpaper = mkOption {
       type = types.path;
-      default = ./default-wallpaper.png;
+      default = pkgs.rnlWallpapers.default;
       description = "Path to default wallpaper";
     };
   };
