@@ -22,6 +22,7 @@
 
     # Compilers
     gcc13
+    gdb
 
     # Browser
     firefox
