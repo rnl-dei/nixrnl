@@ -5,10 +5,9 @@
     os.nixos
     type.physical
 
-    oni
-    #labs
-    #cluster.client
-    #gitlab-runner.es
+    labs
+    cluster.client
+    gitlab-runner.es
   ];
 
   rnl.storage.disks.root = ["/dev/nvme0n1"];
