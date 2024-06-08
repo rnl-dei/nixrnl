@@ -9,9 +9,11 @@
 
   environment.systemPackages = with pkgs; [
     # Editors
-    vim
+    vim-full
     neovim
     emacs
+    gedit
+    geany
     sublime
     codeblocksFull
     (vscode-with-extensions.override {
@@ -22,7 +24,11 @@
 
     # Compilers
     gcc13
+
+    # Debuggers
     gdb
+    valgrind
+    ddd
 
     # Browser
     firefox
