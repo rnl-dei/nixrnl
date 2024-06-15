@@ -65,6 +65,12 @@
   # These settings constrain resources consumed by *all* users, globally.
   systemd.slices."user".sliceConfig = {
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
+
+    # Page cache management is dumb and reclamation is not automatic when memory runs out
+    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
+    MemoryHigh = "94%"; # set to just under MemoryMax
+
     # Note: CPUQuota is not set here because percentages are relative to one CPU, not the total amount of resources
     # Also, DO NOT SET CPUQUOTA WITHOUT TESTING IT. It made borg slow down to unacceptable levels.
     # See https://papyrus.rnl.tecnico.ulisboa.pt/rnl/pl/kuen4nzcd3dsx8f1tqugsg5fba for context.
