@@ -37,8 +37,12 @@
   # Overrides limits from profile/ist-shell
   # TODO: move to somewhere where it can be shared with borg(cluster server) and other heavily shared machines.
   systemd.slices."user-".sliceConfig = {
-    # MemoryHigh triggers aggressive memory reclamation, and only seems to work well with bursty workloads.
     MemoryMax = "10%"; # 8GB * 10% ≃ 800MB
+
+    # Page cache management is dumb and reclamation is not automatic when memory runs out
+    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
+    MemoryHigh = "9%"; # set to just under MemoryMax
 
     # Prevent fork-bombs
     TasksMax = 1024; # 4096 is too much in a low-spec machine
