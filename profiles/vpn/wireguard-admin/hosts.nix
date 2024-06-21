@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octect used: 76
+# Last octect used: 77
 [
   {
     # André Aparício
@@ -380,5 +380,10 @@
     # Vasco Morais
     publicKey = "P8+NK+LbcUpMKVfDZ8oxS4Am4NVCONSwYnolefdvlSU=";
     lastOctect = 76;
+  }
+  {
+    # Francisco Martins
+    publicKey = "u7Km5jIMhj6SsNjZcuIwereOUAK40iP7fq7FHWplvzw=";
+    lastOctect = 77;
   }
 ]
