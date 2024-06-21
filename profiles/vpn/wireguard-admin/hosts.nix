@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octect used: 75
+# Last octect used: 76
 [
   {
     # André Aparício
@@ -375,5 +375,10 @@
     # Rafael Girão
     publicKey = "JNlD0pE/d3NBfc+cpynf8xOA6oMlNrdCN+449mBHhUc=";
     lastOctect = 75;
+  }
+  {
+    # Vasco Morais
+    publicKey = "P8+NK+LbcUpMKVfDZ8oxS4Am4NVCONSwYnolefdvlSU=";
+    lastOctect = 76;
   }
 ]
