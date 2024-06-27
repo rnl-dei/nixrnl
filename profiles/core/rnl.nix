@@ -79,7 +79,7 @@ in {
 
   # Configure locale
   console.keyMap = "pt-latin9";
-  services.xserver.layout = "pt,us";
+  services.xserver.xkb.layout = "pt,us";
   i18n = {
     defaultLocale = "en_US.utf8";
     extraLocaleSettings = {

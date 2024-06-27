@@ -31,8 +31,8 @@
 
       auth_provider = krb5
       chpass_provider = krb5
-      krb5_realm = ${config.krb5.libdefaults.default_realm}
-      krb5_server = ${config.krb5.realms.${config.krb5.libdefaults.default_realm}.default_domain}
+      krb5_realm = ${config.security.krb5.settings.libdefaults.default_realm}
+      krb5_server = ${config.security.krb5.settings.realms.${config.security.krb5.settings.libdefaults.default_realm}.default_domain}
     '';
   };
 
