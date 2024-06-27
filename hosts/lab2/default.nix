@@ -7,7 +7,6 @@
 
     labs
     cluster.client
-    gitlab-runner.es
   ];
 
   networking.enableIPv6 = false;
