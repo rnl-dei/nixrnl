@@ -22,12 +22,12 @@ modules:
   network-zeus:
     version: 3
     auth:
-      username: cacti
-      password: {{ snmp_zeus_password }}
+      username: ${SNMP_ZEUS_USER}
+      password: ${SNMP_ZEUS_PASSWORD}
       security_level: authPriv
       auth_protocol: SHA
       priv_protocol: AES
-      priv_password: {{ snmp_zeus_priv_password }}
+      priv_password: ${SNMP_ZEUS_PRIV}
     timeout: 30s # it's a lot of stuff
     walk:
       - interfaces

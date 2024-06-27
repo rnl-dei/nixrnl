@@ -102,7 +102,6 @@
     owner = "snmp-exporter";
   };
 
-
   services.nginx.virtualHosts.grafana.serverName = "grafana.${config.rnl.domain}";
   services.nginx.virtualHosts.prometheus.serverName = "prometheus.${config.rnl.domain}";
 

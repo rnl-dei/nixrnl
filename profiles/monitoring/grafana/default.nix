@@ -47,15 +47,19 @@
     };
     provision = {
       enable = true;
-      datasources.settings = import ./datasources;
-      dashboards.settings.providers."RNL-Dashboards" = {
-        name = "RNL-Dashboards";
-        options.path = ./dashboards;
+      datasources.path = ./datasources.yaml;
+      alerting = {
+        rules.path = ./alerts/rules;
+        # templates.path = ./alerts/templates;
+        # policies.path = ./alerts/policies;
+        # contactPoints.path = ./alerts/contacts-points.yaml;
       };
-      alerts.settings.providers."RNL-Alerting" = {
-        name = "RNL-Alerting";
-        options.path = ./alertrules;
-      };
+      dashboards.settings.providers = [
+        {
+          name = "RNL-Dashboards";
+          options.path = ./dashboards;
+        }
+      ];
     };
   };
 

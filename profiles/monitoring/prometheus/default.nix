@@ -77,27 +77,20 @@ in {
   };
 
   # SNMP Exporter
+  age.secrets."tardis-snmp-exporter.env" = {
+    file = ../../../secrets/tardis-snmp-exporter-env.age;
+  };
   services.prometheus.exporters.snmp = {
     enable = true;
-
-    # TODO: get the passwords from the secrets manager (DOES NOT WORK YET)
-    
-    # snmp_zeus_password
-    # snmp_zeus_priv_password
-
-    # TODO: possibly improve this, make it more Nix-y
-    snmp_generator = pkgs.runCommand "snmp-generator" {
-      nativeBuildInputs = [ pkgs.snmp_exporter ];
-      buildInputs = [ pkgs.sed ];
-    } ''
-      sed -i 's/{ snmp_zeus_password }/${snmp_zeus_password}/g' ./snmp_generator.yml
-      sed -i 's/{ snmp_zeus_priv_password }/${snmp_zeus_priv_password}/g' ./snmp_generator.yml
-      generator generate ${./snmp_generator.yml}
-    '';
-
-    # copy the generated file to the config file
-    configFile = pkgs.copyPathToStore ./snmp.yml;
-    
+    configurationPath = ./snmp.yml; # pkgs.copyPathToStore
+    extraFlags = [
+      "--config.expand-environment-variables"
+    ];
+  };
+  systemd.services.snmp_exporter.serviceConfig = {
+    EnvironmentFile = config.age.secrets."tardis-snmp-exporter.env".path;
+    # potentially useless line
+    PassEnvironment = ["SNMP_ZEUS_USER" "SNMP_ZEUS_PASSWORD" "SNMP_ZEUS_PRIV"];
   };
 
   services.nginx.upstreams.prometheus.servers = {
