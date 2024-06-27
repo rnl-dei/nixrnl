@@ -3,10 +3,7 @@
   pkgs,
   ...
 }: {
-  virtualisation = {
-    docker.enableNvidia = true;
-    podman.enableNvidia = true;
-  };
+  virtualisation.containers.cdi.dynamic.nvidia.enable = true;
 
   # Make sure opengl is enabled
   hardware.opengl = {
