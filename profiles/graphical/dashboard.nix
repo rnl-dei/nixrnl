@@ -9,10 +9,7 @@
 
   services.xserver = {
     windowManager.openbox.enable = true;
-    displayManager.autoLogin = {
-      enable = true;
-      user = "rnl";
-    };
+
     monitorSection = ''
       Option "DPMS" "false"
     '';
@@ -22,6 +19,10 @@
       Option "SuspendTime" "0"
       Option "OffTime" "0"
     '';
+  };
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "rnl";
   };
 
   xdg.autostart.enable = true;

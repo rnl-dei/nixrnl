@@ -11,6 +11,6 @@ moodle-utils.buildMoodlePlugin rec {
 
   src = fetchzip {
     url = "https://moodle.org/plugins/download.php/29972/${pluginType}_${name}_moodle43_${version}.zip";
-    sha256 = "sha256-OcZe0E+qiQeBfn2PXmxEMn7CrGEi931rrAGt6IEFAY4=";
+    sha256 = "sha256-a3aR7iyuaOty08+6e7kF/kRIhgqfpp7kc661e+z3UA0=";
   };
 }

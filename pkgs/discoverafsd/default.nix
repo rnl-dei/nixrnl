@@ -6,7 +6,8 @@
   makeWrapper,
   stdenv,
   systemd,
-  toybox,
+  coreutils,
+  findutils,
   ...
 }:
 stdenv.mkDerivation rec {
@@ -20,7 +21,8 @@ stdenv.mkDerivation rec {
     bc
     curl
     systemd
-    toybox
+    coreutils
+    findutils
   ];
 
   nativeBuildInputs = [makeWrapper];
