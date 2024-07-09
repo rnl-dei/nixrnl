@@ -5,12 +5,12 @@
 }:
 moodle-utils.buildMoodlePlugin rec {
   name = "filtercodes";
-  version = "2023112000";
+  version = "2024050100";
 
   pluginType = "filter";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/30529/${pluginType}_${name}_moodle43_${version}.zip";
-    sha256 = "sha256-O6QruDxYe9Nmb2gQ5epQybOL1CSLm7sKXdA5kOWGSD8=";
+    url = "https://moodle.org/plugins/download.php/31902/${pluginType}_${name}_moodle44_${version}.zip";
+    sha256 = "sha256-6Z+9P/ax1UKxuaoNnbEHPK3jrU5JvgjsPiQIwmF4Xac=";
   };
 }

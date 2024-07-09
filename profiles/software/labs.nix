@@ -96,23 +96,23 @@
         torch-bin
 
         # FP (LEFT)
-        (buildPythonPackage rec {
-          pname = "bnf";
-          version = "1.0.4";
-          src = fetchPypi {
-            inherit pname version;
-            sha256 = "sha256-EV2STk7/5jVdivdeup+Lg/9zCi0USkUUd8edc0xaT7Q=";
-          };
-          doCheck = false;
-          propagatedBuildInputs = [
-            # Specify dependencies
-            pkgs.python3Packages.ply
-          ];
-        })
-        pylint
+        # (buildPythonPackage rec {
+        #   pname = "bnf";
+        #   version = "1.0.4";
+        #   src = fetchPypi {
+        #     inherit pname version;
+        #     sha256 = "sha256-EV2STk7/5jVdivdeup+Lg/9zCi0USkUUd8edc0xaT7Q=";
+        #   };
+        #   doCheck = false;
+        #   propagatedBuildInputs = [
+        #     # Specify dependencies
+        #     pkgs.python3Packages.ply
+        #   ];
+        # })
+        # pylint
         # lizard # Broken (23.11)
-        pygame
-        pysimplegui
+        # pygame
+        # pysimplegui
 
         # PRI
         nltk

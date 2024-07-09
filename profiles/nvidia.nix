@@ -3,10 +3,7 @@
   pkgs,
   ...
 }: {
-  virtualisation = {
-    docker.enableNvidia = true;
-    podman.enableNvidia = true;
-  };
+  hardware.nvidia-container-toolkit.enable = true;
 
   # Make sure opengl is enabled
   hardware.opengl = {
@@ -53,6 +50,5 @@
       RestartSec = "1";
     };
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target"];
   };
 }
