@@ -24,11 +24,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/pcm.img";
-      }
-    ];
+    disks = [{source.dev = "/dev/zvol/dpool/volumes/pcm";}];
   };
 }
