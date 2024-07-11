@@ -5,12 +5,12 @@
 }:
 moodle-utils.buildMoodlePlugin rec {
   name = "mergeusers";
-  version = "2023061900";
+  version = "2024060300";
 
   pluginType = "tool";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/29477/${pluginType}_${name}_moodle42_${version}.zip";
-    sha256 = "sha256-qZl+XOjonLz98gi3Y9uSFpGHIycu+UTXErUUMkj3JCs=";
+    url = "https://moodle.org/plugins/download.php/32263/${pluginType}_${name}_moodle44_${version}.zip";
+    sha256 = "sha256-yEMK7+8PFjpGA0fhangwAUrJlLJa/l6rNGOm6554M/o=";
   };
 }
