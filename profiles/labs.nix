@@ -170,6 +170,12 @@
     #   password = "welcome";
     #   extraGroups = ["volatile" "no-ssh"];
     # };
+    lxmls24 = {
+      isNormalUser = true;
+      description = "LxMLS'24 user";
+      hashedPassword = "$6$cooc.1CzJLUtF/Bv$5vMvUyjlZaWABXpJBq6Pu0KoB46fBa1riAuFSNyX6WqKcge.tU90ejjrRBLClvRIi0t6W.6.VaUecHUIkDlk20";
+      extraGroups = ["volatile" "no-ssh"];
+    };
   };
 
   users.groups = {
