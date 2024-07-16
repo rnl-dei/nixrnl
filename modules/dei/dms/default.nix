@@ -329,6 +329,7 @@ in {
         dms = {
           isNormalUser = true;
           home = "/var/lib/dei/dms";
+          homeMode = "750";
           group = webserver.group;
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
         };
