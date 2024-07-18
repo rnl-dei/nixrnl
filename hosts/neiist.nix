@@ -1,6 +1,6 @@
 {profiles, ...}: {
   imports = with profiles; [
-    core.rnl
+    core.third-party
     filesystems.simple-uefi
     os.ubuntu
     type.vm
