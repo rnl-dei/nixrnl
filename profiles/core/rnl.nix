@@ -163,6 +163,7 @@ in {
     setSendmail = true;
     defaults = {
       from = "%U@%C";
+      domain = config.networking.fqdn;
     };
     accounts = {
       "default" = {
