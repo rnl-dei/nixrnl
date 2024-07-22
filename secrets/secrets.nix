@@ -53,6 +53,8 @@ in {
   # Secrets
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
+  "dei-glitchtip-secret-key.age".publicKeys = users ++ [dei];
+  "dei-glitchtip-database-env.age".publicKeys = users ++ [dei];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
   "helios-env.age".publicKeys = users ++ [selene];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];

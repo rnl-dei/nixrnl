@@ -163,25 +163,6 @@
     options = ["bind"];
   };
 
-  # GlitchTip
-  # Docker-compose inside of the machine
-  # TODO: Move this to NixOS Configuration
-  services.nginx.virtualHosts.glitchtip = {
-    serverName = "glitchtip.${config.networking.fqdn}";
-    enableACME = true;
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:8000";
-      extraConfig = ''
-        # RNL IPs
-        allow 193.136.164.0/24;
-        allow 2001:690:2100:80::/62;
-
-        deny all;
-      '';
-    };
-  };
-
   # Git hooks
   rnl.githook = {
     enable = true;
@@ -207,5 +188,36 @@
 
   age.secrets."dms-prod-db-password" = {
     file = ../secrets/dms-prod-db-password.age;
+  };
+
+  # GlitchTip
+  services.glitchtip = {
+    enable = true;
+    glitchtipImage = "glitchtip/glitchtip:v4.0";
+    secretKeyFile = config.age.secrets."dei-glitchtip-secret-key".path;
+    databaseEnvFile = config.age.secrets."dei-glitchtip-databse-env".path;
+    emailUrl = "smtp://${config.rnl.mailserver.host}:${toString config.rnl.mailserver.port}";
+  };
+
+  services.nginx.virtualHosts.glitchtip.locations."/".extraConfig = ''
+    # RNL IPs
+    allow 193.136.164.0/24;
+    allow 2001:690:2100:80::/62;
+
+    deny all;
+  '';
+
+  # Bind mount /mnt/data/glitctip to /var/lib/glitchtip
+  fileSystems."${config.services.glitchtip.stateDir}" = {
+    device = "/mnt/data/glitchtip";
+    options = ["bind"];
+  };
+
+  age.secrets."dei-glitchtip-secret-key" = {
+    file = ../secrets/dei-glitchtip-secret-key.age;
+  };
+
+  age.secrets."dei-glitchtip-databse-env" = {
+    file = ../secrets/dei-glitchtip-database-env.age;
   };
 }
