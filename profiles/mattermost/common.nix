@@ -26,6 +26,9 @@
       "~ /api/v[0-9]+/(users/)?websocket$" = {
         proxyPass = "http://mattermost";
         proxyWebsockets = true;
+        extraConfig = ''
+          client_max_body_size 100M;
+        '';
       };
     };
   };
