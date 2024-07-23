@@ -15,6 +15,7 @@ let
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
+  caixote = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKDqUCaBZ5e2e8k05ba/17fAYdDjXU3dTx/D5rg3JISu";
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
   dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
@@ -33,6 +34,7 @@ in {
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
+  "host-keys/caixote.age".publicKeys = deployMachines;
   "host-keys/dealer.age".publicKeys = deployMachines;
   "host-keys/dei.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;
@@ -55,6 +57,7 @@ in {
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [dei];
   "dei-glitchtip-database-env.age".publicKeys = users ++ [dei];
+  "dms-prod-db-password.age".publicKeys = users ++ [dei];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
   "helios-env.age".publicKeys = users ++ [selene];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
@@ -73,11 +76,11 @@ in {
   "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
+  "syncoid-at-caixote-ssh-key.age".publicKeys = users ++ [caixote];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "windows-labs-image-key.age".publicKeys = users ++ [labs];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
-  "dms-prod-db-password.age".publicKeys = users ++ [dei];
 }
