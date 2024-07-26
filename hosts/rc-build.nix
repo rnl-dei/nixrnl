@@ -11,7 +11,6 @@
   rnl.virtualisation.guest = {
     description = "Builds dos projetos de RC do taguspark";
 
-    autostart = false;
     uefi = false;
     memory = 4096;
 

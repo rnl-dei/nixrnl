@@ -13,6 +13,7 @@
     createdBy = "diogo.cardoso";
     maintainers = ["ines.lynce" "david.pissarra"];
 
+    autostart = false;
     vcpu = 4;
     memory = 4096;
 
