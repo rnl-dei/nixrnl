@@ -37,6 +37,8 @@
       any process that is consuming 100% of CPU[0m for an unreasonable
       amount of time.
 
+      Only ports 1024-65535 are open for incoming connections.
+
     ################################################################################
 
   '';
