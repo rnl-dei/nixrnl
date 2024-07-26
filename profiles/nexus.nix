@@ -16,7 +16,15 @@
   };
 
   # Allow users to access the machine from outside the network
-  networking.firewall.enable = lib.mkForce false;
+  networking.firewall = let
+    portRanges = {
+      from = 1024;
+      to = 65535;
+    };
+  in {
+    allowedTCPPortRanges = [ portRanges ];
+    allowedUDPPortRanges = [ portRanges ];
+  };
 
   users.motd = ''
 
