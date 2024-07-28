@@ -9,7 +9,7 @@
   # RNL Wallpaper
   rnl.wallpaper = {
     enable = true;
-    url = "https://wallpaper.rnl.tecnico.ulisboa.pt/";
+    url = "https://wallpaper.${config.rnl.domain}/";
   };
 
   # Display Manager: LightDM
