@@ -38,9 +38,9 @@
         client_id = "$__env{GRAFANA_AUTH_GITLAB_CLIENT_ID}";
         client_secret = "$__env{GRAFANA_AUTH_GITLAB_CLIENT_SECRET}";
         scopes = "read_api";
-        auth_url = "https://gitlab.rnl.tecnico.ulisboa.pt/oauth/authorize";
-        token_url = "https://gitlab.rnl.tecnico.ulisboa.pt/oauth/token";
-        api_url = "https://gitlab.rnl.tecnico.ulisboa.pt/api/v4";
+        auth_url = "https://gitlab.${config.rnl.domain}/oauth/authorize";
+        token_url = "https://gitlab.${config.rnl.domain}/oauth/token";
+        api_url = "https://gitlab.${config.rnl.domain}/api/v4";
         allowed_groups = "rnl, dei";
         role_attribute_path = "is_admin && 'Admin' || contains(groups[*], 'rnl') && 'Editor' || 'Viewer'";
       };

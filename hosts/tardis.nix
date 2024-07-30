@@ -9,6 +9,7 @@
     os.nixos
     type.physical
 
+    webserver
     monitoring.grafana
     monitoring.prometheus
   ];
@@ -86,6 +87,8 @@
   };
 
   users.users.root.hashedPassword = "$6$ITQx6/WKOUggTAcj$yV6UZhwfVSK6zd5HdsdCvL7dGfcDh0NxnyZ5i6xrIKtvP2TrkFWNrKLB0NJ/JjiaiNVAMX/GFVRXYwowjVnEk1";
+
+  rnl.internalHost = true;
 
   # Bind mount /mnt/data/grafana to /var/lib/grafana
   fileSystems."${config.services.grafana.dataDir}" = {

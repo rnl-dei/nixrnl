@@ -12,7 +12,7 @@
     nixosConfigurations;
 
   targets = [
-    (config: "${cfg.networking.fqdn}:${toString cfg.services.prometheus.exporters.node.port}")
+    (config: "${config.networking.fqdn}:${toString config.services.prometheus.exporters.node.port}")
   ];
 in {
   static_configs = lib.rnl.mkStaticConfigs hosts targets [];
