@@ -19,10 +19,12 @@
   rnl.storage = {
     disks = {
       root = [
-        # TODO: Add root disk (2 SSDs of >200 GB)
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800309"
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800370"
       ];
       data = [
-        # TODO: Add data disks (2 HDD disks of 3TB each is enough)
+        "/dev/disk/by-id/ata-TOSHIBA_HDWQ140_Y8C1K0M7FAYG"
+        "/dev/disk/by-id/ata-TOSHIBA_HDWQ140_Y8C6K0J3FAYG"
       ];
     };
   };
@@ -82,6 +84,8 @@
       };
     };
   };
+
+  users.users.root.hashedPassword = "$6$ITQx6/WKOUggTAcj$yV6UZhwfVSK6zd5HdsdCvL7dGfcDh0NxnyZ5i6xrIKtvP2TrkFWNrKLB0NJ/JjiaiNVAMX/GFVRXYwowjVnEk1";
 
   # Bind mount /mnt/data/grafana to /var/lib/grafana
   fileSystems."${config.services.grafana.dataDir}" = {
