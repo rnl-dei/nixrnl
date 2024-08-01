@@ -39,6 +39,11 @@
 
     ist-delegate-election.inputs.flake-utils.follows = "flake-utils";
 
+    # Runs checks before committing
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
+
     # We only have these inputs to pass to other dependencies and
     # avoid having multiple versions in our flake.
     flake-utils.url = "github:numtide/flake-utils";
@@ -54,11 +59,12 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
-    unstable,
+    pre-commit-hooks,
     ...
   } @ inputs: let
-    lib = nixpkgs.lib.extend (self: super:
+    lib = nixpkgs.lib.extend (self: _super:
       import ./lib {
         inherit inputs profiles pkgs nixosConfigurations;
         lib = self;
@@ -72,16 +78,42 @@
     inherit nixosConfigurations overlays;
 
     devShells.x86_64-linux.default = pkgs.mkShell {
-      buildInputs = with pkgs; [
-        inputs.agenix.packages.x86_64-linux.agenix
-        deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
-        secrets-check
-      ];
+      inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
+      buildInputs =
+        self.checks.x86_64-linux.pre-commit-check.enabledPackages
+        ++ (with pkgs; [
+          inputs.agenix.packages.x86_64-linux.agenix
+          deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
+          secrets-check
+        ]);
     };
 
     packages.x86_64-linux = {
       deploy-anywhere = pkgs.deploy-anywhere;
       secrets-check = pkgs.secrets-check;
+    };
+
+    checks.x86_64-linux.pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
+      src = ./.;
+      hooks = {
+        # Nix
+        alejandra.enable = true;
+        deadnix.enable = true;
+
+        # Shell
+        shellcheck.enable = true;
+        shfmt.enable = true;
+
+        # Git
+        check-merge-conflicts.enable = true;
+        forbid-new-submodules.enable = true;
+
+        # Spellcheck
+        typos = {
+          enable = true;
+          settings.configPath = "./typos.toml";
+        };
+      };
     };
 
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;

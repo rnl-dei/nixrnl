@@ -1,0 +1,13 @@
+[default]
+extend-ignore-re = [
+    # Ignore lines with trailing "# spellchecker:disable-line"
+    "(?Rm)^.*(#|//)\\s*spellchecker:disable-line$",
+
+    # Ignore blocks delimited by "# spellchecker:<on|off>"
+    "(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on",
+]
+
+[default.extend-words]
+# Don't correct the "ist" or "rnl"
+ist = "ist"
+rnl = "rnl"
