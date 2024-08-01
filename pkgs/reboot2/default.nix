@@ -17,7 +17,8 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     for i in *; do
-      cp $i $out/bin
+      i=''${i%.sh}
+      cp $i.sh $out/bin/$i
       chmod +x $out/bin/$i
       wrapProgram $out/bin/$i \
         --prefix PATH : ${lib.makeBinPath buildInputs}

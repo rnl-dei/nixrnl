@@ -1,8 +1,4 @@
-{
-  config,
-  profiles,
-  ...
-}: {
+{profiles, ...}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi

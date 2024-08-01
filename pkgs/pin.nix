@@ -1,6 +1,5 @@
 {
   autoPatchelfHook,
-  bintools-unwrapped,
   fetchurl,
   lib,
   stdenv,

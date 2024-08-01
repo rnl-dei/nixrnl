@@ -1,7 +1,6 @@
 {
   config,
   profiles,
-  lib,
   ...
 }: {
   imports = with profiles; [

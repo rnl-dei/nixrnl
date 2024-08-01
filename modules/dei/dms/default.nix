@@ -13,7 +13,6 @@ with lib; let
   siteOpts = {
     options,
     config,
-    lib,
     name,
     ...
   }: {
@@ -141,7 +140,7 @@ with lib; let
         environmentFile = mkOption {
           type = types.path;
           default = "${config.stateDir}/dms.env";
-          description = "Path to the environment file (usefull for secrets)";
+          description = "Path to the environment file (useful for secrets)";
         };
       };
     };
@@ -266,7 +265,7 @@ in {
     services.nginx = {
       enable = true;
       virtualHosts =
-        mapAttrs' (siteName: siteCfg: {
+        mapAttrs' (_siteName: siteCfg: {
           name = siteCfg.serviceName;
           value = {
             serverName = mkDefault siteCfg.serverName;

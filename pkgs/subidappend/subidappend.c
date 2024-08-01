@@ -1,5 +1,5 @@
 /* Appends user's and his groups' IDs to
- * /etc/subuid and /etc/subgid, respectivelly,
+ * /etc/subuid and /etc/subgid, respectively,
  * if not present already.
  * Used for setting up rootless docker in slurm.
  *
@@ -9,9 +9,9 @@
  *   when executing a user's request. This is supposed
  *   to be a suid binary called from a script setting
  *   up docker. This is the only part requiring root
- *   priviledges.
+ *   privileges.
  *
- * If you need root priviledges, why don't you just
+ * If you need root privileges, why don't you just
  * put a script in slurm.conf's Prolog?
  * - I'm not sure if the Prolog program runs as root.
  *   The manpage slurm.conf(5) only mentions root in

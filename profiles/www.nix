@@ -153,9 +153,9 @@ in {
       # Fix for roundcube to work with MySQL since default is PostgreSQL
       # Reference: https://github.com/NixOS/nixpkgs/blob/25e3d4c0d3591c99929b1ec07883177f6ea70c9d/nixos/modules/services/mail/roundcube.nix#L140
       inherit (config.services.roundcube.database) username host dbname;
-      databseURL = "mysql://${username}:' . $password . '@${host}/${dbname}";
+      databaseURL = "mysql://${username}:' . $password . '@${host}/${dbname}";
     in ''
-      $config['db_dsnw'] = '${databseURL}';
+      $config['db_dsnw'] = '${databaseURL}';
       $config['default_host'] = 'ssl://${config.rnl.mailserver.host}';
       $config['default_port'] = 993;
       $config['smtp_server'] = 'tls://${config.rnl.mailserver.host}';

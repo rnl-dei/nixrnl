@@ -33,7 +33,7 @@
     import inputs.nixpkgs ({
         overlays =
           [
-            (self: super: {
+            (_self: _super: {
               unstable = import inputs.unstable argsPkgs;
               allowOpenSSL = import inputs.nixpkgs (argsPkgs // {config.permittedInsecurePackages = ["openssl-1.1.1w"];});
               allowSquid = import inputs.nixpkgs (argsPkgs // {config.permittedInsecurePackages = ["squid-5.9"];});

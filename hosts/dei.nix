@@ -200,7 +200,7 @@
     enable = true;
     glitchtipImage = "glitchtip/glitchtip:v4.0";
     secretKeyFile = config.age.secrets."dei-glitchtip-secret-key".path;
-    databaseEnvFile = config.age.secrets."dei-glitchtip-databse-env".path;
+    databaseEnvFile = config.age.secrets."dei-glitchtip-database-env".path;
     emailUrl = "smtp://${config.rnl.mailserver.host}:${toString config.rnl.mailserver.port}";
   };
 
@@ -222,7 +222,7 @@
     file = ../secrets/dei-glitchtip-secret-key.age;
   };
 
-  age.secrets."dei-glitchtip-databse-env" = {
+  age.secrets."dei-glitchtip-database-env" = {
     file = ../secrets/dei-glitchtip-database-env.age;
   };
 }
