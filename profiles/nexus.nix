@@ -22,8 +22,8 @@
       to = 65535;
     };
   in {
-    allowedTCPPortRanges = [ portRanges ];
-    allowedUDPPortRanges = [ portRanges ];
+    allowedTCPPortRanges = [portRanges];
+    allowedUDPPortRanges = [portRanges];
   };
 
   users.motd = ''

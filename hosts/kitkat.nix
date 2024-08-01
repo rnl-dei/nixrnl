@@ -22,11 +22,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/kitkat.img";
-      }
-    ];
+    disks = [{source.dev = "/dev/zvol/dpool/data/kitkat";}];
   };
 }
