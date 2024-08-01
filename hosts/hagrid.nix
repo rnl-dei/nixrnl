@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   profiles,
   ...
@@ -75,6 +76,47 @@
   services.arpwatch = {
     enable = true;
     interfaces.enp2s0 = {};
+  };
+
+  # Dashboard
+  systemd.services.dashboard-server = let
+    dashboardPort = 7331; # Port to serve the dashboard (randomly chosen)
+    dashboardDir = pkgs.writeTextDir "dashboard_admin.json" (lib.generators.toJSON {} {
+      settingsReloadIntervalMinutes = 20;
+      fullscreen = true;
+      autoStart = true;
+
+      websites = [
+        {
+          url = "https://rnl.tecnico.ulisboa.pt";
+          duration = 5;
+          tabReloadIntervalSeconds = 3600;
+        }
+        {
+          url = "https://rnl.tecnico.ulisboa.pt/dashboard";
+          duration = 5;
+          tabReloadIntervalSeconds = 600;
+        }
+        {
+          url = "https://grafana.rnl.tecnico.ulisboa.pt/d/D7PpwMQVk/labswatch?orgId=1&refresh=1m&theme=dark&kiosk";
+          duration = 10;
+          tabReloadIntervalSeconds = 3600;
+        }
+        {
+          url = "https://grafana.rnl.tecnico.ulisboa.pt/d/f9baf51c-7055-427c-a9d2-19a6584efc47/grafana-alert?orgId=1&refresh=1m&theme=dark&kiosk";
+          duration = 10;
+          tabReloadIntervalSeconds = 3600;
+        }
+      ];
+    });
+  in {
+    description = "Dashboard HTTP Server";
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      ExecStart = "${pkgs.simple-http-server}/bin/simple-http-server --ip 127.0.0.1 --nocache -p ${toString dashboardPort} ${dashboardDir}";
+      Restart = "always";
+      User = "nobody";
+    };
   };
 
   # Setup spotifyd to play music on TV
