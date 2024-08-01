@@ -41,6 +41,18 @@
     options = ["bind"];
   };
 
+  rnl.db-cluster = {
+    ensureDatabases = ["mattermost"];
+    ensureUsers = [
+      {
+        name = "mattermost";
+        ensurePermissions = {
+          "mattermost.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   # Wheatley Bot
   rnl.wheatley = {
     enable = true;

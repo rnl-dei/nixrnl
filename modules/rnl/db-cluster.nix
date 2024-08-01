@@ -1,11 +1,14 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
   cfg = config.rnl.db-cluster;
   package = config.services.mysql.package;
+
+  isMariaDB = getName package == getName pkgs.mariadb;
 
   userOptions = {
     name = mkOption {
@@ -16,7 +19,7 @@ with lib; let
     host = mkOption {
       type = types.str;
       description = "Host of the user";
-      default = "localhost";
+      default = config.networking.fqdn;
     };
 
     ensurePermissions = mkOption {
@@ -70,7 +73,35 @@ in {
           cfg.ensureDatabases}
         ) | ${package}/bin/mysql -N
       ''}
+
+
+      ${concatMapStrings (user: let
+          authOption = optionalString (user.host == "localhost") "IDENTIFIED WITH ${
+            if isMariaDB
+            then "unix_socket"
+            else "auth_socket"
+          }";
+        in ''
+          ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'${user.host}' ${authOption};"
+            ${concatStringsSep "\n" (mapAttrsToList (database: permission: ''
+              echo "GRANT ${permission} ON ${database} TO \`${user.name}\`@\`${user.host}\`;"
+            '')
+            user.ensurePermissions)}
+          ) | ${package}/bin/mysql -N
+        '')
+        cfg.ensureUsers}
     '';
+
+    environment.etc."mysql.state".text = let
+      mkDatabase = database: "database:${database}";
+      mkUser = user: "user:${user.name}@${user.host}:${mkPermissions user}";
+      mkPermissions = user: lib.concatStringsSep ";" (mapAttrsToList (n: v: "${n}=${v}") user.ensurePermissions);
+    in ''
+      ${concatStringsSep "\n" (map mkDatabase cfg.ensureDatabases)}
+      ${concatStringsSep "\n" (map mkUser cfg.ensureUsers)}
+    '';
+
+    environment.systemPackages = [pkgs.mysql-check-state];
 
     # TODO: Add a service to check if the user exists
     # and if there are databases, users or permissions dangling

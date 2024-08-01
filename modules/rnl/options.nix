@@ -3,12 +3,6 @@ with lib; {
   options.rnl = {
     internalHost = mkEnableOption "Enable this if host is inaccessible from the outside";
 
-    databases = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "List of databases to create at the DB Cluster";
-    };
-
     domain = mkOption {
       type = types.str;
       readOnly = true;

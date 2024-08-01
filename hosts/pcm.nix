@@ -26,4 +26,22 @@
     ];
     disks = [{source.dev = "/dev/zvol/dpool/volumes/pcm";}];
   };
+
+  rnl.db-cluster = {
+    ensureDatabases = ["pcm_gamecourse" "pcm_moodle"];
+    ensureUsers = [
+      {
+        name = "pcm_gamecourse";
+        ensurePermissions = {
+          "pcm_gamecourse.*" = "ALL PRIVILEGES";
+        };
+      }
+      {
+        name = "pcm_moodle";
+        ensurePermissions = {
+          "pcm_moodle.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 }

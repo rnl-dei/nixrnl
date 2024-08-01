@@ -82,6 +82,17 @@
     ];
     sites.default.serverName = "dms.${config.networking.fqdn}";
   };
+  rnl.db-cluster = {
+    ensureDatabases = ["dms_blatta"];
+    ensureUsers = [
+      {
+        name = "dms";
+        ensurePermissions = {
+          "dms_blatta.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 
   dei.phdms.sites.default.serverName = "phdms.${config.networking.fqdn}";
 

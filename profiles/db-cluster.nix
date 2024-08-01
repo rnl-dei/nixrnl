@@ -25,9 +25,24 @@
     };
   };
 
-  rnl.db-cluster = {
-    enable = true;
-    ensureDatabases = lib.flatten (lib.mapAttrsToList (_: {config, ...}: config.rnl.databases) nixosConfigurations);
+  rnl.db-cluster = let
+    # Only consider hosts that have the db-cluster option disabled
+    hosts = lib.filterAttrs (_: {config, ...}: ! config.rnl.db-cluster.enable) nixosConfigurations;
+    ensureDatabases = [] ++ config.services.mysql.ensureDatabases;
+    ensureUsers =
+      [
+        {
+          name = "root";
+          ensurePermissions = {
+            "*.*" = "ALL PRIVILEGES";
+          };
+        }
+      ]
+      ++ (map (u: u // {host = "localhost";}) config.services.mysql.ensureUsers);
+  in {
+    enable = lib.mkForce true;
+    ensureDatabases = ensureDatabases ++ lib.flatten (lib.mapAttrsToList (_: {config, ...}: config.rnl.db-cluster.ensureDatabases) hosts);
+    ensureUsers = ensureUsers ++ lib.flatten (lib.mapAttrsToList (_: {config, ...}: config.rnl.db-cluster.ensureUsers) hosts);
   };
 
   # Required for WSREP scripts

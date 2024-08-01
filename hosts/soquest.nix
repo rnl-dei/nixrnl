@@ -30,4 +30,16 @@
       }
     ];
   };
+
+  rnl.db-cluster = {
+    ensureDatabases = ["soquest_moodle"];
+    ensureUsers = [
+      {
+        name = "soquest";
+        ensurePermissions = {
+          "soquest_moodle.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 }

@@ -72,6 +72,24 @@
     sites.default.serverName = "dms.dei.tecnico.ulisboa.pt";
   };
 
+  rnl.db-cluster = {
+    ensureDatabases = ["dms" "leicalumni"];
+    ensureUsers = [
+      {
+        name = "dms";
+        ensurePermissions = {
+          "dms.*" = "ALL PRIVILEGES";
+        };
+      }
+      {
+        name = "leicalumni";
+        ensurePermissions = {
+          "leicalumni.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   services.nginx.virtualHosts.redirect-dms = {
     serverName = "dms.${config.networking.fqdn}";
     serverAliases = ["dms.${config.rnl.domain}"];
