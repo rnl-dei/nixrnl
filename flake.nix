@@ -15,14 +15,18 @@
     # NixOS Anywhere used by dev shell to deploy to remote machines
     nixos-anywhere.url = "github:numtide/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-anywhere.inputs.nixos-stable.follows = "nixpkgs";
     nixos-anywhere.inputs.disko.follows = "disko";
+    nixos-anywhere.inputs.treefmt-nix.follows = "treefmt-nix";
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.inputs.systems.follows = "systems";
 
     # Required for command-not-found
     flake-programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
     flake-programs-sqlite.inputs.nixpkgs.follows = "nixpkgs";
+    flake-programs-sqlite.inputs.utils.follows = "flake-utils";
 
     # IST Delegate Election
     ist-delegate-election.url = "github:diogotcorreia/ist-delegate-election";
@@ -31,6 +35,22 @@
     # Wolbridge
     wolbridge.url = "git+https://gitlab.rnl.tecnico.ulisboa.pt/rnl/infra/wolbridge";
     wolbridge.inputs.nixpkgs.follows = "nixpkgs";
+    wolbridge.inputs.poetry2nix.follows = "poetry2nix";
+
+    ist-delegate-election.inputs.flake-utils.follows = "flake-utils";
+
+    # We only have these inputs to pass to other dependencies and
+    # avoid having multiple versions in our flake.
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.inputs.systems.follows = "systems";
+    systems.url = "github:nix-systems/default";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    poetry2nix.url = "github:nix-community/poetry2nix";
+    poetry2nix.inputs.flake-utils.follows = "flake-utils";
+    poetry2nix.inputs.nixpkgs.follows = "nixpkgs";
+    poetry2nix.inputs.systems.follows = "systems";
+    poetry2nix.inputs.treefmt-nix.follows = "treefmt-nix";
   };
 
   outputs = {
