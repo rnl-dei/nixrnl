@@ -30,4 +30,6 @@
       }
     ];
   };
+
+  rnl.databases = ["soquest_moodle"];
 }

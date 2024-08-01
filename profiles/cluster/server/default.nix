@@ -7,6 +7,8 @@
   pamCreateGlusterHome =
     pkgs.writeShellScript "pam_create_gluster_home.sh"
     (builtins.readFile ./pam_create_gluster_home.sh);
+
+  databaseName = "slurm_acct_db";
 in {
   imports = [../common.nix];
 
@@ -20,12 +22,13 @@ in {
       extraConfig = ''
         StorageHost=${config.rnl.database.host}
         StoragePort=${toString config.rnl.database.port}
-        StorageLoc=slurm_acct_db # Default name
+        StorageLoc=${databaseName}
 
         PrivateData=accounts,events,usage,users
       '';
     };
   };
+  rnl.databases = [databaseName];
 
   # Ensure slurmctld does not run without /mnt/cirrus being mounted
   systemd.services.slurmctld = {

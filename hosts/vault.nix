@@ -56,6 +56,7 @@
   };
 
   services.vault.extraSettingsPaths = [config.age.secrets."vault-storage.hcl".path];
+  rnl.databases = ["vault"];
 
   # Set Vault TLS certs
   age.secrets."vault.cer" = {

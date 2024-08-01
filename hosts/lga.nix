@@ -67,6 +67,7 @@
     };
     virtualHost.hostName = "moodle.dei.tecnico.ulisboa.pt";
   };
+  rnl.databases = [config.services.moodle.database.name];
 
   rnl.labels.location = "chapek";
 

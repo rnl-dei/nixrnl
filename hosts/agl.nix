@@ -67,6 +67,7 @@
       passwordFile = config.age.secrets."moodle-agl-db.password".path;
     };
   };
+  rnl.databases = [config.services.moodle.database.name];
 
   rnl.internalHost = true;
 

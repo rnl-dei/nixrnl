@@ -95,6 +95,7 @@
     ];
     sites.default.serverName = "dms.${config.networking.fqdn}";
   };
+  rnl.databases = ["dms_blatta"];
 
   dei.phdms.sites.default.serverName = "phdms.${config.networking.fqdn}";
 

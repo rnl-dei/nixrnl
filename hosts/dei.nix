@@ -85,6 +85,8 @@
     sites.default.serverName = "dms.dei.tecnico.ulisboa.pt";
   };
 
+  rnl.databases = ["dms" "leicalumni"];
+
   services.nginx.virtualHosts.redirect-dms = {
     serverName = "dms.${config.networking.fqdn}";
     serverAliases = ["dms.${config.rnl.domain}"];

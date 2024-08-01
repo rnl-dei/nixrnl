@@ -26,4 +26,6 @@
     ];
     disks = [{source.dev = "/dev/zvol/dpool/volumes/pcm";}];
   };
+
+  rnl.databases = ["pcm_gamecourse" "pcm_moodle"];
 }

@@ -18,6 +18,7 @@
 
     settingsFile = config.age.secrets."ist-delegate-election.env".path;
   };
+  rnl.databases = ["ist_delegate_election"];
 
   services.nginx.upstreams.ist-delegate-election.servers = {
     "[::1]:${toString config.services.ist-delegate-election.port}" = {};

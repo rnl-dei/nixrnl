@@ -35,4 +35,6 @@
       }
     ];
   };
+
+  rnl.databases = ["neiist"];
 }

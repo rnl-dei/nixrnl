@@ -54,6 +54,8 @@
     options = ["bind"];
   };
 
+  rnl.databases = ["mattermost"];
+
   # Wheatley Bot
   rnl.wheatley = {
     enable = true;
