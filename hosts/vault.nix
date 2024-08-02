@@ -16,19 +16,19 @@
   # Networking
   networking = {
     interfaces.enp1s0 = {
-        ipv4.addresses = [
-          {
-            address = "193.136.164.81";
-            prefixLength = 26;
-          }
-        ];
-        ipv6.addresses = [
-          {
-            address = "2001:690:2100:81::81";
-            prefixLength = 64;
-          }
-        ];
-      };
+      ipv4.addresses = [
+        {
+          address = "193.136.164.81";
+          prefixLength = 26;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "2001:690:2100:81::81";
+          prefixLength = 64;
+        }
+      ];
+    };
 
     defaultGateway.address = "193.136.164.126";
     defaultGateway6.address = "2001:690:2100:81::ffff:1";
