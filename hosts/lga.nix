@@ -4,7 +4,7 @@
   ...
 }: {
   imports = with profiles; [
-    core.rnl
+    core.dei
     filesystems.simple-uefi
     os.nixos
     type.vm
