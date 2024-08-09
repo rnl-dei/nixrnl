@@ -188,8 +188,8 @@ in {
     extraFlags = ["--collector.textfile.directory=/etc/node-exporter-textfiles"];
   };
 
-  environment.etc."node-exporter-textfiles/rev.prom".text = ''
-    node_host_rev{rev="${inputs.self.shortRev or "dirty"}"} 1
+  environment.etc."node-exporter-textfiles/rev.prom".source = pkgs.runCommandLocal "rev.prom" {} ''
+    echo "node_host_rev $((16#${inputs.self.shortRev or "-1"}))" > $out
   '';
 
   programs.ssh.knownHosts = {
