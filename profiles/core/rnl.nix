@@ -189,7 +189,11 @@ in {
   };
 
   environment.etc."node-exporter-textfiles/rev.prom".source = pkgs.runCommandLocal "rev.prom" {} ''
-    echo "node_host_rev $((16#${inputs.self.shortRev or "-1"}))" > $out
+    echo "node_host_rev ${
+      if (inputs.self.shortRev or null) != null
+      then "$((16#${inputs.self.shortRev}))" # Convert from hex to decimal
+      else "-1"
+    }" > $out
   '';
 
   programs.ssh.knownHosts = {
