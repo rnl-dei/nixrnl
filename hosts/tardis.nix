@@ -1,4 +1,5 @@
 {
+  pkgs,
   profiles,
   config,
   ...
@@ -86,7 +87,7 @@
     };
   };
 
-  users.users.root.hashedPassword = "$6$ITQx6/WKOUggTAcj$yV6UZhwfVSK6zd5HdsdCvL7dGfcDh0NxnyZ5i6xrIKtvP2TrkFWNrKLB0NJ/JjiaiNVAMX/GFVRXYwowjVnEk1";
+  users.users.root.hashedPassword = "$6$KiqWyF4hlWzRoxH6$AtMCiv4b97CWhaowo1AVPGaOIPmXnJJfQmVG0kVYIgmL1pSOFhXwig9WFp1ziV2pF3WHu.oYhpFGZ16AxVkUu/";
 
   rnl.internalHost = true;
 
@@ -105,6 +106,29 @@
 
   services.nginx.virtualHosts.grafana.serverName = "grafana.${config.rnl.domain}";
   services.nginx.virtualHosts.prometheus.serverName = "prometheus.${config.rnl.domain}";
+
+  services.nginx.virtualHosts.tardis = {
+    serverName = config.networking.fqdn;
+    enableACME = true;
+    forceSSL = true;
+    locations = {
+      "/".root = pkgs.writeTextDir "index.html" ''
+        <html>
+          <head>
+            <title>Tardis</title>
+          </head>
+          <body>
+            <h1>Welcome to Tardis</h1>
+            <ul>
+              <li><a href="https://${config.services.nginx.virtualHosts.grafana.serverName}">Grafana</a></li>
+              <li><a href="https://${config.services.nginx.virtualHosts.prometheus.serverName}">Prometheus</a></li>
+            </ul>
+          </body>
+        </html>
+      '';
+      "/grafana".return = "301 $scheme://${config.services.nginx.virtualHosts.grafana.serverName}";
+    };
+  };
 
   # VLANs
   networking.vlans = {

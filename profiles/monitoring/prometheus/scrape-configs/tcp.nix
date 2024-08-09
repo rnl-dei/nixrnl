@@ -8,9 +8,7 @@
   ...
 }: let
   hosts =
-    lib.rnl.filterHosts [
-    ]
-    nixosConfigurations;
+    lib.rnl.filterHosts [] nixosConfigurations;
 
   targets = [
   ];

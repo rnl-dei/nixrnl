@@ -24,6 +24,7 @@ in [
     relabel_configs =
       relabelAddressTargetParam
       ++ relabelInstance
+      ++ relabelInstanceRegex
       ++ relabelBlackboxAddress;
   }
   {

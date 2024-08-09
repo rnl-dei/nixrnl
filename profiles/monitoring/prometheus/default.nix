@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  nixosConfigurations,
   ...
 } @ args: let
   # Relabeling rules for Prometheus

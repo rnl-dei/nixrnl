@@ -15,5 +15,10 @@ with lib; {
       description = "Check if host answer to ping in IPv6";
       default = config.rnl.monitoring.ping;
     };
+    amt = mkOption {
+      type = types.bool;
+      description = "Check if host answer to AMT";
+      default = false;
+    };
   };
 }

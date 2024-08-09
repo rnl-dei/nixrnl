@@ -18,7 +18,11 @@
         from_name = "Grafana @ RNL";
         from_address = lib.mkDefault "noreply@grafana.${config.rnl.domain}";
       };
-      # Use local sqlite database
+      database = {
+        type = "mysql";
+        user = "grafana";
+        host = "/run/mysqld/mysqld.sock";
+      };
       analytics = {
         reporting_enabled = false;
         feedback_enabled = false;
@@ -42,13 +46,21 @@
         token_url = "https://gitlab.${config.rnl.domain}/oauth/token";
         api_url = "https://gitlab.${config.rnl.domain}/api/v4";
         allowed_groups = "rnl, dei";
-        role_attribute_path = "is_admin && 'Admin' || contains(groups[*], 'rnl') && 'Editor' || 'Viewer'";
+        role_attribute_path = "contains(groups[*], 'rnl') && 'Admin' || 'Viewer'";
       };
     };
     provision = {
       enable = true;
       # TODO: Add provisioning of datasources, alerting and dashboards
     };
+  };
+
+  # Use MySQL instead of SQLite for Grafana
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureDatabases = [ "grafana" ];
+    ensureUsers = [ { name = "grafana"; ensurePermissions = { "grafana.*" = "ALL PRIVILEGES"; }; } ];
   };
 
   services.nginx.upstreams.grafana.servers = {
