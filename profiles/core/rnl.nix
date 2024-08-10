@@ -190,7 +190,7 @@ in {
 
   environment.etc."node-exporter-textfiles/rev.prom".source = pkgs.runCommandLocal "rev.prom" {} ''
     echo "node_host_rev ${
-      if (inputs.self.shortRev or null) != null
+      if inputs.self ? shortRev # Check if shortRev is defined
       then "$((16#${inputs.self.shortRev}))" # Convert from hex to decimal
       else "-1"
     }" > $out
