@@ -72,37 +72,22 @@
     };
 
     interfaces.priv = {
-      ipv4 = {
-        addresses = [
-          {
-            address = "193.136.164.69";
-            prefixLength = 26;
-          }
-        ];
-        routes = [
-          {
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "193.136.164.126";
-          }
-        ];
-      };
-      ipv6 = {
-        addresses = [
-          {
-            address = "2001:690:2100:81::69";
-            prefixLength = 64;
-          }
-        ];
-        routes = [
-          {
-            address = "::";
-            prefixLength = 0;
-            via = "2001:690:2100:81::ffff:1";
-          }
-        ];
-      };
+      ipv4.addresses = [
+        {
+          address = "193.136.164.69";
+          prefixLength = 26;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "2001:690:2100:81::69";
+          prefixLength = 64;
+        }
+      ];
     };
+
+    defaultGateway.address = "193.136.164.126";
+    defaultGateway6.address = "2001:690:2100:81::ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$zhD1fBAElFJswbcs$d4Ib0y33S2cywpgHXKj9Pd3TOn9R5a0pSmannqVXzjaG10hipMgvhKcapRXBMLvYrgLZUAh9vLBw3co61vdV2/";

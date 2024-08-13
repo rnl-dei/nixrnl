@@ -69,45 +69,30 @@
     };
 
     interfaces.pub = {
-      ipv4 = {
-        addresses = [
-          {
-            address = "193.136.164.5";
-            prefixLength = 26;
-          }
-          {
-            address = "193.136.164.4";
-            prefixLength = 26;
-          }
-        ];
-        routes = [
-          {
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "193.136.164.62";
-          }
-        ];
-      };
-      ipv6 = {
-        addresses = [
-          {
-            address = "2001:690:2100:80::5";
-            prefixLength = 64;
-          }
-          {
-            address = "2001:690:2100:80::4";
-            prefixLength = 64;
-          }
-        ];
-        routes = [
-          {
-            address = "::";
-            prefixLength = 0;
-            via = "2001:690:2100:80::ffff:1";
-          }
-        ];
-      };
+      ipv4.addresses = [
+        {
+          address = "193.136.164.5";
+          prefixLength = 26;
+        }
+        {
+          address = "193.136.164.4";
+          prefixLength = 26;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "2001:690:2100:80::5";
+          prefixLength = 64;
+        }
+        {
+          address = "2001:690:2100:80::4";
+          prefixLength = 64;
+        }
+      ];
     };
+
+    defaultGateway.address = "193.136.164.62";
+    defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$q5qLU8WwsJfRTYGI$IlbfIYFhGS.Lozdd5Cund.7iKgGgdJzXMUCzitl4V.Q5VLR.Ow7sUsZda9hVwYpLHnFcVRGMG6V71omooyRI80";

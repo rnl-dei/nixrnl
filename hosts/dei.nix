@@ -16,37 +16,24 @@
   ];
 
   # Networking
-  networking.interfaces.enp1s0 = {
-    ipv4 = {
-      addresses = [
+  networking = {
+    interfaces.enp1s0 = {
+      ipv4.addresses = [
         {
           address = "193.136.164.12";
           prefixLength = 26;
         }
       ];
-      routes = [
-        {
-          address = "0.0.0.0";
-          prefixLength = 0;
-          via = "193.136.164.62";
-        }
-      ];
-    };
-    ipv6 = {
-      addresses = [
+      ipv6.addresses = [
         {
           address = "2001:690:2100:80::12";
           prefixLength = 64;
         }
       ];
-      routes = [
-        {
-          address = "::";
-          prefixLength = 0;
-          via = "2001:690:2100:80::ffff:1";
-        }
-      ];
     };
+
+    defaultGateway.address = "193.136.164.62";
+    defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
 
   rnl.labels.location = "chapek";

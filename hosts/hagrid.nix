@@ -23,37 +23,24 @@
   ];
 
   # Networking
-  networking.interfaces.enp2s0 = {
-    ipv4 = {
-      addresses = [
+  networking = {
+    interfaces.enp2s0 = {
+      ipv4.addresses = [
         {
           address = "193.136.164.216";
           prefixLength = 27;
         }
       ];
-      routes = [
-        {
-          address = "0.0.0.0";
-          prefixLength = 0;
-          via = "193.136.164.222";
-        }
-      ];
-    };
-    ipv6 = {
-      addresses = [
+      ipv6.addresses = [
         {
           address = "2001:690:2100:82::216";
           prefixLength = 64;
         }
       ];
-      routes = [
-        {
-          address = "::";
-          prefixLength = 0;
-          via = "2001:690:2100:82::ffff:1";
-        }
-      ];
     };
+
+    defaultGateway.address = "193.136.164.222";
+    defaultGateway6.address = "2001:690:2100:82::ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$4llYIsPcdW8Og7ca$E2FWDD9ToDLPuP.GdUGrO4k5J3UFjsBK2fQbfl.KFdbAzB9hyFWUG0U3ZLnd0KxrWf0tZkzNvF2PG9r/QE.oY0";
