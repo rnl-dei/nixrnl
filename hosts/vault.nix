@@ -44,6 +44,18 @@
 
   services.vault.extraSettingsPaths = [config.age.secrets."vault-storage.hcl".path];
 
+  rnl.db-cluster = {
+    ensureDatabases = ["vault"];
+    ensureUsers = [
+      {
+        name = "vault";
+        ensurePermissions = {
+          "vault.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   # Set Vault TLS certs
   age.secrets."vault.cer" = {
     file = ../secrets/vault-cer.age;

@@ -1,12 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{lib, ...}:
 with lib; {
   options.rnl = {
-    internalHost = mkEnableOption "Enable this if host is unaccessible from the outside";
+    internalHost = mkEnableOption "Enable this if host is inaccessible from the outside";
 
     domain = mkOption {
       type = types.str;

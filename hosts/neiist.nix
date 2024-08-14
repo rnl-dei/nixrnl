@@ -35,4 +35,16 @@
       }
     ];
   };
+
+  rnl.db-cluster = {
+    ensureDatabases = ["neiist"];
+    ensureUsers = [
+      {
+        name = "neiist";
+        ensurePermissions = {
+          "neiist.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 }

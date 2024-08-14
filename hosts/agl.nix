@@ -53,6 +53,20 @@
       passwordFile = config.age.secrets."moodle-agl-db.password".path;
     };
   };
+  rnl.db-cluster = let
+    database = config.services.moodle.database.name;
+    user = config.services.moodle.database.user;
+  in {
+    ensureDatabases = [database];
+    ensureUsers = [
+      {
+        name = user;
+        ensurePermissions = {
+          "${database}.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 
   rnl.internalHost = true;
 
