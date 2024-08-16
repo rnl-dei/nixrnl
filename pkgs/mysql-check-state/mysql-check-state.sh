@@ -57,7 +57,7 @@ while test $# -gt 0; do
       ;;
     -P|--prompt-password)
       shift
-      PASSWORD=$(read -s -p "Password: ")
+      read -r -s -p "Password: " PASSWORD
       ;;
     -D|--delete-extra)
       DELETE_EXTRA=1
@@ -125,7 +125,7 @@ get_databases_from_file() {
 }
 
 DATABASES=$(mysql_command "SHOW DATABASES")
-USERS=$(mysql_command "SELECT user, host FROM mysql.user")
+USERS=$(mysql_command "SELECT CONCAT(user, '@', host) FROM mysql.user")
 
 drop_database() {
   local db=$1
@@ -175,26 +175,21 @@ check_databases() {
 
 check_users() {
   local file_users=$(get_users_from_file | cut -d: -f1) # Remove permissions
-  local mysql_users="$USERS"
-  while [ ! -z "$mysql_users" ]; do
-    local user=$(echo $mysql_users | cut -d' ' -f1)
-    local host=$(echo $mysql_users | cut -d' ' -f2)
-    if ! echo "$file_users" | grep -qFx "$user@$host"; then
-      yellow "[EXTRA] User '$user'@'$host' not found in file"
+  local user
+  for user in $USERS; do
+    if ! echo "$file_users" | grep -qFx "$user"; then
+      yellow "[EXTRA] User '$user' not found in file"
       if [ ! -z "$DELETE_EXTRA" ]; then
         drop_user $user $host
       fi
     else
-      green "[OK] User '$user'@'$host' found in file"
+      green "[OK] User '$user' found in file"
     fi
-    mysql_users=$(echo $mysql_users | cut -d$' ' -f3-)
   done
 
-  for line in $file_users; do
-    user=$(echo $line | cut -d@ -f1 | cut -d: -f1)
-    host=$(echo $line | cut -d@ -f2 | cut -d: -f1)
+  for user in $file_users; do
     if ! echo "$USERS" | grep -qFx "$user"; then
-      red "[MISSING] User '$user'@'$host' missing in MySQL"
+      red "[MISSING] User '$user' missing in MySQL"
     fi
   done
 }
