@@ -44,6 +44,9 @@
         };
       };
       # Plugins
+      plugin = {
+        graphviz.path = "${pkgs.graphviz}/bin/dot";
+      };
     };
     templates = with pkgs.dokuwikiTemplates; [bootstrap3];
     plugins = with pkgs.dokuwikiPlugins; [
