@@ -27,6 +27,10 @@
     # IST Delegate Election
     ist-delegate-election.url = "github:diogotcorreia/ist-delegate-election";
     ist-delegate-election.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Wolbridge
+    wolbridge.url = "git+https://gitlab.rnl.tecnico.ulisboa.pt/rnl/infra/wolbridge";
+    wolbridge.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
