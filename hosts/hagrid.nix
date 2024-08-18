@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   profiles,
@@ -104,6 +105,19 @@
       Restart = "always";
       User = "nobody";
     };
+  };
+
+  # WoL Bridge
+  rnl.wolbridge = {
+    enable = true;
+    openFirewall = true;
+    domain = config.rnl.domain;
+    pingHosts = ["193.136.164.{193..221}"];
+    configFile = pkgs.writeText "wolbridge-config.json" (lib.generators.toJSON {} {
+      all = ["rnl" "dei"];
+      rnl = ["torvalds" "pikachu" "geoff" "thor" "raijin" "raidou"];
+      dei = ["prohmakas" "marte" "sazed"];
+    });
   };
 
   # Setup spotifyd to play music on TV
