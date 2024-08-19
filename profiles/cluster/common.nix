@@ -53,6 +53,14 @@ in {
       # set ReturnToService=1 to avoid this. However, this requires rebooting nodes using slurm, always.
       # So the system must use this facility to reboot: requires internal tooling to make `reboot` use slurm internally, changing DE behavior (dunno how).
       ReturnToService=2
+
+      # slurmd sometimes takes longer than expected to kill jobs, causing nodes to drain.
+      # According to internet people this is due to a mismatch between the default timeout
+      # used in task/cgroup (120s) and the default UnkillableStepTimeout (60s).
+      # reference: https://support.schedmd.com/show_bug.cgi?id=3941#c7
+      # Note: UnkillableStepTimeout MUST be at least 5x MessageTimeout (10s by default).
+      UnkillableStepTimeout=128
+
       TaskPlugin=task/cgroup,task/affinity
       TreeWidth=120 # Each slurmd daemon can communicate with up to 120 other slurmd daemons
       SelectType=select/cons_tres
