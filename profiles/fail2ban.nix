@@ -11,7 +11,7 @@ in {
   services.fail2ban = {
     enable = true;
 
-    extraPackages = [ pkgs.curl ];
+    extraPackages = [pkgs.curl];
 
     ignoreIP = [
       # RNL IPs
