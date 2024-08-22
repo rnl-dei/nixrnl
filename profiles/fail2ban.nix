@@ -7,6 +7,10 @@
   inherit (lib) mkIf;
   inherit (config) services;
 in {
+  age.secrets."abuseipdb-api-key".file = ../secrets/abuseipdb-api-key.age;
+
+  systemd.services.fail2ban.serviceConfig.EnvironmentFile = config.age.secrets."abuseipdb-api-key".path;
+
   services.fail2ban = {
     enable = true;
     ignoreIP = [
@@ -26,16 +30,12 @@ in {
       rndtime = "4m";
     };
 
-    extraPackages = [pkgs.system-sendmail];
-
-    # TODO: Configure abuseipdb action
-    # TODO: Configure email action
-
     jails = {
       # postfix
       postfix = mkIf services.postfix.enable {
         settings = {
           filter = "postfix";
+          action = ''abuseipdb[abuseipdb_apikey=$ABUSEIPDB_KEY, abuseipdb_category="11,18", abuseipdb_comment="postfix (h)"]'';
         };
       };
       # courier
@@ -44,6 +44,7 @@ in {
       nginx-botsearch = mkIf services.nginx.enable {
         settings = {
           filter = "nginx-botsearch";
+          action = ''abuseipdb[abuseipdb_apikey=$ABUSEIPDB_KEY, abuseipdb_category="21", abuseipdb_comment="bot search (h)"]'';
         };
       };
 
@@ -52,13 +53,15 @@ in {
         settings = {
           filter = "php-url-fopen";
           maxretry = 1;
+          action = ''abuseipdb[abuseipdb_apikey=$ABUSEIPDB_KEY, abuseipdb_category="21", abuseipdb_comment="php f-open() abuse (h)"]'';
         };
       };
 
-      # sshd
+      # sshd (sto)
       sshd = mkIf services.openssh.enable {
         settings = {
           filter = "sshd";
+          action = ''abuseipdb[abuseipdb_apikey=%($ABUSEIPDB_KEY)s, abuseipdb_category="18,22", abuseipdb_comment="ssh abuse (h)"]'';
         };
       };
     };
