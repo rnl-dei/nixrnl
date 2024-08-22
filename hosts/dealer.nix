@@ -43,14 +43,6 @@
     interfaces = [{source = "priv";}];
     disks = [
       {source.dev = "/dev/zvol/dpool/volumes/dealer";}
-      {
-        type = "file";
-        source.file = "/mnt/data/trantor.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/cerebro.img";
-      }
     ];
   };
 

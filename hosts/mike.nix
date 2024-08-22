@@ -25,12 +25,10 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/mike.img";
+        source.dev = "/dev/zvol/dpool/data/mike";
       }
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/mike_dfs.img";
+        source.dev = "/dev/zvol/dpool/data/mike_dfs";
       }
     ];
   };

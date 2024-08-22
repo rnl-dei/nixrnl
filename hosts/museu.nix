@@ -24,8 +24,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/museu2.img";
+        source.dev = "/dev/zvol/dpool/data/museu";
       }
     ];
   };

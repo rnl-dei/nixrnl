@@ -25,16 +25,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/iashak.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/iashak-old.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/iashak-20210405.img";
+        source.dev = "/dev/zvol/dpool/data/iashak";
       }
     ];
   };

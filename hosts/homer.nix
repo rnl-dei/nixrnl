@@ -27,8 +27,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/homer.img";
+        source.dev = "/dev/zvol/dpool/data/homer";
       }
     ];
   };

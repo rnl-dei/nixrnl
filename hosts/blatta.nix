@@ -47,10 +47,6 @@
     interfaces = [{source = "dmz";}];
     disks = [
       {source.dev = "/dev/zvol/dpool/volumes/blatta";}
-      {
-        type = "file";
-        source.file = "/mnt/data/blatta.img";
-      }
     ];
   };
 

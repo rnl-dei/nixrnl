@@ -25,15 +25,12 @@
         addressSlot = "0x05";
       }
     ];
-    # TODO: Move to a ZFS dataset
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/fry-root.img";
+        source.dev = "/dev/zvol/dpool/data/fry-root";
       }
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/fry-data.img";
+        source.dev = "/dev/zvol/dpool/data/fry-data";
       }
     ];
   };

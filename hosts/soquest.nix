@@ -25,8 +25,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/soquest.img";
+        source.dev = "/dev/zvol/dpool/data/soquest";
       }
     ];
   };

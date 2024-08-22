@@ -26,12 +26,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/neiist.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/neiist-old.img";
+        source.dev = "/dev/zvol/dpool/data/neiist";
       }
     ];
   };
