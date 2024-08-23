@@ -25,15 +25,12 @@
         addressSlot = "0x05";
       }
     ];
-    # TODO: Move to ZFS dataset
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/cartman-root.img";
+        source.dev = "/dev/zvol/dpool/volumes/cartman-root";
       }
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/cartman-data.img";
+        source.dev = "/dev/zvol/dpool/data/cartman-data";
       }
     ];
   };

@@ -24,8 +24,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/order.img";
+        source.dev = "/dev/zvol/dpool/data/order";
       }
     ];
   };

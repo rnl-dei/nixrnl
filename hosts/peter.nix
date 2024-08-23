@@ -27,12 +27,10 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/peter-root.img";
+        source.dev = "/dev/zvol/dpool/data/peter-root";
       }
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/peter-data.img";
+        source.dev = "/dev/zvol/dpool/data/peter-data";
       }
     ];
   };

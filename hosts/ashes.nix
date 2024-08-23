@@ -26,11 +26,9 @@
       }
     ];
 
-    # TODO: Move to a ZFS dataset
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/ashes.img";
+        source.dev = "/dev/zvol/dpool/data/ashes";
       }
     ];
   };

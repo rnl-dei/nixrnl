@@ -24,8 +24,7 @@
     ];
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/rc-build.img";
+        source.dev = "/dev/zvol/dpool/data/rc-build";
       }
     ];
   };

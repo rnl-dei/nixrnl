@@ -86,14 +86,6 @@
       {
         source.dev = "/dev/zvol/dpool/data/weaver1";
       }
-      {
-        type = "file";
-        source.file = "/mnt/data/weaver1_root.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/weaver1_shared.img";
-      }
     ];
   };
 

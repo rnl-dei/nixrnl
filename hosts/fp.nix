@@ -21,11 +21,9 @@
         mac = "52:54:00:51:b3:11";
       }
     ];
-    # TODO: Move to a ZFS dataset
     disks = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/fp.img";
+        source.dev = "/dev/zvol/dpool/data/fp";
       }
     ];
   };
