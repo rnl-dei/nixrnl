@@ -39,7 +39,7 @@
     };
 
     defaultGateway.address = "193.136.154.126";
-    defaultGateway6.address = "fe80::96f7:ad00:28af:fa13";
+    defaultGateway6.address = "2001:690:2100:84:ffff:ffff:ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$fBxN95kuNpq4Nxhq$Rev.mpIltLW7keZoT/LLtuamiggGTpBtfs.Z.8ztxin9TI9ZksIUNYeOvc4RgQF.n.nlGAlXRI4IBxyFj3VSa/";
