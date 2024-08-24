@@ -95,15 +95,13 @@ in {
       description = "Wake-on-LAN Bridge";
       after = ["netservcieswork.target"];
       wantedBy = ["multi-user.target"];
-      environment = {
-        HOST = cfg.host;
-        PORT = "${toString cfg.port}";
-      };
       serviceConfig = {
         User = cfg.user;
-        KillSignal = "SIGINT";
+        KillSignal = "SIGKILL";
         ExecStart =
           "${cfg.package}/bin/wolbridge"
+          + " --host ${cfg.host}"
+          + " --port ${toString cfg.port}"
           + (optionalString (cfg.domain != null) " --domain ${cfg.domain}")
           + (optionalString (cfg.configFile != null) " --config ${cfg.configFile}")
           + (optionalString (cfg.stateFile != null) " --state-file ${cfg.stateFile}")

@@ -1,6 +1,9 @@
 {
   config,
+  lib,
+  pkgs,
   profiles,
+  nixosConfigurations,
   ...
 }: {
   imports = with profiles; [
@@ -46,5 +49,27 @@
 
   environment.shellAliases = {
     create-torrent = "transmission-create -p -t udp://tracker.${config.rnl.domain}:31000";
+  };
+
+  # WoL Bridge
+  rnl.wolbridge = {
+    enable = true;
+    openFirewall = true;
+    domain = config.rnl.domain;
+    pingHosts = ["193.136.154.{0..125}"];
+    configFile = let
+      labs =
+        builtins.foldl' (
+          acc: hostname: let
+            lab = builtins.elemAt (builtins.split "p" hostname) 0;
+          in
+            acc // {${lab} = acc."${lab}" or [] ++ [hostname];}
+        ) {} (
+          builtins.filter (hostname: builtins.match "lab([0-9]+|X)p[0-9]+" hostname != null) (builtins.attrNames nixosConfigurations)
+        );
+
+      config = labs // {all = builtins.attrNames labs;};
+    in
+      pkgs.writeText "wolbridge-config.json" (lib.generators.toJSON {} config);
   };
 }
