@@ -6,8 +6,21 @@
   ...
 }: let
   rnlWebsitePort = 3000;
-  labsMatrixPort = 3001;
-  shortenerPort = 3002;
+  # labsMatrixPort = 3001;
+  opensessionsPort = 3002;
+  # shortenerPort = 3002;
+
+  nginxAllowRNLAdmin = ''
+    # Rede admin
+    allow 193.136.164.192/27;
+    allow 2001:690:2100:82::/64;
+  '';
+
+  nginxAllowRNLLabs = ''
+    # Rede LABs
+    allow 193.136.154.0/25;
+    allow 2001:690:2100:84::/64;
+  '';
 in {
   imports = with profiles; [
     webserver
@@ -22,8 +35,18 @@ in {
       forceSSL = true;
       locations = {
         "/".proxyPass = "http://localhost:${toString rnlWebsitePort}";
-        "~ /labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
-        "~ /(webmail|roundcube)".return = "301 https://webmail.${config.rnl.domain}";
+        "/dashboard".index = "index.html";
+        "/logsession" = {
+          proxyPass = "http://localhost.:${toString opensessionsPort}";
+          extraConfig = ''
+            ${nginxAllowRNLAdmin}
+            ${nginxAllowRNLLabs}
+            deny all;
+          '';
+        };
+        "~ ^/tv([^\\r\\n]*)$".return = "301 https://tv.${config.rnl.domain}$1$is_args$args";
+        "~ ^/labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
+        "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return = "301 https://webmail.${config.rnl.domain}$2$is_args$args";
         "~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
       };
     };
@@ -85,14 +108,16 @@ in {
     };
   };
 
-  # virtualisation.oci-containers.containers."labs-matrix" = {
-  #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/labs-matrix:latest";
-  #   ports = ["${toString labsMatrixPort}:3000"];
+  # TODO: Use new version of opensessions
+  # virtualisation.oci-containers.containers."opensessions" = {
+  #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/opensessions:latest";
+  #   ports = ["${toString opensessionsPort}:5000"];
   #   labels = {
   #     "com.centurylinklabs.watchtower.enable" = "true";
   #   };
   # };
 
+  # TODO: Move Shortener from kutt to here
   # virtualisation.oci-containers.containers."shortener" = {
   #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/shortener:latest";
   #   ports = ["${toString shortenerPort}:80"];
@@ -156,7 +181,19 @@ in {
     mode = "0400";
   };
 
-  # # Forum
+  # Opensessions
+  services.nginx.virtualHosts."opensessions" = {
+    serverName = "opensessions.${config.rnl.domain}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/".proxyPass = "http://localhost:${toString opensessionsPort}";
+    extraConfig = ''
+      ${nginxAllowRNLAdmin}
+      deny all;
+    '';
+  };
+
+  # Forum
   services.nginx.virtualHosts."forum" = {
     serverName = "forum.${config.rnl.domain}";
     enableACME = true;
@@ -192,8 +229,22 @@ in {
       "catch_workers_output" = true;
     };
   };
-  rnl.db-cluster = {
-    ensureDatabases = ["forum_rnl" "loginrnl" config.services.roundcube.database.dbname "tv_contents_strapi"];
+  rnl.db-cluster = let
+    roundcube = {
+      database = config.services.roundcube.database.dbname;
+      username = config.services.roundcube.database.username;
+    };
+    tv-cms = {
+      database = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_NAME;
+      username = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_USERNAME;
+    };
+  in {
+    ensureDatabases = [
+      "forum_rnl"
+      "opensessions"
+      roundcube.database
+      tv-cms.database
+    ];
     ensureUsers = [
       {
         name = "forum_user";
@@ -202,21 +253,15 @@ in {
         };
       }
       {
-        name = "logsession";
-        ensurePermissions = {
-          "loginrnl.*" = "ALL PRIVILEGES";
-        };
-      }
-      {
         name = "opensessions";
         ensurePermissions = {
-          "loginrnl.*" = "ALL PRIVILEGES";
+          "opensessions.*" = "ALL PRIVILEGES";
         };
       }
       {
-        name = config.services.roundcube.database.username;
+        name = roundcube.username;
         ensurePermissions = {
-          "${config.services.roundcube.database.dbname}.*" = "ALL PRIVILEGES";
+          "${roundcube.database}.*" = "ALL PRIVILEGES";
         };
       }
       {
