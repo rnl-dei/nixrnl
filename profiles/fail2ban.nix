@@ -34,17 +34,22 @@ in {
       preConfigure =
         prev.preConfigure
         + ''
-          sed -i 's|<abuseipdb_apikey>|$(cat ${config.age.secrets."abuseipdb-api-key".path})|' config/action.d/abuseipdb.conf
-          sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
+                 sed -i 's|<abuseipdb_apikey>|$(cat ${config.age.secrets."abuseipdb-api-key".path})|' config/action.d/abuseipdb.conf
+                 sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
+          sed
         '';
     });
 
     jails = {
+      # action strings need to be formatted this way, otherwise fail2ban wont recognize the multiple ban actions
       # postfix
       postfix = mkIf services.postfix.enable {
         settings = {
           filter = "postfix";
-          action = ''abuseipdb[abuseipdb_category="11,18", abuseipdb_comment="postfix"]'';
+          action = ''
+            abuseipdb[abuseipdb_category="11,18", abuseipdb_comment="postfix"]
+            	 iptables-allports
+          '';
         };
       };
       # courier
@@ -53,7 +58,10 @@ in {
       nginx-botsearch = mkIf services.nginx.enable {
         settings = {
           filter = "nginx-botsearch";
-          action = ''abuseipdb[abuseipdb_category="21", abuseipdb_comment="bot search"]'';
+          action = ''
+            abuseipdb[abuseipdb_category="21", abuseipdb_comment="bot search"]
+            	 iptables-allports
+          '';
         };
       };
 
@@ -62,7 +70,10 @@ in {
         settings = {
           filter = "php-url-fopen";
           maxretry = 1;
-          action = ''abuseipdb[abuseipdb_category="21", abuseipdb_comment="php f-open() abuse"]'';
+          action = ''
+            abuseipdb[abuseipdb_category="21", abuseipdb_comment="php f-open() abuse"]
+            	 iptables-allports
+          '';
         };
       };
 
@@ -70,7 +81,10 @@ in {
       sshd = mkIf services.openssh.enable {
         settings = {
           filter = "sshd";
-          action = ''abuseipdb[abuseipdb_category="18,22", abuseipdb_comment="ssh abuse"]'';
+          action = ''
+            abuseipdb[abuseipdb_category="18,22", abuseipdb_comment="ssh abuse"]
+            	 iptables-allports
+          '';
         };
       };
     };
