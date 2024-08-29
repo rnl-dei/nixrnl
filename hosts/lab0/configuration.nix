@@ -1,3 +1,3 @@
 {lib, ...}: {
-  aliases = lib.rnl.mkLabs "lab0" 6;
+  aliases = lib.rnl.mkLabs "lab0" 9;
 }
