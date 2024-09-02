@@ -6,8 +6,8 @@
 }: let
   inherit (lib) mkIf;
   inherit (config) services;
+  isAbuseIPDbKeyAvailable = config.age.secrets ? "abuseipdb-api.key";
 in {
-  age.secrets."abuseipdb-api-key".file = ../secrets/abuseipdb-api-key.age;
   services.fail2ban = {
     enable = true;
 
@@ -30,37 +30,38 @@ in {
       rndtime = "4m";
     };
 
+    # Removes unused printf from cfg, substitutes the APIkey by path to protected file and passes given comment on action call
     package = pkgs.fail2ban.overrideAttrs (final: prev: {
       preConfigure =
         prev.preConfigure
         + ''
-                 sed -i 's|<abuseipdb_apikey>|$(cat ${config.age.secrets."abuseipdb-api-key".path})|' config/action.d/abuseipdb.conf
-                 sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
-          sed
+          sed -i "s|lgm=\$(printf '%%.1000s\\\n...' \"<matches>\"); ||" config/action.d/abuseipdb.conf
+          sed -i 's|<abuseipdb_apikey>|$(cat ${config.age.secrets."abuseipdb-api.key".path})|' config/action.d/abuseipdb.conf
+          sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
         '';
     });
-
     jails = {
-      # action strings need to be formatted this way, otherwise fail2ban wont recognize the multiple ban actions
+      # Action strings need to be formatted this way, otherwise fail2ban wont recognize the multiple ban actions
+      # %(action_)s is the default action (defined on jail.conf), which is "iptables-allports"
+
       # postfix
       postfix = mkIf services.postfix.enable {
         settings = {
           filter = "postfix";
           action = ''
-            abuseipdb[abuseipdb_category="11,18", abuseipdb_comment="postfix"]
-            	 iptables-allports
+            %(action_)s
+               ${lib.optionalString isAbuseIPDbKeyAvailable "abuseipdb[abuseipdb_category='11,18', abuseipdb_comment='postfix']"}
           '';
         };
       };
-      # courier
 
       # nginx-botsearch
       nginx-botsearch = mkIf services.nginx.enable {
         settings = {
           filter = "nginx-botsearch";
           action = ''
-            abuseipdb[abuseipdb_category="21", abuseipdb_comment="bot search"]
-            	 iptables-allports
+            %(action_)s
+               ${lib.optionalString isAbuseIPDbKeyAvailable "abuseipdb[abuseipdb_category='21', abuseipdb_comment='bot search']"}
           '';
         };
       };
@@ -71,8 +72,8 @@ in {
           filter = "php-url-fopen";
           maxretry = 1;
           action = ''
-            abuseipdb[abuseipdb_category="21", abuseipdb_comment="php f-open() abuse"]
-            	 iptables-allports
+            %(action_)s
+               ${lib.optionalString isAbuseIPDbKeyAvailable "abuseipdb[abuseipdb_category='21', abuseipdb_comment='php f-open() abuse']"}
           '';
         };
       };
@@ -82,8 +83,8 @@ in {
         settings = {
           filter = "sshd";
           action = ''
-            abuseipdb[abuseipdb_category="18,22", abuseipdb_comment="ssh abuse"]
-            	 iptables-allports
+            %(action_)s
+               ${lib.optionalString isAbuseIPDbKeyAvailable "abuseipdb[abuseipdb_category='18,22', abuseipdb_comment='ssh abuse']"}
           '';
         };
       };
