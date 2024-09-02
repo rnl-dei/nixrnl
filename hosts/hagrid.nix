@@ -5,6 +5,8 @@
   profiles,
   ...
 }: {
+  age.secrets."abuseipdb-api.key".file = ../secrets/abuseipdb-api-key.age;
+
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
