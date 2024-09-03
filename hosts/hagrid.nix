@@ -5,8 +5,6 @@
   profiles,
   ...
 }: {
-  age.secrets."abuseipdb-api.key".file = ../secrets/abuseipdb-api-key.age;
-
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -17,6 +15,8 @@
     graphical.dashboard
     vpn.wireguard-admin
   ];
+
+  age.secrets."abuseipdb-api.key".file = ../secrets/abuseipdb-api-key.age;
 
   rnl.labels.location = "inf3-p2-admin";
 
