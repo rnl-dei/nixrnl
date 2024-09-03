@@ -50,6 +50,9 @@
     # FP
     jetbrains.pycharm-community
 
+    # IAC
+    ripes
+
     # LN
     graphviz
     openfst
