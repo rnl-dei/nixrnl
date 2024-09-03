@@ -51,7 +51,7 @@ in {
   "gitlab-runners/es-24-env.age".publicKeys = users ++ [labs];
 
   # Secrets
-  "abuseipdb-api-key.age".publicKeys = users ++ [hagrid];
+  "abuseipdb-api-key.age".publicKeys = users ++ [hagrid lga];
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [dei];
