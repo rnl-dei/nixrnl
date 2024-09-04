@@ -50,22 +50,12 @@ in {
         "~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
       };
     };
-
     "webmail".serverName = "webmail.${config.rnl.domain}";
     "welcome" = {
       serverName = "welcome.${config.rnl.domain}";
       enableACME = true;
       forceSSL = true;
       locations."/".return = "301 https://${config.services.nginx.virtualHosts.www.serverName}";
-    };
-    "labs-matrix" = {
-      serverName = "labs-matrix.${config.rnl.domain}";
-      enableACME = true;
-      forceSSL = true;
-      root = pkgs.writeTextDir "index.html" ''
-        <h1>Work in progress</h1>
-      '';
-      locations."/".index = "index.html";
     };
     # Redirect domains
     "www-redirect" = {
@@ -193,6 +183,35 @@ in {
     '';
   };
 
+  # Labs-Matrix
+  services.nginx.virtualHosts."labs-matrix" = {
+    serverName = "labs-matrix.${config.rnl.domain}";
+    enableACME = true;
+    forceSSL = true;
+    root = "/var/www/labs-matrix";
+    locations."/".index = "index.html";
+    locations."/labs-matrix".return = "301 /";
+  };
+  systemd.services.labs-matrix = {
+    description = "Update labs-matrix website";
+    path = [pkgs.bash pkgs.python3 pkgs.gnumake pkgs.m4 pkgs.curl pkgs.coreutils];
+    script = ''
+      make generate
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      WorkingDirectory = "/var/www/labs-matrix";
+    };
+  };
+  systemd.timers.labs-matrix = {
+    description = "Update labs-matrix website every 7 minutes";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* *:0/7";
+      Unit = "labs-matrix.service";
+    };
+  };
+
   # Forum
   services.nginx.virtualHosts."forum" = {
     serverName = "forum.${config.rnl.domain}";
@@ -292,5 +311,10 @@ in {
       interface = lib.mkDefault "enp1s0";
       virtualIps = [{addr = "2001:690:2100:80::8/64";}]; # www IPv6
     };
+  };
+
+  age.secrets."root-at-www-ssh.key" = {
+    file = ../secrets/root-at-www-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
   };
 }

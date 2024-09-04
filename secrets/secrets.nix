@@ -76,6 +76,7 @@ in {
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [papyrus];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
+  "root-at-www-ssh-key.age".publicKeys = users ++ [www];
   "roundcube-www-db-password.age".publicKeys = users ++ [www];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];

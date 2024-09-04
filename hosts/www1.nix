@@ -58,6 +58,21 @@
     options = ["bind"];
   };
 
+  # Bind mount /mnt/data/labs-matrix to /var/www/labs-matrix
+  fileSystems."${config.services.nginx.virtualHosts.labs-matrix.root}" = {
+    device = "/mnt/data/labs-matrix";
+    options = ["bind"];
+  };
+  # Labs Matrix
+  rnl.githook = {
+    enable = true;
+    hooks.labs-matrix = {
+      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/infra/labs-matrix.git";
+      path = "/mnt/data/labs-matrix";
+      directoryMode = "0755";
+    };
+  };
+
   rnl.labels.location = "chapek";
 
   rnl.storage.disks.data = ["/dev/vdb"];
