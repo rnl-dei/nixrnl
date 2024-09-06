@@ -391,4 +391,9 @@
     publicKey = "DaSyR0HxWAkRg3BXqYitqJje6qWghdJwQ/sR2PjAvWw=";
     lastOctect = 78;
   }
+  {
+    # Simão Sanguinho
+    publicKey = "5AZu5F+jiG9BEhyUZgvFzNucjAH7IwDG+Ardlfm9ECA=";
+    lastOctect = 79;
+  }
 ]
