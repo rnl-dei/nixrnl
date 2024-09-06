@@ -55,6 +55,7 @@
       columns
       comment
       ditaa
+      htmlok
       edittable
       graphviz
       move
