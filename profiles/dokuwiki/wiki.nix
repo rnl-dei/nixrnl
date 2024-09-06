@@ -21,7 +21,6 @@
       passcrypt = "argon2id";
       superuser = "@admin";
       # Editing
-      htmlok = true;
       locktime = 60 * 60;
       # Media
       im_convert = "${pkgs.imagemagick}/bin/convert";
@@ -46,6 +45,8 @@
       # Plugins
       plugin = {
         graphviz.path = "${pkgs.graphviz}/bin/dot";
+        htmlok.htmlok = true;
+        htmlok.phpok = true;
       };
     };
     templates = with pkgs.dokuwikiTemplates; [bootstrap3];
