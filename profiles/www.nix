@@ -6,6 +6,8 @@
   ...
 }: let
   rnlWebsitePort = 3000;
+  tvClientPort = 1336;
+  tvCMSPort = 1337;
   # labsMatrixPort = 3001;
   opensessionsPort = 3002;
   # shortenerPort = 3002;
@@ -33,6 +35,7 @@ in {
       serverName = config.rnl.domain;
       enableACME = true;
       forceSSL = true;
+      root = "/var/www";
       locations = {
         "/".proxyPass = "http://localhost:${toString rnlWebsitePort}";
         "/dashboard".index = "index.html";
@@ -48,6 +51,21 @@ in {
         "~ ^/labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
         "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return = "301 https://webmail.${config.rnl.domain}$2$is_args$args";
         "~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
+        # Misc
+        "/robots.txt".root = pkgs.writeTextDir "robots.txt" ''
+          # Google Image
+          User-agent: Googlebot-Image
+          Allow: /*
+
+          # Google AdSense
+          User-agent: Mediapartners-Google*
+          Disallow:
+
+          # Global
+          User-agent: *
+          Disallow: /forum/
+        '';
+        "/twitter-msg".root = pkgs.writeTextDir "twitter-msg" "";
       };
     };
     "webmail".serverName = "webmail.${config.rnl.domain}";
@@ -63,8 +81,8 @@ in {
       serverAliases = ["www.${config.rnl.domain}" "www.rnl.ist.utl.pt"];
       enableACME = true;
       addSSL = true;
-      locations."/".return = "301 https://${config.services.nginx.virtualHosts.www.serverName}";
       locations."~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
+      locations."~ ^/([^\\r\\n]*)$".return = "301 https://${config.services.nginx.virtualHosts.www.serverName}/$1$is_args$args";
     };
     "forum-redirect" = {
       serverName = "forum.rnl.ist.utl.pt";
@@ -78,6 +96,13 @@ in {
       enableACME = true;
       addSSL = true;
       locations."/".return = "301 https://${config.services.nginx.virtualHosts.webmail.serverName}";
+    };
+    "tv-redirect" = {
+      serverName = "tv.rnl.ist.utl.pt";
+      serverAliases = ["tv.rnl.pt"];
+      enableACME = true;
+      addSSL = true;
+      locations."/".return = "301 https://${config.services.nginx.virtualHosts.televisions.serverName}";
     };
   };
 
@@ -212,6 +237,56 @@ in {
     };
   };
 
+  # Televisions
+  services.nginx.virtualHosts."televisions" = {
+    serverName = "tv.${config.rnl.domain}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/".proxyPass = "http://localhost:${toString tvClientPort}";
+    locations."/strapi" = {
+      proxyPass = "http://localhost:${toString tvCMSPort}";
+      extraConfig = ''
+        rewrite ^/strapi(/.*)$ $1 break;
+      '';
+    };
+  };
+  virtualisation.oci-containers.containers."tv-client" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/rnl/tvsat/client:latest";
+    ports = ["${toString tvClientPort}:3000"];
+    environment = {
+      NODE_ENV = "production";
+      STRAPI_URL = config.virtualisation.oci-containers.containers."tv-cms".environment.URL;
+      NEXT_PUBLIC_STRAPI_URL = config.virtualisation.oci-containers.containers."tv-cms".environment.URL;
+    };
+    environmentFiles = [config.age.secrets."www-tv-client-secret.env".path];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
+  };
+  virtualisation.oci-containers.containers."tv-cms" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/rnl/tvsat/cms:latest";
+    ports = ["${toString tvCMSPort}:1337"];
+    environment = {
+      NODE_ENV = "production";
+      HOST = "0.0.0.0";
+      URL = "https://${config.services.nginx.virtualHosts.televisions.serverName}/strapi";
+      DATABASE_CLIENT = "mysql";
+      DATABASE_HOST = config.rnl.database.host;
+      DATABASE_PORT = toString config.rnl.database.port;
+      DATABASE_NAME = "tv_contents_strapi";
+      DATABASE_USERNAME = "strapi";
+      DATABASE_POOL_MIN = "0";
+    };
+    volumes = ["/var/lib/tv-cms/uploads:/opt/app/public/uploads"];
+    environmentFiles = [config.age.secrets."www-tv-cms-secret.env".path];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
+  };
+
+  age.secrets."www-tv-client-secret.env".file = ../secrets/www-tv-client-secret-env.age;
+  age.secrets."www-tv-cms-secret.env".file = ../secrets/www-tv-cms-secret-env.age;
+
   # Forum
   services.nginx.virtualHosts."forum" = {
     serverName = "forum.${config.rnl.domain}";
@@ -284,20 +359,13 @@ in {
         };
       }
       {
-        name = "satellite";
+        name = tv-cms.username;
         ensurePermissions = {
-          "tv_contents_strapi.*" = "ALL PRIVILEGES";
+          "${tv-cms.database}.*" = "ALL PRIVILEGES";
         };
       }
     ];
   };
-
-  # users.users.forum = {
-  #   isSystemUser = true;
-  #   createHome = false;
-  #   group = "forum";
-  # };
-  # users.groups.forum = {};
 
   services.keepalived = {
     enable = lib.mkDefault true;

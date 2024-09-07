@@ -63,6 +63,13 @@
     device = "/mnt/data/labs-matrix";
     options = ["bind"];
   };
+
+  # Bind mount /mnt/data/tv-cms to /var/lib/tv-cms
+  fileSystems."/var/lib/tv-cms" = {
+    device = "/mnt/data/tv-cms";
+    options = ["bind"];
+  };
+
   # Labs Matrix
   rnl.githook = {
     enable = true;
