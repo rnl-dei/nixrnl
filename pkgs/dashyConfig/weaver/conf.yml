@@ -79,7 +79,7 @@ sections:
       - title: OpenSessions
         description: Shows lab status and who is logged in
         icon: fas fa-desktop
-        url: https://rnl.tecnico.ulisboa.pt/pvt/opensessions/
+        url: https://opensessions.rnl.tecnico.ulisboa.pt/
         id: 2_1739_opensessions
       - title: Lab Matrix
         description: Shows schedule of classes in each lab
