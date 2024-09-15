@@ -9,6 +9,7 @@
       automatic = true;
       randomizedDelaySec = "30min";
       dates = "03:15";
+      options = "--delete-older-than 7d";
     };
 
     registry = {
