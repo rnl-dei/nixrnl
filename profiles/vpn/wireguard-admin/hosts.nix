@@ -152,15 +152,11 @@
     lastOctect = 50;
   }
   {
-    # Carlos Vaz - thinkpad-t450s
-    publicKey = "jH6sXb4y4RzrimK3WMme1UM261Amc0gftoY7vK0EZn8=";
+    # Carlos Vaz - trajanus (laptop)
+    publicKey = "5WH5xbIlP+MEiZJ2Hs89QXkBfcbiHKTJ1pVd/CRQbiY=";
     lastOctect = 32;
   }
-  {
-    # Carlos Vaz - desktop
-    publicKey = "Acs+KVzgfhUWfvwDbLhQhJG7/Fqa18WrBSFveRvWDUw=";
-    lastOctect = 33;
-  }
+  # 33 is free
   {
     # João Borges - war (laptop)
     publicKey = "cf7n/vT0cpdHbhSPRVuP/PMfWW8CgN2v6uvt/WeM5Ao=";
