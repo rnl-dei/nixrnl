@@ -13,6 +13,8 @@
 # --agenix-args: Optional: arguments to pass to agenix. Example: --agenix-args="-d"
 # --nixos-anywhere-args: Optional: arguments to pass to nixos-anywhere. Example: --nixos-anywhere-args="--extra-files /etc/nixos"
 
+set -e
+
 # Check if agenix is installed
 if ! command -v agenix &> /dev/null; then
   echo "agenix is not installed. Please install it first."
