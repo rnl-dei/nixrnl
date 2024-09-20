@@ -7,8 +7,9 @@ let
   pikachu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY";
   geoff = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICG5lKQD5jhYAT7hOLLV/3nD6IJ6BG/2OKIl/Ry5lRDg";
   aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ";
+  lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
 
-  users = [torvalds raijin raidou thor pikachu geoff aurelius];
+  users = [torvalds raijin raidou thor pikachu geoff aurelius lilb];
 
   deployMachines = users ++ [];
 
