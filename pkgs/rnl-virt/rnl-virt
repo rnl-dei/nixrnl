@@ -323,7 +323,10 @@ def vm_eject(args):
 ###############################################################################
 
 # Define arguments
-parser = argparse.ArgumentParser(description="Manage RNL Virtual Machines")
+parser = argparse.ArgumentParser(
+    prog="rnl-virt", # sys.argv[0] and sys.orig_argv[1] are /path/to/.rnl-virt-wrapped in Nix
+    description="Manage RNL Virtual Machines",
+)
 
 subparsers = parser.add_subparsers()
 
