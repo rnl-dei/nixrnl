@@ -84,6 +84,7 @@ in {
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "tardis-grafana-env.age".publicKeys = users ++ [tardis];
   "tardis-healthchecksio-url.age".publicKeys = users ++ [tardis];
+  "tardis-snmp-exporter-env.age".publicKeys = users ++ [tardis];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];

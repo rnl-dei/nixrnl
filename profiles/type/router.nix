@@ -1,0 +1,3 @@
+{...}: {
+  rnl.labels.type = "router";
+}
