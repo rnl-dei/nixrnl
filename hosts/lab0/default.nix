@@ -3,7 +3,7 @@
     core.rnl
     filesystems.labs
     os.nixos
-    type.physical
+    type.lab
 
     labs
     cluster.client
