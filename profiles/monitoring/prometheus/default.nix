@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 } @ args: let
   # Relabeling rules for Prometheus
@@ -36,18 +35,6 @@
       {
         target_label = "__address__";
         replacement = "${config.networking.fqdn}:${toString config.services.prometheus.exporters.blackbox.port}";
-      }
-    ];
-    relabelSNMPAddress = [
-      {
-        target_label = "__address__";
-        replacement = "${config.networking.fqdn}:${toString config.services.prometheus.exporters.snmp.port}";
-      }
-    ];
-    relabelSSHAddress = [
-      {
-        target_label = "__address__";
-        replacement = "${config.networking.fqdn}:9312";
       }
     ];
   };
@@ -96,19 +83,4 @@ in {
     enable = true;
     configFile = ./blackbox.yml;
   };
-
-  # SNMP Exporter
-  age.secrets."tardis-snmp-exporter.env".file = ../../../secrets/tardis-snmp-exporter-env.age;
-  services.prometheus.exporters.snmp = let
-    snmpConfig = pkgs.runCommandLocal "generate-snmp-exporter-config" {} ''
-      ${pkgs.prometheus-snmp-exporter}/bin/generator generate -g ${./snmp.yml} -m ${pkgs.rnlMibs.mibs} -o $out
-    '';
-  in {
-    enable = true;
-    configurationPath = snmpConfig;
-    extraFlags = [
-      "--config.expand-environment-variables"
-    ];
-  };
-  systemd.services.prometheus-snmp-exporter.serviceConfig.EnvironmentFile = config.age.secrets."tardis-snmp-exporter.env".path;
 }

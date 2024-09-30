@@ -27,6 +27,7 @@ let
   nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
   papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
+  tardis = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGOUuCvrnWbXGFZAl5n7W/IGgwmNauGUBzY1hdeIkoY";
   thomas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/SxiOeNV93iXm91x8MIEc9SW8TiksqDWQtaqnbmC6D";
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
@@ -46,6 +47,7 @@ in {
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
+  "host-keys/tardis.age".publicKeys = deployMachines;
   "host-keys/thomas.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
   "host-keys/weaver.age".publicKeys = deployMachines;
@@ -57,8 +59,9 @@ in {
   # Secrets
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
-  "dei-glitchtip-secret-key.age".publicKeys = users ++ [dei];
   "dei-glitchtip-database-env.age".publicKeys = users ++ [dei];
+  "dei-glitchtip-secret-key.age".publicKeys = users ++ [dei];
+  "dms-prod-db-password.age".publicKeys = users ++ [dei];
   "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
   "helios-env.age".publicKeys = users ++ [selene];
   "ist-delegate-election-env.age".publicKeys = users ++ [selene];
@@ -71,14 +74,16 @@ in {
   "papyrus-private-env.age".publicKeys = users ++ [papyrus];
   "papyrus-wheatley-token.age".publicKeys = users ++ [papyrus];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
-  "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
+  "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [papyrus];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
   "root-at-www-ssh-key.age".publicKeys = users ++ [www];
   "roundcube-www-db-password.age".publicKeys = users ++ [www];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
+  "tardis-grafana-env.age".publicKeys = users ++ [tardis];
+  "tardis-healthchecksio-url.age".publicKeys = users ++ [tardis];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
   "vault-key.age".publicKeys = users ++ [vault];
@@ -87,5 +92,4 @@ in {
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
   "www-tv-client-secret-env.age".publicKeys = users ++ [www];
   "www-tv-cms-secret-env.age".publicKeys = users ++ [www];
-  "dms-prod-db-password.age".publicKeys = users ++ [dei];
 }
