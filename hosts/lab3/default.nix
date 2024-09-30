@@ -14,4 +14,6 @@
   rnl.windows-labs.partition = "/dev/nvme0n1p2";
 
   rnl.labels.location = "inf1-p2-lab3";
+
+  rnl.monitoring.amt = true;
 }

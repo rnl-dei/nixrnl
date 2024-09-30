@@ -1,0 +1,72 @@
+modules:
+  ping4:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+
+  ping6:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: ip6
+      ip_protocol_fallback: false
+
+  http_2xx:
+    prober: http
+    http:
+      preferred_ip_protocol: ip4
+      headers:
+        User-Agent: Blackbox-Exporter
+
+  tcp_connect:
+    prober: tcp
+    tcp:
+      preferred_ip_protocol: ip4
+
+  pop3s_banner:
+    prober: tcp
+    tcp:
+      preferred_ip_protocol: ip4
+      query_response:
+        - expect: "^+OK"
+      tls: true
+      tls_config:
+        insecure_skip_verify: false
+
+  smtp_starttls:
+    prober: tcp
+    timeout: 15s
+    tcp:
+      query_response:
+      - expect: "^220 "
+      - send: "EHLO prober\r"
+      - expect: "^250-STARTTLS"
+      - send: "STARTTLS\r"
+      - expect: "^220"
+      - starttls: true
+      - send: "EHLO prober\r"
+      - expect: "^250-AUTH"
+      - send: "QUIT\r"
+
+  imap_starttls:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: ip4
+      query_response:
+        - expect: "OK.*STARTTLS"
+        - send: ". STARTTLS"
+        - expect: "OK"
+        - starttls: true
+        - send: ". capability"
+        - expect: "CAPABILITY IMAP4rev1"
+
+  ftp_connect:
+    prober: tcp
+    timeout: 15s
+    tcp:
+      query_response:
+      - expect: "^220 "
+      - send: "QUIT\r"

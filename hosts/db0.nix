@@ -24,6 +24,9 @@
     defaultGateway.address = "193.136.164.126";
   };
 
+  # Disable ping IPv6 monitoring
+  rnl.monitoring.ping6 = false;
+
   rnl.labels.location = "chapek";
 
   rnl.virtualisation.guest = {

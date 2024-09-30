@@ -35,5 +35,10 @@
     unit = "C";
   };
 
+  services.prometheus.exporters.smartctl = {
+    enable = true;
+    openFirewall = true;
+  };
+
   rnl.labels.type = lib.mkDefault "physical";
 }
