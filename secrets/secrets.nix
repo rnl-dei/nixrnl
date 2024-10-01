@@ -30,6 +30,7 @@ let
   thomas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/SxiOeNV93iXm91x8MIEc9SW8TiksqDWQtaqnbmC6D";
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
+  www = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5cj7QcYEz9cSmbQS1ZbmDjQUVdsT9AsmyJdFbZNOg/ www";
 in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
@@ -48,6 +49,7 @@ in {
   "host-keys/thomas.age".publicKeys = deployMachines;
   "host-keys/vault.age".publicKeys = deployMachines;
   "host-keys/weaver.age".publicKeys = deployMachines;
+  "host-keys/www.age".publicKeys = deployMachines;
 
   # GitLab runners tokens
   "gitlab-runners/es-24-env.age".publicKeys = users ++ [labs];
@@ -74,6 +76,8 @@ in {
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [papyrus];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
+  "root-at-www-ssh-key.age".publicKeys = users ++ [www];
+  "roundcube-www-db-password.age".publicKeys = users ++ [www];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
   "transmission-labs-settings-json.age".publicKeys = users ++ [dollars dolly labs];
   "vault-cer.age".publicKeys = users ++ [vault];
@@ -81,5 +85,7 @@ in {
   "vault-storage-hcl.age".publicKeys = users ++ [vault];
   "windows-labs-image-key.age".publicKeys = users ++ [labs];
   "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
+  "www-tv-client-secret-env.age".publicKeys = users ++ [www];
+  "www-tv-cms-secret-env.age".publicKeys = users ++ [www];
   "dms-prod-db-password.age".publicKeys = users ++ [dei];
 }
