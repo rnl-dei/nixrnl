@@ -100,7 +100,7 @@ with lib; {
       mgmt = mkOption {
         type = types.int;
         readOnly = true;
-        default = 100;
+        default = 1;
         description = "Management VLAN";
       };
       admin = mkOption {

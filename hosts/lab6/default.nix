@@ -7,7 +7,7 @@
     core.rnl
     filesystems.labs
     os.nixos
-    type.physical
+    type.lab
 
     labs
     cluster.client
@@ -22,4 +22,6 @@
   services.xserver.videoDrivers = lib.mkForce ["modesetting" "fbdev"];
 
   rnl.labels.location = "inf1-p1-lab6";
+
+  rnl.monitoring.amt = true;
 }

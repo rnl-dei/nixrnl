@@ -19,4 +19,7 @@
   systemd.services."sessioncontrol".enable = lib.mkForce false;
   services.transmission.enable = lib.mkForce false;
   rnl.windows-labs.enable = lib.mkForce false;
+
+  # Disable ping monitoring
+  rnl.monitoring.ping = false;
 }
