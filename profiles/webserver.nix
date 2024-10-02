@@ -10,6 +10,7 @@
 
   services.nginx = {
     enable = true;
+    enableReload = true;
     serverTokens = false;
     statusPage = true;
 
