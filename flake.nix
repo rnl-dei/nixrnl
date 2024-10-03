@@ -111,6 +111,7 @@
         # Spellcheck
         typos = {
           enable = true;
+          pass_filenames = false; # must configure excludes through typos.toml
           settings.configPath = "./typos.toml";
         };
       };

@@ -20,3 +20,9 @@ extend-ignore-re = [
 # Don't correct the "ist" or "rnl"
 ist = "ist"
 rnl = "rnl"
+
+[files]
+extend-exclude = [
+    "secrets/**/*.age",
+    "pkgs/rnlTorrents/torrents/*.torrent"
+]
