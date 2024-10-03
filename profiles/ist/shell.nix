@@ -102,4 +102,14 @@
     CPUWeight = 110; # default is 100
     IOWeight = 110; # default is 100
   };
+
+  # Use "classic ptrace permissions", that allows processes to ptrace any others running
+  # under the same UID (as long as they are dumpable).
+  # See https://www.kernel.org/doc/Documentation/security/Yama.txt for more information.
+  #
+  # The default is "1", which only allows ptrace-ing when the tracer and tracee processes
+  # are parent and child. This is good for security but cumbersome in a multi-user machine
+  # for developers who may only remember they only want to trace a program after it starts
+  # and encounters a (potentially hard to reproduce) bug.
+  boot.kernel.sysctl."kernel.yama.ptrace_scope" = 0;
 }
