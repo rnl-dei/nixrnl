@@ -7,6 +7,9 @@
   slurmProlog = pkgs.writeShellScript "slurm-prolog.sh" ''
     #!/bin/sh
     set -e
+    # send stdout/stderr to journal
+    exec > >(${pkgs.systemd}/bin/systemd-cat -t "slurm-prolog.sh/$SLURM_JOB_USER") 2>&1
+
     # Ensure subuid/subgid assignments exist for job user for container usage
     PAM_USER=$SLURM_JOB_USER ${pkgs.subidappend}/bin/subidappend
 
@@ -30,6 +33,10 @@
   slurmTaskProlog = pkgs.writeShellScript "slurm-taskprolog.sh" ''
     #!/bin/sh
     set -e
+    # send stderr to journal
+    # don't send stdout: Slurm needs it to set env vars!
+    exec 2> >(${pkgs.systemd}/bin/systemd-cat -t "slurm-task-prolog.sh/$SLURM_JOB_USER")
+
     # set DOCKER_HOST for container usage
     echo export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
     echo export HOME=$CLUSTER_HOME
@@ -37,6 +44,8 @@
   slurmEpilog = pkgs.writeShellScript "slurm-epilog.sh" ''
     #!/bin/sh
     set -e
+    # send stdout/stderr to journal
+    exec > >(${pkgs.systemd}/bin/systemd-cat -t "slurm-epilog.sh/$SLURM_JOB_USER") 2>&1
 
     COUNTER_PATH=/run/slurm-count-"$SLURM_JOB_USER"
     (

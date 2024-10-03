@@ -25,4 +25,12 @@
   };
 
   networking.firewall.allowedTCPPorts = [6818];
+
+  # Slurm has been acting up, store more logs
+  # TODO: go back to the default (10% max / 15% keep free but capped to 4GB)
+  services.journald.extraConfig = ''
+    [Journal]
+    SystemMaxUse=50G
+    SystemKeepFree=80G
+  '';
 }
