@@ -10,8 +10,22 @@
     # Ensure subuid/subgid assignments exist for job user for container usage
     PAM_USER=$SLURM_JOB_USER ${pkgs.subidappend}/bin/subidappend
 
-    # Make systemd create /run/user/<uid> (for container usage)
-    ${pkgs.systemd}/bin/loginctl enable-linger $SLURM_JOB_USER
+    COUNTER_PATH=/run/slurm-count-"$SLURM_JOB_USER"
+    (
+      ${pkgs.util-linux}/bin/flock -e 200
+
+      if [ ! -f "$COUNTER_PATH" ] || [[ "$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")" == "0" ]]; then
+        # Make systemd create /run/user/<uid> (for container usage)
+        ${pkgs.systemd}/bin/loginctl enable-linger "$SLURM_JOB_USER"
+
+        echo 1 > "$COUNTER_PATH"
+      else
+        # count number of concurrent jobs from the same user to avoid calling
+        # disable-linger prematurely in Slurm's Epilog
+        prev_count="$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")"
+        echo $(( prev_count + 1 )) > "$COUNTER_PATH"
+      fi
+    ) 200>"$COUNTER_PATH.lock"
   '';
   slurmTaskProlog = pkgs.writeShellScript "slurm-taskprolog.sh" ''
     #!/bin/sh
@@ -23,9 +37,24 @@
   slurmEpilog = pkgs.writeShellScript "slurm-epilog.sh" ''
     #!/bin/sh
     set -e
-    # systemd can now clear up /run/user/<uid> and other resources
-    # FIXME: fix race condition with other jobs from same user in same node
-    ${pkgs.systemd}/bin/loginctl disable-linger $SLURM_JOB_USER
+
+    COUNTER_PATH=/run/slurm-count-"$SLURM_JOB_USER"
+    (
+      ${pkgs.util-linux}/bin/flock -e 200
+
+      count="$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")"
+      count="$(( count - 1 ))"
+
+      # only call disable-linger when all jobs from the user have completed
+      if [[ $count -le 0 ]]; then
+        echo 0 > "$COUNTER_PATH"
+
+        # systemd can now clear up /run/user/<uid> and other resources
+        ${pkgs.systemd}/bin/loginctl disable-linger "$SLURM_JOB_USER"
+      else
+        echo "$count" > "$COUNTER_PATH"
+      fi
+    ) 200>"$COUNTER_PATH.lock"
   '';
 in {
   services.slurm = {
