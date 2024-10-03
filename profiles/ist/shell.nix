@@ -67,7 +67,7 @@
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "94%"; # set to just under MemoryMax
 
@@ -83,7 +83,7 @@
   systemd.slices."user-" = {
     sliceConfig = {
       # @ist189409's computer had ~1600 tasks in /user.slice
-      # This ought to be enough to accomodate any not-too-unreasonable workload, while stopping fork bombs.
+      # This ought to be enough to accommodate any not-too-unreasonable workload, while stopping fork bombs.
       TasksMax = lib.mkDefault 4096;
     };
 

@@ -2,7 +2,7 @@
   rakeLeaves,
   inputs,
   ...
-}: final: prev:
+}: _final: prev:
 prev.lib.mapAttrsRecursive
 (_: path: (prev.callPackage path {inherit inputs;}))
 (rakeLeaves ../pkgs)

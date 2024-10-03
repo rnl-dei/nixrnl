@@ -9,7 +9,7 @@
   rnl.labels.location = "chapek";
 
   rnl.virtualisation.guest = {
-    description = "VM para apoio à tese do Guillermo Bettencourt";
+    description = "VM para apoio à tese do Guillermo Bettencourt"; # spellchecker:disable-line
     createdBy = "nuno.alves";
     maintainers = ["miguel.pardal" "guillermo.bettencourt"];
 

@@ -13,7 +13,6 @@ with lib; let
   siteOpts = {
     options,
     config,
-    lib,
     name,
     ...
   }: {
@@ -95,7 +94,7 @@ in {
     services.nginx = {
       enable = true;
       virtualHosts =
-        mapAttrs' (siteName: siteCfg: {
+        mapAttrs' (_siteName: siteCfg: {
           name = siteCfg.serviceName;
           value = {
             serverName = mkDefault "${siteCfg.serverName}";
@@ -128,7 +127,7 @@ in {
       instance = {
         type = "emperor";
         vassals =
-          mapAttrs' (siteName: siteCfg: {
+          mapAttrs' (_siteName: siteCfg: {
             name = siteCfg.serviceName;
             value = {
               type = "normal";

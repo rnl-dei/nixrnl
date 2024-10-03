@@ -50,7 +50,7 @@
     MemoryMax = "10%"; # 8GB * 10% ≃ 800MB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "9%"; # set to just under MemoryMax
 

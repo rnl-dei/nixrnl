@@ -8,6 +8,6 @@
 
   rnl.labels.location = "dsi";
 
-  # Diable ping IPv6 monitoring
+  # Disable ping IPv6 monitoring
   rnl.monitoring.ping6 = false;
 }

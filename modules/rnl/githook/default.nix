@@ -42,7 +42,7 @@ with lib; let
         default = null;
         description = ''
           The path to the script that run when pull is done and changes are detected
-          Default: Coomand in the root of the repository (.pull_hooks.sh)
+          Default: Command in the root of the repository (.pull_hooks.sh)
         '';
       };
       user = mkOption {
@@ -157,6 +157,6 @@ in {
         cfg.hooks;
     };
 
-    systemd.tmpfiles.rules = attrsets.mapAttrsToList (name: hook: "d ${hook.path} ${hook.directoryMode} ${hook.directoryUser} ${hook.directoryGroup} - -") cfg.hooks;
+    systemd.tmpfiles.rules = attrsets.mapAttrsToList (_name: hook: "d ${hook.path} ${hook.directoryMode} ${hook.directoryUser} ${hook.directoryGroup} - -") cfg.hooks;
   };
 }

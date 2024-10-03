@@ -18,7 +18,6 @@
   maxMemoryDiff,
   memory,
   name,
-  timeout,
   uefi,
   vcpu,
   directKernel,

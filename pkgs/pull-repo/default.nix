@@ -1,5 +1,4 @@
 {
-  autoPatchelfHook,
   bash,
   git,
   lib,
@@ -19,7 +18,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    cp pull-repo $out/bin
+    cp pull-repo.sh $out/bin/pull-repo
     wrapProgram $out/bin/pull-repo \
       --prefix PATH : ${lib.makeBinPath buildInputs}
   '';

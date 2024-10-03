@@ -1,8 +1,4 @@
-{
-  copyPathToStore,
-  lib,
-  ...
-}: let
+{lib, ...}: let
   # Only import the files that end with .torrent
   listTorrentFiles = path:
     lib.filterAttrs (

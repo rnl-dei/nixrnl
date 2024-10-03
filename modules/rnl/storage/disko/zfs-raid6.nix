@@ -36,7 +36,7 @@
     };
   };
 
-  mkDataDiskConfig = device: index: {
+  mkDataDiskConfig = device: _index: {
     type = "disk";
     inherit device;
     content = {

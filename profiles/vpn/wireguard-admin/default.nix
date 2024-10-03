@@ -10,10 +10,10 @@
   hosts = import ./hosts.nix;
 
   # Allowed IPs will look like this:
-  # 192.168.20.<lastOctect> fd92:3315:9e43:c490::<lastOctect>/128 (plus extra ips for multicast)
+  # 192.168.20.<lastOctet> fd92:3315:9e43:c490::<lastOctet>/128 (plus extra ips for multicast)
   mkPeers = builtins.map (peer: {
     inherit (peer) publicKey;
-    allowedIPs = ["192.168.20.${toString peer.lastOctect}/32" "fd92:3315:9e43:c490::${toString peer.lastOctect}/128" "224.0.0.0/24" "ff00::/16"];
+    allowedIPs = ["192.168.20.${toString peer.lastOctet}/32" "fd92:3315:9e43:c490::${toString peer.lastOctet}/128" "224.0.0.0/24" "ff00::/16"];
   });
 in {
   networking.nat.enable = true;

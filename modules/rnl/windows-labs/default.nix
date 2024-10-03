@@ -108,7 +108,7 @@ in {
         fi
 
         # Copy extra files to EFI partition
-        for file in ${lib.concatStringsSep " " (mapAttrsToList (name: path: path) cfg.extraFiles)}; do
+        for file in ${lib.concatStringsSep " " (mapAttrsToList (_name: path: path) cfg.extraFiles)}; do
           echo "Copying $file to EFI partition"
           cp $file /boot/EFI/Microsoft/Boot
         done

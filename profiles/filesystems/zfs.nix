@@ -17,7 +17,7 @@
   };
 
   boot.zfs.devNodes = "/dev/disk/by-partlabel"; # Disko uses partlabel
-  boot.zfs.forceImportRoot = lib.mkForce false; # Disable this by recomendation
+  boot.zfs.forceImportRoot = lib.mkForce false; # Disable this by recommendation
 
   # Use simple zfs layout
   rnl.storage = {

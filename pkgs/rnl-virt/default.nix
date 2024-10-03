@@ -1,5 +1,4 @@
 {
-  autoPatchelfHook,
   lib,
   libvirt,
   makeWrapper,

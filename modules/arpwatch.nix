@@ -126,7 +126,7 @@ in {
   config = mkIf cfg.enable {
     systemd.services =
       mapAttrs'
-      (n: v: {
+      (_n: v: {
         name = "arpwatch-${v.interface}";
         value = {
           description = "Watch ARP on interface ${v.interface}";

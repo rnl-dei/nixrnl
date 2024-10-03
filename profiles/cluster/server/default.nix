@@ -93,7 +93,7 @@ in {
   security.pam.services.login.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
   security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
 
-  # Limit individual user's memory usage agressively
+  # Limit individual user's memory usage aggressively
   # This is a heavily shared machine
   # Overrides limits from profile/ist-shell
   # TODO: move to somewhere where it can be shared with nexus and other heavily shared machines.
@@ -101,7 +101,7 @@ in {
     MemoryMax = "13%"; # 2GB * 12% ≃ 260MB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "12%"; # set to just under MemoryMax
 
