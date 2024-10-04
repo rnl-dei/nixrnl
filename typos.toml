@@ -13,7 +13,7 @@ extend-ignore-re = [
     'mac = "[a-fA-F0-9:]+";',
 
     # ignore maintainers list (PT names sometimes trigger it)
-    'maintainers = \[[-"a-zA-Z0-9_. ]+\];'
+    '(?s)\s*maintainers\s*=\s*\[[-"a-zA-Z0-9_. \n]*\]\s*;'
 ]
 
 [default.extend-words]

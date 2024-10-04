@@ -97,8 +97,8 @@
       src = ./.;
       hooks = {
         # Nix
-        alejandra.enable = true;
         deadnix.enable = true;
+        nixfmt-rfc-style.enable = true;
 
         # Shell
         shellcheck.enable = true;
@@ -117,6 +117,6 @@
       };
     };
 
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
   };
 }
