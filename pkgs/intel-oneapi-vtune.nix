@@ -41,7 +41,11 @@ stdenv.mkDerivation rec {
 
   unpackPhase = "dpkg-deb -x $src .";
 
-  nativeBuildInputs = [autoPatchelfHook dpkg wrapGAppsHook];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    dpkg
+    wrapGAppsHook
+  ];
 
   buildInputs = [
     stdenv.cc.cc.lib
@@ -107,17 +111,17 @@ stdenv.mkDerivation rec {
     exec = "vtune-gui";
     icon = "vtune";
     startupNotify = false;
-    categories = ["Development"];
-    mimeTypes = ["text/plain"];
-    keywords = ["vtune"];
+    categories = [ "Development" ];
+    mimeTypes = [ "text/plain" ];
+    keywords = [ "vtune" ];
   };
 
   meta = with lib; {
     homepage = "https://software.intel.com/content/www/us/en/develop/tools/oneapi.html";
     description = "Intel® VTune(TM) Profiler";
-    platforms = ["x86_64-linux"];
+    platforms = [ "x86_64-linux" ];
     license = licenses.unfree;
-    sourceProvenance = with sourceTypes; [binaryNativeCode];
-    maintainers = ["carlos.vaz"];
+    sourceProvenance = with sourceTypes; [ binaryNativeCode ];
+    maintainers = [ "carlos.vaz" ];
   };
 }

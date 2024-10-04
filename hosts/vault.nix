@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -42,10 +39,10 @@
     group = "vault";
   };
 
-  services.vault.extraSettingsPaths = [config.age.secrets."vault-storage.hcl".path];
+  services.vault.extraSettingsPaths = [ config.age.secrets."vault-storage.hcl".path ];
 
   rnl.db-cluster = {
-    ensureDatabases = ["vault"];
+    ensureDatabases = [ "vault" ];
     ensureUsers = [
       {
         name = "vault";
@@ -84,7 +81,7 @@
   rnl.virtualisation.guest = {
     description = "Gestor de segredos e CA da RNL";
 
-    interfaces = [{source = "priv";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/vault";}];
+    interfaces = [ { source = "priv"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/vault"; } ];
   };
 }

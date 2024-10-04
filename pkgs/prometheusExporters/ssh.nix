@@ -21,6 +21,6 @@ buildGoModule rec {
   meta = with lib; {
     description = "Prometheus SSH exporter";
     license = licenses.asl20;
-    maintainers = ["martim.monis"];
+    maintainers = [ "martim.monis" ];
   };
 }

@@ -4,7 +4,8 @@
   pkgs,
   profiles,
   ...
-}: let
+}:
+let
   plugins = with pkgs.moodlePlugins; [
     peerwork
     course_menu
@@ -17,12 +18,13 @@
 
   # Max upload size
   maxUploadSize = "100M";
-in {
-  imports = with profiles; [webserver];
+in
+{
+  imports = with profiles; [ webserver ];
 
   services.moodle = {
     enable = true;
-    package = pkgs.moodle.override {inherit plugins;};
+    package = pkgs.moodle.override { inherit plugins; };
     initialPassword = "M00dl3!Admin"; # Don't forget to change this after install
     database = {
       host = lib.mkDefault config.rnl.database.host;
@@ -48,9 +50,14 @@ in {
   services.nginx.virtualHosts.moodle = {
     default = lib.mkDefault true;
     serverName = config.services.moodle.virtualHost.hostName;
-    serverAliases = [config.networking.fqdn];
+    serverAliases = [ config.networking.fqdn ];
     root = "${config.services.moodle.package}/share/moodle";
-    inherit (config.services.moodle.virtualHost) enableACME forceSSL addSSL onlySSL;
+    inherit (config.services.moodle.virtualHost)
+      enableACME
+      forceSSL
+      addSSL
+      onlySSL
+      ;
 
     extraConfig = ''
       client_max_body_size ${maxUploadSize};

@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.labs
@@ -10,7 +11,7 @@
     cluster.tests
   ];
 
-  rnl.storage.disks.root = ["/dev/sda"];
+  rnl.storage.disks.root = [ "/dev/sda" ];
 
   rnl.labels.location = "inf1-p01-estaleiro";
 }

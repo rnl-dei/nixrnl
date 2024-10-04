@@ -3,18 +3,19 @@
   lib,
   pkgs,
   ...
-} @ args: let
+}@args:
+let
   # Relabeling rules for Prometheus
   relabeling = {
     relabelInstance = [
       {
-        source_labels = ["__address__"];
+        source_labels = [ "__address__" ];
         target_label = "instance";
       }
     ];
     relabelInstanceRegex = [
       {
-        source_labels = ["instance"];
+        source_labels = [ "instance" ];
         target_label = "instance";
         replacement = "\${1}";
         regex = "([^\.]+)\..+";
@@ -22,13 +23,13 @@
     ];
     relabelEndpoint = [
       {
-        source_labels = ["__address__"];
+        source_labels = [ "__address__" ];
         target_label = "endpoint";
       }
     ];
     relabelAddressTargetParam = [
       {
-        source_labels = ["__address__"];
+        source_labels = [ "__address__" ];
         target_label = "__param_target";
       }
     ];
@@ -46,25 +47,23 @@
     ];
   };
 
-  extraArgs = {} // relabeling;
+  extraArgs = { } // relabeling;
 
   # TODO: Write documentation
-  mkScrapeConfigs = dir:
+  mkScrapeConfigs =
+    dir:
     lib.lists.flatten (
-      lib.mapAttrsToList
-      (
-        path: _: let
+      lib.mapAttrsToList (
+        path: _:
+        let
           cfg' = import (dir + "/${path}") (args // extraArgs);
           cfgs = lib.toList cfg';
-        in (builtins.map
-          (
-            cfg: ({job_name = lib.removeSuffix ".nix" path;} // cfg)
-          )
-          cfgs)
-      )
-      (builtins.readDir dir)
+        in
+        (builtins.map (cfg: ({ job_name = lib.removeSuffix ".nix" path; } // cfg)) cfgs)
+      ) (builtins.readDir dir)
     );
-in {
+in
+{
   # Prometheus
   services.prometheus = {
     enable = true;
@@ -76,7 +75,7 @@ in {
     scrapeConfigs = mkScrapeConfigs ./scrape-configs;
   };
   services.nginx.upstreams.prometheus.servers = {
-    "localhost:${toString config.services.prometheus.port}" = {};
+    "localhost:${toString config.services.prometheus.port}" = { };
   };
   services.nginx.virtualHosts.prometheus = {
     serverName = lib.mkDefault "${config.networking.fqdn}";
@@ -92,17 +91,18 @@ in {
   };
 
   # SNMP Exporter
-  services.prometheus.exporters.snmp = let
-    snmpConfig = pkgs.runCommandLocal "generate-snmp-exporter-config" {} ''
-      ${pkgs.prometheus-snmp-exporter}/bin/generator generate -g ${./snmp.yml} -m ${pkgs.rnl-snmp-mibs}/share/snmp/mibs/ -o $out
-    '';
-  in {
-    enable = true;
-    configurationPath = snmpConfig;
-    extraFlags = [
-      "--config.expand-environment-variables"
-    ];
-  };
+  services.prometheus.exporters.snmp =
+    let
+      snmpConfig = pkgs.runCommandLocal "generate-snmp-exporter-config" { } ''
+        ${pkgs.prometheus-snmp-exporter}/bin/generator generate -g ${./snmp.yml} -m ${pkgs.rnl-snmp-mibs}/share/snmp/mibs/ -o $out
+      '';
+    in
+    {
+      enable = true;
+      configurationPath = snmpConfig;
+      extraFlags = [ "--config.expand-environment-variables" ];
+    };
   age.secrets."tardis-snmp-exporter.env".file = ../../../secrets/tardis-snmp-exporter-env.age;
-  systemd.services.prometheus-snmp-exporter.serviceConfig.EnvironmentFile = config.age.secrets."tardis-snmp-exporter.env".path;
+  systemd.services.prometheus-snmp-exporter.serviceConfig.EnvironmentFile =
+    config.age.secrets."tardis-snmp-exporter.env".path;
 }

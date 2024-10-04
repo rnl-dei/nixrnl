@@ -1,14 +1,13 @@
+{ inputs, lib, ... }:
 {
-  inputs,
-  lib,
-  ...
-}: {
   aliases = {
-    live = {extraModules = [(inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")];};
+    live = {
+      extraModules = [ (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix") ];
+    };
     live-dhcp = {
       extraModules = [
         (inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
-        {networking.useDHCP = lib.mkForce true;}
+        { networking.useDHCP = lib.mkForce true; }
       ];
     };
     live-netboot-dhcp = {

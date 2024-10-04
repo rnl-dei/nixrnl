@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   rnl.storage = {
     enable = true;
     layout = "labs";

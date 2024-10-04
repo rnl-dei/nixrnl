@@ -1,8 +1,5 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   disks = config.rnl.storage.disks;
 
   mkRootDiskConfig = device: _index: {
@@ -52,13 +49,15 @@
 
   root = mkRootDiskConfig (builtins.elemAt disks.root 0) 0;
 
-  data = builtins.listToAttrs (lib.imap0 (
-      i: device: {
-        name = "data-${toString i}";
-        value = mkDataDiskConfig device i;
-      }
-    )
-    disks.data);
-in {
-  disk = {inherit root;} // data;
+  data = builtins.listToAttrs (
+    lib.imap0 (i: device: {
+      name = "data-${toString i}";
+      value = mkDataDiskConfig device i;
+    }) disks.data
+  );
+in
+{
+  disk = {
+    inherit root;
+  } // data;
 }

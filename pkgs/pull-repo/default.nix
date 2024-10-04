@@ -13,8 +13,13 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./.;
-  buildInputs = [bash git system-sendmail logger];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [
+    bash
+    git
+    system-sendmail
+    logger
+  ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -24,7 +29,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["nuno.alves"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "nuno.alves" ];
   };
 }

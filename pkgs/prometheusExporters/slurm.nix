@@ -17,7 +17,7 @@ buildGoModule rec {
     sha256 = "sha256-KS9LoDuLQFq3KoKpHd8vg1jw20YCNRJNJrnBnu5vxvs=";
   };
 
-  buildInputs = [slurm];
+  buildInputs = [ slurm ];
 
   doCheck = false;
 
@@ -26,6 +26,6 @@ buildGoModule rec {
   meta = with lib; {
     description = "Prometheus SLURM exporter";
     license = licenses.gpl3;
-    maintainers = ["nuno.alves"];
+    maintainers = [ "nuno.alves" ];
   };
 }

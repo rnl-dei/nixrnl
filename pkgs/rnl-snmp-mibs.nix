@@ -1,8 +1,4 @@
-{
-  fetchzip,
-  stdenv,
-  ...
-}:
+{ fetchzip, stdenv, ... }:
 stdenv.mkDerivation {
   name = "rnl-snmp-mibs";
 

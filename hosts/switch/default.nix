@@ -1,8 +1,5 @@
+{ lib, profiles, ... }:
 {
-  lib,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.unknown

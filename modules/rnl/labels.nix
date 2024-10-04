@@ -1,9 +1,6 @@
+{ config, lib, ... }:
+with lib;
 {
-  config,
-  lib,
-  ...
-}:
-with lib; {
   options.rnl.labels = {
     core = mkOption {
       type = types.nullOr types.str;

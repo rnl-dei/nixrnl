@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -24,12 +25,8 @@
       }
     ];
     disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/mike";
-      }
-      {
-        source.dev = "/dev/zvol/dpool/data/mike_dfs";
-      }
+      { source.dev = "/dev/zvol/dpool/data/mike"; }
+      { source.dev = "/dev/zvol/dpool/data/mike_dfs"; }
     ];
   };
 }

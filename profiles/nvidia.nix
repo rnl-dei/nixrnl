@@ -1,8 +1,5 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}: {
   hardware.nvidia-container-toolkit.enable = true;
 
   # Make sure opengl is enabled
@@ -13,7 +10,7 @@
   };
 
   # Tell Xorg to use the nvidia driver
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
     # Modesetting is needed for most wayland compositors
@@ -28,7 +25,7 @@
   # Enable cuda support
   # nixpkgs.config.cudaSupport = true; is not viable, tries to recompile the universe and fails.
   # Use the -bin version of packages which require cuda support instead.
-  environment.systemPackages = with pkgs; [cudatoolkit];
+  environment.systemPackages = with pkgs; [ cudatoolkit ];
   environment.variables."CUDA_PATH" = "${pkgs.cudatoolkit}";
 
   # Slurm needs to know how to detect GPUs
@@ -49,6 +46,6 @@
       Restart = "always";
       RestartSec = "1";
     };
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 }

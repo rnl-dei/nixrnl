@@ -1,8 +1,5 @@
+{ pkgs, profiles, ... }:
 {
-  pkgs,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -33,44 +30,51 @@
     description = "DB arbitrator";
     createdBy = "nuno.alves";
 
-    interfaces = [{source = "priv";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/db0";}];
+    interfaces = [ { source = "priv"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/db0"; } ];
   };
 
   # Galera Arbitrator
   # https://github.com/codership/galera/blob/644e7f04139079566a03109ce105d658a043d0a9/garb/files/garb.service
-  systemd.services.garbd = let
-    arbitratorConfigFile = pkgs.writeText "garbd.cnf" ''
-      name = db0
-      group = rnl_db_cluster
-      address = gcomm://db2,db1,db0
-    '';
-  in {
-    description = "Galera Arbitrator Daemon";
-    after = ["network.target"];
-    wantedBy = ["multi-user.target"];
-    unitConfig = {
-      Documentation = ["man:garbd(8)" "https://galeracluster.com/library/documentation/arbitrator.html"];
+  systemd.services.garbd =
+    let
+      arbitratorConfigFile = pkgs.writeText "garbd.cnf" ''
+        name = db0
+        group = rnl_db_cluster
+        address = gcomm://db2,db1,db0
+      '';
+    in
+    {
+      description = "Galera Arbitrator Daemon";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      unitConfig = {
+        Documentation = [
+          "man:garbd(8)"
+          "https://galeracluster.com/library/documentation/arbitrator.html"
+        ];
+      };
+      serviceConfig = {
+        User = "nobody";
+        ExecStart = "${pkgs.mariadb-galera}/bin/garbd --cfg ${arbitratorConfigFile}";
+
+        # Use SIGINT because with the default SIGTERM
+        # garbd fails to reliably transition to 'destroyed' state
+        KillSignal = "SIGINT";
+
+        TimeoutSec = "2m";
+        PrivateTmp = false;
+      };
     };
-    serviceConfig = {
-      User = "nobody";
-      ExecStart = "${pkgs.mariadb-galera}/bin/garbd --cfg ${arbitratorConfigFile}";
 
-      # Use SIGINT because with the default SIGTERM
-      # garbd fails to reliably transition to 'destroyed' state
-      KillSignal = "SIGINT";
-
-      TimeoutSec = "2m";
-      PrivateTmp = false;
+  networking.firewall =
+    let
+      garbdPort = 4567;
+    in
+    {
+      allowedTCPPorts = [ garbdPort ];
+      allowedUDPPorts = [ garbdPort ];
     };
-  };
-
-  networking.firewall = let
-    garbdPort = 4567;
-  in {
-    allowedTCPPorts = [garbdPort];
-    allowedUDPPorts = [garbdPort];
-  };
 
   users.motd = ''
 

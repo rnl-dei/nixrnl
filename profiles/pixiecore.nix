@@ -1,6 +1,8 @@
-{nixosConfigurations, ...}: let
+{ nixosConfigurations, ... }:
+let
   build = nixosConfigurations.live-netboot-dhcp.config.system.build;
-in {
+in
+{
   services.pixiecore = {
     enable = true;
     openFirewall = true;
@@ -15,5 +17,5 @@ in {
 
   # Enable this to fix this issue:
   # https://github.com/NixOS/nixpkgs/issues/252116
-  networking.firewall.allowedUDPPorts = [4011];
+  networking.firewall.allowedUDPPorts = [ 4011 ];
 }

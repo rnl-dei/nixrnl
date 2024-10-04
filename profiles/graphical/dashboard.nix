@@ -1,5 +1,6 @@
-{pkgs, ...}: {
-  imports = [./common.nix];
+{ pkgs, ... }:
+{
+  imports = [ ./common.nix ];
 
   # Create RNL user without full permissions
   users.users.rnl = {
@@ -31,7 +32,7 @@
     target = "xdg/autostart/chromium-browser.desktop";
   };
 
-  environment.systemPackages = with pkgs; [chromium];
+  environment.systemPackages = with pkgs; [ chromium ];
 
   programs.chromium = {
     enable = true;

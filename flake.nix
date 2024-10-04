@@ -58,65 +58,75 @@
     poetry2nix.inputs.treefmt-nix.follows = "treefmt-nix";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    pre-commit-hooks,
-    ...
-  } @ inputs: let
-    lib = nixpkgs.lib.extend (self: _super:
-      import ./lib {
-        inherit inputs profiles pkgs nixosConfigurations;
-        lib = self;
-      });
+  outputs =
+    {
+      self,
+      nixpkgs,
+      pre-commit-hooks,
+      ...
+    }@inputs:
+    let
+      lib = nixpkgs.lib.extend (
+        self: _super:
+        import ./lib {
+          inherit
+            inputs
+            profiles
+            pkgs
+            nixosConfigurations
+            ;
+          lib = self;
+        }
+      );
 
-    overlays = lib.rnl.mkOverlays ./overlays;
-    pkgs = lib.rnl.mkPkgs overlays;
-    nixosConfigurations = lib.rnl.mkHosts ./hosts;
-    profiles = lib.rnl.mkProfiles ./profiles;
-  in {
-    inherit nixosConfigurations overlays;
+      overlays = lib.rnl.mkOverlays ./overlays;
+      pkgs = lib.rnl.mkPkgs overlays;
+      nixosConfigurations = lib.rnl.mkHosts ./hosts;
+      profiles = lib.rnl.mkProfiles ./profiles;
+    in
+    {
+      inherit nixosConfigurations overlays;
 
-    devShells.x86_64-linux.default = pkgs.mkShell {
-      inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
-      buildInputs =
-        self.checks.x86_64-linux.pre-commit-check.enabledPackages
-        ++ (with pkgs; [
-          inputs.agenix.packages.x86_64-linux.agenix
-          deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
-          secrets-check
-        ]);
-    };
+      devShells.x86_64-linux.default = pkgs.mkShell {
+        inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
+        buildInputs =
+          self.checks.x86_64-linux.pre-commit-check.enabledPackages
+          ++ (with pkgs; [
+            inputs.agenix.packages.x86_64-linux.agenix
+            deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
+            secrets-check
+          ]);
+      };
 
-    packages.x86_64-linux = {
-      deploy-anywhere = pkgs.deploy-anywhere;
-      secrets-check = pkgs.secrets-check;
-    };
+      packages.x86_64-linux = {
+        deploy-anywhere = pkgs.deploy-anywhere;
+        secrets-check = pkgs.secrets-check;
+      };
 
-    checks.x86_64-linux.pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
-      src = ./.;
-      hooks = {
-        # Nix
-        alejandra.enable = true;
-        deadnix.enable = true;
+      checks.x86_64-linux.pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
+        src = ./.;
+        hooks = {
+          # Nix
+          deadnix.enable = true;
+          nixfmt-rfc-style.enable = true;
 
-        # Shell
-        shellcheck.enable = true;
-        shfmt.enable = true;
+          # Shell
+          shellcheck.enable = true;
+          shfmt.enable = true;
 
-        # Git
-        check-merge-conflicts.enable = true;
-        forbid-new-submodules.enable = true;
+          # Git
+          check-merge-conflicts.enable = true;
+          forbid-new-submodules.enable = true;
 
-        # Spellcheck
-        typos = {
-          enable = true;
-          pass_filenames = false; # must configure excludes through typos.toml
-          settings.configPath = "./typos.toml";
+          # Spellcheck
+          typos = {
+            enable = true;
+            pass_filenames = false; # must configure excludes through typos.toml
+            settings.configPath = "./typos.toml";
+          };
         };
       };
-    };
 
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
-  };
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+    };
 }

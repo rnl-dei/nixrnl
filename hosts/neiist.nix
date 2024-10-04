@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Webserver do NEIIST";
-    maintainers = ["neiist"];
+    maintainers = [ "neiist" ];
 
     uefi = false;
     memory = 4096;
@@ -24,15 +25,11 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/neiist";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/neiist"; } ];
   };
 
   rnl.db-cluster = {
-    ensureDatabases = ["neiist"];
+    ensureDatabases = [ "neiist" ];
     ensureUsers = [
       {
         name = "neiist";

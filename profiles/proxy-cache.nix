@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   services.nginx.virtualHosts.proxy-cache = {
     serverName = lib.mkDefault "proxy-cache.${config.networking.fqdn}";
     enableACME = true;

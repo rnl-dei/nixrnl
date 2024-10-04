@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -14,7 +15,7 @@
     memory = 8192;
     vcpu = 8;
 
-    interfaces = [{source = "labs";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/refresh";}];
+    interfaces = [ { source = "labs"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/refresh"; } ];
   };
 }

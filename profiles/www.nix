@@ -4,7 +4,8 @@
   pkgs,
   profiles,
   ...
-}: let
+}:
+let
   rnlWebsitePort = 3000;
   tvClientPort = 1336;
   tvCMSPort = 1337;
@@ -23,7 +24,8 @@
     allow 193.136.154.0/25;
     allow 2001:690:2100:84::/64;
   '';
-in {
+in
+{
   imports = with profiles; [
     webserver
     phpfpm
@@ -78,7 +80,10 @@ in {
     # Redirect domains
     "www-redirect" = {
       serverName = "rnl.ist.utl.pt";
-      serverAliases = ["www.${config.rnl.domain}" "www.rnl.ist.utl.pt"];
+      serverAliases = [
+        "www.${config.rnl.domain}"
+        "www.rnl.ist.utl.pt"
+      ];
       enableACME = true;
       addSSL = true;
       locations."~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
@@ -86,7 +91,10 @@ in {
     };
     "forum-redirect" = {
       serverName = "forum.rnl.ist.utl.pt";
-      serverAliases = ["forum.ist.utl.pt" "forum.tecnico.ulisboa.pt"];
+      serverAliases = [
+        "forum.ist.utl.pt"
+        "forum.tecnico.ulisboa.pt"
+      ];
       enableACME = true;
       addSSL = true;
       locations."/".return = "301 https://${config.services.nginx.virtualHosts.forum.serverName}";
@@ -99,7 +107,7 @@ in {
     };
     "tv-redirect" = {
       serverName = "tv.rnl.ist.utl.pt";
-      serverAliases = ["tv.rnl.pt"];
+      serverAliases = [ "tv.rnl.pt" ];
       enableACME = true;
       addSSL = true;
       locations."/".return = "301 https://${config.services.nginx.virtualHosts.televisions.serverName}";
@@ -108,7 +116,7 @@ in {
 
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
-    volumes = ["/var/run/docker.sock:/var/run/docker.sock"];
+    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
     environment = {
       "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
       "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
@@ -117,7 +125,7 @@ in {
 
   virtualisation.oci-containers.containers."rnl-website" = {
     image = "registry.rnl.tecnico.ulisboa.pt/rnl/website:latest";
-    ports = ["${toString rnlWebsitePort}:80"];
+    ports = [ "${toString rnlWebsitePort}:80" ];
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };
@@ -148,33 +156,39 @@ in {
       passwordFile = config.age.secrets."roundcube-www-db.password".path;
       host = config.rnl.database.host;
     };
-    plugins = ["archive" "zipdownload"];
-    extraConfig = let
-      # Fix for roundcube to work with MySQL since default is PostgreSQL
-      # Reference: https://github.com/NixOS/nixpkgs/blob/25e3d4c0d3591c99929b1ec07883177f6ea70c9d/nixos/modules/services/mail/roundcube.nix#L140
-      inherit (config.services.roundcube.database) username host dbname;
-      databaseURL = "mysql://${username}:' . $password . '@${host}/${dbname}";
-    in ''
-      $config['db_dsnw'] = '${databaseURL}';
-      $config['default_host'] = 'ssl://${config.rnl.mailserver.host}';
-      $config['default_port'] = 993;
-      $config['smtp_server'] = 'tls://${config.rnl.mailserver.host}';
-      $config['smtp_port'] = 25;
-      $config['product_name'] = 'RNL Webmail';
-      $config['mail_domain'] = '${config.rnl.domain}';
-      $config['cipher_method'] = 'AES-256-CBC';
-    '';
+    plugins = [
+      "archive"
+      "zipdownload"
+    ];
+    extraConfig =
+      let
+        # Fix for roundcube to work with MySQL since default is PostgreSQL
+        # Reference: https://github.com/NixOS/nixpkgs/blob/25e3d4c0d3591c99929b1ec07883177f6ea70c9d/nixos/modules/services/mail/roundcube.nix#L140
+        inherit (config.services.roundcube.database) username host dbname;
+        databaseURL = "mysql://${username}:' . $password . '@${host}/${dbname}";
+      in
+      ''
+        $config['db_dsnw'] = '${databaseURL}';
+        $config['default_host'] = 'ssl://${config.rnl.mailserver.host}';
+        $config['default_port'] = 993;
+        $config['smtp_server'] = 'tls://${config.rnl.mailserver.host}';
+        $config['smtp_port'] = 25;
+        $config['product_name'] = 'RNL Webmail';
+        $config['mail_domain'] = '${config.rnl.domain}';
+        $config['cipher_method'] = 'AES-256-CBC';
+      '';
   };
   # Change setup script since we are using MySQL
   # Reference: https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/mail/roundcube.nix
-  systemd.services.roundcube-setup.script = let
-    cfg = config.services.roundcube;
-    inherit (cfg.database) username host dbname;
-    passwordFile = cfg.database.passwordFile;
+  systemd.services.roundcube-setup.script =
+    let
+      cfg = config.services.roundcube;
+      inherit (cfg.database) username host dbname;
+      passwordFile = cfg.database.passwordFile;
 
-    mysql = "${pkgs.mariadb}/bin/mysql -N -h ${host} -u ${username} -p`cat ${passwordFile}` ${dbname}";
-    php = config.services.phpfpm.pools.roundcube.phpPackage;
-  in
+      mysql = "${pkgs.mariadb}/bin/mysql -N -h ${host} -u ${username} -p`cat ${passwordFile}` ${dbname}";
+      php = config.services.phpfpm.pools.roundcube.phpPackage;
+    in
     lib.mkForce ''
       version="$(${mysql} -e "SELECT value FROM system WHERE name = 'roundcube-version';" || true)"
       if ! (grep -E '[a-zA-Z0-9]' <<< "$version"); then
@@ -219,7 +233,14 @@ in {
   };
   systemd.services.labs-matrix = {
     description = "Update labs-matrix website";
-    path = [pkgs.bash pkgs.python3 pkgs.gnumake pkgs.m4 pkgs.curl pkgs.coreutils];
+    path = [
+      pkgs.bash
+      pkgs.python3
+      pkgs.gnumake
+      pkgs.m4
+      pkgs.curl
+      pkgs.coreutils
+    ];
     script = ''
       make generate
     '';
@@ -230,7 +251,7 @@ in {
   };
   systemd.timers.labs-matrix = {
     description = "Update labs-matrix website every 7 minutes";
-    wantedBy = ["timers.target"];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "*-*-* *:0/7";
       Unit = "labs-matrix.service";
@@ -252,20 +273,20 @@ in {
   };
   virtualisation.oci-containers.containers."tv-client" = {
     image = "registry.rnl.tecnico.ulisboa.pt/rnl/tvsat/client:latest";
-    ports = ["${toString tvClientPort}:3000"];
+    ports = [ "${toString tvClientPort}:3000" ];
     environment = {
       NODE_ENV = "production";
       STRAPI_URL = config.virtualisation.oci-containers.containers."tv-cms".environment.URL;
       NEXT_PUBLIC_STRAPI_URL = config.virtualisation.oci-containers.containers."tv-cms".environment.URL;
     };
-    environmentFiles = [config.age.secrets."www-tv-client-secret.env".path];
+    environmentFiles = [ config.age.secrets."www-tv-client-secret.env".path ];
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };
   };
   virtualisation.oci-containers.containers."tv-cms" = {
     image = "registry.rnl.tecnico.ulisboa.pt/rnl/tvsat/cms:latest";
-    ports = ["${toString tvCMSPort}:1337"];
+    ports = [ "${toString tvCMSPort}:1337" ];
     environment = {
       NODE_ENV = "production";
       HOST = "0.0.0.0";
@@ -277,8 +298,8 @@ in {
       DATABASE_USERNAME = "strapi";
       DATABASE_POOL_MIN = "0";
     };
-    volumes = ["/var/lib/tv-cms/uploads:/opt/app/public/uploads"];
-    environmentFiles = [config.age.secrets."www-tv-cms-secret.env".path];
+    volumes = [ "/var/lib/tv-cms/uploads:/opt/app/public/uploads" ];
+    environmentFiles = [ config.age.secrets."www-tv-cms-secret.env".path ];
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };
@@ -323,61 +344,63 @@ in {
       "catch_workers_output" = true;
     };
   };
-  rnl.db-cluster = let
-    roundcube = {
-      database = config.services.roundcube.database.dbname;
-      username = config.services.roundcube.database.username;
+  rnl.db-cluster =
+    let
+      roundcube = {
+        database = config.services.roundcube.database.dbname;
+        username = config.services.roundcube.database.username;
+      };
+      tv-cms = {
+        database = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_NAME;
+        username = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_USERNAME;
+      };
+    in
+    {
+      ensureDatabases = [
+        "forum_rnl"
+        "opensessions"
+        roundcube.database
+        tv-cms.database
+      ];
+      ensureUsers = [
+        {
+          name = "forum_user";
+          ensurePermissions = {
+            "forum_rnl.*" = "ALL PRIVILEGES";
+          };
+        }
+        {
+          name = "opensessions";
+          ensurePermissions = {
+            "opensessions.*" = "ALL PRIVILEGES";
+          };
+        }
+        {
+          name = roundcube.username;
+          ensurePermissions = {
+            "${roundcube.database}.*" = "ALL PRIVILEGES";
+          };
+        }
+        {
+          name = tv-cms.username;
+          ensurePermissions = {
+            "${tv-cms.database}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
     };
-    tv-cms = {
-      database = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_NAME;
-      username = config.virtualisation.oci-containers.containers."tv-cms".environment.DATABASE_USERNAME;
-    };
-  in {
-    ensureDatabases = [
-      "forum_rnl"
-      "opensessions"
-      roundcube.database
-      tv-cms.database
-    ];
-    ensureUsers = [
-      {
-        name = "forum_user";
-        ensurePermissions = {
-          "forum_rnl.*" = "ALL PRIVILEGES";
-        };
-      }
-      {
-        name = "opensessions";
-        ensurePermissions = {
-          "opensessions.*" = "ALL PRIVILEGES";
-        };
-      }
-      {
-        name = roundcube.username;
-        ensurePermissions = {
-          "${roundcube.database}.*" = "ALL PRIVILEGES";
-        };
-      }
-      {
-        name = tv-cms.username;
-        ensurePermissions = {
-          "${tv-cms.database}.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
-  };
 
   services.keepalived = {
     enable = lib.mkDefault true;
     vrrpInstances.wwwIP4 = {
       virtualRouterId = 8;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "193.136.164.8/26";}]; # www IPv4
+      virtualIps = [ { addr = "193.136.164.8/26"; } ]; # www IPv4
     };
     vrrpInstances.wwwIP6 = {
       virtualRouterId = 8;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "2001:690:2100:80::8/64";}]; # www IPv6
+      virtualIps = [ { addr = "2001:690:2100:80::8/64"; } ]; # www IPv6
     };
   };
 

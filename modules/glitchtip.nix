@@ -1,11 +1,9 @@
-{
-  config,
-  lib,
-  ...
-}:
-with lib; let
+{ config, lib, ... }:
+with lib;
+let
   cfg = config.services.glitchtip;
-in {
+in
+{
   options.services.glitchtip = {
     enable = mkEnableOption (lib.mdDoc "GlitchTip is an open-source, self-hosted error tracking tool.");
 
@@ -52,7 +50,7 @@ in {
     extraEnvironment = mkOption {
       type = types.attrsOf types.str;
       description = lib.mdDoc "Extra environment variables to set.";
-      default = {};
+      default = { };
     };
 
     stateDir = mkOption {
@@ -63,12 +61,18 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.oci-containers.containers = let
-      image = cfg.glitchtipImage;
-      dependsOn = ["postgres" "redis"];
-      environmentFiles = [cfg.databaseEnvFile cfg.secretKeyFile];
-      environment =
-        {
+    virtualisation.oci-containers.containers =
+      let
+        image = cfg.glitchtipImage;
+        dependsOn = [
+          "postgres"
+          "redis"
+        ];
+        environmentFiles = [
+          cfg.databaseEnvFile
+          cfg.secretKeyFile
+        ];
+        environment = {
           GLITCHTIP_DOMAIN = "https://${cfg.domain}";
           DEFAULT_FROM_EMAIL = cfg.fromEmail;
           EMAIL_URL = cfg.emailUrl;
@@ -76,38 +80,56 @@ in {
           #DATABASE_URL = "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB";
           CELERY_WORKER_AUTOSCALE = "1,3";
           CELERY_WORKER_MAX_TASKS_PER_CHILD = "10000";
-        }
-        // cfg.extraEnvironment;
-      network = "glitchtip"; # FIXME: You need to create this network manually
-    in {
-      postgres = {
-        image = "postgres:16";
-        volumes = ["${cfg.stateDir}/postgres:/var/lib/postgresql/data"];
-        environmentFiles = [cfg.databaseEnvFile];
-        extraOptions = ["--network=${network}"];
+        } // cfg.extraEnvironment;
+        network = "glitchtip"; # FIXME: You need to create this network manually
+      in
+      {
+        postgres = {
+          image = "postgres:16";
+          volumes = [ "${cfg.stateDir}/postgres:/var/lib/postgresql/data" ];
+          environmentFiles = [ cfg.databaseEnvFile ];
+          extraOptions = [ "--network=${network}" ];
+        };
+        redis = {
+          image = "redis:latest";
+          extraOptions = [ "--network=${network}" ];
+        };
+        web = {
+          inherit
+            image
+            dependsOn
+            environment
+            environmentFiles
+            ;
+          ports = [ "${toString cfg.port}:${environment.PORT}" ];
+          volumes = [ "${cfg.stateDir}/uploads:/code/uploads" ];
+          extraOptions = [ "--network=${network}" ];
+        };
+        worker = {
+          inherit
+            image
+            dependsOn
+            environment
+            environmentFiles
+            ;
+          cmd = [ "./bin/run-celery-with-beat.sh" ];
+          volumes = [ "${cfg.stateDir}/uploads:/code/uploads" ];
+          extraOptions = [ "--network=${network}" ];
+        };
+        migrate = {
+          inherit
+            image
+            dependsOn
+            environment
+            environmentFiles
+            ;
+          cmd = [
+            "./manage.py"
+            "migrate"
+          ];
+          extraOptions = [ "--network=${network}" ];
+        };
       };
-      redis = {
-        image = "redis:latest";
-        extraOptions = ["--network=${network}"];
-      };
-      web = {
-        inherit image dependsOn environment environmentFiles;
-        ports = ["${toString cfg.port}:${environment.PORT}"];
-        volumes = ["${cfg.stateDir}/uploads:/code/uploads"];
-        extraOptions = ["--network=${network}"];
-      };
-      worker = {
-        inherit image dependsOn environment environmentFiles;
-        cmd = ["./bin/run-celery-with-beat.sh"];
-        volumes = ["${cfg.stateDir}/uploads:/code/uploads"];
-        extraOptions = ["--network=${network}"];
-      };
-      migrate = {
-        inherit image dependsOn environment environmentFiles;
-        cmd = ["./manage.py" "migrate"];
-        extraOptions = ["--network=${network}"];
-      };
-    };
 
     services.nginx.virtualHosts.glitchtip = {
       serverName = cfg.domain;

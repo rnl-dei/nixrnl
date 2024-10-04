@@ -3,10 +3,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   inherit (config) services;
-in {
+in
+{
   services.fail2ban = {
     enable = true;
     ignoreIP = [
@@ -26,7 +28,7 @@ in {
       rndtime = "4m";
     };
 
-    extraPackages = [pkgs.system-sendmail];
+    extraPackages = [ pkgs.system-sendmail ];
 
     # TODO: Configure abuseipdb action
     # TODO: Configure email action

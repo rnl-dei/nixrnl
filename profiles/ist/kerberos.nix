@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   # Setup Kerberos
   security.krb5 = {
     enable = true;
@@ -14,7 +15,9 @@
       };
 
       realms = {
-        "IST.UTL.PT" = {default_domain = "kerberos.tecnico.ulisboa.pt";};
+        "IST.UTL.PT" = {
+          default_domain = "kerberos.tecnico.ulisboa.pt";
+        };
       };
     };
   };

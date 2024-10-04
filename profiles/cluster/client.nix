@@ -1,13 +1,14 @@
-{...}: {
-  imports = [./common.nix];
+{ ... }:
+{
+  imports = [ ./common.nix ];
 
   services.slurm.client.enable = true;
 
   systemd.services.slurmd = {
     # Ensure slurmd does not run without /mnt/cirrus being mounted
-    requires = ["mnt-cirrus.mount"];
-    after = ["mnt-cirrus.mount"];
-    partOf = ["mnt-cirrus.mount"];
+    requires = [ "mnt-cirrus.mount" ];
+    after = [ "mnt-cirrus.mount" ];
+    partOf = [ "mnt-cirrus.mount" ];
 
     serviceConfig = {
       # Auto-restart slurmd to sidestep temporary issues
@@ -24,7 +25,7 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [6818];
+  networking.firewall.allowedTCPPorts = [ 6818 ];
 
   # Slurm has been acting up, store more logs
   # TODO: go back to the default (10% max / 15% keep free but capped to 4GB)

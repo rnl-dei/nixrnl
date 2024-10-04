@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "VM do nuno.silva@rnl (ex-rnl)";
     createdBy = "nuno.silva";
-    maintainers = ["nuno.silva"];
+    maintainers = [ "nuno.silva" ];
 
     uefi = false;
     memory = 2048;
@@ -26,10 +27,6 @@
       }
     ];
 
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/ashes";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/ashes"; } ];
   };
 }

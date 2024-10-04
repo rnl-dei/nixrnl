@@ -1,5 +1,6 @@
-{lib, ...}:
-with lib; {
+{ lib, ... }:
+with lib;
+{
   options.rnl = {
     internalHost = mkEnableOption "Enable this if host is inaccessible from the outside";
 
@@ -60,7 +61,10 @@ with lib; {
           "info@example.com" = "user1@example.com";
           "postmaster@example.com" = "user1@example.com";
           "abuse@example.com" = "user1@example.com";
-          "multi@example.com" = ["user1@example.com" "user2@example.com"];
+          "multi@example.com" = [
+            "user1@example.com"
+            "user2@example.com"
+          ];
         };
       };
     };

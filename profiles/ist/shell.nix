@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   imports = [
     ./afs.nix
     ./ldap.nix
@@ -32,7 +33,9 @@
       auth_provider = krb5
       chpass_provider = krb5
       krb5_realm = ${config.security.krb5.settings.libdefaults.default_realm}
-      krb5_server = ${config.security.krb5.settings.realms.${config.security.krb5.settings.libdefaults.default_realm}.default_domain}
+      krb5_server = ${
+        config.security.krb5.settings.realms.${config.security.krb5.settings.libdefaults.default_realm}.default_domain
+      }
     '';
   };
 
@@ -41,14 +44,18 @@
   security.pam.krb5.enable = false; # Use SSSD instead
 
   # Get AFS ticket from Kerberos on login and ssh
-  security.pam.services.login.text = lib.mkDefault (lib.mkOrder 1500 ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
-    session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-  '');
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkOrder 1500 ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
-    session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-  '');
+  security.pam.services.login.text = lib.mkDefault (
+    lib.mkOrder 1500 ''
+      session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
+      session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    ''
+  );
+  security.pam.services.sshd.text = lib.mkDefault (
+    lib.mkOrder 1500 ''
+      session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
+      session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    ''
+  );
 
   # Allow SSH using istID
   services.openssh.settings.PasswordAuthentication = lib.mkForce true;

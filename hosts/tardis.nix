@@ -3,7 +3,8 @@
   profiles,
   config,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.zfs-mirror
@@ -94,11 +95,12 @@
   # Bind mount /mnt/data/grafana to /var/lib/grafana
   fileSystems."${config.services.grafana.dataDir}" = {
     device = "/mnt/data/grafana";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Add Grafana secrets (GitLab Client ID and Secret, Admin Password)
-  systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets."tardis-grafana.env".path;
+  systemd.services.grafana.serviceConfig.EnvironmentFile =
+    config.age.secrets."tardis-grafana.env".path;
   age.secrets."tardis-grafana.env" = {
     file = ../secrets/tardis-grafana-env.age;
     owner = "grafana";
@@ -141,7 +143,7 @@
   # Healthchecks.io
   systemd.timers.healthchecksio = {
     description = "Ping Healthchecks.io every 5 min";
-    wantedBy = ["timers.target"];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "*:0/5";
       Unit = "healthchecksio.service";

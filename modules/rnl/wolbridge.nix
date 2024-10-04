@@ -4,12 +4,14 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.rnl.wolbridge;
   defaultUser = "wolbridge";
   location = "/var/lib/wolbridge";
   defaultStateFile = "${location}/state.json";
-in {
+in
+{
   options.rnl.wolbridge = {
     enable = mkEnableOption "Enable the WoL-Bridge service.";
 
@@ -75,13 +77,13 @@ in {
 
     pingHosts = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "The hosts to ping.";
     };
   };
 
   config = mkIf cfg.enable {
-    networking.firewall.allowedTCPPorts = optionals cfg.openFirewall [cfg.port];
+    networking.firewall.allowedTCPPorts = optionals cfg.openFirewall [ cfg.port ];
 
     users.users = optionalAttrs (cfg.user == defaultUser) {
       ${defaultUser} = {
@@ -93,8 +95,8 @@ in {
 
     systemd.services.wolbridge = {
       description = "Wake-on-LAN Bridge";
-      after = ["netservcieswork.target"];
-      wantedBy = ["multi-user.target"];
+      after = [ "netservcieswork.target" ];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         User = cfg.user;
         KillSignal = "SIGKILL";
@@ -109,7 +111,7 @@ in {
       };
     };
 
-    systemd.services.wolbridge-scan = mkIf (cfg.pingHosts != []) {
+    systemd.services.wolbridge-scan = mkIf (cfg.pingHosts != [ ]) {
       description = "Wake-on-LAN Bridge scan hosts to learn MAC addresses";
       serviceConfig = {
         Type = "oneshot";
@@ -123,9 +125,9 @@ in {
       '';
     };
 
-    systemd.timers.wolbridge-scan = mkIf (cfg.pingHosts != []) {
+    systemd.timers.wolbridge-scan = mkIf (cfg.pingHosts != [ ]) {
       description = "Wake-on-LAN Bridge scan timer";
-      wantedBy = ["timers.target"];
+      wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = cfg.pingSchedule;
         AccuracySec = "5m";

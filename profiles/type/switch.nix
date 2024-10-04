@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   # Disable Node exporter
   services.prometheus.exporters.node.enable = false;
 
