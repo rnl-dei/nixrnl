@@ -105,7 +105,7 @@ function send_request {
     # ver logsession.php para documentação dos parâmetros do POST
     local time_started=$SECONDS
     HTTP_CODE=$(curl --netrc-file "$NETRC_FILE" \
-        --max-time 120 --write-out '%{http_code}' --silent --form-string service="$PAM_SERVICE" \
+        --max-time 2 --write-out '%{http_code}' --silent --form-string service="$PAM_SERVICE" \
         --form-string user="$USER_ID" \
         --form-string type="$1" \
         --form-string tty="$PAM_TTY" \
