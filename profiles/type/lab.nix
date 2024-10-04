@@ -3,14 +3,15 @@
   lib,
   pkgs,
   ...
-}: {
-  imports = [./physical.nix];
+}:
+{
+  imports = [ ./physical.nix ];
 
   rnl.labels.type = "lab";
 
   # Bootloader
   boot = {
-    supportedFilesystems = ["ntfs"];
+    supportedFilesystems = [ "ntfs" ];
     plymouth.enable = true;
     loader = {
       efi.canTouchEfiVariables = lib.mkForce true;
@@ -49,7 +50,9 @@
           fi
         '';
 
-        extraFiles = {"ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";};
+        extraFiles = {
+          "ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";
+        };
         extraEntries =
           (lib.optionalString config.rnl.windows-labs.enable ''
             menuentry --unrestricted "Windows 10" {

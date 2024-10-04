@@ -4,149 +4,152 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.dei.dms;
   sites = filterAttrs (_: v: v.enable) cfg.sites;
   user = config.dei.dms.user;
   webserver = config.services.nginx;
 
-  siteOpts = {
-    options,
-    config,
-    name,
-    ...
-  }: {
-    options = {
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable DEI Management System application";
-      };
+  siteOpts =
+    {
+      options,
+      config,
+      name,
+      ...
+    }:
+    {
+      options = {
+        enable = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Enable DEI Management System application";
+        };
 
-      serviceName = mkOption {
-        type = types.str;
-        description = "Name of the DMS service";
-        default =
-          if name == "default"
-          then "dms"
-          else "dms-${name}";
-        readOnly = true;
-      };
-
-      stateDir = mkOption {
-        type = types.path;
-        default = "/var/lib/dei/dms/${name}";
-        description = "Location of the DMS state directory";
-      };
-
-      serverName = mkOption {
-        type = types.str;
-        default = "${name}";
-        description = "Webserver URL";
-      };
-
-      serverAliases = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        description = "Webserver aliases";
-      };
-
-      deployScriptPackage = mkOption {
-        type = types.package;
-        default = mkDeployScript name;
-        description = "Package containing the deploy script";
-      };
-
-      database = {
-        host = mkOption {
+        serviceName = mkOption {
           type = types.str;
-          default = "localhost";
-          description = "Database host address";
+          description = "Name of the DMS service";
+          default = if name == "default" then "dms" else "dms-${name}";
+          readOnly = true;
         };
 
-        port = mkOption {
-          type = types.int;
-          default = 3306;
-          description = "Database port";
-        };
-
-        name = mkOption {
-          type = types.str;
-          default = "dms";
-          description = "Database name";
-        };
-
-        user = mkOption {
-          type = types.str;
-          default = "dms";
-          description = "Database user";
-        };
-
-        passwordFile = mkOption {
-          type = types.nullOr types.path;
-          default = null;
-          description = "Path to the file containing the database password";
-        };
-      };
-
-      backend = {
-        java = mkOption {
-          type = types.str;
-          default = "${pkgs.openjdk17}/bin/java";
-          description = "Path to the Java executable";
-        };
-
-        jar = mkOption {
+        stateDir = mkOption {
           type = types.path;
-          default = "${config.stateDir}/dms.jar";
-          description = "Path to the DMS JAR file";
+          default = "/var/lib/dei/dms/${name}";
+          description = "Location of the DMS state directory";
         };
 
-        port = mkOption {
-          type = types.int;
-          default = 8080;
-          description = "Port of the backend server";
-        };
-
-        command = mkOption {
+        serverName = mkOption {
           type = types.str;
-          default = "${config.backend.java} -jar ${config.backend.jar} --server.port=${toString config.backend.port} " + (concatStringsSep " " config.backend.extraArgs);
-          description = "Command to start the DMS backend";
+          default = "${name}";
+          description = "Webserver URL";
         };
 
-        extraArgs = mkOption {
+        serverAliases = mkOption {
           type = types.listOf types.str;
-          default = [];
-          description = "Extra arguments to pass to the backend server";
+          default = [ ];
+          description = "Webserver aliases";
         };
 
-        environment = mkOption {
-          type = types.attrsOf types.str;
-          default = {
-            DB_HOST = config.database.host;
-            DB_PORT = toString config.database.port;
-            DB_NAME = config.database.name;
-            DB_USERNAME = config.database.user;
+        deployScriptPackage = mkOption {
+          type = types.package;
+          default = mkDeployScript name;
+          description = "Package containing the deploy script";
+        };
+
+        database = {
+          host = mkOption {
+            type = types.str;
+            default = "localhost";
+            description = "Database host address";
           };
-          description = "Environment variables to set for the DMS service";
+
+          port = mkOption {
+            type = types.int;
+            default = 3306;
+            description = "Database port";
+          };
+
+          name = mkOption {
+            type = types.str;
+            default = "dms";
+            description = "Database name";
+          };
+
+          user = mkOption {
+            type = types.str;
+            default = "dms";
+            description = "Database user";
+          };
+
+          passwordFile = mkOption {
+            type = types.nullOr types.path;
+            default = null;
+            description = "Path to the file containing the database password";
+          };
         };
 
-        extraEnvironment = mkOption {
-          type = types.attrsOf types.str;
-          default = {};
-          description = "Extra environment variables to set for the DMS service";
-        };
+        backend = {
+          java = mkOption {
+            type = types.str;
+            default = "${pkgs.openjdk17}/bin/java";
+            description = "Path to the Java executable";
+          };
 
-        environmentFile = mkOption {
-          type = types.path;
-          default = "${config.stateDir}/dms.env";
-          description = "Path to the environment file (useful for secrets)";
+          jar = mkOption {
+            type = types.path;
+            default = "${config.stateDir}/dms.jar";
+            description = "Path to the DMS JAR file";
+          };
+
+          port = mkOption {
+            type = types.int;
+            default = 8080;
+            description = "Port of the backend server";
+          };
+
+          command = mkOption {
+            type = types.str;
+            default =
+              "${config.backend.java} -jar ${config.backend.jar} --server.port=${toString config.backend.port} "
+              + (concatStringsSep " " config.backend.extraArgs);
+            description = "Command to start the DMS backend";
+          };
+
+          extraArgs = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            description = "Extra arguments to pass to the backend server";
+          };
+
+          environment = mkOption {
+            type = types.attrsOf types.str;
+            default = {
+              DB_HOST = config.database.host;
+              DB_PORT = toString config.database.port;
+              DB_NAME = config.database.name;
+              DB_USERNAME = config.database.user;
+            };
+            description = "Environment variables to set for the DMS service";
+          };
+
+          extraEnvironment = mkOption {
+            type = types.attrsOf types.str;
+            default = { };
+            description = "Extra environment variables to set for the DMS service";
+          };
+
+          environmentFile = mkOption {
+            type = types.path;
+            default = "${config.stateDir}/dms.env";
+            description = "Path to the environment file (useful for secrets)";
+          };
         };
       };
     };
-  };
 
-  mkDeployScript = site:
+  mkDeployScript =
+    site:
     pkgs.writeScriptBin "deploy-${cfg.sites."${site}".serviceName}" ''
       set -e # stop on error
 
@@ -220,11 +223,12 @@ with lib; let
 
       echo -e "''${GRN}DMS ${site} successfully deployed.''${CLR}"
     '';
-in {
+in
+{
   options.dei.dms = {
     sites = mkOption {
       type = types.attrsOf (types.submodule siteOpts);
-      default = {};
+      default = { };
       description = "Specification of one or more DMS sites to serve";
     };
 
@@ -243,20 +247,21 @@ in {
 
       authorizedKeys = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = "SSH public keys authorized to do the deploy";
       };
     };
   };
 
-  config = mkIf (sites != {}) {
+  config = mkIf (sites != { }) {
     systemd.tmpfiles.rules =
-      flatten (mapAttrsToList (_: siteCfg: [
+      flatten (
+        mapAttrsToList (_: siteCfg: [
           "d ${siteCfg.stateDir} 0750 ${user} ${webserver.group} - -"
           "d ${siteCfg.stateDir}/public 0750 ${user} ${webserver.group} - -"
           "d ${siteCfg.stateDir}/data 0700 ${user} ${webserver.group} - -"
-        ])
-        sites)
+        ]) sites
+      )
       ++ [
         "d /var/lib/dei/dms 0750 ${user} ${webserver.group} - -"
         "d ${cfg.builds.directory} 0750 ${user} ${webserver.group} - -"
@@ -264,64 +269,60 @@ in {
 
     services.nginx = {
       enable = true;
-      virtualHosts =
-        mapAttrs' (_siteName: siteCfg: {
-          name = siteCfg.serviceName;
-          value = {
-            serverName = mkDefault siteCfg.serverName;
-            serverAliases = mkDefault siteCfg.serverAliases;
-            root = "${siteCfg.stateDir}/www";
-            enableACME = mkDefault true;
-            forceSSL = mkDefault true;
-            locations = {
-              "/" = {
-                tryFiles = "$uri $uri/ /index.html";
-              };
-              "/raa/" = {
-                extraConfig = ''
-                  add_header Access-Control-Allow-Origin 'https://rnl.tecnico.ulisboa.pt/';
-                '';
-              };
-              "/api/" = {
-                extraConfig = ''
-                  client_max_body_size 512M;
-                '';
-                proxyPass = "http://127.0.0.1:${toString siteCfg.backend.port}/";
-                proxyWebsockets = true;
-              };
-              "/public/" = {
-                root = "${siteCfg.stateDir}";
-                index = "file.txt";
-              };
-            };
-          };
-        })
-        sites;
-    };
-
-    systemd.services =
-      mapAttrs' (siteName: siteCfg: {
+      virtualHosts = mapAttrs' (_siteName: siteCfg: {
         name = siteCfg.serviceName;
         value = {
-          description = "DEI Management System Backend (${siteName})";
-          after = ["network.target"];
-          wantedBy = ["multi-user.target"];
-
-          environment = siteCfg.backend.environment;
-          script = ''
-            ${siteCfg.backend.command}
-          '';
-
-          serviceConfig = {
-            User = user;
-            Group = webserver.group;
-            EnvironmentFile = siteCfg.backend.environmentFile;
-            Restart = "on-failure";
-            RestartSec = "5s";
+          serverName = mkDefault siteCfg.serverName;
+          serverAliases = mkDefault siteCfg.serverAliases;
+          root = "${siteCfg.stateDir}/www";
+          enableACME = mkDefault true;
+          forceSSL = mkDefault true;
+          locations = {
+            "/" = {
+              tryFiles = "$uri $uri/ /index.html";
+            };
+            "/raa/" = {
+              extraConfig = ''
+                add_header Access-Control-Allow-Origin 'https://rnl.tecnico.ulisboa.pt/';
+              '';
+            };
+            "/api/" = {
+              extraConfig = ''
+                client_max_body_size 512M;
+              '';
+              proxyPass = "http://127.0.0.1:${toString siteCfg.backend.port}/";
+              proxyWebsockets = true;
+            };
+            "/public/" = {
+              root = "${siteCfg.stateDir}";
+              index = "file.txt";
+            };
           };
         };
-      })
-      sites;
+      }) sites;
+    };
+
+    systemd.services = mapAttrs' (siteName: siteCfg: {
+      name = siteCfg.serviceName;
+      value = {
+        description = "DEI Management System Backend (${siteName})";
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+
+        environment = siteCfg.backend.environment;
+        script = ''
+          ${siteCfg.backend.command}
+        '';
+
+        serviceConfig = {
+          User = user;
+          Group = webserver.group;
+          EnvironmentFile = siteCfg.backend.environmentFile;
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
+      };
+    }) sites;
 
     users.users = mkMerge [
       (mkIf (user == "dms") {
@@ -333,9 +334,7 @@ in {
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
         };
       })
-      {
-        root.packages = mapAttrsToList (_: siteCfg: siteCfg.deployScriptPackage) sites;
-      }
+      { root.packages = mapAttrsToList (_: siteCfg: siteCfg.deployScriptPackage) sites; }
     ];
   };
 }

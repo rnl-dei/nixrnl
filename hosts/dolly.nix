@@ -5,7 +5,8 @@
   profiles,
   nixosConfigurations,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -20,9 +21,7 @@
   rnl.labels.location = "inf1-p01-a3";
 
   # Storage
-  rnl.storage.disks.root = [
-    "/dev/disk/by-id/ata-WDC_WD1002F9YZ-09H1JL1_WD-WMC5K0D3AW7K"
-  ];
+  rnl.storage.disks.root = [ "/dev/disk/by-id/ata-WDC_WD1002F9YZ-09H1JL1_WD-WMC5K0D3AW7K" ];
 
   # Networking
   networking = {
@@ -56,20 +55,29 @@
     enable = true;
     openFirewall = true;
     domain = config.rnl.domain;
-    pingHosts = ["193.136.154.{0..125}"];
-    configFile = let
-      labs =
-        builtins.foldl' (
-          acc: hostname: let
-            lab = builtins.elemAt (builtins.split "p" hostname) 0;
-          in
-            acc // {${lab} = acc."${lab}" or [] ++ [hostname];}
-        ) {} (
-          builtins.filter (hostname: builtins.match "lab([0-9]+|X)p[0-9]+" hostname != null) (builtins.attrNames nixosConfigurations)
-        );
+    pingHosts = [ "193.136.154.{0..125}" ];
+    configFile =
+      let
+        labs =
+          builtins.foldl'
+            (
+              acc: hostname:
+              let
+                lab = builtins.elemAt (builtins.split "p" hostname) 0;
+              in
+              acc // { ${lab} = acc."${lab}" or [ ] ++ [ hostname ]; }
+            )
+            { }
+            (
+              builtins.filter (hostname: builtins.match "lab([0-9]+|X)p[0-9]+" hostname != null) (
+                builtins.attrNames nixosConfigurations
+              )
+            );
 
-      config = labs // {all = builtins.attrNames labs;};
-    in
-      pkgs.writeText "wolbridge-config.json" (lib.generators.toJSON {} config);
+        config = labs // {
+          all = builtins.attrNames labs;
+        };
+      in
+      pkgs.writeText "wolbridge-config.json" (lib.generators.toJSON { } config);
   };
 }

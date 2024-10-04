@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Domain Controller do domínio DEIAD (Backup)";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     autostart = false; # Keep it off until starts working
@@ -26,12 +27,8 @@
       }
     ];
     disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/peter-root";
-      }
-      {
-        source.dev = "/dev/zvol/dpool/data/peter-data";
-      }
+      { source.dev = "/dev/zvol/dpool/data/peter-root"; }
+      { source.dev = "/dev/zvol/dpool/data/peter-data"; }
     ];
   };
 }

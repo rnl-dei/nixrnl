@@ -1,8 +1,5 @@
+{ pkgs, profiles, ... }:
 {
-  pkgs,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -36,8 +33,8 @@
   rnl.virtualisation.guest = {
     description = "Gestão de configuração para o DEI";
 
-    interfaces = [{source = "priv";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/thomas";}];
+    interfaces = [ { source = "priv"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/thomas"; } ];
   };
 
   rnl.githook = {
@@ -54,45 +51,45 @@
     owner = "root";
   };
 
-  environment.systemPackages = let
-    ansible = pkgs.ansible.override {
-      windowsSupport = true;
-    };
-  in [
-    ansible
-    (pkgs.writeScriptBin "deploy" ''
-      FLAGS=""
+  environment.systemPackages =
+    let
+      ansible = pkgs.ansible.override { windowsSupport = true; };
+    in
+    [
+      ansible
+      (pkgs.writeScriptBin "deploy" ''
+        FLAGS=""
 
-      POSITIONAL=()
-      while [[ $# -gt 0 ]]
-      do
-      key="$1"
+        POSITIONAL=()
+        while [[ $# -gt 0 ]]
+        do
+        key="$1"
 
-      case $key in
-          -w|--windows)
-          FLAGS="$FLAGS --ask-vault-pass"
-          shift
-          ;;
-          -c|--check)
-          FLAGS="$FLAGS --check --diff"
-          shift
-          ;;
-          *)
-          FLAGS="$FLAGS -l $1"
-          shift
-          ;;
-      esac
-      done
-      set -- "''${POSITIONAL[@]}" # restore positional parameters
+        case $key in
+            -w|--windows)
+            FLAGS="$FLAGS --ask-vault-pass"
+            shift
+            ;;
+            -c|--check)
+            FLAGS="$FLAGS --check --diff"
+            shift
+            ;;
+            *)
+            FLAGS="$FLAGS -l $1"
+            shift
+            ;;
+        esac
+        done
+        set -- "''${POSITIONAL[@]}" # restore positional parameters
 
-      if [[ -z $FLAGS ]]
-      then
-              FLAGS="$FLAGS --ask-vault-pass"
-      fi
+        if [[ -z $FLAGS ]]
+        then
+                FLAGS="$FLAGS --ask-vault-pass"
+        fi
 
-      ${ansible}/bin/ansible-playbook $FLAGS /etc/ansible/site.yml
-    '')
-  ];
+        ${ansible}/bin/ansible-playbook $FLAGS /etc/ansible/site.yml
+      '')
+    ];
 
   users.motd = ''
 

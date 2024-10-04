@@ -3,7 +3,8 @@
   profiles,
   pkgs,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -38,11 +39,11 @@
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
   fileSystems."${config.services.mattermost.statePath}" = {
     device = "/mnt/data/mattermost";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   rnl.db-cluster = {
-    ensureDatabases = ["mattermost"];
+    ensureDatabases = [ "mattermost" ];
     ensureUsers = [
       {
         name = "mattermost";
@@ -89,15 +90,15 @@
 
   rnl.labels.location = "chapek";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Servidor de comunicação interna";
 
-    interfaces = [{source = "pub";}];
+    interfaces = [ { source = "pub"; } ];
     disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/papyrus";}
-      {source.dev = "/dev/zvol/dpool/data/papyrus";}
+      { source.dev = "/dev/zvol/dpool/volumes/papyrus"; }
+      { source.dev = "/dev/zvol/dpool/data/papyrus"; }
     ];
   };
 }

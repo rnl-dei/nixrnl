@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Teses e cadeira de PCM (Moodle)";
-    maintainers = ["daniel.goncalves"];
+    maintainers = [ "daniel.goncalves" ];
 
     uefi = false;
     memory = 2048;
@@ -24,11 +25,14 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/pcm";}];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/pcm"; } ];
   };
 
   rnl.db-cluster = {
-    ensureDatabases = ["pcm_gamecourse" "pcm_moodle"];
+    ensureDatabases = [
+      "pcm_gamecourse"
+      "pcm_moodle"
+    ];
     ensureUsers = [
       {
         name = "pcm_gamecourse";

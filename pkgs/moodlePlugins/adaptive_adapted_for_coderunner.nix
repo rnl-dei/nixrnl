@@ -1,8 +1,4 @@
-{
-  fetchzip,
-  moodle-utils,
-  ...
-}:
+{ fetchzip, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "adaptive_adapted_for_coderunner";
   version = "2021112300";

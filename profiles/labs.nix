@@ -4,7 +4,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     # Required for command-not-found to work using flakes
     inputs.flake-programs-sqlite.nixosModules.programs-sqlite
@@ -48,7 +49,10 @@
   services.pcscd.enable = true;
 
   # Clean subuids and gids on boot
-  systemd.tmpfiles.rules = ["f+  /etc/subuid 0644 root root -" "f+  /etc/subgid 0644 root root -"];
+  systemd.tmpfiles.rules = [
+    "f+  /etc/subuid 0644 root root -"
+    "f+  /etc/subgid 0644 root root -"
+  ];
 
   users.users.root.hashedPassword = "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
 
@@ -80,7 +84,10 @@
   };
 
   # RNL Virt / Reboot2
-  environment.systemPackages = with pkgs; [rnl-virt reboot2];
+  environment.systemPackages = with pkgs; [
+    rnl-virt
+    reboot2
+  ];
   virtualisation.libvirtd.enable = true;
 
   # Extra users
@@ -94,11 +101,11 @@
   };
 
   users.groups = {
-    no-ssh = {}; # Group for users that should not have SSH access
-    volatile = {}; # Group for volatile home directories
+    no-ssh = { }; # Group for users that should not have SSH access
+    volatile = { }; # Group for volatile home directories
   };
 
-  services.openssh.settings.DenyGroups = [config.users.groups.no-ssh.name];
+  services.openssh.settings.DenyGroups = [ config.users.groups.no-ssh.name ];
   security.pam.mount = {
     enable = true;
     extraVolumes = [
@@ -110,24 +117,35 @@
   # Open Sessions
   systemd.services."sessioncontrol" = {
     description = "RNL session control";
-    requires = ["network-online.target"];
-    after = ["network.target" "network-online.target"];
+    requires = [ "network-online.target" ];
+    after = [
+      "network.target"
+      "network-online.target"
+    ];
     serviceConfig = {
       Type = "simple";
       RemainAfterExit = true;
       ExecStart = "${pkgs.opensessions-scripts}/bin/session-control.sh boot";
       ExecStop = "${pkgs.opensessions-scripts}/bin/session-control.sh shutdown";
     };
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
   };
 
   # Add after run ist-shell scripts
-  security.pam.services.login.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (lib.mkDefault (lib.mkOrder 2000 ''
-    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
-  ''));
-  security.pam.services.sshd.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (lib.mkDefault (lib.mkOrder 2000 ''
-    session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
-  ''));
+  security.pam.services.login.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (
+    lib.mkDefault (
+      lib.mkOrder 2000 ''
+        session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
+      ''
+    )
+  );
+  security.pam.services.sshd.text = lib.mkIf (config.systemd.services."sessioncontrol".enable) (
+    lib.mkDefault (
+      lib.mkOrder 2000 ''
+        session optional pam_exec.so ${pkgs.opensessions-scripts}/bin/session-control.sh
+      ''
+    )
+  );
 
   # Windows Deploy
   rnl.windows-labs = {

@@ -1,8 +1,4 @@
-{
-  buildGoModule,
-  fetchgit,
-  ...
-}:
+{ buildGoModule, fetchgit, ... }:
 buildGoModule rec {
   name = "wheatley";
 

@@ -1,8 +1,5 @@
+{ inputs, pkgs, ... }:
 {
-  inputs,
-  pkgs,
-  ...
-}: {
   nix = {
     # Improve nix store disk usage
     gc = {
@@ -37,7 +34,10 @@
       keep-outputs = true;
       keep-derivations = true;
       fallback = true;
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
     };
   };
 

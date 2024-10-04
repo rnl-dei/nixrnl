@@ -1,9 +1,6 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}: {
-  imports = [./common.nix];
+  imports = [ ./common.nix ];
 
   age.secrets."papyrus-private.env" = {
     file = ../../secrets/papyrus-private-env.age;
@@ -43,6 +40,9 @@
       };
     };
 
-    plugins = with pkgs.mattermostPlugins; [playbooks rssfeed];
+    plugins = with pkgs.mattermostPlugins; [
+      playbooks
+      rssfeed
+    ];
   };
 }

@@ -1,15 +1,11 @@
-{
-  lib,
-  stdenv,
-  ...
-}:
+{ lib, stdenv, ... }:
 stdenv.mkDerivation rec {
   pname = "subidappend";
   version = "1.0";
 
   src = lib.cleanSource ./.;
 
-  buildInputs = [];
+  buildInputs = [ ];
 
   buildPhase = ''
     gcc subidappend.c -o subidappend
@@ -21,6 +17,6 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    maintainers = ["carlos.vaz"];
+    maintainers = [ "carlos.vaz" ];
   };
 }

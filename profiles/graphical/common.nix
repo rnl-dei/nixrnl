@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   services.xserver.enable = true;
 
   # Audio

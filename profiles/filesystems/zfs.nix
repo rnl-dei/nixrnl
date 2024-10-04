@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   # TODO: Configure zed
 
   # Enable zram swap
@@ -12,7 +9,7 @@
   };
 
   boot = {
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 

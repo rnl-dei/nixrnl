@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   services.grafana = {
     enable = true;
     package = pkgs.unstable.grafana;
@@ -55,17 +56,19 @@
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = ["grafana"];
+    ensureDatabases = [ "grafana" ];
     ensureUsers = [
       {
         name = "grafana";
-        ensurePermissions = {"grafana.*" = "ALL PRIVILEGES";};
+        ensurePermissions = {
+          "grafana.*" = "ALL PRIVILEGES";
+        };
       }
     ];
   };
 
   services.nginx.upstreams.grafana.servers = {
-    "localhost:${toString config.services.grafana.settings.server.http_port}" = {};
+    "localhost:${toString config.services.grafana.settings.server.http_port}" = { };
   };
 
   services.nginx.virtualHosts.grafana = {

@@ -3,7 +3,8 @@
   profiles,
   pkgs,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -59,18 +60,18 @@
   # Bind mount /var/lib/dokuwiki/wiki/data to /mnt/data/dokuwiki
   fileSystems."${config.services.dokuwiki.sites.wiki.stateDir}" = {
     device = "/mnt/data/dokuwiki/data";
-    options = ["bind"];
+    options = [ "bind" ];
   };
   fileSystems."${config.services.dokuwiki.sites.wiki.usersFile}" = {
     device = "/mnt/data/dokuwiki/users.auth.php";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   rnl.internalHost = true;
 
   rnl.labels.location = "zion";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Webserver interno";
@@ -78,21 +79,17 @@
     vcpu = 4;
     memory = 4096;
 
-    interfaces = [{source = "priv";}];
+    interfaces = [ { source = "priv"; } ];
     disks = [
-      {
-        source.dev = "/dev/zvol/dpool/volumes/weaver1";
-      }
-      {
-        source.dev = "/dev/zvol/dpool/data/weaver1";
-      }
+      { source.dev = "/dev/zvol/dpool/volumes/weaver1"; }
+      { source.dev = "/dev/zvol/dpool/data/weaver1"; }
     ];
   };
 
   # Sync wiki pages to GitLab
   systemd.services.dokuwiki-sync-gitlab = {
     description = "Sync DokuWiki pages to GitLab";
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
     startAt = "*-*-* *:00:00"; # Run every hour
     serviceConfig = {
       Type = "oneshot";

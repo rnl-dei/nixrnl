@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.rnl.wallpaper;
-in {
+in
+{
   options.rnl.wallpaper = {
     enable = mkEnableOption "RNL Wallpaper";
     url = mkOption {
@@ -29,7 +31,7 @@ in {
   config = mkIf cfg.enable {
     systemd.services."rnl-wallpaper" = {
       description = "RNL Wallpaper";
-      wantedBy = ["graphical.target"];
+      wantedBy = [ "graphical.target" ];
       startAt = "*-*-* 4:00:00"; # Run every day at 4am
       serviceConfig = {
         Type = "oneshot";

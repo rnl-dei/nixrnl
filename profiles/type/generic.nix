@@ -1,3 +1,4 @@
-{...}: {
+{ ... }:
+{
   rnl.labels.type = "generic";
 }

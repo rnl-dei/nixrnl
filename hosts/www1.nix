@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -55,19 +52,19 @@
   # Bind mount /mnt/data/forum to /var/www/forum
   fileSystems."${config.services.nginx.virtualHosts.forum.root}" = {
     device = "/mnt/data/forum";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Bind mount /mnt/data/labs-matrix to /var/www/labs-matrix
   fileSystems."${config.services.nginx.virtualHosts.labs-matrix.root}" = {
     device = "/mnt/data/labs-matrix";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Bind mount /mnt/data/tv-cms to /var/lib/tv-cms
   fileSystems."/var/lib/tv-cms" = {
     device = "/mnt/data/tv-cms";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Labs Matrix
@@ -82,17 +79,17 @@
 
   rnl.labels.location = "chapek";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Webserver da RNL";
 
     vcpu = 4;
 
-    interfaces = [{source = "pub";}];
+    interfaces = [ { source = "pub"; } ];
     disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/www1";}
-      {source.dev = "/dev/zvol/dpool/data/www1";}
+      { source.dev = "/dev/zvol/dpool/volumes/www1"; }
+      { source.dev = "/dev/zvol/dpool/data/www1"; }
 
       {
         type = "file";

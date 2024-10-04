@@ -15,7 +15,10 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-v2wqYKB57FORfSaKl9Awc15hiftWkA01xvawGRtd/MU=";
   };
 
-  buildInputs = [pam libkrb5];
+  buildInputs = [
+    pam
+    libkrb5
+  ];
 
   meta = with lib; {
     homepage = "https://www.eyrie.org/~eagle/software/pam-afs-session/";

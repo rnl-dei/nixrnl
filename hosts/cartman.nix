@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.dei
     filesystems.unknown
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Servidor de ficheiros do domínio DEIAD";
     createdBy = "dei";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     memory = 10240;
@@ -26,12 +27,8 @@
       }
     ];
     disks = [
-      {
-        source.dev = "/dev/zvol/dpool/volumes/cartman-root";
-      }
-      {
-        source.dev = "/dev/zvol/dpool/data/cartman-data";
-      }
+      { source.dev = "/dev/zvol/dpool/volumes/cartman-root"; }
+      { source.dev = "/dev/zvol/dpool/data/cartman-data"; }
     ];
   };
 }

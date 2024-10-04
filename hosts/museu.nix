@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Website do museu do DEI";
     createdBy = "nuno.alves";
-    maintainers = ["david.matos"];
+    maintainers = [ "david.matos" ];
 
     memory = 8192;
     vcpu = 2;
@@ -22,10 +23,6 @@
         mac = "52:54:00:40:cb:23";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/museu";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/museu"; } ];
   };
 }

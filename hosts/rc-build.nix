@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -22,10 +23,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/rc-build";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/rc-build"; } ];
   };
 }

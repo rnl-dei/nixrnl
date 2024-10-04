@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   environment.systemPackages = with pkgs; [
     # Version Control
     git
@@ -63,19 +64,20 @@
     gradle
     maven
 
-    (python3.withPackages (ps:
-      with ps; [
+    (python3.withPackages (
+      ps: with ps; [
         # General
         requests
         virtualenv
-      ]))
+      ]
+    ))
     conda
   ];
 
   # The following two lines are needed for the C++ headers to be found outside a
   # nix-shell with this package.
   # https://discourse.nixos.org/t/c-header-includes-in-nixos/17410/2
-  environment.extraOutputsToInstall = ["flex"];
+  environment.extraOutputsToInstall = [ "flex" ];
   environment.variables.C_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.papi}/include:${pkgs.pin}/source/include";
   environment.variables.CPLUS_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.pin}/source/include";
 }

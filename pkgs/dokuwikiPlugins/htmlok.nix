@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchzip,
-  ...
-}:
+{ stdenv, fetchzip, ... }:
 stdenv.mkDerivation rec {
   name = "htmlok";
   version = "2023-05-10";

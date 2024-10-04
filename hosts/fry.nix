@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.dei
     filesystems.unknown
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Servidor WDS e development para o domínio DEIAD";
     createdBy = "rodrigo.rato";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     memory = 8192;
@@ -26,12 +27,8 @@
       }
     ];
     disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/fry-root";
-      }
-      {
-        source.dev = "/dev/zvol/dpool/data/fry-data";
-      }
+      { source.dev = "/dev/zvol/dpool/data/fry-root"; }
+      { source.dev = "/dev/zvol/dpool/data/fry-data"; }
     ];
   };
 }

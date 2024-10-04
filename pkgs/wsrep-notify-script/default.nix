@@ -14,8 +14,14 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./.;
-  buildInputs = [bash coreutils findutils gnused system-sendmail];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [
+    bash
+    coreutils
+    findutils
+    gnused
+    system-sendmail
+  ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -26,7 +32,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = {
-    platforms = ["x86_64-linux"];
-    maintainers = ["nuno.alves"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "nuno.alves" ];
   };
 }

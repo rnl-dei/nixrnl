@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Projetos de FP LEIC";
     createdBy = "nuno.alves";
-    maintainers = ["alberto.abad"];
+    maintainers = [ "alberto.abad" ];
 
     memory = 4096;
 
@@ -21,10 +22,6 @@
         mac = "52:54:00:51:b3:11";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/fp";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/fp"; } ];
   };
 }

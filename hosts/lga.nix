@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -37,7 +34,7 @@
   # Bind mount /var/lib/moodle to /mnt/data/moodle
   fileSystems."/var/lib/moodle" = {
     device = "/mnt/data/moodle";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   age.secrets."moodle-lga-db.password" = {
@@ -54,37 +51,39 @@
     };
     virtualHost.hostName = "moodle.dei.tecnico.ulisboa.pt";
   };
-  rnl.db-cluster = let
-    database = config.services.moodle.database.name;
-    user = config.services.moodle.database.user;
-  in {
-    ensureDatabases = [database];
-    ensureUsers = [
-      {
-        name = user;
-        ensurePermissions = {
-          "${database}.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
-  };
+  rnl.db-cluster =
+    let
+      database = config.services.moodle.database.name;
+      user = config.services.moodle.database.user;
+    in
+    {
+      ensureDatabases = [ database ];
+      ensureUsers = [
+        {
+          name = user;
+          ensurePermissions = {
+            "${database}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
+    };
 
   rnl.labels.location = "chapek";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Moodle @ DEI";
     createdBy = "nuno.alves";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     memory = 8192;
     vcpu = 8;
 
-    interfaces = [{source = "pub";}];
+    interfaces = [ { source = "pub"; } ];
     disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/lga";}
-      {source.dev = "/dev/zvol/dpool/data/lga";}
+      { source.dev = "/dev/zvol/dpool/volumes/lga"; }
+      { source.dev = "/dev/zvol/dpool/data/lga"; }
     ];
   };
 }

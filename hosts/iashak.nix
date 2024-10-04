@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Mooshak para IA/LP";
-    maintainers = ["luisa.coheur"];
+    maintainers = [ "luisa.coheur" ];
 
     uefi = false;
     memory = 2048;
@@ -23,10 +24,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/iashak";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/iashak"; } ];
   };
 }

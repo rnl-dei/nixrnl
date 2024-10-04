@@ -3,8 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
-  imports = [./common.nix];
+}:
+{
+  imports = [ ./common.nix ];
 
   # RNL Wallpaper
   rnl.wallpaper = {
@@ -20,9 +21,7 @@
     background = config.rnl.wallpaper.path;
   };
 
-  environment.cinnamon.excludePackages = with pkgs; [
-    networkmanagerapplet
-  ];
+  environment.cinnamon.excludePackages = with pkgs; [ networkmanagerapplet ];
   programs.nm-applet.enable = lib.mkForce false;
 
   # Desktop Manager: Cinnamon

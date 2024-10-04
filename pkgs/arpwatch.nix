@@ -25,9 +25,12 @@ stdenv.mkDerivation rec {
     install -d -m 0755 $out/share/man/man8
   '';
 
-  configureFlags = ["--sbindir=${placeholder "out"}/bin"];
+  configureFlags = [ "--sbindir=${placeholder "out"}/bin" ];
 
-  buildInputs = [libpcap system-sendmail];
+  buildInputs = [
+    libpcap
+    system-sendmail
+  ];
 
   meta = with lib; {
     homepage = "https://ee.lbl.gov/";

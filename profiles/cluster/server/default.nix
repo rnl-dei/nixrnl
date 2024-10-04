@@ -3,17 +3,19 @@
   config,
   pkgs,
   ...
-}: let
-  pamCreateGlusterHome =
-    pkgs.writeShellScript "pam_create_gluster_home.sh"
-    (builtins.readFile ./pam_create_gluster_home.sh);
+}:
+let
+  pamCreateGlusterHome = pkgs.writeShellScript "pam_create_gluster_home.sh" (
+    builtins.readFile ./pam_create_gluster_home.sh
+  );
 
   databaseName = "slurm_acct_db";
-in {
-  imports = [../common.nix];
+in
+{
+  imports = [ ../common.nix ];
 
   # Fix to allow slurmdbd with external database
-  systemd.services.slurmdbd.requires = lib.mkForce ["munged.service"];
+  systemd.services.slurmdbd.requires = lib.mkForce [ "munged.service" ];
 
   services.slurm = {
     server.enable = true;
@@ -29,7 +31,7 @@ in {
     };
   };
   rnl.db-cluster = {
-    ensureDatabases = [databaseName];
+    ensureDatabases = [ databaseName ];
     ensureUsers = [
       {
         name = "slurm";
@@ -42,14 +44,17 @@ in {
 
   # Ensure slurmctld does not run without /mnt/cirrus being mounted
   systemd.services.slurmctld = {
-    requires = ["mnt-cirrus.mount"];
-    after = ["mnt-cirrus.mount"];
-    partOf = ["mnt-cirrus.mount"];
+    requires = [ "mnt-cirrus.mount" ];
+    after = [ "mnt-cirrus.mount" ];
+    partOf = [ "mnt-cirrus.mount" ];
   };
 
   # Slurmctld port and srun batch ports
   networking.firewall = {
-    allowedTCPPorts = [6817 6819];
+    allowedTCPPorts = [
+      6817
+      6819
+    ];
     allowedTCPPortRanges = [
       {
         from = 60001;
@@ -90,8 +95,12 @@ in {
 
   '';
 
-  security.pam.services.login.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
+  security.pam.services.login.text = lib.mkDefault (
+    lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}"
+  );
+  security.pam.services.sshd.text = lib.mkDefault (
+    lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}"
+  );
 
   # Limit individual user's memory usage aggressively
   # This is a heavily shared machine

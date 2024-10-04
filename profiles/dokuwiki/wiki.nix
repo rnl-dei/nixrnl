@@ -1,8 +1,5 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}: {
   services.dokuwiki.sites."wiki" = {
     enable = true;
     settings = {
@@ -31,7 +28,11 @@
       htmlmail = false;
       # Advanced
       updatecheck = false;
-      dontlog = ["debug" "error" "deprecated"]; # Set this to [] if you want logs
+      dontlog = [
+        "debug"
+        "error"
+        "deprecated"
+      ]; # Set this to [] if you want logs
       # Templates
       tpl = {
         bootstrap3 = {
@@ -49,7 +50,7 @@
         htmlok.phpok = true;
       };
     };
-    templates = with pkgs.dokuwikiTemplates; [bootstrap3];
+    templates = with pkgs.dokuwikiTemplates; [ bootstrap3 ];
     plugins = with pkgs.dokuwikiPlugins; [
       blockquote
       color

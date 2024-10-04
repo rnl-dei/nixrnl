@@ -1,8 +1,5 @@
+{ profiles, lib, ... }:
 {
-  profiles,
-  lib,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.labs
@@ -12,7 +9,7 @@
     labs
   ];
 
-  rnl.storage.disks.root = ["/dev/sda"]; # Change this if needed
+  rnl.storage.disks.root = [ "/dev/sda" ]; # Change this if needed
   rnl.labels.location = null;
 
   # Disable services that are not needed in generic labs

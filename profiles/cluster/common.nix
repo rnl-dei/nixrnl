@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   slurmProlog = pkgs.writeShellScript "slurm-prolog.sh" ''
     #!/bin/sh
     set -e
@@ -65,7 +66,8 @@
       fi
     ) 200>"$COUNTER_PATH.lock"
   '';
-in {
+in
+{
   services.slurm = {
     controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
@@ -152,12 +154,19 @@ in {
   };
 
   # Setup cirrus
-  environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
+  environment.systemPackages = [
+    pkgs.glusterfs
+    pkgs.mpi
+  ];
 
   fileSystems."/mnt/cirrus" = {
     device = lib.mkDefault "dredd:/mnt/data/cirrus";
     fsType = "nfs";
-    options = ["noauto" "x-systemd.automount" "nfsvers=4.2"];
+    options = [
+      "noauto"
+      "x-systemd.automount"
+      "nfsvers=4.2"
+    ];
   };
 
   environment.shellInit = ''

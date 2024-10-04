@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   # Setup AFS
   services.openafsClient = {
     enable = true;

@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   listenPort = 34266;
 
   outInterface = config.networking.nat.externalInterface;
@@ -13,9 +14,15 @@
   # 192.168.20.<lastOctet> fd92:3315:9e43:c490::<lastOctet>/128 (plus extra ips for multicast)
   mkPeers = builtins.map (peer: {
     inherit (peer) publicKey;
-    allowedIPs = ["192.168.20.${toString peer.lastOctet}/32" "fd92:3315:9e43:c490::${toString peer.lastOctet}/128" "224.0.0.0/24" "ff00::/16"];
+    allowedIPs = [
+      "192.168.20.${toString peer.lastOctet}/32"
+      "fd92:3315:9e43:c490::${toString peer.lastOctet}/128"
+      "224.0.0.0/24"
+      "ff00::/16"
+    ];
   });
-in {
+in
+{
   networking.nat.enable = true;
   assertions = [
     {
@@ -23,9 +30,9 @@ in {
       message = "networking.nat.externalInterface must be set";
     }
   ];
-  networking.nat.internalInterfaces = ["wg0"];
+  networking.nat.internalInterfaces = [ "wg0" ];
   networking.firewall = {
-    allowedUDPPorts = [listenPort];
+    allowedUDPPorts = [ listenPort ];
   };
 
   age.secrets."wireguard-admin-private.key" = {
@@ -38,7 +45,7 @@ in {
     wg0 = {
       inherit listenPort;
       privateKeyFile = config.age.secrets."wireguard-admin-private.key".path;
-      ips = ["192.168.20.254/24"];
+      ips = [ "192.168.20.254/24" ];
       postSetup = ''
         ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 192.168.20.0/24 -o ${outInterface} -j MASQUERADE
       '';
@@ -57,12 +64,12 @@ in {
     vrrpInstances.wireguardAdminIP4 = {
       virtualRouterId = 211;
       interface = outInterface;
-      virtualIps = [{addr = "193.136.164.211/27";}]; # fang IPv4
+      virtualIps = [ { addr = "193.136.164.211/27"; } ]; # fang IPv4
     };
     vrrpInstances.wireguardAdminIP6 = {
       virtualRouterId = 211;
       interface = outInterface;
-      virtualIps = [{addr = "2001:690:2100:82::211/64";}]; # fang IPv6
+      virtualIps = [ { addr = "2001:690:2100:82::211/64"; } ]; # fang IPv6
     };
   };
 

@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,7 +12,10 @@
   rnl.virtualisation.guest = {
     description = "VM para apoio à tese do Guillermo Bettencourt"; # spellchecker:disable-line
     createdBy = "nuno.alves";
-    maintainers = ["miguel.pardal" "guillermo.bettencourt"];
+    maintainers = [
+      "miguel.pardal"
+      "guillermo.bettencourt"
+    ];
 
     uefi = false;
     memory = 4096;
@@ -23,15 +27,11 @@
         mac = "52:54:00:74:86:ba";
       }
     ];
-    disks = [
-      {
-        source.dev = "/dev/zvol/dpool/data/soquest";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/soquest"; } ];
   };
 
   rnl.db-cluster = {
-    ensureDatabases = ["soquest_moodle"];
+    ensureDatabases = [ "soquest_moodle" ];
     ensureUsers = [
       {
         name = "soquest";

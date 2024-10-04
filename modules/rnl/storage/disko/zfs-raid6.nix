@@ -1,8 +1,5 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   disks = config.rnl.storage.disks;
 
   mkRootDiskConfig = device: index: {
@@ -22,7 +19,10 @@
             type = "filesystem";
             format = "vfat";
             mountpoint = "/boot${lib.optionalString (index > 0) (toString index)}";
-            mountOptions = ["defaults" "nofail"];
+            mountOptions = [
+              "defaults"
+              "nofail"
+            ];
           };
         };
         rpool = {
@@ -53,21 +53,19 @@
     };
   };
 
-  root = builtins.listToAttrs (lib.imap0 (
-      i: device: {
-        name = "root-${toString i}";
-        value = mkRootDiskConfig device i;
-      }
-    )
-    disks.root);
+  root = builtins.listToAttrs (
+    lib.imap0 (i: device: {
+      name = "root-${toString i}";
+      value = mkRootDiskConfig device i;
+    }) disks.root
+  );
 
-  data = builtins.listToAttrs (lib.imap0 (
-      i: device: {
-        name = "data-${toString i}";
-        value = mkDataDiskConfig device i;
-      }
-    )
-    disks.data);
+  data = builtins.listToAttrs (
+    lib.imap0 (i: device: {
+      name = "data-${toString i}";
+      value = mkDataDiskConfig device i;
+    }) disks.data
+  );
 
   zfsDefaultOptions = {
     options = {
@@ -87,43 +85,40 @@
       # "com.sun:auto-snapshot" = "false";
     };
   };
-in {
+in
+{
   disk = root // data;
 
-  zpool.rpool =
-    zfsDefaultOptions
-    // {
-      type = "zpool";
-      mode = "mirror";
-      datasets = {
-        root = {
-          type = "zfs_fs";
-          mountpoint = "/";
-        };
-        reserved = {
-          type = "zfs_fs";
-          options.refreservation = "10G";
-        };
+  zpool.rpool = zfsDefaultOptions // {
+    type = "zpool";
+    mode = "mirror";
+    datasets = {
+      root = {
+        type = "zfs_fs";
+        mountpoint = "/";
+      };
+      reserved = {
+        type = "zfs_fs";
+        options.refreservation = "10G";
       };
     };
+  };
 
-  zpool.dpool =
-    zfsDefaultOptions
-    // {
-      type = "zpool";
-      mode = "raidz2"; # RAID 6
-      datasets = {
-        data = {
-          type = "zfs_fs";
-          mountpoint = "/mnt/data";
-        };
-        volumes = {
-          type = "zfs_fs";
-        };
-        reserved = {
-          type = "zfs_fs";
-          options.refreservation = "10G";
-        };
+  zpool.dpool = zfsDefaultOptions // {
+    type = "zpool";
+    mode = "raidz2"; # RAID 6
+    datasets = {
+      data = {
+        type = "zfs_fs";
+        mountpoint = "/mnt/data";
+      };
+      volumes = {
+        type = "zfs_fs";
+      };
+      reserved = {
+        type = "zfs_fs";
+        options.refreservation = "10G";
       };
     };
+  };
 }

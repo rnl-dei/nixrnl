@@ -1,9 +1,6 @@
+{ config, lib, ... }:
+with lib;
 {
-  config,
-  lib,
-  ...
-}:
-with lib; {
   options.rnl.monitoring = {
     ping = mkOption {
       type = types.bool;

@@ -11,8 +11,11 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./src;
-  buildInputs = [bash grub2];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [
+    bash
+    grub2
+  ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -26,7 +29,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["nuno.alves"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "nuno.alves" ];
   };
 }
