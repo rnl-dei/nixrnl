@@ -1,2 +1,5 @@
 # introduction of pre-commit-hooks-nix, fixed all the reported issues and formatting
 b4d73f3e4e5bf5a1fa8972ecaea5c831e3763737
+
+# changed formatter from alejandra to nixfmt-rfc-style
+0aa1f5014199cf9a45948a791fc27948300bd623
