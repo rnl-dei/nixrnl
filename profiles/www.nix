@@ -10,7 +10,6 @@ let
   tvClientPort = 1336;
   tvCMSPort = 1337;
   # labsMatrixPort = 3001;
-  opensessionsPort = 3002;
   # shortenerPort = 3002;
 
   nginxAllowRNLAdmin = ''
@@ -24,8 +23,29 @@ let
     allow 193.136.154.0/25;
     allow 2001:690:2100:84::/64;
   '';
-in
-{
+
+  # TODO: Use the mainstream package when this commit is released:
+  # https://github.com/schweikert/fping/commit/291656af14b8734e881f1f4bfcdf8dc0418491cc
+  fping = pkgs.fping.overrideAttrs (_final: _prev: {
+    version = "5.3r2";
+
+    configurePhase = ''
+      ./autogen.sh
+      ./configure --prefix=$out
+    '';
+
+    nativeBuildInputs = with pkgs; [
+      autoconf
+      automake
+      perl
+    ];
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/schweikert/fping/archive/7e9ce344499b1d96e10b772773c1deb15b2644fc.tar.gz";
+      hash = "sha256-kfLBf0JHWxblETic6YNkBd4K6C+VWitBqTwSzcQNgXs=";
+    };
+  });
+in {
   imports = with profiles; [
     webserver
     phpfpm
@@ -41,14 +61,14 @@ in
       locations = {
         "/".proxyPass = "http://localhost:${toString rnlWebsitePort}";
         "/dashboard".index = "index.html";
-        "/logsession" = {
-          proxyPass = "http://localhost.:${toString opensessionsPort}";
-          extraConfig = ''
-            ${nginxAllowRNLAdmin}
-            ${nginxAllowRNLLabs}
-            deny all;
-          '';
-        };
+        "/logsession".extraConfig = ''
+          ${nginxAllowRNLAdmin}
+          ${nginxAllowRNLLabs}
+          deny all;
+
+          uwsgi_pass unix:${config.services.uwsgi.instance.vassals.opensessions.socket};
+          include ${config.services.nginx.package}/conf/uwsgi_params;
+        '';
         "~ ^/tv([^\\r\\n]*)$".return = "301 https://tv.${config.rnl.domain}$1$is_args$args";
         "~ ^/labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
         "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return = "301 https://webmail.${config.rnl.domain}$2$is_args$args";
@@ -131,15 +151,6 @@ in
     };
   };
 
-  # TODO: Use new version of opensessions
-  # virtualisation.oci-containers.containers."opensessions" = {
-  #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/opensessions:latest";
-  #   ports = ["${toString opensessionsPort}:5000"];
-  #   labels = {
-  #     "com.centurylinklabs.watchtower.enable" = "true";
-  #   };
-  # };
-
   # TODO: Move Shortener from kutt to here
   # virtualisation.oci-containers.containers."shortener" = {
   #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/shortener:latest";
@@ -215,11 +226,41 @@ in
     serverName = "opensessions.${config.rnl.domain}";
     enableACME = true;
     forceSSL = true;
-    locations."/".proxyPass = "http://localhost:${toString opensessionsPort}";
+    locations."/".extraConfig = ''
+      uwsgi_pass unix:${config.services.uwsgi.instance.vassals.opensessions.socket};
+      include ${config.services.nginx.package}/conf/uwsgi_params;
+    '';
     extraConfig = ''
       ${nginxAllowRNLAdmin}
       deny all;
     '';
+  };
+  services.uwsgi = {
+    enable = true;
+    user = config.services.nginx.user;
+    group = config.services.nginx.group;
+    plugins = ["python3"];
+    instance = {
+      type = "emperor";
+      vassals.opensessions = let
+        dir = config.rnl.githook.hooks.opensessions.path;
+      in {
+        type = "normal";
+        wsgi-file = "${dir}/app/wsgi.py";
+        socket = "${config.services.uwsgi.runDir}/opensessions.sock";
+        chdir = dir;
+        virtualenv = "${dir}/.venv";
+        env = ["FPING_COMMAND=${config.security.wrapperDir}/fping"];
+        # TODO: Add remote database
+      };
+    };
+  };
+
+  security.wrappers.fping = {
+    setuid = true;
+    owner = "root";
+    group = "root";
+    source = "${fping}/bin/fping";
   };
 
   # Labs-Matrix

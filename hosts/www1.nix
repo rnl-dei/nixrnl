@@ -67,12 +67,16 @@
     options = [ "bind" ];
   };
 
-  # Labs Matrix
   rnl.githook = {
     enable = true;
     hooks.labs-matrix = {
       url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/infra/labs-matrix.git";
       path = "/mnt/data/labs-matrix";
+      directoryMode = "0755";
+    };
+    hooks.opensessions = {
+      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/infra/opensessions.git";
+      path = "/mnt/data/opensessions";
       directoryMode = "0755";
     };
   };
