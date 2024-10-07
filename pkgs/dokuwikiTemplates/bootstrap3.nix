@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchFromGitHub,
-  ...
-}:
+{ stdenv, fetchFromGitHub, ... }:
 stdenv.mkDerivation rec {
   name = "bootstrap3";
   version = "2022-07-27";

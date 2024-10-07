@@ -3,7 +3,8 @@
   profiles,
   pkgs,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -38,27 +39,30 @@
 
   rnl.labels.location = "chapek";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "VM de produção para o DEI";
     createdBy = "nuno.alves";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     vcpu = 4;
     memory = 4096;
 
-    interfaces = [{source = "pub";}];
+    interfaces = [ { source = "pub"; } ];
     disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/dei";}
-      {source.dev = "/dev/zvol/dpool/data/dei";}
+      { source.dev = "/dev/zvol/dpool/volumes/dei"; }
+      { source.dev = "/dev/zvol/dpool/data/dei"; }
     ];
   };
 
   # DEI
   services.nginx.virtualHosts.dei = {
     serverName = config.networking.fqdn;
-    serverAliases = ["equipa.dei.tecnico.ulisboa.pt" "equipa.${config.networking.fqdn}"];
+    serverAliases = [
+      "equipa.dei.tecnico.ulisboa.pt"
+      "equipa.${config.networking.fqdn}"
+    ];
     enableACME = true;
     forceSSL = true;
     locations."/".return = "307 https://dei.tecnico.ulisboa.pt"; # TODO: Fix team website
@@ -73,7 +77,10 @@
   };
 
   rnl.db-cluster = {
-    ensureDatabases = ["dms" "leicalumni"];
+    ensureDatabases = [
+      "dms"
+      "leicalumni"
+    ];
     ensureUsers = [
       {
         name = "dms";
@@ -92,7 +99,7 @@
 
   services.nginx.virtualHosts.redirect-dms = {
     serverName = "dms.${config.networking.fqdn}";
-    serverAliases = ["dms.${config.rnl.domain}"];
+    serverAliases = [ "dms.${config.rnl.domain}" ];
     enableACME = true;
     forceSSL = true;
     locations."/".return = "301 https://${config.dei.dms.sites.default.serverName}$request_uri$is_args$args";
@@ -101,14 +108,14 @@
   # Bind mount /mnt/data/dms to /var/lib/dei/dms/default
   fileSystems."${config.dei.dms.sites.default.stateDir}" = {
     device = "/mnt/data/dms";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Local database
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = ["dms"];
+    ensureDatabases = [ "dms" ];
     ensureUsers = [
       {
         name = "dms";
@@ -122,7 +129,7 @@
   # Backups
   systemd.timers."backup-prod-db" = {
     description = "Backup DMS production database timer";
-    wantedBy = ["timers.target"];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "*-*-* 02:00:00";
       Unit = "backup-prod-db.service";
@@ -147,7 +154,7 @@
 
   services.nginx.virtualHosts.redirect-phdms = {
     serverName = "phdms.${config.networking.fqdn}";
-    serverAliases = ["deic.${config.networking.fqdn}"];
+    serverAliases = [ "deic.${config.networking.fqdn}" ];
     enableACME = true;
     forceSSL = true;
     locations."/".return = "301 https://${config.dei.phdms.sites.default.serverName}$request_uri$is_args$args";
@@ -156,7 +163,7 @@
   # Bind mount /mnt/data/phdms to /var/lib/dei/phdms/default
   fileSystems."${config.dei.phdms.sites.default.stateDir}" = {
     device = "/mnt/data/phdms";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # LEIC-Alumni
@@ -165,7 +172,7 @@
   # Bind mount /mnt/data/leic-alumni to /var/lib/dei/leic-alumni/default
   fileSystems."${config.dei.leic-alumni.sites.default.stateDir}" = {
     device = "/mnt/data/leic-alumni";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   # Git hooks
@@ -185,7 +192,7 @@
     };
   };
 
-  systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
+  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
   age.secrets."root-at-dei-ssh.key" = {
     file = ../secrets/root-at-dei-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
@@ -200,7 +207,7 @@
     enable = true;
     glitchtipImage = "glitchtip/glitchtip:v4.0";
     secretKeyFile = config.age.secrets."dei-glitchtip-secret-key".path;
-    databaseEnvFile = config.age.secrets."dei-glitchtip-databse-env".path;
+    databaseEnvFile = config.age.secrets."dei-glitchtip-database-env".path;
     emailUrl = "smtp://${config.rnl.mailserver.host}:${toString config.rnl.mailserver.port}";
   };
 
@@ -215,14 +222,14 @@
   # Bind mount /mnt/data/glitctip to /var/lib/glitchtip
   fileSystems."${config.services.glitchtip.stateDir}" = {
     device = "/mnt/data/glitchtip";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   age.secrets."dei-glitchtip-secret-key" = {
     file = ../secrets/dei-glitchtip-secret-key.age;
   };
 
-  age.secrets."dei-glitchtip-databse-env" = {
+  age.secrets."dei-glitchtip-database-env" = {
     file = ../secrets/dei-glitchtip-database-env.age;
   };
 }

@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -37,7 +34,7 @@
   # Bind mount /var/lib/moodle to /mnt/data/moodle
   fileSystems."/var/lib/moodle" = {
     device = "/mnt/data/moodle";
-    options = ["bind"];
+    options = [ "bind" ];
   };
 
   age.secrets."moodle-agl-db.password" = {
@@ -53,39 +50,41 @@
       passwordFile = config.age.secrets."moodle-agl-db.password".path;
     };
   };
-  rnl.db-cluster = let
-    database = config.services.moodle.database.name;
-    user = config.services.moodle.database.user;
-  in {
-    ensureDatabases = [database];
-    ensureUsers = [
-      {
-        name = user;
-        ensurePermissions = {
-          "${database}.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
-  };
+  rnl.db-cluster =
+    let
+      database = config.services.moodle.database.name;
+      user = config.services.moodle.database.user;
+    in
+    {
+      ensureDatabases = [ database ];
+      ensureUsers = [
+        {
+          name = user;
+          ensurePermissions = {
+            "${database}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
+    };
 
   rnl.internalHost = true;
 
   rnl.labels.location = "zion";
 
-  rnl.storage.disks.data = ["/dev/vdb"];
+  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Moodle @ DEI (Staging)";
     createdBy = "nuno.alves";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     memory = 8192;
     vcpu = 8;
 
-    interfaces = [{source = "pub";}];
+    interfaces = [ { source = "pub"; } ];
     disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/agl";}
-      {source.dev = "/dev/zvol/dpool/data/agl";}
+      { source.dev = "/dev/zvol/dpool/volumes/agl"; }
+      { source.dev = "/dev/zvol/dpool/data/agl"; }
     ];
   };
 }

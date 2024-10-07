@@ -1,10 +1,8 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   hasPodman = config.virtualisation.podman.enable;
-in {
+in
+{
   services.gitlab-runner = {
     enable = true;
   };
@@ -13,9 +11,9 @@ in {
   virtualisation.podman.dockerSocket.enable = true;
   systemd.services = lib.mkIf hasPodman {
     gitlab-runner = {
-      after = ["podman.service"];
-      requires = ["podman.service"];
-      serviceConfig.SupplementaryGroups = ["podman"];
+      after = [ "podman.service" ];
+      requires = [ "podman.service" ];
+      serviceConfig.SupplementaryGroups = [ "podman" ];
     };
   };
 }

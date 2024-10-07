@@ -1,8 +1,5 @@
+{ lib, profiles, ... }:
 {
-  lib,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -15,8 +12,16 @@
     location = null;
   };
 
+  rnl.monitoring.ping = false;
+
   # Disable root SSH via password
   services.openssh.settings.PermitRootLogin = lib.mkForce "without-password";
+
+  # Allow adding new keys to root user for nixos-anywhere to work
+  services.openssh.authorizedKeysFiles = lib.mkForce [
+    "/etc/ssh/authorized_keys.d/%u"
+    "/root/.ssh/authorized_keys"
+  ];
 
   # Disable nixos autologin and set root as autologin user
   services.getty.autologinUser = lib.mkForce "root";

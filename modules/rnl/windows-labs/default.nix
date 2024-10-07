@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.rnl.windows-labs;
-in {
+in
+{
   options.rnl.windows-labs = {
     enable = mkEnableOption "RNL Windows Labs";
     package = mkOption {
@@ -37,7 +39,11 @@ in {
       description = "The path to the partition to mount";
     };
     compression = mkOption {
-      type = types.enum ["none" "zstd" "gpg-zstd"];
+      type = types.enum [
+        "none"
+        "zstd"
+        "gpg-zstd"
+      ];
       default = "gpg-zstd";
       description = "The compression algorithm to use when writing the image";
     };
@@ -69,7 +75,7 @@ in {
 
     systemd.services."rnl-windows-labs" = {
       description = "Deploy Windows image to partition";
-      wantedBy = ["multi-user.target"];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "simple";
         RemainAfterExit = true;
@@ -108,7 +114,7 @@ in {
         fi
 
         # Copy extra files to EFI partition
-        for file in ${lib.concatStringsSep " " (mapAttrsToList (name: path: path) cfg.extraFiles)}; do
+        for file in ${lib.concatStringsSep " " (mapAttrsToList (_name: path: path) cfg.extraFiles)}; do
           echo "Copying $file to EFI partition"
           cp $file /boot/EFI/Microsoft/Boot
         done

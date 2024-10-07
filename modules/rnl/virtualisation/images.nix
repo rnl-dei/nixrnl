@@ -1,12 +1,18 @@
 {
   config,
-  lib,
   nixosConfigurations,
   pkgs,
   ...
-}: let
-  getIsoPathFromHost = host: let iso = host.config.system.build.isoImage; in iso + "/iso/" + iso.isoName;
-in {
+}:
+let
+  getIsoPathFromHost =
+    host:
+    let
+      iso = host.config.system.build.isoImage;
+    in
+    iso + "/iso/" + iso.isoName;
+in
+{
   "nixos-live" = getIsoPathFromHost nixosConfigurations.live;
 
   "ubuntu-23.04" = pkgs.fetchurl {

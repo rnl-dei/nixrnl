@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.zfs-mirror
@@ -42,6 +43,9 @@
 
     defaultGateway.address = "193.136.164.126";
   };
+
+  # Disable ping IPv6 monitoring
+  rnl.monitoring.ping6 = false;
 
   users.users.root.hashedPassword = "$6$x2GVjFi0iJZCwQ2l$omZcbZkgxAtdc.oNda1AhdMEQizTAmEfNmHk6IKuGZoFMd.7Bf9mfWjF2gvQxIzwLtKxPmADSCk9FqQbH.C3E0";
 

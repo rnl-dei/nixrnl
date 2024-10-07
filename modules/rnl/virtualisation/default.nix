@@ -4,8 +4,9 @@
   config,
   nixosConfigurations,
   ...
-} @ args:
-with lib; let
+}@args:
+with lib;
+let
   cfg = config.rnl.virtualisation;
 
   vmOptions = {
@@ -22,7 +23,7 @@ with lib; let
 
     maintainers = mkOption {
       type = types.listOf types.str;
-      default = ["rnl"];
+      default = [ "rnl" ];
       description = "List of maintainers";
     };
 
@@ -39,13 +40,19 @@ with lib; let
     };
 
     arch = mkOption {
-      type = types.enum ["x86_64" "aarch64"];
+      type = types.enum [
+        "x86_64"
+        "aarch64"
+      ];
       default = "x86_64";
       description = "Architecture of the virtual machine";
     };
 
     machine = mkOption {
-      type = types.enum ["q35" "i440fx"];
+      type = types.enum [
+        "q35"
+        "i440fx"
+      ];
       default = "q35";
       description = "Machine type";
     };
@@ -57,8 +64,16 @@ with lib; let
     };
 
     boot = mkOption {
-      type = types.listOf (types.enum ["hd" "cdrom"]);
-      default = ["hd" "cdrom"];
+      type = types.listOf (
+        types.enum [
+          "hd"
+          "cdrom"
+        ]
+      );
+      default = [
+        "hd"
+        "cdrom"
+      ];
       description = "Boot order";
     };
 
@@ -81,21 +96,31 @@ with lib; let
     };
 
     cpu = mkOption {
-      type = types.enum ["host-model" "host-passthrough"];
+      type = types.enum [
+        "host-model"
+        "host-passthrough"
+      ];
       default = "host-passthrough";
       description = "CPU mode";
     };
 
     features = mkOption {
       type = types.listOf types.str;
-      default = ["acpi"];
+      default = [ "acpi" ];
       description = "List of features";
-      example = ["acpi" "apic" "pae"];
+      example = [
+        "acpi"
+        "apic"
+        "pae"
+      ];
     };
 
     graphics = {
       type = mkOption {
-        type = types.enum ["none" "spice"];
+        type = types.enum [
+          "none"
+          "spice"
+        ];
         default = "spice";
         description = "Graphics type";
       };
@@ -132,13 +157,17 @@ with lib; let
     };
 
     disks = mkOption {
-      type = types.listOf (types.submodule {options = diskOptions;});
-      default = [];
+      type = types.listOf (types.submodule { options = diskOptions; });
+      default = [ ];
       description = "List of disks";
       example = [
         {
-          source = {dev = "/dev/zvol/zroot/vms/example";};
-          target = {dev = "vda";};
+          source = {
+            dev = "/dev/zvol/zroot/vms/example";
+          };
+          target = {
+            dev = "vda";
+          };
           size = 20;
           bootOrder = 1;
         }
@@ -147,14 +176,17 @@ with lib; let
 
     cdroms = mkOption {
       type = types.nullOr (types.listOf types.path);
-      default = [];
+      default = [ ];
       description = "List of CD-ROMs. Support up to 4 CD-ROMs.";
-      example = ["/path/to/image.iso" config.rnl.virtualisation.images.nixos-live];
+      example = [
+        "/path/to/image.iso"
+        config.rnl.virtualisation.images.nixos-live
+      ];
     };
 
     interfaces = mkOption {
-      type = types.listOf (types.submodule {options = interfaceOptions;});
-      default = [];
+      type = types.listOf (types.submodule { options = interfaceOptions; });
+      default = [ ];
       description = "List of network interfaces";
       example = [
         {
@@ -167,7 +199,10 @@ with lib; let
 
   diskOptions = {
     device = mkOption {
-      type = types.enum ["disk" "cdrom"];
+      type = types.enum [
+        "disk"
+        "cdrom"
+      ];
       default = "disk";
       description = ''
         Disk device
@@ -176,13 +211,16 @@ with lib; let
     };
 
     type = mkOption {
-      type = types.enum ["block" "file"];
+      type = types.enum [
+        "block"
+        "file"
+      ];
       default = "block";
       description = "Disk type";
     };
 
     driverType = mkOption {
-      type = types.enum ["raw"];
+      type = types.enum [ "raw" ];
       default = "raw";
       description = "Disk driver type";
     };
@@ -213,7 +251,10 @@ with lib; let
       };
 
       bus = mkOption {
-        type = types.enum ["sata" "virtio"];
+        type = types.enum [
+          "sata"
+          "virtio"
+        ];
         default = "virtio";
         description = "Disk target bus";
       };
@@ -240,7 +281,10 @@ with lib; let
 
   interfaceOptions = {
     type = mkOption {
-      type = types.enum ["bridge" "network"];
+      type = types.enum [
+        "bridge"
+        "network"
+      ];
       description = "Network type";
       default = "bridge";
     };
@@ -262,7 +306,7 @@ with lib; let
     };
 
     addressType = mkOption {
-      type = types.enum ["pci"];
+      type = types.enum [ "pci" ];
       description = "Network address type";
       default = "pci";
     };
@@ -280,33 +324,29 @@ with lib; let
     };
   };
 
-  hosts =
-    lib.mapAttrs (_: host: host.config.rnl.virtualisation.guest)
-    (lib.filterAttrs (
-        _: host:
-          host.config.rnl.labels.location
-          == config.networking.hostName
-          && host.config.rnl.labels.type == "vm"
-      )
-      nixosConfigurations);
+  hosts = lib.mapAttrs (_: host: host.config.rnl.virtualisation.guest) (
+    lib.filterAttrs (
+      _: host:
+      host.config.rnl.labels.location == config.networking.hostName && host.config.rnl.labels.type == "vm"
+    ) nixosConfigurations
+  );
 
-  services =
-    lib.mapAttrs' (name: config: {
-      name = "libvirt-guest@${name}";
-      value = (import ./service.nix args) (config // {inherit name;});
-    })
-    hosts;
-in {
+  services = lib.mapAttrs' (name: config: {
+    name = "libvirt-guest@${name}";
+    value = (import ./service.nix args) (config // { inherit name; });
+  }) hosts;
+in
+{
   options.rnl.virtualisation = {
     enable = mkEnableOption "RNL Virtualisation";
     hosts = mkOption {
-      type = types.attrsOf (types.submodule {options = vmOptions;});
+      type = types.attrsOf (types.submodule { options = vmOptions; });
       default = hosts;
       readOnly = true;
       description = "Virtual machines";
     };
     guest = mkOption {
-      type = types.nullOr (types.submodule {options = vmOptions;});
+      type = types.nullOr (types.submodule { options = vmOptions; });
       default = null;
       description = "Guest virtual machine";
     };

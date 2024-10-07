@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   services.mattermost = {
     enable = true;
     siteName = lib.mkDefault "Mattermost @ RNL";
@@ -12,7 +9,7 @@
   };
 
   services.nginx.upstreams.mattermost.servers = {
-    "${config.services.mattermost.listenAddress}" = {};
+    "${config.services.mattermost.listenAddress}" = { };
   };
 
   services.nginx.virtualHosts.mattermost = {

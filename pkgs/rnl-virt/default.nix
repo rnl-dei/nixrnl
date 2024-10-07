@@ -1,5 +1,4 @@
 {
-  autoPatchelfHook,
   lib,
   libvirt,
   makeWrapper,
@@ -15,8 +14,14 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./.;
-  buildInputs = [libvirt python3 qemu virt-manager virt-viewer];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [
+    libvirt
+    python3
+    qemu
+    virt-manager
+    virt-viewer
+  ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -26,7 +31,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["carlos.vaz"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "carlos.vaz" ];
   };
 }

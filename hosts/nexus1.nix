@@ -1,8 +1,5 @@
+{ profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -50,7 +47,7 @@
     memory = 8192;
     vcpu = 8;
 
-    interfaces = [{source = "dmz";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/nexus1";}];
+    interfaces = [ { source = "dmz"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/nexus1"; } ];
   };
 }

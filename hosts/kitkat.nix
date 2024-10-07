@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -22,6 +23,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [{source.dev = "/dev/zvol/dpool/data/kitkat";}];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/kitkat"; } ];
   };
 }

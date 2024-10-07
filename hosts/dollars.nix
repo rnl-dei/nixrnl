@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-mirror
@@ -45,7 +42,7 @@
     };
 
     defaultGateway.address = "193.136.154.126";
-    defaultGateway6.address = "fe80::96f7:ad00:28af:fa13";
+    defaultGateway6.address = "2001:690:2100:84:ffff:ffff:ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$FYer1DJhVX1eYtCx$/gMyf.WtjzxE/KyeGaHPLeeJN2.mMkCsPuKBGkCGlpxmhnJrh7nbqj.97aLmMM9vLpjWFj7FWkmNT9Q4jAlRG1";

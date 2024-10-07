@@ -1,6 +1,5 @@
 {
   bash,
-  fetchzip,
   inputs,
   lib,
   makeWrapper,
@@ -17,7 +16,7 @@ stdenv.mkDerivation rec {
     inputs.nixos-anywhere.packages.x86_64-linux.nixos-anywhere # Used to deploy
     inputs.agenix.packages.x86_64-linux.agenix # Used to decrypt host keys
   ];
-  nativeBuildInputs = [makeWrapper];
+  nativeBuildInputs = [ makeWrapper ];
   installPhase = ''
     mkdir -p $out/bin
     cp ${name}.sh $out/bin/${name}

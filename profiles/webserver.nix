@@ -3,10 +3,14 @@
   lib,
   profiles,
   ...
-}: {
-  imports = with profiles; [certificates];
+}:
+{
+  imports = with profiles; [ certificates ];
 
-  networking.firewall.allowedTCPPorts = [80 443];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 
   services.nginx = {
     enable = true;
@@ -25,7 +29,7 @@
 
   security.dhparams = {
     enable = true;
-    params.nginx = {};
+    params.nginx = { };
   };
 
   # Configure nginx exporter

@@ -3,7 +3,8 @@
   pkgs,
   profiles,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -39,19 +40,13 @@
   rnl.virtualisation.guest = {
     description = "VM de testes para o DEI";
     createdBy = "nuno.alves";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     vcpu = 4;
     memory = 4096;
 
-    interfaces = [{source = "dmz";}];
-    disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/blatta";}
-      {
-        type = "file";
-        source.file = "/mnt/data/blatta.img";
-      }
-    ];
+    interfaces = [ { source = "dmz"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/blatta"; } ];
   };
 
   rnl.internalHost = true; # Use Vault to generate certificates
@@ -60,7 +55,7 @@
     serverName = "${config.networking.fqdn}";
     enableACME = true;
     forceSSL = true;
-    locations."/". root = pkgs.writeTextDir "index.html" ''
+    locations."/".root = pkgs.writeTextDir "index.html" ''
       <html>
         <body>
           <h1>Welcome to Blatta</h1>
@@ -83,7 +78,7 @@
     sites.default.serverName = "dms.${config.networking.fqdn}";
   };
   rnl.db-cluster = {
-    ensureDatabases = ["dms_blatta"];
+    ensureDatabases = [ "dms_blatta" ];
     ensureUsers = [
       {
         name = "dms";
@@ -107,7 +102,7 @@
     };
   };
 
-  systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
+  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
   age.secrets."root-at-blatta-ssh.key" = {
     file = ../secrets/root-at-blatta-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
@@ -119,7 +114,7 @@
     authentication = ''
       local phdms phdms trust
     '';
-    ensureDatabases = ["phdms"];
+    ensureDatabases = [ "phdms" ];
     ensureUsers = [
       {
         name = "root";
@@ -135,7 +130,7 @@
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = ["dms"];
+    ensureDatabases = [ "dms" ];
     ensureUsers = [
       {
         name = "dms";

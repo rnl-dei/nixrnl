@@ -4,8 +4,9 @@
   profiles,
   pkgs,
   ...
-}: {
-  imports = with profiles; [graphical.labs];
+}:
+{
+  imports = with profiles; [ graphical.labs ];
 
   environment.systemPackages = with pkgs; [
     # Editors
@@ -17,9 +18,7 @@
     sublime
     codeblocksFull
     (vscode-with-extensions.override {
-      vscodeExtensions = with vscode-extensions; [
-        ms-vscode.cpptools
-      ];
+      vscodeExtensions = with vscode-extensions; [ ms-vscode.cpptools ];
     })
 
     # Compilers
@@ -52,7 +51,7 @@
   '';
 
   # Disable Nix
-  nix.settings.allowed-users = ["root"];
+  nix.settings.allowed-users = [ "root" ];
 
   # Firewall
   networking.firewall.enable = lib.mkForce false;
@@ -151,39 +150,43 @@
     '';
   };
 
-  networking.proxy = let
-    address = config.services.squid.proxyAddress;
-    port = toString config.services.squid.proxyPort;
-  in {
-    httpProxy = "http://${address}:${port}";
-    httpsProxy = "http://${address}:${port}";
-  };
+  networking.proxy =
+    let
+      address = config.services.squid.proxyAddress;
+      port = toString config.services.squid.proxyPort;
+    in
+    {
+      httpProxy = "http://${address}:${port}";
+      httpsProxy = "http://${address}:${port}";
+    };
 
   rnl.wallpaper.defaultWallpaper = pkgs.rnlWallpapers.oni2024;
 
-  programs.firefox = let
-    mooshakURL = "https://mooshak.dcc.fc.up.pt/~oni-judge/";
-  in {
-    enable = true;
-    preferences = {
-      "browser.startup.homepage" = mooshakURL;
+  programs.firefox =
+    let
+      mooshakURL = "https://mooshak.dcc.fc.up.pt/~oni-judge/";
+    in
+    {
+      enable = true;
+      preferences = {
+        "browser.startup.homepage" = mooshakURL;
+      };
+      policies = {
+        Bookmarks = [
+          {
+            Title = "Mooshak ONI";
+            URL = mooshakURL;
+            Placement = "toolbar";
+          }
+        ];
+        DisplayBookmarksToolbar = true;
+        OverrideFirstRunPage = mooshakURL;
+      };
     };
-    policies = {
-      Bookmarks = [
-        {
-          Title = "Mooshak ONI";
-          URL = mooshakURL;
-          Placement = "toolbar";
-        }
-      ];
-      DisplayBookmarksToolbar = true;
-      OverrideFirstRunPage = mooshakURL;
-    };
-  };
 
   # Bootloader
   boot = {
-    supportedFilesystems = ["ntfs"];
+    supportedFilesystems = [ "ntfs" ];
     plymouth.enable = true;
     loader = {
       efi.canTouchEfiVariables = lib.mkForce true;
@@ -222,7 +225,9 @@
           fi
         '';
 
-        extraFiles = {"ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";};
+        extraFiles = {
+          "ipxe.efi" = "${pkgs.ipxe}/ipxe.efi";
+        };
         extraEntries =
           (lib.optionalString config.rnl.windows-labs.enable ''
             menuentry --unrestricted "Windows 10" {

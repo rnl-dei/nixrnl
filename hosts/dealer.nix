@@ -3,7 +3,8 @@
   pkgs,
   profiles,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -40,18 +41,8 @@
     description = "Gestão das VMs com ansible";
     createdBy = "nuno.alves";
 
-    interfaces = [{source = "priv";}];
-    disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/dealer";}
-      {
-        type = "file";
-        source.file = "/mnt/data/trantor.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/cerebro.img";
-      }
-    ];
+    interfaces = [ { source = "priv"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/dealer"; } ];
   };
 
   rnl.githook = {
@@ -83,19 +74,17 @@
     owner = "root";
   };
 
-  environment.systemPackages = let
-    ansible = pkgs.ansible.override {
-      windowsSupport = true;
-    };
-  in [
-    ansible
-  ];
+  environment.systemPackages =
+    let
+      ansible = pkgs.ansible.override { windowsSupport = true; };
+    in
+    [ ansible ];
 
   # Discoverafsd
   systemd.services.discoverafsd = {
     description = "DiscoverAFS daemon";
-    after = ["network.target"];
-    wantedBy = ["multi-user.target"];
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
 
     environment = {
       DISCOVERAFSD_DIR = "/var/lib/discoverafsd";

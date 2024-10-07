@@ -4,7 +4,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.rnl.mysqlBackup;
   defaultUser = "mysqlbackup";
   mysqlPkg = config.services.mysql.package or pkgs.mariadb;
@@ -39,7 +40,8 @@ with lib; let
     find ${cfg.location} -type f -name '*.gz' -mtime +${toString cfg.retentionDays} -delete
     rmdir ${cfg.location}/* 2>/dev/null || true
   '';
-in {
+in
+{
   options.rnl.mysqlBackup = {
     enable = mkEnableOption "MySQL backups";
 
@@ -60,7 +62,7 @@ in {
     };
 
     databases = mkOption {
-      default = [];
+      default = [ ];
       type = types.listOf types.str;
       description = ''
         List of database names to dump.
@@ -77,7 +79,7 @@ in {
 
     arguments = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = ''
         Arguments to pass to mysqldump.
       '';
@@ -113,10 +115,11 @@ in {
     services.mysql.ensureUsers = [
       {
         name = cfg.user;
-        ensurePermissions = let
-          privs = "SELECT, SHOW VIEW, TRIGGER, LOCK TABLES";
-          grant = db: nameValuePair "${db}.*" privs;
-        in
+        ensurePermissions =
+          let
+            privs = "SELECT, SHOW VIEW, TRIGGER, LOCK TABLES";
+            grant = db: nameValuePair "${db}.*" privs;
+          in
           listToAttrs (map grant cfg.databases);
       }
     ];
@@ -124,7 +127,7 @@ in {
     systemd = {
       timers.mysql-backup = {
         description = "Mysql backup timer";
-        wantedBy = ["timers.target"];
+        wantedBy = [ "timers.target" ];
         timerConfig = {
           OnCalendar = cfg.calendar;
           AccuracySec = "5m";
@@ -140,9 +143,7 @@ in {
         };
         script = backupScript;
       };
-      tmpfiles.rules = [
-        "d ${cfg.location} 0700 ${cfg.user} - - -"
-      ];
+      tmpfiles.rules = [ "d ${cfg.location} 0700 ${cfg.user} - - -" ];
     };
   };
 }

@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-raid6
@@ -35,7 +32,10 @@
     hostId = "d5cc31cd"; # Randomly generated
 
     bonds.bond0 = {
-      interfaces = ["eno1" "eno2"];
+      interfaces = [
+        "eno1"
+        "eno2"
+      ];
       driverOptions.mode = "802.3ad";
     };
 
@@ -63,12 +63,24 @@
     };
 
     bridges = {
-      priv = {interfaces = ["bond0"];};
-      pub = {interfaces = ["pub-vlan"];};
-      labs = {interfaces = ["labs-vlan"];};
-      dmz = {interfaces = ["dmz-vlan"];};
-      gia = {interfaces = ["gia-vlan"];};
-      portateis = {interfaces = ["portateis-vlan"];};
+      priv = {
+        interfaces = [ "bond0" ];
+      };
+      pub = {
+        interfaces = [ "pub-vlan" ];
+      };
+      labs = {
+        interfaces = [ "labs-vlan" ];
+      };
+      dmz = {
+        interfaces = [ "dmz-vlan" ];
+      };
+      gia = {
+        interfaces = [ "gia-vlan" ];
+      };
+      portateis = {
+        interfaces = [ "portateis-vlan" ];
+      };
     };
 
     interfaces.priv = {

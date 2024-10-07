@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
     findutils
   ];
 
-  nativeBuildInputs = [makeWrapper];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
        mkdir -p $out/bin
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["nuno.alves"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "nuno.alves" ];
   };
 }

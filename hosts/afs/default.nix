@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.dsi
     filesystems.unknown
@@ -7,4 +8,7 @@
   ];
 
   rnl.labels.location = "dsi";
+
+  # Disable ping IPv6 monitoring
+  rnl.monitoring.ping6 = false;
 }

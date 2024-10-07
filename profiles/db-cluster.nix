@@ -4,7 +4,8 @@
   pkgs,
   nixosConfigurations,
   ...
-}: {
+}:
+{
   services.mysql = {
     enable = true;
     package = pkgs.mariadb_106;
@@ -25,25 +26,31 @@
     };
   };
 
-  rnl.db-cluster = let
-    # Only consider hosts that have the db-cluster option disabled
-    hosts = lib.filterAttrs (_: {config, ...}: ! config.rnl.db-cluster.enable) nixosConfigurations;
-    ensureDatabases = [] ++ config.services.mysql.ensureDatabases;
-    ensureUsers =
-      [
+  rnl.db-cluster =
+    let
+      # Only consider hosts that have the db-cluster option disabled
+      hosts = lib.filterAttrs (_: { config, ... }: !config.rnl.db-cluster.enable) nixosConfigurations;
+      ensureDatabases = [ ] ++ config.services.mysql.ensureDatabases;
+      ensureUsers = [
         {
           name = "root";
           ensurePermissions = {
             "*.*" = "ALL PRIVILEGES";
           };
         }
-      ]
-      ++ (map (u: u // {host = "localhost";}) config.services.mysql.ensureUsers);
-  in {
-    enable = lib.mkForce true;
-    ensureDatabases = ensureDatabases ++ lib.flatten (lib.mapAttrsToList (_: {config, ...}: config.rnl.db-cluster.ensureDatabases) hosts);
-    ensureUsers = ensureUsers ++ lib.flatten (lib.mapAttrsToList (_: {config, ...}: config.rnl.db-cluster.ensureUsers) hosts);
-  };
+      ] ++ (map (u: u // { host = "localhost"; }) config.services.mysql.ensureUsers);
+    in
+    {
+      enable = lib.mkForce true;
+      ensureDatabases =
+        ensureDatabases
+        ++ lib.flatten (
+          lib.mapAttrsToList (_: { config, ... }: config.rnl.db-cluster.ensureDatabases) hosts
+        );
+      ensureUsers =
+        ensureUsers
+        ++ lib.flatten (lib.mapAttrsToList (_: { config, ... }: config.rnl.db-cluster.ensureUsers) hosts);
+    };
 
   # Required for WSREP scripts
   # Reference: https://github.com/NixOS/nixpkgs/blob/master/nixos/tests/mysql/mariadb-galera.nix
@@ -66,8 +73,13 @@
   # Galera ports
   # Reference: https://galeracluster.com/library/documentation/firewall-settings.html
   networking.firewall = {
-    allowedTCPPorts = [3306 4567 4568 4444];
-    allowedUDPPorts = [4567];
+    allowedTCPPorts = [
+      3306
+      4567
+      4568
+      4444
+    ];
+    allowedUDPPorts = [ 4567 ];
   };
 
   networking.extraHosts = ''
@@ -80,8 +92,8 @@
     vrrpInstances.db-clusterIP4 = {
       virtualRouterId = 95;
       interface = lib.mkDefault "eno1";
-      virtualIps = [{addr = "193.136.164.95/26";}]; # db IPv4
-      trackScripts = ["check_mysql"];
+      virtualIps = [ { addr = "193.136.164.95/26"; } ]; # db IPv4
+      trackScripts = [ "check_mysql" ];
     };
 
     vrrpScripts = {
@@ -93,6 +105,7 @@
     };
   };
 
+  # spellchecker:off
   users.motd = ''
 
     ################################################################################
@@ -114,4 +127,5 @@
     ################################################################################
 
   '';
+  # spellchecker:on
 }

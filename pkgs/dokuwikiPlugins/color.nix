@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchzip,
-  ...
-}:
+{ stdenv, fetchzip, ... }:
 stdenv.mkDerivation rec {
   name = "color";
   version = "2022-10-19";

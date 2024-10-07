@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
     iputils
   ];
 
-  nativeBuildInputs = [makeWrapper];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
        mkdir -p $out/bin
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["andre.romao"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "andre.romao" ];
   };
 }

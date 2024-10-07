@@ -1,30 +1,33 @@
-{lib, ...}: {
-  imports = [./software/shell.nix];
+{ lib, ... }:
+{
+  imports = [ ./software/shell.nix ];
 
   services.keepalived = {
     enable = lib.mkDefault true;
     vrrpInstances.nexusIP4 = {
       virtualRouterId = 129;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "193.136.164.129/26";}]; # nexus IPv4
+      virtualIps = [ { addr = "193.136.164.129/26"; } ]; # nexus IPv4
     };
     vrrpInstances.nexusIP6 = {
       virtualRouterId = 129;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "2001:690:2100:83::129/64";}]; # nexus IPv6
+      virtualIps = [ { addr = "2001:690:2100:83::129/64"; } ]; # nexus IPv6
     };
   };
 
   # Allow users to access the machine from outside the network
-  networking.firewall = let
-    portRanges = {
-      from = 1024;
-      to = 65535;
+  networking.firewall =
+    let
+      portRanges = {
+        from = 1024;
+        to = 65535;
+      };
+    in
+    {
+      allowedTCPPortRanges = [ portRanges ];
+      allowedUDPPortRanges = [ portRanges ];
     };
-  in {
-    allowedTCPPortRanges = [portRanges];
-    allowedUDPPortRanges = [portRanges];
-  };
 
   users.motd = ''
 
@@ -50,7 +53,7 @@
     MemoryMax = "10%"; # 8GB * 10% ≃ 800MB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "9%"; # set to just under MemoryMax
 

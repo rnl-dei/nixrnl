@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # Configure Hashicorp Vault
   services.vault = {
     enable = true;
@@ -20,7 +21,7 @@
   };
 
   services.nginx.upstreams.vault.servers = {
-    "${config.services.vault.address}" = {};
+    "${config.services.vault.address}" = { };
   };
 
   services.nginx.virtualHosts.vault = {
@@ -36,12 +37,12 @@
     vrrpInstances.vaultIP4 = {
       virtualRouterId = 81;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "193.136.164.81/26";}]; # www IPv4
+      virtualIps = [ { addr = "193.136.164.81/26"; } ]; # www IPv4
     };
     vrrpInstances.vaultIP6 = {
       virtualRouterId = 81;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "2001:690:2100:81::81/64";}]; # www IPv6
+      virtualIps = [ { addr = "2001:690:2100:81::81/64"; } ]; # www IPv6
     };
   };
 }

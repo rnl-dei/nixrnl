@@ -1,11 +1,8 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, ... }:
+let
   disks = config.rnl.storage.disks;
 
-  mkRootDiskConfig = device: index: {
+  mkRootDiskConfig = device: _index: {
     type = "disk";
     inherit device;
     content = {
@@ -37,6 +34,9 @@
   };
 
   root = mkRootDiskConfig (builtins.elemAt disks.root 0) 0;
-in {
-  disk = {inherit root;};
+in
+{
+  disk = {
+    inherit root;
+  };
 }

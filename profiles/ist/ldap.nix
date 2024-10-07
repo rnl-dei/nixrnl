@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Setup LDAP
   users.ldap = {
     enable = true;
@@ -8,5 +9,5 @@
     loginPam = false;
   };
 
-  environment.systemPackages = [pkgs.openldap];
+  environment.systemPackages = [ pkgs.openldap ];
 }

@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.dei
     filesystems.unknown
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Servidor WDS e development para o domínio DEIAD";
     createdBy = "rodrigo.rato";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     memory = 8192;
@@ -25,16 +26,9 @@
         addressSlot = "0x05";
       }
     ];
-    # TODO: Move to a ZFS dataset
     disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/fry-root.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/fry-data.img";
-      }
+      { source.dev = "/dev/zvol/dpool/data/fry-root"; }
+      { source.dev = "/dev/zvol/dpool/data/fry-data"; }
     ];
   };
 }

@@ -1,8 +1,5 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}: {
   services.dokuwiki.sites."wiki" = {
     enable = true;
     settings = {
@@ -21,7 +18,6 @@
       passcrypt = "argon2id";
       superuser = "@admin";
       # Editing
-      htmlok = true;
       locktime = 60 * 60;
       # Media
       im_convert = "${pkgs.imagemagick}/bin/convert";
@@ -32,7 +28,11 @@
       htmlmail = false;
       # Advanced
       updatecheck = false;
-      dontlog = ["debug" "error" "deprecated"]; # Set this to [] if you want logs
+      dontlog = [
+        "debug"
+        "error"
+        "deprecated"
+      ]; # Set this to [] if you want logs
       # Templates
       tpl = {
         bootstrap3 = {
@@ -46,15 +46,18 @@
       # Plugins
       plugin = {
         graphviz.path = "${pkgs.graphviz}/bin/dot";
+        htmlok.htmlok = true;
+        htmlok.phpok = true;
       };
     };
-    templates = with pkgs.dokuwikiTemplates; [bootstrap3];
+    templates = with pkgs.dokuwikiTemplates; [ bootstrap3 ];
     plugins = with pkgs.dokuwikiPlugins; [
       blockquote
       color
       columns
       comment
       ditaa
+      htmlok
       edittable
       graphviz
       move

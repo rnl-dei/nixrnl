@@ -1,8 +1,12 @@
 {
   config,
+  lib,
+  pkgs,
   profiles,
+  nixosConfigurations,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -17,9 +21,7 @@
   rnl.labels.location = "inf1-p01-a3";
 
   # Storage
-  rnl.storage.disks.root = [
-    "/dev/disk/by-id/ata-WDC_WD1002F9YZ-09H1JL1_WD-WMC5K0D3AW7K"
-  ];
+  rnl.storage.disks.root = [ "/dev/disk/by-id/ata-WDC_WD1002F9YZ-09H1JL1_WD-WMC5K0D3AW7K" ];
 
   # Networking
   networking = {
@@ -39,12 +41,43 @@
     };
 
     defaultGateway.address = "193.136.154.126";
-    defaultGateway6.address = "fe80::96f7:ad00:28af:fa13";
+    defaultGateway6.address = "2001:690:2100:84:ffff:ffff:ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$fBxN95kuNpq4Nxhq$Rev.mpIltLW7keZoT/LLtuamiggGTpBtfs.Z.8ztxin9TI9ZksIUNYeOvc4RgQF.n.nlGAlXRI4IBxyFj3VSa/";
 
   environment.shellAliases = {
     create-torrent = "transmission-create -p -t udp://tracker.${config.rnl.domain}:31000";
+  };
+
+  # WoL Bridge
+  rnl.wolbridge = {
+    enable = true;
+    openFirewall = true;
+    domain = config.rnl.domain;
+    pingHosts = [ "193.136.154.{0..125}" ];
+    configFile =
+      let
+        labs =
+          builtins.foldl'
+            (
+              acc: hostname:
+              let
+                lab = builtins.elemAt (builtins.split "p" hostname) 0;
+              in
+              acc // { ${lab} = acc."${lab}" or [ ] ++ [ hostname ]; }
+            )
+            { }
+            (
+              builtins.filter (hostname: builtins.match "lab([0-9]+|X)p[0-9]+" hostname != null) (
+                builtins.attrNames nixosConfigurations
+              )
+            );
+
+        config = labs // {
+          all = builtins.attrNames labs;
+        };
+      in
+      pkgs.writeText "wolbridge-config.json" (lib.generators.toJSON { } config);
   };
 }
