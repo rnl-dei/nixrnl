@@ -10,6 +10,8 @@
     moodle
   ];
 
+  age.secrets."abuseipdb-api.key".file = ../secrets/abuseipdb-api-key.age;
+
   # Networking
   networking = {
     interfaces.enp1s0 = {
