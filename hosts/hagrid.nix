@@ -17,6 +17,8 @@
     vpn.wireguard-admin
   ];
 
+  age.secrets."abuseipdb-api.key".file = ../secrets/abuseipdb-api-key.age;
+
   rnl.labels.location = "inf3-p2-admin";
 
   # Storage
