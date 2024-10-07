@@ -3,15 +3,17 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   inherit (config) services;
   isAbuseIPDbKeyAvailable = config.age.secrets ? "abuseipdb-api.key";
-in {
+in
+{
   services.fail2ban = {
     enable = true;
 
-    extraPackages = [pkgs.curl];
+    extraPackages = [ pkgs.curl ];
 
     ignoreIP = [
       # RNL IPs
@@ -31,15 +33,19 @@ in {
     };
 
     # Removes unused printf from cfg, substitutes the APIkey by path to protected file and passes given comment on action call
-    package = pkgs.fail2ban.overrideAttrs (final: prev: {
-      preConfigure =
-        prev.preConfigure
-        + (lib.optionalString isAbuseIPDbKeyAvailable ''
-          sed -i "s|lgm=\$(printf '%%.1000s\\\n...' \"<matches>\"); ||" config/action.d/abuseipdb.conf
-          sed -i 's|<abuseipdb_apikey>|$(cat ${config.age.secrets."abuseipdb-api.key".path})|' config/action.d/abuseipdb.conf
-          sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
-        '');
-    });
+    package = pkgs.fail2ban.overrideAttrs (
+      final: prev: {
+        preConfigure =
+          prev.preConfigure
+          + (lib.optionalString isAbuseIPDbKeyAvailable ''
+            sed -i "s|lgm=\$(printf '%%.1000s\\\n...' \"<matches>\"); ||" config/action.d/abuseipdb.conf
+            sed -i 's|<abuseipdb_apikey>|$(cat ${
+              config.age.secrets."abuseipdb-api.key".path
+            })|' config/action.d/abuseipdb.conf
+            sed -i 's|\$lgm|<abuseipdb_comment>|' config/action.d/abuseipdb.conf
+          '');
+      }
+    );
     jails = {
       # Action strings need to be formatted this way, otherwise fail2ban wont recognize the multiple ban actions
       # %(action_)s is the default action (defined on jail.conf), which is "iptables-allports"
