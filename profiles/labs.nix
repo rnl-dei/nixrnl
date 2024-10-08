@@ -74,6 +74,10 @@
     duid ll   # Allow DHCP server to assign a static IPv6 using the MAC address
   '';
 
+  # Enable Wake on Lan
+  networking.usePredictableInterfaceNames = false;
+  networking.interfaces.eth0.wakeOnLan.enable = true;
+
   # Disable firewall, to simplify everyone's life
   networking.firewall.enable = lib.mkForce false;
 
