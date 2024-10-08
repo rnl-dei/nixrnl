@@ -1,6 +1,8 @@
 {
   description = "NixOS @ RNL";
 
+  # TODO RG: flakeConfig for binary cache?
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -8,6 +10,11 @@
     # Comment out because it's not used
     # rnl-config.url = "git+ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config";
     # rnl-config.inputs.nixpkgs.follows = "nixpkgs";
+
+    # TODO RG: some other inputs here have flake-parts as an input.
+    # Make them follow this one.
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -44,6 +51,7 @@
     ist-delegate-election.inputs.flake-utils.follows = "flake-utils";
 
     # Runs checks before committing
+    # TODO: has been renamed to git-hooks
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
@@ -73,64 +81,90 @@
       lib = nixpkgs.lib.extend (
         self: _super:
         import ./lib {
-          inherit
-            inputs
-            profiles
-            pkgs
-            nixosConfigurations
-            ;
+          inherit inputs profiles nixosConfigurations;
           lib = self;
+          pkgs = rnlPkgs; # TODO RG: pkgs/rnlPkgs should be a perSystem attribute.
         }
       );
 
       overlays = lib.rnl.mkOverlays ./overlays;
-      pkgs = lib.rnl.mkPkgs overlays;
+      rnlPkgs = lib.rnl.mkPkgs overlays;
       nixosConfigurations = lib.rnl.mkHosts ./hosts;
       profiles = lib.rnl.mkProfiles ./profiles;
     in
-    {
-      inherit nixosConfigurations overlays;
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ inputs.pre-commit-hooks.flakeModule ];
 
-      devShells.x86_64-linux.default = pkgs.mkShell {
-        inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;
-        buildInputs =
-          self.checks.x86_64-linux.pre-commit-check.enabledPackages
-          ++ (with pkgs; [
-            inputs.agenix.packages.x86_64-linux.agenix
-            deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
-            secrets-check
-          ]);
+      systems = [
+        # list of systems for which the `perSystem` attributes will be built.
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+
+      flake = {
+        # Expose self and lib so they can be used with `nix repl`.
+        # This is non-standard, but nixpkgs does this as well.
+        inherit self lib;
+        inherit nixosConfigurations overlays;
       };
 
-      packages.x86_64-linux = {
-        deploy-anywhere = pkgs.deploy-anywhere;
-        secrets-check = pkgs.secrets-check;
-      };
+      # list of useful attributes, for reference:
+      # perSystem = { config, self', inputs', pkgs, system, ... }: {
+      perSystem =
+        {
+          config,
+          pkgs,
+          inputs',
+          # system,
+          ...
+        }:
+        {
 
-      checks.x86_64-linux.pre-commit-check = pre-commit-hooks.lib.x86_64-linux.run {
-        src = ./.;
-        hooks = {
-          # Nix
-          deadnix.enable = true;
-          nixfmt-rfc-style.enable = true;
+          devShells.default = pkgs.mkShell {
+            packages =
+              config.pre-commit.settings.enabledPackages
+              ++ (with rnlPkgs; [
+                inputs'.agenix.packages.agenix
+                deploy-anywhere # Customized version of nixos-anywhere with Hashicorp Vault
+                secrets-check
+              ]);
+            shellHook = ''
+              # export DEBUG=1
+              ${config.pre-commit.installationScript}
+            '';
+          };
 
-          # Shell
-          shellcheck.enable = true;
-          shfmt.enable = true;
+          packages = {
+            deploy-anywhere = rnlPkgs.deploy-anywhere;
+            secrets-check = rnlPkgs.secrets-check;
+          };
+          # TODO RG: do this instead, but some packages in ./pkgs are not actually packages.
+          # packages = (lib.rnl.rnlPkgs);
 
-          # Git
-          check-merge-conflicts.enable = true;
-          forbid-new-submodules.enable = true;
+          pre-commit.settings.hooks = {
+            # Nix
+            deadnix.enable = true;
+            # TODO: consider enabling
+            # statix.enable = true;
+            nixfmt-rfc-style.enable = true;
 
-          # Spellcheck
-          typos = {
-            enable = true;
-            pass_filenames = false; # must configure excludes through typos.toml
-            settings.configPath = "./typos.toml";
+            # Shell
+            shellcheck.enable = true;
+            shfmt.enable = true;
+
+            # Git
+            check-merge-conflicts.enable = true;
+            forbid-new-submodules.enable = true;
+
+            # Spellcheck
+            typos = {
+              enable = true;
+              pass_filenames = false; # must configure excludes through typos.toml
+              settings.configPath = "./typos.toml";
+            };
+
+            #TODO: consider adding git commit e-mail check as pre-commit-hook
           };
         };
-      };
-
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
     };
 }

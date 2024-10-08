@@ -9,6 +9,9 @@
 let
   inherit (lib.rnl) rakeLeaves;
 
+  rnlPkgs = (
+    lib.mapAttrsRecursive (_: path: (pkgs.callPackage path { inherit inputs; })) (rakeLeaves ../pkgs)
+  );
   /*
     *
     Synopsis: mkPkgs overlays
@@ -344,5 +347,6 @@ in
     mkSecrets
     mkLabs
     mkStaticConfigs
+    rnlPkgs
     ;
 }
