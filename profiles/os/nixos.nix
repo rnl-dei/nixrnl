@@ -35,6 +35,7 @@
       keep-derivations = true;
       fallback = true;
       experimental-features = [
+        "ca-derivations"
         "nix-command"
         "flakes"
       ];
