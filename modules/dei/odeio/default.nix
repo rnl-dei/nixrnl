@@ -82,8 +82,6 @@ let
              DIRECTORY="$1"
              if [ ! -d "$DIRECTORY" ]; then
                error_msg "Could not find build $DIRECTORY"
-             elif [ ! -d "$DIRECTORY/www" ]; then
-               error_msg "Missing $DIRECTORY/www"
              fi
            }
 
@@ -118,7 +116,7 @@ let
            ${pkgs.toybox}/bin/rm -rf "$STATE_DIR/www"
 
            # Create symbolic links to new build
-           ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$STATE_DIR/www"
+           ${pkgs.toybox}/bin/ln -s "$BUILD" "$STATE_DIR/www"
 
 
            echo -e "''${GRN}ODEIO ${site} successfully deployed.''${CLR}"
