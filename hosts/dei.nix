@@ -80,7 +80,7 @@ in
     builds.authorizedKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICSDnfYmzk0zCktsKjRAphZavsDwXG/ymq+STFff1Zy/" # GitLab CI
     ];
-    sites.default.serverName = "odeio.dei.tecnico.ulisboa.pt";
+    sites.default.serverName = "observatorio.dei.tecnico.ulisboa.pt";
   };
 
   rnl.db-cluster = {
@@ -105,8 +105,8 @@ in
   };
 
   services.nginx.virtualHosts.redirect-odeio = {
-    serverName = "odeio.${config.networking.fqdn}";
-    serverAliases = [ "odeio.${config.rnl.domain}" ];
+    serverName = "observatorio.${config.networking.fqdn}";
+    serverAliases = [ "observatorio.${config.rnl.domain}" ];
     enableACME = true;
     forceSSL = true;
     locations."/".return = "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";

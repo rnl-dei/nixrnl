@@ -14,8 +14,8 @@ let
   siteOpts =
     {
       options,
-      config,
-      lib,
+      # config,
+      # lib,
       name,
       ...
     }:
@@ -121,7 +121,7 @@ let
            ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$STATE_DIR/www"
 
 
-           echo -e "''${GRN}DMS ${site} successfully deployed.''${CLR}"
+           echo -e "''${GRN}ODEIO ${site} successfully deployed.''${CLR}"
     '';
 in
 {
@@ -160,12 +160,14 @@ in
       )
       ++ [
         "d /var/lib/dei/odeio 0750 ${user} ${webserver.group} - -"
+        # TODO: use this - currently not working and things are still getting garbage-collected.
+        # "L+ /nix/var/nix/gcroots/odeio-builds - - - - ${cfg.builds.directory}" # Adds ODEIO builds to gcroots so they aren't garbage collected
         "d ${cfg.builds.directory} 0750 ${user} ${webserver.group} - -"
       ];
 
     services.nginx = {
       enable = true;
-      virtualHosts = mapAttrs' (siteName: siteCfg: {
+      virtualHosts = mapAttrs' (_siteName: siteCfg: {
         name = siteCfg.serviceName;
         value = {
           serverName = mkDefault siteCfg.serverName;
