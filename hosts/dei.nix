@@ -106,7 +106,6 @@ in
 
   services.nginx.virtualHosts.redirect-odeio = {
     serverName = "observatorio.${config.networking.fqdn}";
-    serverAliases = [ "observatorio.${config.rnl.domain}" ];
     enableACME = true;
     forceSSL = true;
     locations."/".return = "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
