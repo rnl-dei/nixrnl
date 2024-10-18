@@ -14,7 +14,7 @@
     createdBy = "nuno.alves";
     maintainers = [ "alberto.abad" ];
 
-    memory = 4096;
+    memory = 6144;
 
     interfaces = [
       {
