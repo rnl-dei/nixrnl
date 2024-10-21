@@ -65,6 +65,9 @@
     julia
     sbcl
 
+    # PPla
+    unstable.minizinc
+
     # SD
     eclipses.eclipse-java
     jetbrains.idea-community
