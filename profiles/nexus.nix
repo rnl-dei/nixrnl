@@ -34,7 +34,7 @@
     ################################################################################
 
       [1;37mWelcome to Nexus[0m
-      https://rnl.tecnico.ulisboa.pt/servicos/unix_shell
+      https://rnl.tecnico.ulisboa.pt/servicos/unix-shell
 
       Be aware that [1;31mwill be terminated without previous advertisement,
       any process that is consuming 100% of CPU[0m for an unreasonable
