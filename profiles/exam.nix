@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   # Warning: do not use domain names in these rules, at the risk of the
   # firewall starting before a nameserver could be fetched from the DHCP
@@ -7,7 +7,7 @@
     enable = true;
     ruleset = ''
       table inet filter {
-        # Block all incomming connections traffic except SSH and "ping".
+        # Block all incoming connections traffic except SSH and "ping".
         chain input {
           type filter hook input priority 0;
 
