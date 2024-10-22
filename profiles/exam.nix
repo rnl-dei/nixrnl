@@ -40,22 +40,9 @@
           # accept traffic originated from us
           ct state {established, related} accept
 
-
-          # Allow DNS
-          # ip daddr 193.136.164.1 udp dport domain accept
-          # ip daddr 193.136.164.2 udp dport domain accept
-
-          # # kerberos.tecnico.ulisboa.pt
-          # ip daddr 193.136.128.55 tcp dport {kerberos,kerberos-adm} accept
-          # # ldap.tecnico.ulisboa.pt
-          # ip daddr 193.136.128.31 tcp dport {ldap,ldaps} accept
-
           # # Gitlab @ RNL
           # ip daddr 193.136.164.27 tcp dport {http,https} accept
           # ip daddr 193.136.164.19 tcp dport {http,https} accept
-
-          # # NTP
-          # ip daddr 193.136.164.4 udp dport ntp accept
 
           ip daddr 193.136.164.8 tcp dport {http,https} accept
 
