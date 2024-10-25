@@ -10,6 +10,7 @@
     # Required for command-not-found to work using flakes
     inputs.flake-programs-sqlite.nixosModules.programs-sqlite
     ./ist/shell.nix
+    ./exam.nix
     ./pull.nix
     ./graphical/labs.nix
     ./containers/podman/rootless.nix
