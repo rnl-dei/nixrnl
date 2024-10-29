@@ -8,7 +8,6 @@
 
     labs
     cluster.client
-    exam
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
