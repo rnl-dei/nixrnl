@@ -40,15 +40,15 @@
           # accept traffic originated from us
           ct state {established, related} accept
 
-          # Gitlab @ RNL
-          ip daddr 193.136.164.27 tcp dport {http,https,ssh} accept
-          ip daddr 193.136.164.19 tcp dport {http,https} accept
-          # fenix.tecnico.ulisboa.pt
-          ip daddr 193.136.102.79 tcp dport {http,https} accept
-          # id.tecnico.ulisboa.pt
-          ip daddr 193.136.128.167 tcp dport {http,https} accept
-          # static.tecnico.ulisboa.pt
-          ip daddr 193.136.128.169 tcp dport {http,https} accept
+          # # Gitlab @ RNL
+          # ip daddr 193.136.164.27 tcp dport {http,https,ssh} accept
+          # ip daddr 193.136.164.19 tcp dport {http,https} accept
+          # # fenix.tecnico.ulisboa.pt
+          # ip daddr 193.136.102.79 tcp dport {http,https} accept
+          # # id.tecnico.ulisboa.pt
+          # ip daddr 193.136.128.167 tcp dport {http,https} accept
+          # # static.tecnico.ulisboa.pt
+          # ip daddr 193.136.128.169 tcp dport {http,https} accept
 
           ip daddr 193.136.164.8 tcp dport {http,https} accept
 
