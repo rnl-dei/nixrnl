@@ -8,7 +8,7 @@ with lib;
 let
   cfg = config.dei.multi-dms;
   user = cfg.user;
-  webserver = config.services.nginx; # TODO: change this
+  webserver = config.services.caddy; # TODO: change this
   buildsDir = "${cfg.directory}/builds";
   deploysDir = "${cfg.directory}/deploys-available";
   enabledSitesDir = "${cfg.directory}/deploys-enabled";
