@@ -104,9 +104,9 @@
             FENIX_ADDRESS = "https://fenix.tecnico.ulisboa.pt";
             FENIX_REDIRECT_URL = "https://helios.${config.rnl.domain}/auth/after";
             FENIX_ALLOWED_USERS_TO_CREATE_ELECTIONS = lib.concatStringsSep "," [
-              "ist23745"
-              "ist199291"
-              "ist1103252"
+              "ist23745" # Lurdes
+              "ist23000" # JLuis
+              "ist1103252" # JPereira
             ];
 
             DEBUG = "0";
