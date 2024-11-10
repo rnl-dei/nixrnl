@@ -26,6 +26,12 @@
     recommendedProxySettings = true;
 
     sslDhparam = config.security.dhparams.params.nginx.path;
+
+    # TODO: explain why this is so or make a better alternative
+    virtualHosts.localhost.listenAddresses = lib.mkForce [
+      "127.0.0.1"
+      "[::1]"
+    ];
   };
 
   security.dhparams = {
