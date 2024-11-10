@@ -149,7 +149,7 @@
     ];
   };
 
-  # MaiilHog
+  # MailHog
   services.mailhog.enable = true;
   services.nginx.virtualHosts.mailhog = {
     serverName = "mailhog.${config.networking.fqdn}";
