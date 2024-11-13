@@ -19,4 +19,15 @@
     interfaces = [ { source = "portateis"; } ];
     disks = [ { source.dev = "/dev/zvol/dpool/data/doorstep"; } ];
   };
+
+  networking = {
+    interfaces.enp1s0.ipv4.addresses = [
+      {
+        address = "10.16.81.251";
+        prefixLength = 23;
+      }
+    ];
+
+    defaultGateway.address = "10.16.81.254";
+  };
 }
