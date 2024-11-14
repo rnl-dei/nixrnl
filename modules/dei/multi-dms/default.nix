@@ -21,7 +21,7 @@ let
   deploysDir = "${cfg.directory}/deploys";
   instanceDir = "${deploysDir}/%i";
   # Directory where caddy will look for extra configuration files.
-  enabledSitesDir = "${cfg.directory}/deploys-enabled";
+  enabledSitesDir = "${cfg.directory}/sites-enabled";
   systemd-escape = "${pkgs.systemdMinimal}/bin/systemd-escape";
   systemctl = "${pkgs.systemdMinimal}/bin/systemctl";
 
@@ -164,13 +164,13 @@ let
 
       # Note: /public/* untested - may be broken!
       handle /public/* {
-        root * /var/lib/dei/multi-dms/deploys/$deployment_name/public
+        root * ${cfg.directory}/deploys/$deployment_name/public
         try_files {path} {path}/ /index.txt
         file_server
       }
 
       handle {
-              root * /var/lib/dei/multi-dms/deploys/$deployment_name/www
+              root * ${cfg.directory}/deploys/$deployment_name/www
               try_files {path} {path}/ /index.html
               file_server
       }
@@ -241,11 +241,9 @@ let
     INSTANCE_NAME=$deployment_name # TODO: hack for poorly factored code. Such is life
     deployment_svc_name="multi-dms@$deployment_name.service"
 
+    builds_dir="${buildsDir}"
     echo "Instance name: $INSTANCE_NAME"
-
-
-    builds_dir=${buildsDir}
-
+    echo "Build directory: $builds_dir"
     # ----    
 
     check_build_dir() {
@@ -292,7 +290,9 @@ let
     # Delete any old deployment leftovers
     echo "Deleting (possible) leftover dms.jar and www...."
     ${systemctl} stop $deployment_svc_name
-    ${pkgs.toybox}/bin/rm -rf "$INSTANCE_DIR/{www,dms.jar}"
+    ${pkgs.toybox}/bin/rm -rf "$INSTANCE_DIR/www"
+    ${pkgs.toybox}/bin/rm -rf "$INSTANCE_DIR/dms.jar"
+
 
     # Init new deployment instance
     echo "Init new instance..."
@@ -323,7 +323,7 @@ in
 
     user = mkOption {
       type = types.str;
-      default = "multi-dms";
+      default = "dms";
       description = "User to run the DMS service as";
     };
 
