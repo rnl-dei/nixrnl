@@ -76,7 +76,7 @@ let
         echo -n "$port"
     }
 
-    db_dump_file="${cfg.directory}/common/dms_backup_2024-10-10.sql" # TODO: change this
+    db_dump_file="${cfg.directory}/common/latest.sql"
   '';
 
   preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
