@@ -19,7 +19,7 @@
       valid-lifetime = 4000;
       option-data = [
         {
-          name = "DNS servers";
+          name = "dns-servers";
           data = "ns.rnl.tecnico.ulisboa.pt";
         }
       ];
