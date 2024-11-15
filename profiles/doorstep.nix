@@ -10,6 +10,7 @@
         persist = true;
         name = "/var/lib/kea/dhcp4.leases";
       };
+      authoritative = true;
       subnet4 = [
         {
           id = 1;
