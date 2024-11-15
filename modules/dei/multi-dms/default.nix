@@ -18,8 +18,8 @@ let
   user = cfg.user;
   webserver = config.services.caddy; # TODO: change this
   buildsDir = "${cfg.directory}/builds";
-  deploysDir = "${cfg.directory}/deploys";
-  instanceDir = "${deploysDir}/%i";
+  instancesDir = "${cfg.directory}/instances";
+  instanceDir = "${instancesDir}/%i";
   # Directory where caddy will look for extra configuration files.
   enabledSitesDir = "${cfg.directory}/sites-enabled";
   systemd-escape = "${pkgs.systemdMinimal}/bin/systemd-escape";
@@ -120,7 +120,7 @@ let
 
       # Because Blatta is too slow for create-destroy DBs on system stop/start,
       # we only populate the DB once and don't automatically destroy it.
-      if test -f ${deploysDir}/$INSTANCE_NAME/_multi-dms-db-init; then
+      if test -f ${instancesDir}/$INSTANCE_NAME/_multi-dms-db-init; then
         echo "Refusing to re-populate the database."
         return
       fi
@@ -131,8 +131,7 @@ let
         -u dms -p"$DB_PASSWORD" \
         dms < "$db_dump_file"
 
-      touch ${deploysDir}/$INSTANCE_NAME/_multi-dms-db-init
-      sleep 10 # :thinking:
+      touch ${instancesDir}/$INSTANCE_NAME/_multi-dms-db-init
     }
 
     add_caddy_vhost() {
@@ -235,7 +234,6 @@ let
     fi
 
     # -----
-
     deployment_name_aux=$(${systemd-escape} --mangle "$1")
     deployment_name=''${deployment_name_aux%.service}
     INSTANCE_NAME=$deployment_name # TODO: hack for poorly factored code. Such is life
@@ -277,8 +275,7 @@ let
       exit 3
     fi
 
-    INSTANCE_DIR="${deploysDir}/$deployment_name"
-
+    INSTANCE_DIR="${instancesDir}/$deployment_name"
     # ----
     # Implementation
 
@@ -363,7 +360,6 @@ in
       default = deployScript;
       description = "Package containing the deploy script";
     };
-    # TODO rg: deploy script
 
     backend = {
       java = mkOption {
@@ -372,9 +368,6 @@ in
         description = "Path to the Java executable";
       };
 
-      # TODO rg: use random port inside interval (See /var/lib/dms in blatta)
-      # TODO: create getPort shellScript here
-      # TODO: change descriptions
       minPort = mkOption {
         type = types.int;
         default = 36000;
@@ -389,9 +382,7 @@ in
       command = mkOption {
         type = types.str;
         default =
-          # FIXME rg: dont use static port!
-          # Maybe use unix socket...?
-          "${cfg.backend.java} -jar ${deploysDir}/$INSTANCE_NAME/dms.jar --server.port=$BACKEND_PORT"
+          "${cfg.backend.java} -jar ${instancesDir}/$INSTANCE_NAME/dms.jar --server.port=$BACKEND_PORT"
           + (concatStringsSep " " cfg.backend.extraArgs);
         description = "Command to start the DMS backend";
       };
@@ -432,7 +423,7 @@ in
     systemd.tmpfiles.rules = [
       "d ${cfg.directory} 0750 ${user} ${webserver.group} - -"
       "d ${buildsDir} 0750 ${user} ${webserver.group} - -"
-      "d ${deploysDir}/public 0750 ${user} ${webserver.group} - -"
+      "d ${instancesDir}/public 0750 ${user} ${webserver.group} - -"
       "d ${enabledSitesDir} 0750 ${user} ${webserver.group} - -"
 
       # TODO: when does this run?
@@ -448,20 +439,10 @@ in
       # https://serverfault.com/questions/193377/ipv6-loopback-addresses-equivalent-to-127-x-x-x
     ];
 
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-    # FIXME RG: DON'T DEPLOY TO DEI YET
-
     # TODO: caddy in its own module?
     services.caddy = {
       # TODO: remove `package` line on >= 25.11
-      # tls_trust_pool directive doesn't seem to exist atm (on 24.05)
+      # tls_trust_pool directive doesn't seem to exist atm (on 24.05's version)
       package = pkgs.unstable.caddy;
       enable = true;
       acmeCA = config.security.acme.defaults.server;
@@ -484,7 +465,7 @@ in
           "fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt".extraConfig = ''
             encode zstd gzip
             handle {
-                  redir {header.Referer}login?{query}
+              redir {header.Referer}login?{query}
             }
           '';
         }
@@ -504,15 +485,15 @@ in
             # https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#https
             value = {
               extraConfig = ''
-                              encode zstd gzip
-                              reverse_proxy https://127.0.0.80 {
-                	        	    transport http {
-                                  tls_server_name ${svName}
-                                  tls_trust_pool file {
-                                    pem_file /var/lib/acme/.minica/cert.pem /etc/ssl/certs/ca-bundle.crt
-                                  }
-                		            }
-                              }
+                encode zstd gzip
+                reverse_proxy https://127.0.0.80 {
+                  transport http {
+                    tls_server_name ${svName}
+                    tls_trust_pool file {
+                      pem_file /var/lib/acme/.minica/cert.pem /etc/ssl/certs/ca-bundle.crt
+                    }
+                  }
+                }
               '';
             };
           }
@@ -522,8 +503,6 @@ in
     systemd.services."multi-dms@" = {
       description = "DEI Management System Backend (%i)";
       after = [ "network.target" ];
-      #FIXME: wantedby multi-user.target is causing multi-dms@multi-user.service to exist???
-      # wantedBy = [ "multi-user.target" ]; 
 
       path = with pkgs; [
         bash
@@ -539,7 +518,6 @@ in
       environment = cfg.backend.environment;
 
       serviceConfig = {
-        #TODO: systemd-analyze verify <this>
         User = user;
         Group = webserver.group;
         ExecStart = "${startScript}/bin/multi-dms-start";
