@@ -241,7 +241,7 @@ let
     INSTANCE_NAME=$deployment_name # TODO: hack for poorly factored code. Such is life
     deployment_svc_name="multi-dms@$deployment_name.service"
 
-    builds_dir="${buildsDir}"
+    builds_dir="${buildsDir}/$INSTANCE_NAME"
     echo "Instance name: $INSTANCE_NAME"
     echo "Build directory: $builds_dir"
     # ----    
