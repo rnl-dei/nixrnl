@@ -5,6 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+    doorstep
   ];
 
   rnl.labels.location = "zion";
