@@ -20,7 +20,7 @@
       option-data = [
         {
           name = "domain-name-servers";
-          code = "6";
+          code = 6;
           data = "193.136.164.1";
         }
       ];
