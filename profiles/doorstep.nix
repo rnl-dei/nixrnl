@@ -20,7 +20,7 @@
       option-data = [
         {
           name = "dns-servers";
-          data = "ns.rnl.tecnico.ulisboa.pt";
+          data = "193.136.164.1";
         }
       ];
     };
