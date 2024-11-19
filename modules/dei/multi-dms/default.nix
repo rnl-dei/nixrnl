@@ -289,7 +289,6 @@ let
     echo "BACKEND_PORT=$backend_port" > "$INSTANCE_DIR/dms.env"
     echo "DB_PORT=$db_port" >> "$INSTANCE_DIR/dms.env"
     echo "DMS_URL"=https://dms-$deployment_name.blatta.rnl.tecnico.ulisboa.pt >> "$INSTANCE_DIR/dms.env"
-    echo "CALLBACK_URL"=https://fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt/login >> "$INSTANCE_DIR/dms.env"
 
     # Start DMS instance and reload caddy
     echo "Starting $deployment_svc_name. The first time might take a while."
