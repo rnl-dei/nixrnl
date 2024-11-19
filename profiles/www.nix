@@ -171,8 +171,8 @@ in
         $config['db_dsnw'] = '${databaseURL}';
         $config['default_host'] = 'ssl://${config.rnl.mailserver.host}';
         $config['default_port'] = 993;
-        $config['smtp_server'] = 'tls://${config.rnl.mailserver.host}';
-        $config['smtp_port'] = 25;
+        $config['smtp_server'] = 'ssl://${config.rnl.mailserver.host}';
+        $config['smtp_port'] = 465;
         $config['product_name'] = 'RNL Webmail';
         $config['mail_domain'] = '${config.rnl.domain}';
         $config['cipher_method'] = 'AES-256-CBC';
