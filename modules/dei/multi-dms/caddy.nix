@@ -6,6 +6,9 @@
 }:
 with lib;
 let
+  # FIXME:  ask rnl if there's a better way
+  hostv4 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
+  hostv6 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
 in
 {
 
@@ -40,15 +43,7 @@ in
     # Note: the order of the handle directives matter!
     # The first handle directive that matches will win.
     virtualHosts =
-      {
-        # Gateway to redirect fenix oauth responses to correct DMS instance
-        "fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt".extraConfig = ''
-          encode zstd gzip
-          handle {
-            redir {header.Referer}login?{query}
-          }
-        '';
-      }
+      { }
       // (mapAttrs' (
         _vhostName: vhostConfig:
         let

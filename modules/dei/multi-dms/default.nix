@@ -18,11 +18,11 @@ let
   user = cfg.user;
   webserver = config.services.caddy; # TODO: change this
   buildsDir = "${cfg.directory}/builds";
-  instancesDir = "${cfg.directory}/instances";
-  instanceDir = "${instancesDir}/%i";
+  environmentsDir = "${cfg.directory}/environments";
+  # Path to an environment's data. Can only be used in configurations systemd reads directly! (e.g, using this in (...).env files will NOT work.)
+  systemdDir = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
-  enabledSitesDir = "${cfg.directory}/sites-enabled";
-  systemd-escape = "${pkgs.systemdMinimal}/bin/systemd-escape";
+  caddyConfigsDir = "${cfg.directory}/caddy-configs";
   systemctl = "${pkgs.systemdMinimal}/bin/systemctl";
 
   common = ''
@@ -32,34 +32,34 @@ let
 
 
     get_db_container_name() {
-        local deployment_name="$1"
+        local ENVIRONMENT_NAME="$1"
 
         # Check if arguments are provided
-        if [[ -z "$deployment_name"  ]]; then
-            echo "Usage: create_db_container_name <deployment_name>"
+        if [[ -z "$ENVIRONMENT_NAME"  ]]; then
+            echo "Usage: create_db_container_name <ENVIRONMENT_NAME>"
             return 1
         fi
 
         # Hash the input string and convert it to an integer within the specified range
-        local hash=$(echo -n "$deployment_name" | sha256sum | cut -c1-7)
+        local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
         db_container_name="dms-$hash" # container name will always be 11 chars, which is max. allowed.
     }
 
     get_port() {
         local min_port="$1"
         local max_port="$2"
-        local deployment_name="$3"
+        local ENVIRONMENT_NAME="$3"
 
         # Check if arguments are provided
-        if [[ -z "$deployment_name"  ]]; then
-            echo "Usage: get_port <min_port> <max_port> <deployment_name>"
+        if [[ -z "$ENVIRONMENT_NAME"  ]]; then
+            echo "Usage: get_port <min_port> <max_port> <ENVIRONMENT_NAME>"
             return 1
         fi
         # Calculate range
         local range=$(($max_port - $min_port + 1))
 
         # Hash the input string and convert it to an integer within the specified range
-        local hash=$(echo -n "$deployment_name" | sha256sum | cut -c1-8)
+        local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
         local port=$(( (0x$hash % range) + $min_port ))
         echo -n "$port"
     }
@@ -71,12 +71,12 @@ let
     #!/usr/bin/env bash
     set -xo pipefail #TODO: add -eu flags
 
-    echo "Start pre-start script for DMS deployment $INSTANCE_NAME"
+    echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
     ${common}
-    get_db_container_name $INSTANCE_NAME # sets $db_container_name
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $INSTANCE_NAME)
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $INSTANCE_NAME)
+    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
 
     create_db() {
       local db_name="$1"
@@ -108,7 +108,7 @@ let
 
       # Because Blatta is too slow for create-destroy DBs on system stop/start,
       # we only populate the DB once and don't automatically destroy it.
-      if test -f ${instancesDir}/$INSTANCE_NAME/_multi-dms-db-init; then
+      if test -f ${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init; then
         echo "Refusing to re-populate the database."
         return
       fi
@@ -119,25 +119,25 @@ let
         -u dms -p"$DB_PASSWORD" \
         dms < "$db_dump_file"
 
-      touch ${instancesDir}/$INSTANCE_NAME/_multi-dms-db-init
+      touch ${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init
     }
 
     add_caddy_vhost() {
-      local deployment_name="$1"
+      local ENVIRONMENT_NAME="$1"
       local backend_port="$2"
 
       # Check if arguments are provided
-      if [[ -z "$deployment_name" || -z "$backend_port" ]]; then
-        echo "Usage: add_caddy_vhost <deployment_name> <backend_port>"
+      if [[ -z "$ENVIRONMENT_NAME" || -z "$backend_port" ]]; then
+        echo "Usage: add_caddy_vhost <ENVIRONMENT_NAME> <backend_port>"
         return 1
       fi
 
-      touch ${enabledSitesDir}/$deployment_name
+      touch ${caddyConfigsDir}/$ENVIRONMENT_NAME
 
-      cat > ${enabledSitesDir}/$deployment_name << EOL
-    dms-$deployment_name.blatta.rnl.tecnico.ulisboa.pt {
+      cat > ${caddyConfigsDir}/$ENVIRONMENT_NAME << EOL
+    dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt {
       log {
-              output file /var/log/caddy/access-dms-$deployment_name.blatta.rnl.tecnico.ulisboa.pt.log
+              output file /var/log/caddy/access-dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt.log
       }
 
       encode zstd gzip
@@ -151,13 +151,13 @@ let
 
       # Note: /public/* untested - may be broken!
       handle /public/* {
-        root * ${cfg.directory}/deploys/$deployment_name/public
+        root * ${cfg.directory}/deploys/$ENVIRONMENT_NAME/public
         try_files {path} {path}/ /index.txt
         file_server
       }
 
       handle {
-              root * ${cfg.directory}/deploys/$deployment_name/www
+              root * ${cfg.directory}/deploys/$ENVIRONMENT_NAME/www
               try_files {path} {path}/ /index.html
               file_server
       }
@@ -168,7 +168,7 @@ let
     }
 
     create_db $db_container_name $db_port
-    add_caddy_vhost $INSTANCE_NAME $backend_port
+    add_caddy_vhost $ENVIRONMENT_NAME $backend_port
     sleep 1
     populate_db $db_port # TODO: this is very, very, very slow to be doing on-demand.
     #                      Consider an alternative (talk to Carlos/RNL if hypervisor might get faster soon:tm:)
@@ -180,10 +180,10 @@ let
     echo "I am stick!"
 
     ${common}
-    get_db_container_name $INSTANCE_NAME # sets $db_container_name
+    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
 
     # Remove caddy virtualhost
-    rm ${enabledSitesDir}/$INSTANCE_NAME
+    rm ${caddyConfigsDir}/$ENVIRONMENT_NAME
     ${systemctl} reload caddy
 
     # Destroy DB # TODO: actually just stopping because on-demand create/destroy DB is way too slow on blatta.
@@ -213,22 +213,19 @@ let
       exit 1
     }
 
-    branch_name=$1
+    ENVIRONMENT_NAME=$1
 
+
+    service_name="multi-dms@$ENVIRONMENT_NAME.service"
     # Check if arguments are provided
-    if [[ -z "$branch_name" ]]; then
-      echo "Usage: $0 <branch name>"
+    if [[ -z "$ENVIRONMENT_NAME" ]]; then
+      echo "Usage: $0 <environment name without 'multi-dms/' prefix> [build timestamp]"
       exit 1
     fi
 
     # -----
-    deployment_name_aux=$(${systemd-escape} --mangle "$1")
-    deployment_name=''${deployment_name_aux%.service}
-    INSTANCE_NAME=$deployment_name # TODO: hack for poorly factored code. Such is life
-    deployment_svc_name="multi-dms@$deployment_name.service"
-
-    builds_dir="${buildsDir}/$INSTANCE_NAME"
-    echo "Instance name: $INSTANCE_NAME"
+    builds_dir="${buildsDir}/$ENVIRONMENT_NAME"
+    echo "Environment name: $ENVIRONMENT_NAME"
     echo "Build directory: $builds_dir"
     # ----    
 
@@ -247,7 +244,7 @@ let
       error_msg "No $builds_dir directory found."
     fi
 
-    LAST_BUILD_STAMP="$(ls -t $builds_dir | ${pkgs.gnugrep}/bin/grep '^[[:digit:]]\+$' | head -n 1)"
+    LAST_BUILD_STAMP="$(ls -t "$builds_dir" | ${pkgs.gnugrep}/bin/grep '^[[:digit:]]\+$' | head -n 1)"
     if [ -z "$LAST_BUILD_STAMP" ]; then
       error_msg "There is no (last) build. Please copy a build to $builds_dir."
     fi
@@ -255,46 +252,56 @@ let
     BUILD="$builds_dir/$BUILD_STAMP"
     check_build_dir $BUILD
 
-    echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)? "
-    read -n1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      echo -e "''${YEL}Aborting...''${CLR}"
-      exit 3
+    # Only prompt for confirmation if not specifying a build to use.
+    if [[ -z "$2" ]]; then
+        BUILD="$builds_dir/$BUILD_STAMP"
+        echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)?"
+        read -n1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+          echo -e "''${YEL}Aborting...''${CLR}"
+          exit 3
+        fi
+        BUILD_STAMP=$LAST_BUILD_STAMP
+    else
+      echo "Deploying build ''${BLU}$BUILD''${CLR}, commit time: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
     fi
 
-    INSTANCE_DIR="${instancesDir}/$deployment_name"
+    ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
     # ----
     # Implementation
 
     ${common}
-    get_db_container_name $deployment_name # sets $db_container_name
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $INSTANCE_NAME)
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $INSTANCE_NAME)
+    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
 
     # Delete any old deployment leftovers
     echo "Deleting (possible) leftover dms.jar and www...."
-    ${systemctl} stop $deployment_svc_name
-    ${pkgs.toybox}/bin/rm -rf "$INSTANCE_DIR/www"
-    ${pkgs.toybox}/bin/rm -rf "$INSTANCE_DIR/dms.jar"
+    ${systemctl} stop $service_name
+    ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/www"
+    ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/dms.jar"
 
 
-    # Init new deployment instance
-    echo "Init new instance..."
-    echo "Instance's container name is '$db_container_name'".
+    echo "Init new environment..."
+    echo "Environment's container DB name is '$db_container_name'".
     echo "You can access it with e.g 'machinectl shell $db_container_name'."
-    mkdir -p "$INSTANCE_DIR"
-    ${pkgs.toybox}/bin/ln -s "$BUILD/dms.jar" "$INSTANCE_DIR/dms.jar"
-    ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$INSTANCE_DIR/www"
-    echo "BACKEND_PORT=$backend_port" > "$INSTANCE_DIR/dms.env"
-    echo "DB_PORT=$db_port" >> "$INSTANCE_DIR/dms.env"
-    echo "DMS_URL"=https://dms-$deployment_name.blatta.rnl.tecnico.ulisboa.pt >> "$INSTANCE_DIR/dms.env"
+    mkdir -p "$ENVIRONMENT_DIR"
+    ${pkgs.toybox}/bin/ln -s "$BUILD/dms.jar" "$ENVIRONMENT_DIR/dms.jar"
+    ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$ENVIRONMENT_DIR/www"
+    echo "BACKEND_PORT=$backend_port" > "$ENVIRONMENT_DIR/dms.env"
+    echo "DB_PORT=$db_port" >> "$ENVIRONMENT_DIR/dms.env"
+    echo "DMS_URL"=https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt >> "$ENVIRONMENT_DIR/dms.env"
 
-    # Start DMS instance and reload caddy
-    echo "Starting $deployment_svc_name. The first time might take a while."
-    ${systemctl} start $deployment_svc_name
+
+    # Start DMS environment and reload caddy
+    echo "Starting service $service_name . The first time might take a while."
+    ${systemctl} start $service_name
     echo "Started DMS."
-    echo "Instance URL: https://dms-$deployment_name.blatta.rnl.tecnico.ulisboa.pt"
+    echo "Environment status:"
+    ${systemctl} status $service_name --no-block --no-pager
+    echo "Environment URL: https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt"
+
   '';
 in
 {
@@ -369,7 +376,7 @@ in
       command = mkOption {
         type = types.str;
         default =
-          "${cfg.backend.java} -jar ${instancesDir}/$INSTANCE_NAME/dms.jar --server.port=$BACKEND_PORT"
+          "${cfg.backend.java} -jar ${environmentsDir}/$ENVIRONMENT_NAME/dms.jar --server.port=$BACKEND_PORT"
           + (concatStringsSep " " cfg.backend.extraArgs);
         description = "Command to start the DMS backend";
       };
@@ -385,11 +392,12 @@ in
         default = {
           NIX_PATH = (concatStringsSep ":" config.nix.nixPath); # TODO: ugly, but nixos-container needs it (actually nix-env)
           DB_HOST = cfg.database.host;
-          INSTANCE_NAME = "%i";
+          INSTANCE_NAME = "%i"; # TODO: make sure external things aren't using INSTANCE_NAME and deprecate it
+          ENVIRONMENT_NAME = "%i";
           DB_NAME = "dms";
           DB_USERNAME = "dms";
-          FILES_DIR = "${instanceDir}/data";
-          FILES_PUBLIC = "${instanceDir}/www";
+          FILES_DIR = "${systemdDir}/data";
+          FILES_PUBLIC = "${systemdDir}/www";
         };
         description = "Environment variables common to all DMS deployments";
       };
@@ -401,6 +409,7 @@ in
       };
     };
   };
+  imports = [ ./caddy.nix ];
 
   config = mkIf (cfg.enable) {
 
@@ -410,12 +419,22 @@ in
     systemd.tmpfiles.rules = [
       "d ${cfg.directory} 0750 ${user} ${webserver.group} - -"
       "d ${buildsDir} 0750 ${user} ${webserver.group} - -"
-      "d ${instancesDir}/public 0750 ${user} ${webserver.group} - -"
-      "d ${enabledSitesDir} 0750 ${user} ${webserver.group} - -"
+      "d ${environmentsDir}/public 0750 ${user} ${webserver.group} - -"
+      "d ${caddyConfigsDir} 0750 ${user} ${webserver.group} - -"
     ];
 
     services.caddy.extraConfig = ''
-      import ${enabledSitesDir}/*
+      import ${caddyConfigsDir}/*
+    '';
+
+    # Note 1: DO NOT USE THIS IN PRODUCTION!
+    # Note 2: The order of the `handle` directives matter!
+    #         The first handle directive that matches will win.
+    services.caddy.virtualHosts."fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt".extraConfig = ''
+      encode zstd gzip
+      handle {
+        redir {header.Referer}login?{query}
+      }
     '';
 
     systemd.services."multi-dms@" = {
@@ -445,14 +464,14 @@ in
 
         EnvironmentFile = [
           cfg.backend.environmentFile
-          "${instanceDir}/dms.env"
+          "${systemdDir}/dms.env"
         ];
         Restart = "on-failure";
         RestartSec = "5s";
       };
 
       unitConfig = {
-        ConditionPathExists = "${instanceDir}";
+        ConditionPathExists = "${systemdDir}";
       };
     };
 
