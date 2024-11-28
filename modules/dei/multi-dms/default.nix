@@ -67,6 +67,7 @@ let
     db_dump_file="${cfg.directory}/common/latest.sql"
   '';
 
+  # TODO: use writeShellApplication for auto shellcheck and other things
   preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
     #!/usr/bin/env bash
     set -xo pipefail #TODO: add -eu flags
@@ -74,7 +75,7 @@ let
     echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
     ${common}
-    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
+    get_db_container_name "$ENVIRONMENT_NAME" # sets $db_container_name
     backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
     db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
 
@@ -174,6 +175,7 @@ let
     #                      Consider an alternative (talk to Carlos/RNL if hypervisor might get faster soon:tm:)
   '';
 
+  # TODO: use writeShellApplication for auto shellcheck and other things
   postStopScript = pkgs.writeScriptBin "multi-dms-poststop" ''
     #!/usr/bin/env bash
     set -xo pipefail #TODO: add -eu flags
@@ -183,18 +185,20 @@ let
     get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
 
     # Remove caddy virtualhost
-    rm ${caddyConfigsDir}/$ENVIRONMENT_NAME
+    rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
     ${systemctl} reload caddy
 
     # Destroy DB # TODO: actually just stopping because on-demand create/destroy DB is way too slow on blatta.
     nixos-container stop "$db_container_name"
   '';
 
+  # TODO: use writeShellApplication for auto shellcheck and other things
   startScript = pkgs.writeScriptBin "multi-dms-start" ''
     #!/usr/bin/env bash
     exec ${cfg.backend.command}
   '';
 
+  # TODO: use writeShellApplication for auto shellcheck and other things
   deployScript = pkgs.writeScriptBin "multi-dms-deploy" ''
     #!/usr/bin/env bash
 
@@ -272,7 +276,7 @@ let
     # Implementation
 
     ${common}
-    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
+    get_db_container_name "$ENVIRONMENT_NAME" # sets $db_container_name
     backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
     db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
 
