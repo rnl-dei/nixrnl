@@ -152,15 +152,15 @@ let
 
       # Note: /public/* untested - may be broken!
       handle /public/* {
-        root * ${cfg.directory}/deploys/$ENVIRONMENT_NAME/public
+        root * ${cfg.directory}/environments/$ENVIRONMENT_NAME/public
         try_files {path} {path}/ /index.txt
         file_server
       }
 
       handle {
-              root * ${cfg.directory}/deploys/$ENVIRONMENT_NAME/www
-              try_files {path} {path}/ /index.html
-              file_server
+        root * ${cfg.directory}/environments/$ENVIRONMENT_NAME/www
+        try_files {path} {path}/ /index.html
+        file_server
       }
     }
 
@@ -217,16 +217,15 @@ let
       exit 1
     }
 
-    ENVIRONMENT_NAME=$1
 
-
-    service_name="multi-dms@$ENVIRONMENT_NAME.service"
     # Check if arguments are provided
-    if [[ -z "$ENVIRONMENT_NAME" ]]; then
+    if  ![[ $# -eq 1 ] || [ $# -eq 2 ]]; then
       echo "Usage: $0 <environment name without 'multi-dms/' prefix> [build timestamp]"
       exit 1
     fi
 
+    service_name="multi-dms@$ENVIRONMENT_NAME.service"
+    ENVIRONMENT_NAME=$1
     # -----
     builds_dir="${buildsDir}/$ENVIRONMENT_NAME"
     echo "Environment name: $ENVIRONMENT_NAME"
@@ -257,7 +256,7 @@ let
     check_build_dir $BUILD
 
     # Only prompt for confirmation if not specifying a build to use.
-    if [[ -z "$2" ]]; then
+    if [[ $# -eq 2 ]]; then
         BUILD="$builds_dir/$BUILD_STAMP"
         echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)?"
         read -n1 -r
@@ -268,7 +267,8 @@ let
         fi
         BUILD_STAMP=$LAST_BUILD_STAMP
     else
-      echo "Deploying build ''${BLU}$BUILD''${CLR}, commit time: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
+      #TODO rg: colors are broken here
+      echo "Deploying build ''${BLU} $BUILD ''${CLR}, commit time: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
     fi
 
     ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
@@ -485,6 +485,15 @@ in
       TimeoutStartSec = mkForce "10min 0s";
     };
 
+    # TODO: Is this an unnecessary hack? 
+    # I feel like there should be a better option
+    security.wrappers."multi-dms-deploy" = {
+      source = cfg.deployScriptPackage;
+      owner = "root";
+      group = "root";
+      setuid = true;
+    };
+
     users.users = mkMerge [
       (mkIf (user == "multi-dms") {
         multi-dms = {
@@ -495,7 +504,9 @@ in
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
         };
       })
-      { root.packages = [ cfg.deployScriptPackage ]; }
+      {
+        #  root.packages = [ cfg.deployScriptPackage ]; 
+      }
     ];
   };
 }
