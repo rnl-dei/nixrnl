@@ -16,7 +16,7 @@ let
 
   cfg = config.dei.multi-dms;
   user = cfg.user;
-  webserver = config.services.caddy; # TODO: change this
+  webserver = config.services.caddy;
   buildsDir = "${cfg.directory}/builds";
   environmentsDir = "${cfg.directory}/environments";
   # Path to an environment's data. Can only be used in configurations systemd reads directly! (e.g, using this in (...).env files will NOT work.)
@@ -67,10 +67,9 @@ let
     db_dump_file="${cfg.directory}/common/latest.sql"
   '';
 
-  # TODO: use writeShellApplication for auto shellcheck and other things
   preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
     #!/usr/bin/env bash
-    set -xo pipefail #TODO: add -eu flags
+    set -xo pipefail 
 
     echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
@@ -171,14 +170,12 @@ let
     create_db $db_container_name $db_port
     add_caddy_vhost $ENVIRONMENT_NAME $backend_port
     sleep 1
-    populate_db $db_port # TODO: this is very, very, very slow to be doing on-demand.
-    #                      Consider an alternative (talk to Carlos/RNL if hypervisor might get faster soon:tm:)
+    populate_db $db_port # TODO: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
   '';
 
-  # TODO: use writeShellApplication for auto shellcheck and other things
   postStopScript = pkgs.writeScriptBin "multi-dms-poststop" ''
     #!/usr/bin/env bash
-    set -xo pipefail #TODO: add -eu flags
+    set -xo pipefail 
     echo "I am stick!"
 
     ${common}
@@ -188,17 +185,15 @@ let
     rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
     ${systemctl} reload caddy
 
-    # Destroy DB # TODO: actually just stopping because on-demand create/destroy DB is way too slow on blatta.
+    # Destroy DB # TODO: actually just stopping, because on-demand create/destroy DB is way too slow on blatta.
     nixos-container stop "$db_container_name"
   '';
 
-  # TODO: use writeShellApplication for auto shellcheck and other things
   startScript = pkgs.writeScriptBin "multi-dms-start" ''
     #!/usr/bin/env bash
     exec ${cfg.backend.command}
   '';
 
-  # TODO: use writeShellApplication for auto shellcheck and other things
   deployScript = pkgs.writeScriptBin "multi-dms-deploy" ''
     #!/usr/bin/env bash
 
@@ -219,14 +214,14 @@ let
 
 
     # Check if arguments are provided
-    if  ![[ $# -eq 1 ] || [ $# -eq 2 ]]; then
+    if  [[ $# -ne 1 && $# -ne 2 ]]; then
       echo "Usage: $0 <environment name without 'multi-dms/' prefix> [build timestamp]"
       exit 1
     fi
 
-    service_name="multi-dms@$ENVIRONMENT_NAME.service"
     ENVIRONMENT_NAME=$1
     # -----
+    service_name="multi-dms@$ENVIRONMENT_NAME.service"
     builds_dir="${buildsDir}/$ENVIRONMENT_NAME"
     echo "Environment name: $ENVIRONMENT_NAME"
     echo "Build directory: $builds_dir"
@@ -243,7 +238,7 @@ let
       fi
     }
 
-    if (! ls $builds_dir &>/dev/null); then
+    if (! ls "$builds_dir" &>/dev/null); then
       error_msg "No $builds_dir directory found."
     fi
 
@@ -253,10 +248,10 @@ let
     fi
     BUILD_STAMP="''${2:-$LAST_BUILD_STAMP}"
     BUILD="$builds_dir/$BUILD_STAMP"
-    check_build_dir $BUILD
+    check_build_dir "$BUILD"
 
     # Only prompt for confirmation if not specifying a build to use.
-    if [[ $# -eq 2 ]]; then
+    if [[ $# -ne 2 ]]; then
         BUILD="$builds_dir/$BUILD_STAMP"
         echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)?"
         read -n1 -r
@@ -267,8 +262,7 @@ let
         fi
         BUILD_STAMP=$LAST_BUILD_STAMP
     else
-      #TODO rg: colors are broken here
-      echo "Deploying build ''${BLU} $BUILD ''${CLR}, commit time: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
+      echo "Deploying build $BUILD, commit timestamp: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
     fi
 
     ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
@@ -282,7 +276,7 @@ let
 
     # Delete any old deployment leftovers
     echo "Deleting (possible) leftover dms.jar and www...."
-    ${systemctl} stop $service_name
+    ${systemctl} stop "$service_name"
     ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/www"
     ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/dms.jar"
 
@@ -303,9 +297,8 @@ let
     ${systemctl} start $service_name
     echo "Started DMS."
     echo "Environment status:"
-    ${systemctl} status $service_name --no-block --no-pager
+    ${systemctl} status "$service_name" --no-block --no-pager
     echo "Environment URL: https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt"
-
   '';
 in
 {
@@ -394,9 +387,8 @@ in
       environment = mkOption {
         type = types.attrsOf types.str;
         default = {
-          NIX_PATH = (concatStringsSep ":" config.nix.nixPath); # TODO: ugly, but nixos-container needs it (actually nix-env)
+          NIX_PATH = (concatStringsSep ":" config.nix.nixPath); # ugly, but nixos-container needs it (actually nix-env)
           DB_HOST = cfg.database.host;
-          INSTANCE_NAME = "%i"; # TODO: make sure external things aren't using INSTANCE_NAME and deprecate it
           ENVIRONMENT_NAME = "%i";
           DB_NAME = "dms";
           DB_USERNAME = "dms";
@@ -423,8 +415,10 @@ in
     systemd.tmpfiles.rules = [
       "d ${cfg.directory} 0750 ${user} ${webserver.group} - -"
       "d ${buildsDir} 0750 ${user} ${webserver.group} - -"
-      "d ${environmentsDir}/public 0750 ${user} ${webserver.group} - -"
+      "d ${environmentsDir} 0750 ${user} ${webserver.group} - -"
       "d ${caddyConfigsDir} 0750 ${user} ${webserver.group} - -"
+      "Z /etc/nixos-containers 0771 ${user} root - -"
+      "Z /var/lib/nixos-containers 0771 ${user} root - -"
     ];
 
     services.caddy.extraConfig = ''
@@ -485,14 +479,16 @@ in
       TimeoutStartSec = mkForce "10min 0s";
     };
 
-    # TODO: Is this an unnecessary hack? 
-    # I feel like there should be a better option
-    security.wrappers."multi-dms-deploy" = {
-      source = cfg.deployScriptPackage;
-      owner = "root";
-      group = "root";
-      setuid = true;
-    };
+    security.polkit.enable = true;
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          RegExp('multi-dms@[A-Za-z0-9_-]+.service').test(action.lookup("unit")) === true &&
+          subject.user == "dms") {
+          return polkit.Result.YES;
+      }
+      });
+    '';
 
     users.users = mkMerge [
       (mkIf (user == "multi-dms") {
@@ -504,9 +500,7 @@ in
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
         };
       })
-      {
-        #  root.packages = [ cfg.deployScriptPackage ]; 
-      }
+      { dms.packages = [ cfg.deployScriptPackage ]; }
     ];
   };
 }
