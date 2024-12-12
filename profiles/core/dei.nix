@@ -14,6 +14,7 @@
     "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJvkSRd4B8oEvmXI5uduJtrV4GkRc/f1PFaezQ3wobn08apvaTGHLrNPqgqzv+QwNppWkwSX0j2fNqt2dsUmcbw= rafael.girao@sazed2[TPM]"
     "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxyt2Uhru+PIf9SKRF96AW05P9WuyR7NKbS6OZyElNjOT+1qmkeL82+7B5qeHsACA3ZRo4svorIS1Q8khLmexk= rafael.girao@vin-TPM"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1lwuhiBZjUIzFikFCrzyp1jppOZSvlyc1/JZDvvqgD simao.sanguinho@macbook"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJYSbX6p2JOTjroVejNWYndyf9LX/yzDyHO8nY32JGf sanguinho@nixos"
   ];
 
   rnl.githook.emailDestination = "robots-dei@${config.rnl.domain}";
