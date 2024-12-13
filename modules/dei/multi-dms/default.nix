@@ -170,7 +170,7 @@ let
     create_db $db_container_name $db_port
     add_caddy_vhost $ENVIRONMENT_NAME $backend_port
     sleep 1
-    populate_db $db_port # TODO: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
+    populate_db $db_port #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
   '';
 
   postStopScript = pkgs.writeScriptBin "multi-dms-poststop" ''
@@ -185,7 +185,7 @@ let
     rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
     ${systemctl} reload caddy
 
-    # Destroy DB # TODO: actually just stopping, because on-demand create/destroy DB is way too slow on blatta.
+    # Stop DB (when fast hypervisor, it may be better to destroy and create DBs on start/stop) 
     nixos-container stop "$db_container_name"
   '';
 
@@ -444,7 +444,7 @@ in
         nixos-container
 
         # Dependencies of nixos-container:
-        # TODO: this should be upstreamed to nixpkgs, perhaps
+        # TODO: this should probably be upstreamed to nixpkgs
         util-linux # dependency of nixos-container (e.g, it tries to do `exec (...) mountpoint`)
         systemd # dependency of nixos-container (and possibly prestart and poststop scripts)
         nix # nix-env

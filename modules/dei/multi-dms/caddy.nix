@@ -19,8 +19,6 @@ in
   ];
 
   systemd.tmpfiles.rules = [
-    # TODO: when does this run?
-    # what if it runs before the file exists...? :thinking:
     # Make sure temporary selfsigned nixos CA cert is readable by Caddy 
     "z /var/lib/acme/.minica 0755 acme acme -"
     "z /var/lib/acme/.minica/cert.pem 0644 acme acme -"
@@ -28,7 +26,7 @@ in
 
   services.caddy = {
     # TODO: remove `package` line on >= 25.11
-    # tls_trust_pool directive doesn't seem to exist atm (on 24.05's version)
+    # `tls_trust_pool` directive doesn't seem to exist atm (on 24.05's version)
     package = pkgs.unstable.caddy;
     enable = true;
     acmeCA = config.security.acme.defaults.server;
@@ -39,7 +37,6 @@ in
       default_bind ${hostv4} [${hostv6}] #TODO: see comment at `hostv4`/6
     '';
 
-    # Eventually, make a real entry for production/master (or just let nginx keep handling it?)
     # Note: the order of the handle directives matter!
     # The first handle directive that matches will win.
     virtualHosts =
@@ -47,12 +44,11 @@ in
       // (mapAttrs' (
         _vhostName: vhostConfig:
         let
-          #TODO: maybe explicitly set serverName for 'localhost' virtualHost (see changes made in webserver.nix) rather than doing this
           svName =
             if (vhostConfig.serverName != null) then
               vhostConfig.serverName
             else
-              "dummy-value-for-localhost.blatta.rnl.tecnico.ulisboa.pt"; # TODO: don't know what's the best way to do this
+              "dummy-value-for-localhost.blatta.rnl.tecnico.ulisboa.pt"; # don't know if this is the best approach.
         in
         {
           #name = vhostConfig.serverName ? "dms.blatta.rnl.tecnico.ulisboa.pt";
