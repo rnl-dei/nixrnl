@@ -74,11 +74,6 @@
       path = "/mnt/data/labs-matrix";
       directoryMode = "0755";
     };
-    hooks.opensessions = {
-      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/infra/opensessions.git";
-      path = "/mnt/data/opensessions";
-      directoryMode = "0755";
-    };
   };
 
   rnl.labels.location = "chapek";
