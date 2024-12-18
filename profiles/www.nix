@@ -23,29 +23,8 @@ let
     allow 193.136.154.0/25;
     allow 2001:690:2100:84::/64;
   '';
-
-  # TODO: Use the mainstream package when this commit is released:
-  # https://github.com/schweikert/fping/commit/291656af14b8734e881f1f4bfcdf8dc0418491cc
-  fping = pkgs.fping.overrideAttrs (_final: _prev: {
-    version = "5.3r2";
-
-    configurePhase = ''
-      ./autogen.sh
-      ./configure --prefix=$out
-    '';
-
-    nativeBuildInputs = with pkgs; [
-      autoconf
-      automake
-      perl
-    ];
-
-    src = pkgs.fetchurl {
-      url = "https://github.com/schweikert/fping/archive/7e9ce344499b1d96e10b772773c1deb15b2644fc.tar.gz";
-      hash = "sha256-kfLBf0JHWxblETic6YNkBd4K6C+VWitBqTwSzcQNgXs=";
-    };
-  });
-in {
+in
+{
   imports = with profiles; [
     webserver
     phpfpm
@@ -239,29 +218,55 @@ in {
     enable = true;
     user = config.services.nginx.user;
     group = config.services.nginx.group;
-    plugins = ["python3"];
+    plugins = [ "python3" ];
     instance = {
       type = "emperor";
-      vassals.opensessions = let
-        dir = config.rnl.githook.hooks.opensessions.path;
-      in {
+      vassals.opensessions = {
         type = "normal";
-        wsgi-file = "${dir}/app/wsgi.py";
+        pythonPackages =
+          self: with self; [
+            pkgs.opensessions
+            mysqlclient
+          ];
+        module = "opensessions.wsgi:application";
         socket = "${config.services.uwsgi.runDir}/opensessions.sock";
-        chdir = dir;
-        virtualenv = "${dir}/.venv";
-        env = ["FPING_COMMAND=${config.security.wrapperDir}/fping"];
-        # TODO: Add remote database
+        env = [
+          "FPING_COMMAND=${config.security.wrapperDir}/fping"
+          "DATABASE_URI=@(${config.age.secrets."open-sessions-db-uri".path})"
+          # TODO: move into nixos config
+          "OPENSESSIONS_CONFIG_FILE=/mnt/data/opensessions/opensessions.yaml"
+        ];
       };
     };
   };
+  age.secrets."open-sessions-db-uri" = {
+    file = ../secrets/open-sessions-db-uri.age;
+    owner = config.services.uwsgi.user;
+    mode = "0400";
+  };
+
+  systemd.services.uwsgi.serviceConfig = {
+    # let fping acquire its capabilities
+    CapabilityBoundingSet = [
+      "CAP_NET_RAW"
+      "CAP_NET_ADMIN"
+    ];
+  };
 
   security.wrappers.fping = {
-    setuid = true;
+    capabilities = "cap_net_raw,cap_net_admin+ep";
     owner = "root";
     group = "root";
-    source = "${fping}/bin/fping";
+    source = "${pkgs.fping}/bin/fping";
   };
+
+  # assertions = [
+  #   {
+  #     assertion = config.security.wrapperDir == "/run/wrappers/bin";
+  #     message = "profiles/www.nix assumes security wrapper dir is /run/wrappers/bin";
+  #   }
+  # ];
+  # systemd.services.uwsgi.path = [ "/run/wrappers" ];
 
   # Labs-Matrix
   services.nginx.virtualHosts."labs-matrix" = {

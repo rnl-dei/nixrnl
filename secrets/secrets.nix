@@ -88,6 +88,7 @@ in
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
+  "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [ blatta ];
