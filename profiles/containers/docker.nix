@@ -7,6 +7,7 @@
 
     docker = {
       enable = true;
+      autoPrune.enable = true; # Don't run out of space
     };
   };
 }
