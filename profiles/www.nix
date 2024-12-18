@@ -239,6 +239,7 @@ in
       };
     };
   };
+
   age.secrets."open-sessions-db-uri" = {
     file = ../secrets/open-sessions-db-uri.age;
     owner = config.services.uwsgi.user;
@@ -259,14 +260,6 @@ in
     group = "root";
     source = "${pkgs.fping}/bin/fping";
   };
-
-  # assertions = [
-  #   {
-  #     assertion = config.security.wrapperDir == "/run/wrappers/bin";
-  #     message = "profiles/www.nix assumes security wrapper dir is /run/wrappers/bin";
-  #   }
-  # ];
-  # systemd.services.uwsgi.path = [ "/run/wrappers" ];
 
   # Labs-Matrix
   services.nginx.virtualHosts."labs-matrix" = {
