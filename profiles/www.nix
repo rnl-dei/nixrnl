@@ -10,7 +10,6 @@ let
   tvClientPort = 1336;
   tvCMSPort = 1337;
   # labsMatrixPort = 3001;
-  opensessionsPort = 3002;
   # shortenerPort = 3002;
 
   nginxAllowRNLAdmin = ''
@@ -41,14 +40,14 @@ in
       locations = {
         "/".proxyPass = "http://localhost:${toString rnlWebsitePort}";
         "/dashboard".index = "index.html";
-        "/logsession" = {
-          proxyPass = "http://localhost.:${toString opensessionsPort}";
-          extraConfig = ''
-            ${nginxAllowRNLAdmin}
-            ${nginxAllowRNLLabs}
-            deny all;
-          '';
-        };
+        "/logsession".extraConfig = ''
+          ${nginxAllowRNLAdmin}
+          ${nginxAllowRNLLabs}
+          deny all;
+
+          uwsgi_pass unix:${config.services.uwsgi.instance.vassals.opensessions.socket};
+          include ${config.services.nginx.package}/conf/uwsgi_params;
+        '';
         "~ ^/tv([^\\r\\n]*)$".return = "301 https://tv.${config.rnl.domain}$1$is_args$args";
         "~ ^/labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
         "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return = "301 https://webmail.${config.rnl.domain}$2$is_args$args";
@@ -131,15 +130,6 @@ in
     };
   };
 
-  # TODO: Use new version of opensessions
-  # virtualisation.oci-containers.containers."opensessions" = {
-  #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/opensessions:latest";
-  #   ports = ["${toString opensessionsPort}:5000"];
-  #   labels = {
-  #     "com.centurylinklabs.watchtower.enable" = "true";
-  #   };
-  # };
-
   # TODO: Move Shortener from kutt to here
   # virtualisation.oci-containers.containers."shortener" = {
   #   image = "registry.rnl.tecnico.ulisboa.pt/rnl/shortener:latest";
@@ -215,11 +205,60 @@ in
     serverName = "opensessions.${config.rnl.domain}";
     enableACME = true;
     forceSSL = true;
-    locations."/".proxyPass = "http://localhost:${toString opensessionsPort}";
+    locations."/".extraConfig = ''
+      uwsgi_pass unix:${config.services.uwsgi.instance.vassals.opensessions.socket};
+      include ${config.services.nginx.package}/conf/uwsgi_params;
+    '';
     extraConfig = ''
       ${nginxAllowRNLAdmin}
       deny all;
     '';
+  };
+  services.uwsgi = {
+    enable = true;
+    user = config.services.nginx.user;
+    group = config.services.nginx.group;
+    plugins = [ "python3" ];
+    instance = {
+      type = "emperor";
+      vassals.opensessions = {
+        type = "normal";
+        pythonPackages =
+          self: with self; [
+            pkgs.opensessions
+            mysqlclient
+          ];
+        module = "opensessions.wsgi:application";
+        socket = "${config.services.uwsgi.runDir}/opensessions.sock";
+        env = [
+          "FPING_COMMAND=${config.security.wrapperDir}/fping"
+          "DATABASE_URI=@(${config.age.secrets."open-sessions-db-uri".path})"
+          # TODO: move into nixos config
+          "OPENSESSIONS_CONFIG_FILE=/mnt/data/opensessions/opensessions.yaml"
+        ];
+      };
+    };
+  };
+
+  age.secrets."open-sessions-db-uri" = {
+    file = ../secrets/open-sessions-db-uri.age;
+    owner = config.services.uwsgi.user;
+    mode = "0400";
+  };
+
+  systemd.services.uwsgi.serviceConfig = {
+    # let fping acquire its capabilities
+    CapabilityBoundingSet = [
+      "CAP_NET_RAW"
+      "CAP_NET_ADMIN"
+    ];
+  };
+
+  security.wrappers.fping = {
+    capabilities = "cap_net_raw,cap_net_admin+ep";
+    owner = "root";
+    group = "root";
+    source = "${pkgs.fping}/bin/fping";
   };
 
   # Labs-Matrix

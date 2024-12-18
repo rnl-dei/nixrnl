@@ -67,7 +67,6 @@
     options = [ "bind" ];
   };
 
-  # Labs Matrix
   rnl.githook = {
     enable = true;
     hooks.labs-matrix = {
