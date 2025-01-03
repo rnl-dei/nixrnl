@@ -78,7 +78,7 @@ in
   # ODEIO
   dei.odeio = {
     builds.authorizedKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICSDnfYmzk0zCktsKjRAphZavsDwXG/ymq+STFff1Zy/" # GitLab CI
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHIpnBeT+Pe1LZt1lAmQzNLCxHSc/8Md1qrUCzfziuBf odeio-CI" # GitLab CI
     ];
     sites.default.serverName = "observatorio.dei.tecnico.ulisboa.pt";
   };
