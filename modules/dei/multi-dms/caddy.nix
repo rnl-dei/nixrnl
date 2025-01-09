@@ -6,7 +6,7 @@
 }:
 with lib;
 let
-  # FIXME:  ask rnl if there's a better way
+  # FIXME: refactor flake for a better way of tracking this (RNL module?)
   hostv4 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
   hostv6 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
 in

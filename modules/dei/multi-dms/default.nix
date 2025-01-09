@@ -9,7 +9,7 @@ let
 
   #   References:
   #  - https://nixos.org/manual/nixos/stable/#ch-containers
-  #  - unironically, `cat (which nixos-container)`
+  #  - unironically, `cat $(which nixos-container)`
   #  - `systemctl cat container@` 
   #  - https://smallstep.com/docs/step-ca/certificate-authority-server-production/ (For caddy/nginx setup)
   #       (mirror: https://web.archive.org/web/20241108121229/https://smallstep.com/docs/step-ca/certificate-authority-server-production/)
@@ -23,7 +23,7 @@ let
   systemdDir = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
   caddyConfigsDir = "${cfg.directory}/caddy-configs";
-  systemctl = "${pkgs.systemdMinimal}/bin/systemctl";
+  systemctl = "${pkgs.systemd}/bin/systemctl";
 
   common = ''
     # max length for container name is 11
@@ -41,8 +41,9 @@ let
         fi
 
         # Hash the input string and convert it to an integer within the specified range
-        local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
-        db_container_name="dms-$hash" # container name will always be 11 chars, which is max. allowed.
+        local hash
+        hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
+        echo "dms-$hash" # container name will always be 11 chars, which is max. allowed.
     }
 
     get_port() {
@@ -56,11 +57,11 @@ let
             return 1
         fi
         # Calculate range
-        local range=$(($max_port - $min_port + 1))
+        local range=$((max_port - min_port + 1))
 
         # Hash the input string and convert it to an integer within the specified range
         local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
-        local port=$(( (0x$hash % range) + $min_port ))
+        local port=$(( (0x$hash % range) + min_port ))
         echo -n "$port"
     }
 
@@ -68,15 +69,15 @@ let
   '';
 
   preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     set -xo pipefail 
 
     echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
     ${common}
-    get_db_container_name "$ENVIRONMENT_NAME" # sets $db_container_name
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
+    db_container_name="$(get_db_container_name "$ENVIRONMENT_NAME")"
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} "$ENVIRONMENT_NAME")
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} "$ENVIRONMENT_NAME")
 
     create_db() {
       local db_name="$1"
@@ -94,7 +95,7 @@ let
        --port "tcp:$db_port:3306" \
        --config-file $db_container_config
       
-      nixos-container start $db_name
+      nixos-container start "$db_name"
     }
 
     populate_db() {
@@ -108,18 +109,18 @@ let
 
       # Because Blatta is too slow for create-destroy DBs on system stop/start,
       # we only populate the DB once and don't automatically destroy it.
-      if test -f ${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init; then
+      if test -f "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"; then
         echo "Refusing to re-populate the database."
         return
       fi
 
       ${pkgs.mariadb}/bin/mysql \
         -h ${cfg.database.host} \
-        --port="$DB_PORT" \
+        --port="$db_port" \
         -u dms -p"$DB_PASSWORD" \
         dms < "$db_dump_file"
 
-      touch ${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init
+      touch "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"
     }
 
     add_caddy_vhost() {
@@ -132,9 +133,9 @@ let
         return 1
       fi
 
-      touch ${caddyConfigsDir}/$ENVIRONMENT_NAME
+      touch "${caddyConfigsDir}/$ENVIRONMENT_NAME"
 
-      cat > ${caddyConfigsDir}/$ENVIRONMENT_NAME << EOL
+      cat > "${caddyConfigsDir}/$ENVIRONMENT_NAME" << EOL
     dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt {
       log {
               output file /var/log/caddy/access-dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt.log
@@ -167,19 +168,19 @@ let
     ${systemctl} reload caddy
     }
 
-    create_db $db_container_name $db_port
-    add_caddy_vhost $ENVIRONMENT_NAME $backend_port
+    create_db "$db_container_name" "$db_port"
+    add_caddy_vhost "$ENVIRONMENT_NAME" "$backend_port"
     sleep 1
-    populate_db $db_port #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
+    populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
   '';
 
   postStopScript = pkgs.writeScriptBin "multi-dms-poststop" ''
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     set -xo pipefail 
     echo "I am stick!"
 
     ${common}
-    get_db_container_name $ENVIRONMENT_NAME # sets $db_container_name
+    db_container_name=$(get_db_container_name "$ENVIRONMENT_NAME")
 
     # Remove caddy virtualhost
     rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
@@ -190,19 +191,19 @@ let
   '';
 
   startScript = pkgs.writeScriptBin "multi-dms-start" ''
-    #!/usr/bin/env bash
+    #!/bin/sh
     exec ${cfg.backend.command}
   '';
 
   deployScript = pkgs.writeScriptBin "multi-dms-deploy" ''
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
 
     # Add '-x' (e.g -euxo) if debugging this script.
     set -euo pipefail
 
     # Colors
     RED="\e[1;31m"
-    GRN="\e[1;32m"
+    #GRN="\e[1;32m"
     YEL="\e[1;93m"
     BLU="\e[1;94m"
     CLR="\e[0m"
@@ -242,6 +243,7 @@ let
       error_msg "No $builds_dir directory found."
     fi
 
+    # shellcheck disable=SC2012 # (info): Use find instead of ls to better handle non-alphanumeric filenames.
     LAST_BUILD_STAMP="$(ls -t "$builds_dir" | ${pkgs.gnugrep}/bin/grep '^[[:digit:]]\+$' | head -n 1)"
     if [ -z "$LAST_BUILD_STAMP" ]; then
       error_msg "There is no (last) build. Please copy a build to $builds_dir."
@@ -270,9 +272,9 @@ let
     # Implementation
 
     ${common}
-    get_db_container_name "$ENVIRONMENT_NAME" # sets $db_container_name
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} $ENVIRONMENT_NAME)
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} $ENVIRONMENT_NAME)
+    db_container_name=$(get_db_container_name "$ENVIRONMENT_NAME")
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} "$ENVIRONMENT_NAME")
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} "$ENVIRONMENT_NAME")
 
     # Delete any old deployment leftovers
     echo "Deleting (possible) leftover dms.jar and www...."
@@ -289,12 +291,12 @@ let
     ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$ENVIRONMENT_DIR/www"
     echo "BACKEND_PORT=$backend_port" > "$ENVIRONMENT_DIR/dms.env"
     echo "DB_PORT=$db_port" >> "$ENVIRONMENT_DIR/dms.env"
-    echo "DMS_URL"=https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt >> "$ENVIRONMENT_DIR/dms.env"
+    echo "DMS_URL=https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt" >> "$ENVIRONMENT_DIR/dms.env"
 
 
     # Start DMS environment and reload caddy
     echo "Starting service $service_name . The first time might take a while."
-    ${systemctl} start $service_name
+    ${systemctl} start "$service_name"
     echo "Started DMS."
     echo "Environment status:"
     ${systemctl} status "$service_name" --no-block --no-pager
@@ -469,7 +471,7 @@ in
       };
 
       unitConfig = {
-        ConditionPathExists = "${systemdDir}";
+        ConditionPathExists = systemdDir;
       };
     };
 
