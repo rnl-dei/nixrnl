@@ -7,10 +7,11 @@
 with lib;
 let
   # FIXME: refactor flake for a better way of tracking this (RNL module?)
+  cfg = config.dei.multi-dms;
   hostv4 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
   hostv6 = (builtins.head config.networking.interfaces.enp1s0.ipv4.addresses).address;
 in
-{
+mkIf cfg.enable {
 
   services.nginx.defaultListenAddresses = [
     "127.0.0.80"
@@ -25,7 +26,7 @@ in
   ];
 
   services.caddy = {
-    # TODO: remove `package` line on >= 25.11
+    # TODO: remove `package` line on >= 24.11
     # `tls_trust_pool` directive doesn't seem to exist atm (on 24.05's version)
     package = pkgs.unstable.caddy;
     enable = true;

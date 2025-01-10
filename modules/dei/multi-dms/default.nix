@@ -409,8 +409,7 @@ in
   };
   imports = [ ./caddy.nix ];
 
-  config = mkIf (cfg.enable) {
-
+  config = mkIf cfg.enable {
     virtualisation = {
       containers.enable = true;
     };
