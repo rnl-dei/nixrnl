@@ -14,6 +14,7 @@ let
     filtercodes
     syntaxhighlighter
     mergeusers
+    scheduler
   ];
 
   # Max upload size
