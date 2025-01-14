@@ -32,30 +32,10 @@ let
 
 
     get_db_container_name() {
-        local ENVIRONMENT_NAME="$1"
-
-        # Check if arguments are provided
-        if [[ -z "$ENVIRONMENT_NAME"  ]]; then
-            echo "Usage: create_db_container_name <ENVIRONMENT_NAME>"
-            return 1
-        fi
-
         # Hash the input string and convert it to an integer within the specified range
         local hash
-        hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
-        echo "dms-$hash" # container name will always be 11 chars, which is max. allowed.
-    }
-
-    get_port() {
         local min_port="$1"
         local max_port="$2"
-        local ENVIRONMENT_NAME="$3"
-
-        # Check if arguments are provided
-        if [[ -z "$ENVIRONMENT_NAME"  ]]; then
-            echo "Usage: get_port <min_port> <max_port> <ENVIRONMENT_NAME>"
-            return 1
-        fi
         # Calculate range
         local range=$((max_port - min_port + 1))
 
@@ -75,9 +55,9 @@ let
     echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
     ${common}
-    db_container_name="$(get_db_container_name "$ENVIRONMENT_NAME")"
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} "$ENVIRONMENT_NAME")
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} "$ENVIRONMENT_NAME")
+    db_container_name="$(get_db_container_name)"
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
     create_db() {
       local db_name="$1"
@@ -124,12 +104,11 @@ let
     }
 
     add_caddy_vhost() {
-      local ENVIRONMENT_NAME="$1"
       local backend_port="$2"
 
       # Check if arguments are provided
-      if [[ -z "$ENVIRONMENT_NAME" || -z "$backend_port" ]]; then
-        echo "Usage: add_caddy_vhost <ENVIRONMENT_NAME> <backend_port>"
+      if [[ -z "$backend_port" ]]; then
+        echo "Usage: add_caddy_vhost <backend_port>"
         return 1
       fi
 
@@ -169,7 +148,7 @@ let
     }
 
     create_db "$db_container_name" "$db_port"
-    add_caddy_vhost "$ENVIRONMENT_NAME" "$backend_port"
+    add_caddy_vhost "$backend_port"
     sleep 1
     populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
   '';
@@ -180,7 +159,7 @@ let
     echo "I am stick!"
 
     ${common}
-    db_container_name=$(get_db_container_name "$ENVIRONMENT_NAME")
+    db_container_name=$(get_db_container_name)
 
     # Remove caddy virtualhost
     rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
@@ -272,9 +251,9 @@ let
     # Implementation
 
     ${common}
-    db_container_name=$(get_db_container_name "$ENVIRONMENT_NAME")
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort} "$ENVIRONMENT_NAME")
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort} "$ENVIRONMENT_NAME")
+    db_container_name=$(get_db_container_name)
+    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
+    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
     # Delete any old deployment leftovers
     echo "Deleting (possible) leftover dms.jar and www...."
