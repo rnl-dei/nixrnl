@@ -17,12 +17,12 @@ let
   cfg = config.dei.multi-dms;
   user = cfg.user;
   webserver = config.services.caddy;
-  buildsDir = "${cfg.directory}/builds";
-  environmentsDir = "${cfg.directory}/environments";
+  buildsDir = "${cfg.dataDir}/builds";
+  environmentsDir = "${cfg.dataDir}/environments";
   # Path to an environment's data. Can only be used in configurations systemd reads directly! (e.g, using this in (...).env files will NOT work.)
   systemdDir = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
-  caddyConfigsDir = "${cfg.directory}/caddy-configs";
+  caddyConfigsDir = "${cfg.dataDir}/caddy-configs";
   systemctl = "${pkgs.systemd}/bin/systemctl";
 
   common = ''
@@ -45,7 +45,7 @@ let
         echo -n "$port"
     }
 
-    db_dump_file="${cfg.directory}/common/latest.sql"
+    db_dump_file="${cfg.dataDir}/common/latest.sql"
   '';
 
   preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
@@ -131,13 +131,13 @@ let
 
       # Note: /public/* untested - may be broken!
       handle /public/* {
-        root * ${cfg.directory}/environments/$ENVIRONMENT_NAME/public
+        root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/public
         try_files {path} {path}/ /index.txt
         file_server
       }
 
       handle {
-        root * ${cfg.directory}/environments/$ENVIRONMENT_NAME/www
+        root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/www
         try_files {path} {path}/ /index.html
         file_server
       }
@@ -287,19 +287,19 @@ in
     enable = mkOption {
       type = types.bool;
       default = false;
-      description = "Enable DEI Management System application";
+      description = "Enable DEI Management System application (Multi-Environments)";
     };
 
     user = mkOption {
       type = types.str;
       default = "dms";
-      description = "User to run the DMS service as";
+      description = "User to run the DMS environments as";
     };
 
-    directory = mkOption {
+    dataDir = mkOption {
       type = types.path;
       default = "/var/lib/dei/multi-dms";
-      description = "Base directory to store DMS files";
+      description = "Base data directory to store DMS environments' files";
     };
     builds = {
       authorizedKeys = mkOption {
@@ -381,7 +381,7 @@ in
 
       environmentFile = mkOption {
         type = types.path;
-        default = "${cfg.directory}/common/dms.env";
+        default = "${cfg.dataDir}/common/dms.env";
         description = "Path to the environment file common to all DMS deployments (useful for secrets)";
       };
     };
@@ -393,7 +393,7 @@ in
       containers.enable = true;
     };
     systemd.tmpfiles.rules = [
-      "d ${cfg.directory} 0750 ${user} ${webserver.group} - -"
+      "d ${cfg.dataDir} 0750 ${user} ${webserver.group} - -"
       "d ${buildsDir} 0750 ${user} ${webserver.group} - -"
       "d ${environmentsDir} 0750 ${user} ${webserver.group} - -"
       "d ${caddyConfigsDir} 0750 ${user} ${webserver.group} - -"
@@ -474,7 +474,7 @@ in
       (mkIf (user == "multi-dms") {
         multi-dms = {
           isNormalUser = true;
-          home = cfg.directory;
+          home = cfg.dataDir;
           homeMode = "750";
           group = webserver.group;
           openssh.authorizedKeys.keys = cfg.builds.authorizedKeys;
