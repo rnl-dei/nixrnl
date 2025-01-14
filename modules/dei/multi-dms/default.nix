@@ -19,8 +19,8 @@ let
   webserver = config.services.caddy;
   buildsDir = "${cfg.dataDir}/builds";
   environmentsDir = "${cfg.dataDir}/environments";
-  # Path to an environment's data. Can only be used in configurations systemd reads directly! (e.g, using this in (...).env files will NOT work.)
-  systemdDir = "${environmentsDir}/%i";
+  # Shortcut for the path to an environment's data. Can only be used in configurations systemd reads directly! (e.g, using this variable in (...).env files will NOT work. E.g, Using this inside systemd's `serviceConfig` definition will work.)
+  environmentDirSystemd = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
   caddyConfigsDir = "${cfg.dataDir}/caddy-configs";
   systemctl = "${pkgs.systemd}/bin/systemctl";
@@ -373,8 +373,8 @@ in
           ENVIRONMENT_NAME = "%i";
           DB_NAME = "dms";
           DB_USERNAME = "dms";
-          FILES_DIR = "${systemdDir}/data";
-          FILES_PUBLIC = "${systemdDir}/www";
+          FILES_DIR = "${environmentDirSystemd}/data";
+          FILES_PUBLIC = "${environmentDirSystemd}/www";
         };
         description = "Environment variables common to all DMS deployments";
       };
@@ -442,14 +442,14 @@ in
 
         EnvironmentFile = [
           cfg.backend.environmentFile
-          "${systemdDir}/dms.env"
+          "${environmentDirSystemd}/dms.env"
         ];
         Restart = "on-failure";
         RestartSec = "5s";
       };
 
       unitConfig = {
-        ConditionPathExists = systemdDir;
+        ConditionPathExists = environmentDirSystemd;
       };
     };
 
