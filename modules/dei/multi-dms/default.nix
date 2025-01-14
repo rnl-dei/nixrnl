@@ -170,7 +170,7 @@ let
   '';
 
   startScript = pkgs.writeScriptBin "multi-dms-start" ''
-    #!/bin/sh
+    #!${pkgs.bash}/bin/bash
     exec ${cfg.backend.command}
   '';
 
