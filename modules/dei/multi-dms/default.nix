@@ -464,6 +464,10 @@ in
       TimeoutStartSec = mkForce "10min 0s";
     };
 
+    # Enable polkit with a custom rule:
+    # This allows the `dms` user (the user that both CI connects with and that DMS services run as)
+    # to manage all `multi-dms` systemd services.
+    # In particular, we want CI to start/stop `multi-dms@<branch_name>.service` as required.
     security.polkit.enable = true;
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {
