@@ -4,7 +4,7 @@
 
   environment.systemPackages = with pkgs; [
     # Browser
-    firefox
+    #firefox
     chromium
 
     # Misc
