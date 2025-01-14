@@ -406,6 +406,11 @@ in
     '';
 
     # Note 1: DO NOT USE THIS IN PRODUCTION!
+    #         Using the `Referer` header as the base for the redirect URL is inherently insecure as this is user-controlled,
+    #         and could probably be used maliciously.
+    #         However for development environments this poses no risk, and there seems to be no clearer alternative
+    #         For using one oAuth2 application for multiple distinct instances.
+    #         (For obvious reasons, we can't dynamically create and/or destroy oauth2 applications in Fénix for each DMS instance.)
     # Note 2: The order of the `handle` directives matter!
     #         The first handle directive that matches will win.
     services.caddy.virtualHosts."fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt".extraConfig = ''
