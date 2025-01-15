@@ -9,7 +9,6 @@
     labs
     cluster.client
     nvidia
-    exam
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
