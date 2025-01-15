@@ -38,12 +38,12 @@
     };
   };
 
-  # programs.firefox = {
-  #   enable = true;
-  #   preferences = {
-  #     "network.negotiate-auth.trusted-uris" = "tecnico.ulisboa.pt";
-  #   };
-  # };
+  programs.firefox = {
+    enable = true;
+    preferences = {
+      "network.negotiate-auth.trusted-uris" = "tecnico.ulisboa.pt";
+    };
+  };
 
   # Allow the using of smartcards
   services.pcscd.enable = true;
