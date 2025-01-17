@@ -27,6 +27,7 @@
 
     sslDhparam = config.security.dhparams.params.nginx.path;
 
+    # https://github.com/NixOS/nixpkgs/pull/374519
     # NixOS automatically creates a `localhost` virtualhost for Prometheus healthchecks.
     # This virtualhost tries to bind/listen everywhere - force it to use localhost only.
     virtualHosts.localhost.listenAddresses = lib.mkForce [
