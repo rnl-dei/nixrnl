@@ -77,6 +77,14 @@
     ];
     sites.default.serverName = "dms.${config.networking.fqdn}";
   };
+
+  dei.multi-dms = {
+    enable = true;
+    builds.authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICSDnfYmzk0zCktsKjRAphZavsDwXG/ymq+STFff1Zy/" # GitLab CI
+    ];
+  };
+
   rnl.db-cluster = {
     ensureDatabases = [ "dms_blatta" ];
     ensureUsers = [
@@ -141,7 +149,7 @@
     ];
   };
 
-  # MaiilHog
+  # MailHog
   services.mailhog.enable = true;
   services.nginx.virtualHosts.mailhog = {
     serverName = "mailhog.${config.networking.fqdn}";
