@@ -187,7 +187,6 @@ let
   startScript = pkgs.writeShellApplication {
     name = "multi-dms-start";
     text = ''
-      #!${pkgs.bash}/bin/bash
       exec ${cfg.backend.command}
     '';
   };
