@@ -52,9 +52,9 @@
 
     # Runs checks before committing
     # TODO: has been renamed to git-hooks
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
+    git-hooks.url = "github:cachix/git-hooks.nix";
+    git-hooks.inputs.nixpkgs.follows = "nixpkgs";
+    git-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
 
     # We only have these inputs to pass to other dependencies and
     # avoid having multiple versions in our flake.
@@ -74,7 +74,7 @@
     {
       self,
       nixpkgs,
-      pre-commit-hooks,
+      git-hooks,
       ...
     }@inputs:
     let
@@ -93,7 +93,7 @@
       profiles = lib.rnl.mkProfiles ./profiles;
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ inputs.pre-commit-hooks.flakeModule ];
+      imports = [ inputs.git-hooks.flakeModule ];
 
       systems = [
         # list of systems for which the `perSystem` attributes will be built.
@@ -110,6 +110,7 @@
 
       # list of useful attributes, for reference:
       # perSystem = { config, self', inputs', pkgs, system, ... }: {
+      debug = true;
       perSystem =
         {
           config,
@@ -134,12 +135,7 @@
             '';
           };
 
-          packages = {
-            deploy-anywhere = rnlPkgs.deploy-anywhere;
-            secrets-check = rnlPkgs.secrets-check;
-          };
-          # TODO RG: do this instead, but some packages in ./pkgs are not actually packages.
-          # packages = (lib.rnl.rnlPkgs);
+          legacyPackages = (lib.rnl.rnlPkgs);
 
           pre-commit.settings.hooks = {
             # Nix

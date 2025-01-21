@@ -167,10 +167,35 @@
         "type": "github"
       }
     },
+    "git-hooks": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "gitignore": "gitignore",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-stable": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1728727368,
+        "narHash": "sha256-7FMyNISP7K6XDSIt1NJxkXZnEdV3HZUXvFoBaJ/qdOg=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "eb74e0be24a11a1531b5b8659535580554d30b28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
-          "pre-commit-hooks",
+          "git-hooks",
           "nixpkgs"
         ]
       },
@@ -407,12 +432,12 @@
         "flake-parts": "flake-parts",
         "flake-programs-sqlite": "flake-programs-sqlite",
         "flake-utils": "flake-utils",
+        "git-hooks": "git-hooks",
         "ist-delegate-election": "ist-delegate-election",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs",
         "opensessions": "opensessions",
         "poetry2nix": "poetry2nix",
-        "pre-commit-hooks": "pre-commit-hooks",
         "systems": "systems",
         "treefmt-nix": "treefmt-nix",
         "unstable": "unstable",
