@@ -23,28 +23,35 @@ let
   environmentDirSystemd = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
   caddyConfigsDir = "${cfg.dataDir}/caddy-configs";
+  # Database dump to use for populating DMS databases.
+  dbDumpFile = "${cfg.dataDir}/common/latest.sql";
 
   common = ''
-    # max length for container name is 11
-    # therefore, we use hash of branch name and trim to 7, 
-    # so the end result is e.g 'dms-a4a8114' (always 11 chars).
-
+     # max length for container name is 11
+     # therefore, we use hash of branch name and trim to 7, 
+     # so the end result is e.g 'dms-a4a8114' (always 11 chars).
 
     get_db_container_name() {
-        # Hash the input string and convert it to an integer within the specified range
-        local hash
-        local min_port="$1"
-        local max_port="$2"
-        # Calculate range
-        local range=$((max_port - min_port + 1))
+         # Hash the input string and convert it to an integer within the specified range
+         local hash
+         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
+         echo "dms-$hash" # container name will always be 11 chars, which is max. allowed.
+     }
 
-        # Hash the input string and convert it to an integer within the specified range
-        local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
-        local port=$(( (0x$hash % range) + min_port ))
-        echo -n "$port"
-    }
+     get_port() {
+         local min_port="$1"
+         local max_port="$2"
 
-    db_dump_file="${cfg.dataDir}/common/latest.sql"
+         # Calculate range
+         local range=$((max_port - min_port + 1))
+
+         # Hash the input string and convert it to an integer within the specified range
+         local hash
+         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
+         local port=$(( (0x$hash % range) + min_port ))
+         echo -n "$port"
+     }
+
   '';
 
   preStartScript = pkgs.writeShellApplication {
@@ -58,7 +65,7 @@ let
       echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
       ${common}
-      db_container_name="$(get_db_container_name)"
+      db_container_name=$(get_db_container_name)
       backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
       db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
@@ -76,7 +83,7 @@ let
 
         nixos-container create "$db_name" \
          --port "tcp:$db_port:3306" \
-         --config-file $db_container_config
+         --config-file $db_container_config || true
         
         nixos-container start "$db_name"
       }
@@ -101,13 +108,13 @@ let
           -h ${cfg.database.host} \
           --port="$db_port" \
           -u dms -p"$DB_PASSWORD" \
-          dms < "$db_dump_file"
+          dms < "${dbDumpFile}"
 
         touch "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"
       }
 
       add_caddy_vhost() {
-        local backend_port="$2"
+        local backend_port="$1"
 
         # Check if arguments are provided
         if [[ -z "$backend_port" ]]; then
@@ -169,7 +176,7 @@ let
       db_container_name=$(get_db_container_name)
 
       # Remove caddy virtualhost
-      rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
+      rm -f ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
       systemctl reload caddy
 
       # Stop DB (when fast hypervisor, it may be better to destroy and create DBs on start/stop) 
@@ -191,12 +198,10 @@ let
     runtimeInputs = with pkgs; [
       systemd
       gnugrep
+      # Note: use toybox instead of busybox because busybox `date` does not
+      # Because `date` from busybox does not seem to support parsing UNIX timestamps.
       toybox
-      # Note: still using toybox explicitly for `date` commands
-      # Because `date` from busybox does not support parsing UNIX timestamps.
-      # (And I don't know what other dependencies `writeShellApplication` injects (busybox or not), if any.)
     ];
-    #!${pkgs.bash}/bin/bash
     text = ''
       # Add '-x' (e.g -euxo) if debugging this script.
       set -euo pipefail
@@ -244,6 +249,7 @@ let
       fi
 
       # shellcheck disable=SC2012 # (info): Use find instead of ls to better handle non-alphanumeric filenames.
+      # shellcheck disable=SC2010 # (warning): Don't use ls | grep. Use a glob or a for loop with a condition to allow non-alphanumeric filenames.
       LAST_BUILD_STAMP="$(ls -t "$builds_dir" | grep '^[[:digit:]]\+$' | head -n 1)"
       if [ -z "$LAST_BUILD_STAMP" ]; then
         error_msg "There is no (last) build. Please copy a build to $builds_dir."
@@ -255,7 +261,7 @@ let
       # Only prompt for confirmation if not specifying a build to use.
       if [[ $# -ne 2 ]]; then
           BUILD="$builds_dir/$BUILD_STAMP"
-          echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)?"
+          echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(date -d @"$BUILD_STAMP") (y/N)?"
           read -n1 -r
           echo
           if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -264,7 +270,7 @@ let
           fi
           BUILD_STAMP=$LAST_BUILD_STAMP
       else
-        echo "Deploying build $BUILD, commit timestamp: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
+        echo "Deploying build $BUILD, commit timestamp: $(date -d @"$BUILD_STAMP")..."
       fi
 
       ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
@@ -376,7 +382,7 @@ in
       command = mkOption {
         type = types.str;
         default =
-          "${cfg.backend.java} -jar ${environmentsDir}/$ENVIRONMENT_NAME/dms.jar --server.port=$BACKEND_PORT"
+          "${cfg.backend.java} -jar ${environmentsDir}/\"$ENVIRONMENT_NAME\"/dms.jar --server.port=\"$BACKEND_PORT\""
           + (concatStringsSep " " cfg.backend.extraArgs);
         description = "Command to start the DMS backend";
       };
