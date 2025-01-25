@@ -8,7 +8,6 @@
 
   services.mattermost = {
     environmentFile = config.age.secrets."papyrus-private.env".path;
-
     # Reference: https://docs.mattermost.com/configure/configuration-settings.html
     extraConfig = {
       ServiceSettings = {
