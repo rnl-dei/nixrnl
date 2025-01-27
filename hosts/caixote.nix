@@ -1,8 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-raid6
@@ -16,9 +13,7 @@
 
   # Storage
   rnl.storage.disks = {
-    root = [
-      "/dev/disk/by-id/"
-    ];
+    root = [ "/dev/disk/by-id/" ];
     data = [
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5EG5L"
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5PAJL"
