@@ -69,7 +69,7 @@ deploy-anywhere .#<nixosConfiguration> root@<ip/hostname> [<sshHostKey>]
 Description of the arguments:
 - `<nixosConfiguration>`: The name of the NixOS configuration to deploy. This is the name of the nixosConfiguration output in the `flake.nix` file.
 - `<ip/hostname>`: The IP address or hostname of the machine to deploy to.
-- `<sshHostKey>` (Optional): The SSH host key of the machine to deploy to. This value should be the name of the secret in the `secrets/host-keys` directory (without the `.age`). If ommited, the VM cannot have secrets using Agenix and will generate a new SSH host key.
+- `<sshHostKey>` (Optional): The SSH host key of the machine to deploy to. This value should be the name of the secret in the `secrets/host-keys` directory (without the `.age`). If omitted, the VM cannot have secrets using Agenix and will generate a new SSH host key.
 
 After the deployment is complete, you should be able to SSH into the machine.
 

@@ -11,13 +11,17 @@ stdenv.mkDerivation rec {
   version = "1.0";
 
   src = lib.cleanSource ./src;
-  buildInputs = [bash grub2];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [
+    bash
+    grub2
+  ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
     for i in *; do
-      cp $i $out/bin
+      i=''${i%.sh}
+      cp $i.sh $out/bin/$i
       chmod +x $out/bin/$i
       wrapProgram $out/bin/$i \
         --prefix PATH : ${lib.makeBinPath buildInputs}
@@ -25,7 +29,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    platforms = ["x86_64-linux"];
-    maintainers = ["nuno.alves"];
+    platforms = [ "x86_64-linux" ];
+    maintainers = [ "nuno.alves" ];
   };
 }

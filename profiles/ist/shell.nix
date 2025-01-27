@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   imports = [
     ./afs.nix
     ./ldap.nix
@@ -32,7 +33,9 @@
       auth_provider = krb5
       chpass_provider = krb5
       krb5_realm = ${config.security.krb5.settings.libdefaults.default_realm}
-      krb5_server = ${config.security.krb5.settings.realms.${config.security.krb5.settings.libdefaults.default_realm}.default_domain}
+      krb5_server = ${
+        config.security.krb5.settings.realms.${config.security.krb5.settings.libdefaults.default_realm}.default_domain
+      }
     '';
   };
 
@@ -41,14 +44,18 @@
   security.pam.krb5.enable = false; # Use SSSD instead
 
   # Get AFS ticket from Kerberos on login and ssh
-  security.pam.services.login.text = lib.mkDefault (lib.mkOrder 1500 ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
-    session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-  '');
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkOrder 1500 ''
-    session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
-    session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
-  '');
+  security.pam.services.login.text = lib.mkDefault (
+    lib.mkOrder 1500 ''
+      session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
+      session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    ''
+  );
+  security.pam.services.sshd.text = lib.mkDefault (
+    lib.mkOrder 1500 ''
+      session optional ${pkgs.pam_afs_session}/lib/security/pam_afs_session.so program=${config.services.openafsClient.packages.programs}/bin/aklog nopag
+      session optional pam_exec.so ${pkgs.subidappend}/bin/subidappend
+    ''
+  );
 
   # Allow SSH using istID
   services.openssh.settings.PasswordAuthentication = lib.mkForce true;
@@ -67,7 +74,7 @@
     MemoryMax = "95%"; # 2GB * 95% ≃ 1.9GB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "94%"; # set to just under MemoryMax
 
@@ -83,7 +90,7 @@
   systemd.slices."user-" = {
     sliceConfig = {
       # @ist189409's computer had ~1600 tasks in /user.slice
-      # This ought to be enough to accomodate any not-too-unreasonable workload, while stopping fork bombs.
+      # This ought to be enough to accommodate any not-too-unreasonable workload, while stopping fork bombs.
       TasksMax = lib.mkDefault 4096;
     };
 
@@ -102,4 +109,14 @@
     CPUWeight = 110; # default is 100
     IOWeight = 110; # default is 100
   };
+
+  # Use "classic ptrace permissions", that allows processes to ptrace any others running
+  # under the same UID (as long as they are dumpable).
+  # See https://www.kernel.org/doc/Documentation/security/Yama.txt for more information.
+  #
+  # The default is "1", which only allows ptrace-ing when the tracer and tracee processes
+  # are parent and child. This is good for security but cumbersome in a multi-user machine
+  # for developers who may only remember they only want to trace a program after it starts
+  # and encounters a (potentially hard to reproduce) bug.
+  boot.kernel.sysctl."kernel.yama.ptrace_scope" = 0;
 }

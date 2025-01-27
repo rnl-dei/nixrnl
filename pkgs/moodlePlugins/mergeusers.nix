@@ -1,8 +1,4 @@
-{
-  fetchzip,
-  moodle-utils,
-  ...
-}:
+{ fetchzip, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "mergeusers";
   version = "2024060300";

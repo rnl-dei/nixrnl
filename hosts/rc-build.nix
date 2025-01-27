@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,7 +12,6 @@
   rnl.virtualisation.guest = {
     description = "Builds dos projetos de RC do taguspark";
 
-    autostart = false;
     uefi = false;
     memory = 4096;
 
@@ -23,11 +23,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/rc-build.img";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/rc-build"; } ];
   };
 }

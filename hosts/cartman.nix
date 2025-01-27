@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.dei
     filesystems.unknown
@@ -11,7 +12,7 @@
   rnl.virtualisation.guest = {
     description = "Servidor de ficheiros do domínio DEIAD";
     createdBy = "dei";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     memory = 10240;
@@ -25,16 +26,9 @@
         addressSlot = "0x05";
       }
     ];
-    # TODO: Move to ZFS dataset
     disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/cartman-root.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/cartman-data.img";
-      }
+      { source.dev = "/dev/zvol/dpool/volumes/cartman-root"; }
+      { source.dev = "/dev/zvol/dpool/data/cartman-data"; }
     ];
   };
 }

@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   # TODO: Configure zed
 
   # Enable zram swap
@@ -12,12 +9,12 @@
   };
 
   boot = {
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 
   boot.zfs.devNodes = "/dev/disk/by-partlabel"; # Disko uses partlabel
-  boot.zfs.forceImportRoot = lib.mkForce false; # Disable this by recomendation
+  boot.zfs.forceImportRoot = lib.mkForce false; # Disable this by recommendation
 
   # Use simple zfs layout
   rnl.storage = {

@@ -3,7 +3,8 @@
   pkgs,
   profiles,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.dei
     filesystems.simple-uefi
@@ -14,37 +15,24 @@
   ];
 
   # Networking
-  networking.interfaces.enp1s0 = {
-    ipv4 = {
-      addresses = [
+  networking = {
+    interfaces.enp1s0 = {
+      ipv4.addresses = [
         {
           address = "193.136.164.165";
           prefixLength = 26;
         }
       ];
-      routes = [
-        {
-          address = "0.0.0.0";
-          prefixLength = 0;
-          via = "193.136.164.190";
-        }
-      ];
-    };
-    ipv6 = {
-      addresses = [
+      ipv6.addresses = [
         {
           address = "2001:690:2100:83::165";
           prefixLength = 64;
         }
       ];
-      routes = [
-        {
-          address = "::";
-          prefixLength = 0;
-          via = "2001:690:2100:83::ffff:1";
-        }
-      ];
     };
+
+    defaultGateway.address = "193.136.164.190";
+    defaultGateway6.address = "2001:690:2100:83::ffff:1";
   };
 
   rnl.labels.location = "chapek";
@@ -52,19 +40,13 @@
   rnl.virtualisation.guest = {
     description = "VM de testes para o DEI";
     createdBy = "nuno.alves";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     vcpu = 4;
     memory = 4096;
 
-    interfaces = [{source = "dmz";}];
-    disks = [
-      {source.dev = "/dev/zvol/dpool/volumes/blatta";}
-      {
-        type = "file";
-        source.file = "/mnt/data/blatta.img";
-      }
-    ];
+    interfaces = [ { source = "dmz"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/blatta"; } ];
   };
 
   rnl.internalHost = true; # Use Vault to generate certificates
@@ -73,7 +55,7 @@
     serverName = "${config.networking.fqdn}";
     enableACME = true;
     forceSSL = true;
-    locations."/". root = pkgs.writeTextDir "index.html" ''
+    locations."/".root = pkgs.writeTextDir "index.html" ''
       <html>
         <body>
           <h1>Welcome to Blatta</h1>
@@ -96,6 +78,25 @@
     sites.default.serverName = "dms.${config.networking.fqdn}";
   };
 
+  dei.multi-dms = {
+    enable = true;
+    builds.authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICSDnfYmzk0zCktsKjRAphZavsDwXG/ymq+STFff1Zy/" # GitLab CI
+    ];
+  };
+
+  rnl.db-cluster = {
+    ensureDatabases = [ "dms_blatta" ];
+    ensureUsers = [
+      {
+        name = "dms";
+        ensurePermissions = {
+          "dms_blatta.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   dei.phdms.sites.default.serverName = "phdms.${config.networking.fqdn}";
 
   rnl.githook = {
@@ -109,7 +110,7 @@
     };
   };
 
-  systemd.tmpfiles.rules = ["d /root/.ssh 0755 root root"];
+  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
   age.secrets."root-at-blatta-ssh.key" = {
     file = ../secrets/root-at-blatta-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
@@ -121,7 +122,7 @@
     authentication = ''
       local phdms phdms trust
     '';
-    ensureDatabases = ["phdms"];
+    ensureDatabases = [ "phdms" ];
     ensureUsers = [
       {
         name = "root";
@@ -137,7 +138,7 @@
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = ["dms"];
+    ensureDatabases = [ "dms" ];
     ensureUsers = [
       {
         name = "dms";
@@ -148,7 +149,7 @@
     ];
   };
 
-  # MaiilHog
+  # MailHog
   services.mailhog.enable = true;
   services.nginx.virtualHosts.mailhog = {
     serverName = "mailhog.${config.networking.fqdn}";

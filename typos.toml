@@ -1,0 +1,28 @@
+[default]
+extend-ignore-re = [
+    # Ignore lines with trailing "# spellchecker:disable-line"
+    "(?Rm)^.*(#|//)\\s*spellchecker:disable-line$",
+
+    # Ignore blocks delimited by "# spellchecker:<on|off>"
+    "(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on",
+
+    # ignore hashed passwords (sometimes they trigger it)
+    'hashedPassword = "[^"]+";',
+
+    # ignore MAC addresses (sometimes they trigger it)
+    'mac = "[a-fA-F0-9:]+";',
+
+    # ignore maintainers list (PT names sometimes trigger it)
+    '(?s)\s*maintainers\s*=\s*\[[-"a-zA-Z0-9_. \n]*\]\s*;'
+]
+
+[default.extend-words]
+# Don't correct the "ist" or "rnl"
+ist = "ist"
+rnl = "rnl"
+
+[files]
+extend-exclude = [
+    "secrets/**/*.age",
+    "pkgs/rnlTorrents/torrents/*.torrent"
+]

@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
     jq
     unixtools.xxd
   ];
-  nativeBuildInputs = [makeWrapper];
+  nativeBuildInputs = [ makeWrapper ];
   installPhase = ''
     mkdir -p $out/bin
     cp ${name}.sh $out/bin/${name}

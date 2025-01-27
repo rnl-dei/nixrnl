@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Domain Controller do domínio DEIAD";
-    maintainers = ["dei"];
+    maintainers = [ "dei" ];
 
     uefi = false;
     autostart = false; # Keep it off until starts working :/
@@ -25,11 +26,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/homer.img";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/homer"; } ];
   };
 }

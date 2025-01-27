@@ -1,12 +1,9 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   # Generate a public/private key pair like this:
   # $ nix-store --generate-binary-cache-key cache.yourdomain.tld-1 /var/lib/secrets/harmonia.secret /var/lib/secrets/harmonia.pub
   services.harmonia.enable = true;
-  nix.settings.allowed-users = ["harmonia"];
+  nix.settings.allowed-users = [ "harmonia" ];
 
   services.nginx.virtualHosts.binary-cache = {
     serverName = lib.mkDefault "binary-cache.${config.networking.fqdn}";

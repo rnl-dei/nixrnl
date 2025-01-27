@@ -1,9 +1,5 @@
+{ config, profiles, ... }:
 {
-  config,
-  profiles,
-  lib,
-  ...
-}: {
   imports = with profiles; [
     core.rnl
     filesystems.zfs-mirror
@@ -32,7 +28,10 @@
     hostId = "53ad07f3"; # Randomly generated
 
     bonds.bond0 = {
-      interfaces = ["eno1" "eno2"];
+      interfaces = [
+        "eno1"
+        "eno2"
+      ];
       driverOptions.mode = "802.3ad";
     };
 
@@ -60,62 +59,57 @@
     };
 
     bridges = {
-      priv = {interfaces = ["bond0"];};
-      pub = {interfaces = ["pub-vlan"];};
-      labs = {interfaces = ["labs-vlan"];};
-      dmz = {interfaces = ["dmz-vlan"];};
-      gia = {interfaces = ["gia-vlan"];};
-      portateis = {interfaces = ["portateis-vlan"];};
+      priv = {
+        interfaces = [ "bond0" ];
+      };
+      pub = {
+        interfaces = [ "pub-vlan" ];
+      };
+      labs = {
+        interfaces = [ "labs-vlan" ];
+      };
+      dmz = {
+        interfaces = [ "dmz-vlan" ];
+      };
+      gia = {
+        interfaces = [ "gia-vlan" ];
+      };
+      portateis = {
+        interfaces = [ "portateis-vlan" ];
+      };
     };
 
     interfaces.pub = {
-      ipv4 = {
-        addresses = [
-          {
-            address = "193.136.164.5";
-            prefixLength = 26;
-          }
-          {
-            address = "193.136.164.4";
-            prefixLength = 26;
-          }
-        ];
-        routes = [
-          {
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "193.136.164.62";
-          }
-        ];
-      };
-      ipv6 = {
-        addresses = [
-          {
-            address = "2001:690:2100:80::5";
-            prefixLength = 64;
-          }
-          {
-            address = "2001:690:2100:80::4";
-            prefixLength = 64;
-          }
-        ];
-        routes = [
-          {
-            address = "::";
-            prefixLength = 0;
-            via = "2001:690:2100:80::ffff:1";
-          }
-        ];
-      };
+      ipv4.addresses = [
+        {
+          address = "193.136.164.5";
+          prefixLength = 26;
+        }
+        {
+          address = "193.136.164.4";
+          prefixLength = 26;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "2001:690:2100:80::5";
+          prefixLength = 64;
+        }
+        {
+          address = "2001:690:2100:80::4";
+          prefixLength = 64;
+        }
+      ];
     };
+
+    defaultGateway.address = "193.136.164.62";
+    defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
 
   users.users.root.hashedPassword = "$6$q5qLU8WwsJfRTYGI$IlbfIYFhGS.Lozdd5Cund.7iKgGgdJzXMUCzitl4V.Q5VLR.Ow7sUsZda9hVwYpLHnFcVRGMG6V71omooyRI80";
 
   # NFS
-  systemd.tmpfiles.rules = [
-    "d /mnt/data/cirrus/users 0775 nobody nogroup -"
-  ];
+  systemd.tmpfiles.rules = [ "d /mnt/data/cirrus/users 0775 nobody nogroup -" ];
   services.nfs.server = {
     enable = true;
     # allow borg and labs to mount cirrus
@@ -126,7 +120,7 @@
       /mnt/data/cirrus 2001:690:2100:84::/64(rw,async,no_subtree_check,no_root_squash)
     '';
   };
-  networking.firewall.allowedTCPPorts = [2049];
+  networking.firewall.allowedTCPPorts = [ 2049 ];
   boot.kernel.sysctl = {
     "net.ipv6.conf.default.accept_ra" = 0;
     "net.ipv6.conf.pub.accept_ra" = 1;
@@ -135,11 +129,16 @@
   #NTP
   services.ntp = {
     enable = true;
-    servers = ["hora.rediris.es" "ntp1.software.imdea.org" "ntp04.oal.ul.pt" "servers ntp01.fccn.pt"];
+    servers = [
+      "hora.rediris.es"
+      "ntp1.software.imdea.org"
+      "ntp04.oal.ul.pt"
+      "servers ntp01.fccn.pt"
+    ];
     extraConfig = ''
       interface listen 193.136.164.4
       interface listen 2001:690:2100:80::4
     '';
   };
-  networking.firewall.allowedUDPPorts = [123];
+  networking.firewall.allowedUDPPorts = [ 123 ];
 }

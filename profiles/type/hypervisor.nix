@@ -1,8 +1,12 @@
-{...}: {
-  imports = [./physical.nix];
+{ ... }:
+{
+  imports = [ ./physical.nix ];
 
   # Overall hosts are Intel but some are AMD
-  boot.kernelModules = ["kvm-intel" "kvm-amd"];
+  boot.kernelModules = [
+    "kvm-intel"
+    "kvm-amd"
+  ];
 
   virtualisation.libvirtd = {
     enable = true;

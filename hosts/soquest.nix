@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -9,9 +10,12 @@
   rnl.labels.location = "chapek";
 
   rnl.virtualisation.guest = {
-    description = "VM para apoio à tese do Guillermo Bettencourt";
+    description = "VM para apoio à tese do Guillermo Bettencourt"; # spellchecker:disable-line
     createdBy = "nuno.alves";
-    maintainers = ["miguel.pardal" "guillermo.bettencourt"];
+    maintainers = [
+      "miguel.pardal"
+      "guillermo.bettencourt"
+    ];
 
     uefi = false;
     memory = 4096;
@@ -23,10 +27,17 @@
         mac = "52:54:00:74:86:ba";
       }
     ];
-    disks = [
+    disks = [ { source.dev = "/dev/zvol/dpool/data/soquest"; } ];
+  };
+
+  rnl.db-cluster = {
+    ensureDatabases = [ "soquest_moodle" ];
+    ensureUsers = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/soquest.img";
+        name = "soquest";
+        ensurePermissions = {
+          "soquest_moodle.*" = "ALL PRIVILEGES";
+        };
       }
     ];
   };

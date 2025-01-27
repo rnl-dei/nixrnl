@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchzip,
-  ...
-}:
+{ stdenv, fetchzip, ... }:
 stdenv.mkDerivation rec {
   name = "comment";
   version = "2023-08-18";

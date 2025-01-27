@@ -3,15 +3,19 @@
   config,
   pkgs,
   ...
-}: let
-  pamCreateGlusterHome =
-    pkgs.writeShellScript "pam_create_gluster_home.sh"
-    (builtins.readFile ./pam_create_gluster_home.sh);
-in {
-  imports = [../common.nix];
+}:
+let
+  pamCreateGlusterHome = pkgs.writeShellScript "pam_create_gluster_home.sh" (
+    builtins.readFile ./pam_create_gluster_home.sh
+  );
+
+  databaseName = "slurm_acct_db";
+in
+{
+  imports = [ ../common.nix ];
 
   # Fix to allow slurmdbd with external database
-  systemd.services.slurmdbd.requires = lib.mkForce ["munged.service"];
+  systemd.services.slurmdbd.requires = lib.mkForce [ "munged.service" ];
 
   services.slurm = {
     server.enable = true;
@@ -20,23 +24,37 @@ in {
       extraConfig = ''
         StorageHost=${config.rnl.database.host}
         StoragePort=${toString config.rnl.database.port}
-        StorageLoc=slurm_acct_db # Default name
+        StorageLoc=${databaseName}
 
         PrivateData=accounts,events,usage,users
       '';
     };
   };
+  rnl.db-cluster = {
+    ensureDatabases = [ databaseName ];
+    ensureUsers = [
+      {
+        name = "slurm";
+        ensurePermissions = {
+          "${databaseName}.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 
   # Ensure slurmctld does not run without /mnt/cirrus being mounted
   systemd.services.slurmctld = {
-    requires = ["mnt-cirrus.mount"];
-    after = ["mnt-cirrus.mount"];
-    partOf = ["mnt-cirrus.mount"];
+    requires = [ "mnt-cirrus.mount" ];
+    after = [ "mnt-cirrus.mount" ];
+    partOf = [ "mnt-cirrus.mount" ];
   };
 
   # Slurmctld port and srun batch ports
   networking.firewall = {
-    allowedTCPPorts = [6817 6819];
+    allowedTCPPorts = [
+      6817
+      6819
+    ];
     allowedTCPPortRanges = [
       {
         from = 60001;
@@ -77,10 +95,14 @@ in {
 
   '';
 
-  security.pam.services.login.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
-  security.pam.services.sshd.text = lib.mkDefault (lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}");
+  security.pam.services.login.text = lib.mkDefault (
+    lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}"
+  );
+  security.pam.services.sshd.text = lib.mkDefault (
+    lib.mkAfter "session optional pam_exec.so seteuid ${pamCreateGlusterHome}"
+  );
 
-  # Limit individual user's memory usage agressively
+  # Limit individual user's memory usage aggressively
   # This is a heavily shared machine
   # Overrides limits from profile/ist-shell
   # TODO: move to somewhere where it can be shared with nexus and other heavily shared machines.
@@ -88,7 +110,7 @@ in {
     MemoryMax = "13%"; # 2GB * 12% ≃ 260MB
 
     # Page cache management is dumb and reclamation is not automatic when memory runs out
-    # MemoryHigh is a soft-limit that triggers agressive memory reclamation, preventing OOM kills when the page cache starts to grow
+    # MemoryHigh is a soft-limit that triggers aggressive memory reclamation, preventing OOM kills when the page cache starts to grow
     # This prevents something like downloading a large file to a FS with a large write cache from being OOM-killed
     MemoryHigh = "12%"; # set to just under MemoryMax
 

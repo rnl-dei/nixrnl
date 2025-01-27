@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   users.users.php = {
     group = config.services.nginx.group;
     isSystemUser = true;
@@ -22,6 +23,6 @@
   };
 
   services.nginx.upstreams.php = {
-    servers."unix:${config.services.phpfpm.pools.default.socket}" = {};
+    servers."unix:${config.services.phpfpm.pools.default.socket}" = { };
   };
 }

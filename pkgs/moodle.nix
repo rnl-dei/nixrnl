@@ -3,20 +3,27 @@
   stdenv,
   fetchurl,
   writeText,
-  plugins ? [],
+  plugins ? [ ],
   nixosTests,
   ...
-}: let
-  version = "4.4.1";
+}:
+let
+  version = "4.4.2";
 
   versionParts = lib.take 2 (lib.splitVersion version);
   # 4.2 -> 402, 3.11 -> 311
-  stableVersion = lib.removePrefix "0" (lib.concatMapStrings
-    (p:
-      if (lib.toInt p) < 10
-      then (lib.concatStrings ["0" p])
-      else p)
-    versionParts);
+  stableVersion = lib.removePrefix "0" (
+    lib.concatMapStrings (
+      p:
+      if (lib.toInt p) < 10 then
+        (lib.concatStrings [
+          "0"
+          p
+        ])
+      else
+        p
+    ) versionParts
+  );
 
   # Reference: https://docs.moodle.org/dev/Plugin_types
   pluginDirs = {
@@ -81,52 +88,58 @@
     qbank = "question/bank";
   };
 in
-  stdenv.mkDerivation rec {
-    pname = "moodle";
-    inherit version;
+stdenv.mkDerivation rec {
+  pname = "moodle";
+  inherit version;
 
-    src = fetchurl {
-      url = "https://download.moodle.org/download.php/direct/stable${stableVersion}/${pname}-${version}.tgz";
-      hash = "sha256-+pzDrSMm+V4pEze13mJ/eyhaxcvnmG/eno0csCRTisU=";
-    };
+  src = fetchurl {
+    url = "https://download.moodle.org/download.php/direct/stable${stableVersion}/${pname}-${version}.tgz";
+    hash = "sha256-qQ9X/hx5EgDmElVgj7oZhRI4deliCtNLBR1Pu2PbNII=";
+  };
 
-    phpConfig = writeText "config.php" ''
-      <?php
-        return require(getenv('MOODLE_CONFIG'));
-      ?>
-    '';
+  phpConfig = writeText "config.php" ''
+    <?php
+      return require(getenv('MOODLE_CONFIG'));
+    ?>
+  '';
 
-    installPhase = ''
-      runHook preInstall
+  installPhase = ''
+    runHook preInstall
 
-      mkdir -p $out/share/moodle
-      cp -r . $out/share/moodle
-      cp ${phpConfig} $out/share/moodle/config.php
+    mkdir -p $out/share/moodle
+    cp -r . $out/share/moodle
+    cp ${phpConfig} $out/share/moodle/config.php
 
-      ${lib.concatStringsSep "\n" (map (p: let
+    ${lib.concatStringsSep "\n" (
+      map (
+        p:
+        let
           dir =
-            if (lib.hasAttr p.pluginType pluginDirs)
-            then pluginDirs.${p.pluginType}
-            else throw "unknown moodle plugin type";
-          # we have to copy it, because the plugins have refrences to .. inside
-        in ''
+            if (lib.hasAttr p.pluginType pluginDirs) then
+              pluginDirs.${p.pluginType}
+            else
+              throw "unknown moodle plugin type";
+        in
+        # we have to copy it, because the plugins have references to .. inside
+        ''
           mkdir -p $out/share/moodle/${dir}/${p.name}
           cp -r ${p}/* $out/share/moodle/${dir}/${p.name}/
-        '')
-        plugins)}
+        ''
+      ) plugins
+    )}
 
-      runHook postInstall
-    '';
+    runHook postInstall
+  '';
 
-    passthru.tests = {
-      inherit (nixosTests) moodle;
-    };
+  passthru.tests = {
+    inherit (nixosTests) moodle;
+  };
 
-    meta = with lib; {
-      description = "Free and open-source learning management system (LMS) written in PHP";
-      license = licenses.gpl3Plus;
-      homepage = "https://moodle.org/";
-      maintainers = with maintainers; [freezeboy];
-      platforms = platforms.all;
-    };
-  }
+  meta = with lib; {
+    description = "Free and open-source learning management system (LMS) written in PHP";
+    license = licenses.gpl3Plus;
+    homepage = "https://moodle.org/";
+    maintainers = with maintainers; [ freezeboy ];
+    platforms = platforms.all;
+  };
+}

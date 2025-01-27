@@ -4,7 +4,8 @@
   pkgs,
   profiles,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     webserver
     phpfpm
@@ -20,15 +21,19 @@
     addSSL = true;
     locations = {
       "/" = {
-        root = let
-          configFile = pkgs.dashyConfig.weaver;
-          dashy = pkgs.dashy.override {inherit configFile;};
-        in "${dashy}/share/dashy";
+        root =
+          let
+            configFile = pkgs.dashyConfig.weaver;
+            dashy = pkgs.dashy.override { inherit configFile; };
+          in
+          "${dashy}/share/dashy";
       };
       "~ ^/(doku)?wiki([^\\r\\n]*)$" = {
         return = "301 $scheme://${config.services.nginx.virtualHosts.wiki.serverName}$2$is_args$args";
       };
-      "~ ^/raaas" = {return = "301 $scheme://${config.services.nginx.virtualHosts.raaas.serverName}";};
+      "~ ^/raaas" = {
+        return = "301 $scheme://${config.services.nginx.virtualHosts.raaas.serverName}";
+      };
       "~ ^/zeus(.*)$" = {
         # TODO: Move srx-status-page to a package
         alias = "/var/www/zeus/htdocs/$1";
@@ -55,7 +60,7 @@
   # Watchtower
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
-    volumes = ["/var/run/docker.sock:/var/run/docker.sock"];
+    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
     environment = {
       "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
       "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
@@ -72,7 +77,7 @@
 
   virtualisation.oci-containers.containers."raaas" = {
     image = "registry.rnl.tecnico.ulisboa.pt/rnl/raaas:latest";
-    ports = ["3000:80"];
+    ports = [ "3000:80" ];
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };
@@ -90,12 +95,12 @@
     vrrpInstances.weaverIP4 = {
       virtualRouterId = 88;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "193.136.164.88/26";}]; # weaver IPv4
+      virtualIps = [ { addr = "193.136.164.88/26"; } ]; # weaver IPv4
     };
     vrrpInstances.weaverIP6 = {
       virtualRouterId = 88;
       interface = lib.mkDefault "enp1s0";
-      virtualIps = [{addr = "2001:690:2100:81::88/64";}]; # weaver IPv6
+      virtualIps = [ { addr = "2001:690:2100:81::88/64"; } ]; # weaver IPv6
     };
   };
 }

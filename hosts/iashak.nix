@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -10,7 +11,7 @@
 
   rnl.virtualisation.guest = {
     description = "Mooshak para IA/LP";
-    maintainers = ["luisa.coheur"];
+    maintainers = [ "luisa.coheur" ];
 
     uefi = false;
     memory = 2048;
@@ -23,19 +24,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/iashak.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/iashak-old.img";
-      }
-      {
-        type = "file";
-        source.file = "/mnt/data/iashak-20210405.img";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/iashak"; } ];
   };
 }

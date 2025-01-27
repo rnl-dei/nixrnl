@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchzip,
-  ...
-}:
+{ stdenv, fetchzip, ... }:
 stdenv.mkDerivation rec {
   name = "edittable";
   version = "2023-01-14";

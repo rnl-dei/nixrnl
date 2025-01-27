@@ -1,14 +1,12 @@
+{ inputs, pkgs, ... }:
 {
-  inputs,
-  pkgs,
-  ...
-}: {
   nix = {
     # Improve nix store disk usage
     gc = {
       automatic = true;
       randomizedDelaySec = "30min";
       dates = "03:15";
+      options = "--delete-older-than 7d";
     };
 
     registry = {
@@ -36,7 +34,10 @@
       keep-outputs = true;
       keep-derivations = true;
       fallback = true;
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
     };
   };
 

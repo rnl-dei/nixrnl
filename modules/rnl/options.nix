@@ -1,12 +1,8 @@
+{ lib, ... }:
+with lib;
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-with lib; {
   options.rnl = {
-    internalHost = mkEnableOption "Enable this if host is unaccessible from the outside";
+    internalHost = mkEnableOption "Enable this if host is inaccessible from the outside";
 
     domain = mkOption {
       type = types.str;
@@ -65,7 +61,10 @@ with lib; {
           "info@example.com" = "user1@example.com";
           "postmaster@example.com" = "user1@example.com";
           "abuse@example.com" = "user1@example.com";
-          "multi@example.com" = ["user1@example.com" "user2@example.com"];
+          "multi@example.com" = [
+            "user1@example.com"
+            "user2@example.com"
+          ];
         };
       };
     };
@@ -105,7 +104,7 @@ with lib; {
       mgmt = mkOption {
         type = types.int;
         readOnly = true;
-        default = 100;
+        default = 1;
         description = "Management VLAN";
       };
       admin = mkOption {

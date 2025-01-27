@@ -4,7 +4,8 @@
   profiles,
   pkgs,
   ...
-}: {
+}:
+{
   imports = with profiles; [
     core.rnl
     filesystems.simple-uefi
@@ -17,37 +18,24 @@
   ];
 
   # Networking
-  networking.interfaces.enp1s0 = {
-    ipv4 = {
-      addresses = [
+  networking = {
+    interfaces.enp1s0 = {
+      ipv4.addresses = [
         {
           address = "193.136.164.146";
           prefixLength = 26;
         }
       ];
-      routes = [
-        {
-          address = "0.0.0.0";
-          prefixLength = 0;
-          via = "193.136.164.190";
-        }
-      ];
-    };
-    ipv6 = {
-      addresses = [
+      ipv6.addresses = [
         {
           address = "2001:690:2100:83::146";
           prefixLength = 64;
         }
       ];
-      routes = [
-        {
-          address = "::";
-          prefixLength = 0;
-          via = "2001:690:2100:83::ffff:1";
-        }
-      ];
     };
+
+    defaultGateway.address = "193.136.164.190";
+    defaultGateway6.address = "2001:690:2100:83::ffff:1";
   };
 
   # Nginx Catch-All
@@ -72,53 +60,59 @@
   services.uwsgi = {
     enable = true;
     group = config.services.nginx.group;
-    plugins = ["python3"];
-    instance = let
-      heliosServerDir = config.rnl.githook.hooks.helios-server.path;
-    in {
-      type = "emperor";
-      vassals.helios = {
-        type = "normal";
-        chdir = heliosServerDir;
-        wsgi-file = "${heliosServerDir}/wsgi.py";
-        socket = "${config.services.uwsgi.runDir}/helios.sock";
-        chmod-socket = "660";
-        virtualenv = "${heliosServerDir}/venv";
-        attach-daemon2 = "cmd=./run-celery.sh,daemonize";
-        env = lib.mapAttrsToList (n: v: "${n}=${v}") {
-          PATH = lib.makeBinPath [pkgs.bash]; # for run-celery.sh
+    plugins = [ "python3" ];
+    instance =
+      let
+        heliosServerDir = config.rnl.githook.hooks.helios-server.path;
+      in
+      {
+        type = "emperor";
+        vassals.helios = {
+          type = "normal";
+          chdir = heliosServerDir;
+          wsgi-file = "${heliosServerDir}/wsgi.py";
+          socket = "${config.services.uwsgi.runDir}/helios.sock";
+          chmod-socket = "660";
+          virtualenv = "${heliosServerDir}/venv";
+          attach-daemon2 = "cmd=./run-celery.sh,daemonize";
+          env = lib.mapAttrsToList (n: v: "${n}=${v}") {
+            PATH = lib.makeBinPath [ pkgs.bash ]; # for run-celery.sh
 
-          ENVIRONMENT_FILE = config.age.secrets."helios.env".path;
+            ENVIRONMENT_FILE = config.age.secrets."helios.env".path;
 
-          URL_HOST = "https://helios.${config.rnl.domain}";
-          ALLOWED_HOSTS = "helios.${config.rnl.domain}";
-          SSL = "1";
+            URL_HOST = "https://helios.${config.rnl.domain}";
+            ALLOWED_HOSTS = "helios.${config.rnl.domain}";
+            SSL = "1";
 
-          DEFAULT_FROM_EMAIL = "noreply@helios.${config.rnl.domain}";
-          DEFAULT_FROM_NAME = "Voting at DEI";
-          EMAIL_HOST = config.rnl.mailserver.host;
-          EMAIL_PORT = toString config.rnl.mailserver.port;
-          EMAIL_USE_TLS = "0";
+            DEFAULT_FROM_EMAIL = "noreply@helios.${config.rnl.domain}";
+            DEFAULT_FROM_NAME = "Voting at DEI";
+            EMAIL_HOST = config.rnl.mailserver.host;
+            EMAIL_PORT = toString config.rnl.mailserver.port;
+            EMAIL_USE_TLS = "0";
 
-          SITE_TITLE = "Voting@DEI";
+            SITE_TITLE = "Voting@DEI";
 
-          WELCOME_MESSAGE = "Welcome to DEI's voting system.";
-          HELP_EMAIL_ADDRESS = "dei@${config.rnl.domain}";
+            WELCOME_MESSAGE = "Welcome to DEI's voting system.";
+            HELP_EMAIL_ADDRESS = "dei@${config.rnl.domain}";
 
-          ADMIN_NAME = "Administrator";
-          ADMIN_EMAIL = "dei-robots@${config.rnl.domain}";
+            ADMIN_NAME = "Administrator";
+            ADMIN_EMAIL = "dei-robots@${config.rnl.domain}";
 
-          AUTH_ENABLED_SYSTEMS = "fenix";
-          AUTH_DEFAULT_SYSTEM = "fenix";
+            AUTH_ENABLED_SYSTEMS = "fenix";
+            AUTH_DEFAULT_SYSTEM = "fenix";
 
-          FENIX_ADDRESS = "https://fenix.tecnico.ulisboa.pt";
-          FENIX_REDIRECT_URL = "https://helios.${config.rnl.domain}/auth/after";
-          FENIX_ALLOWED_USERS_TO_CREATE_ELECTIONS = lib.concatStringsSep "," ["ist23745" "ist199291" "ist1103252"];
+            FENIX_ADDRESS = "https://fenix.tecnico.ulisboa.pt";
+            FENIX_REDIRECT_URL = "https://helios.${config.rnl.domain}/auth/after";
+            FENIX_ALLOWED_USERS_TO_CREATE_ELECTIONS = lib.concatStringsSep "," [
+              "ist23745" # Lurdes
+              "ist23000" # JLuis
+              "ist1103252" # JPereira
+            ];
 
-          DEBUG = "0";
+            DEBUG = "0";
+          };
         };
       };
-    };
   };
   services.nginx.virtualHosts."helios" = {
     serverName = "helios.${config.rnl.domain}";
@@ -135,7 +129,7 @@
     authentication = ''
       local helios helios trust
     '';
-    ensureDatabases = ["helios"];
+    ensureDatabases = [ "helios" ];
     ensureUsers = [
       {
         name = "root";
@@ -164,7 +158,7 @@
     description = "IST Delegate Election system";
     createdBy = "nuno.alves";
 
-    interfaces = [{source = "dmz";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/selene";}];
+    interfaces = [ { source = "dmz"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/selene"; } ];
   };
 }

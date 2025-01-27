@@ -1,8 +1,4 @@
-{
-  stdenv,
-  fetchzip,
-  ...
-}:
+{ stdenv, fetchzip, ... }:
 stdenv.mkDerivation rec {
   name = "blockquote";
   version = "2017-08-25";

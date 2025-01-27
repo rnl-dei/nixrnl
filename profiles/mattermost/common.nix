@@ -1,10 +1,13 @@
 {
   config,
   lib,
+  pkgs,
   ...
-}: {
+}:
+{
   services.mattermost = {
     enable = true;
+    package = pkgs.unstable.mattermost;
     siteName = lib.mkDefault "Mattermost @ RNL";
     siteUrl = lib.mkDefault "https://${config.networking.fqdn}";
     listenAddress = "127.0.0.1:8065";
@@ -12,7 +15,7 @@
   };
 
   services.nginx.upstreams.mattermost.servers = {
-    "${config.services.mattermost.listenAddress}" = {};
+    "${config.services.mattermost.listenAddress}" = { };
   };
 
   services.nginx.virtualHosts.mattermost = {

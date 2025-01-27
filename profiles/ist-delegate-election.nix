@@ -3,8 +3,9 @@
   inputs,
   lib,
   ...
-}: {
-  imports = [inputs.ist-delegate-election.nixosModules.ist-delegate-election];
+}:
+{
+  imports = [ inputs.ist-delegate-election.nixosModules.ist-delegate-election ];
 
   age.secrets."ist-delegate-election.env" = {
     file = ../secrets/ist-delegate-election-env.age;
@@ -18,9 +19,20 @@
 
     settingsFile = config.age.secrets."ist-delegate-election.env".path;
   };
+  rnl.db-cluster = {
+    ensureDatabases = [ "ist_delegate_election" ];
+    ensureUsers = [
+      {
+        name = "ist_delegate_election";
+        ensurePermissions = {
+          "ist_delegate_election.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
 
   services.nginx.upstreams.ist-delegate-election.servers = {
-    "[::1]:${toString config.services.ist-delegate-election.port}" = {};
+    "[::1]:${toString config.services.ist-delegate-election.port}" = { };
   };
 
   services.nginx.virtualHosts.ist-delegate-election = {

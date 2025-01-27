@@ -3,13 +3,14 @@
   lib,
   pkgs,
   ...
-}: {
-  imports = [./common.nix];
+}:
+{
+  imports = [ ./common.nix ];
 
   # RNL Wallpaper
   rnl.wallpaper = {
     enable = true;
-    url = "https://wallpaper.rnl.tecnico.ulisboa.pt/";
+    url = "https://wallpaper.${config.rnl.domain}/";
   };
 
   # Display Manager: LightDM
@@ -20,9 +21,7 @@
     background = config.rnl.wallpaper.path;
   };
 
-  environment.cinnamon.excludePackages = with pkgs; [
-    networkmanagerapplet
-  ];
+  environment.cinnamon.excludePackages = with pkgs; [ networkmanagerapplet ];
   programs.nm-applet.enable = lib.mkForce false;
 
   # Desktop Manager: Cinnamon

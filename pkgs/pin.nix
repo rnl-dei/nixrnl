@@ -1,6 +1,5 @@
 {
   autoPatchelfHook,
-  bintools-unwrapped,
   fetchurl,
   lib,
   stdenv,
@@ -16,9 +15,9 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-59RNJWaGMgB9WhCeUDNBXpHbVDuM6eZliToF6FK2dwc=";
   };
 
-  buildInputs = [stdenv.cc.cc.lib];
+  buildInputs = [ stdenv.cc.cc.lib ];
 
-  nativeBuildInputs = [autoPatchelfHook];
+  nativeBuildInputs = [ autoPatchelfHook ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -30,9 +29,9 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     homepage = "https://software.intel.com/content/www/us/en/develop/articles/pin-a-dynamic-binary-instrumentation-tool.html";
     description = "A tool for the dynamic instrumentation of programs";
-    platforms = ["x86_64-linux"];
+    platforms = [ "x86_64-linux" ];
     license = licenses.unfree;
-    sourceProvenance = with sourceTypes; [binaryNativeCode];
-    maintainers = ["carlos.vaz"];
+    sourceProvenance = with sourceTypes; [ binaryNativeCode ];
+    maintainers = [ "carlos.vaz" ];
   };
 }

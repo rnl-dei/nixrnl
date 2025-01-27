@@ -53,6 +53,6 @@ mkYarnPackage rec {
     description = "A self-hostable personal dashboard built for you. Includes status-checking, widgets, themes, icon packs, a UI editor and tons more!";
     homepage = "https://dashy.to/";
     license = licenses.mit;
-    maintainers = ["nuno.alves"];
+    maintainers = [ "nuno.alves" ];
   };
 }

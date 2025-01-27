@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.rnl
     filesystems.unknown
@@ -22,11 +23,6 @@
         addressSlot = "0x05";
       }
     ];
-    disks = [
-      {
-        type = "file";
-        source.file = "/mnt/data/lvm/chaos.img";
-      }
-    ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/chaos"; } ];
   };
 }

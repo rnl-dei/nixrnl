@@ -11,7 +11,8 @@ stages:
 
 lint:
   stage: check
-  script: nix fmt -- -c --quiet .
+  # HACK: "build" the a single check to avoid running nix flake check (which requires too much RAM)
+  script: nix build --print-build-logs .\#checks.x86_64-linux.pre-commit-check
 
 secrets-check:
   stage: check

@@ -3,13 +3,18 @@
   lib,
   profiles,
   ...
-}: {
-  imports = with profiles; [certificates];
+}:
+{
+  imports = with profiles; [ certificates ];
 
-  networking.firewall.allowedTCPPorts = [80 443];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 
   services.nginx = {
     enable = true;
+    enableReload = true;
     serverTokens = false;
     statusPage = true;
 
@@ -21,11 +26,19 @@
     recommendedProxySettings = true;
 
     sslDhparam = config.security.dhparams.params.nginx.path;
+
+    # https://github.com/NixOS/nixpkgs/pull/374519
+    # NixOS automatically creates a `localhost` virtualhost for Prometheus healthchecks.
+    # This virtualhost tries to bind/listen everywhere - force it to use localhost only.
+    virtualHosts.localhost.listenAddresses = lib.mkForce [
+      "127.0.0.1"
+      "[::1]"
+    ];
   };
 
   security.dhparams = {
     enable = true;
-    params.nginx = {};
+    params.nginx = { };
   };
 
   # Configure nginx exporter

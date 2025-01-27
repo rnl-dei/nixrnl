@@ -1,4 +1,5 @@
-{profiles, ...}: {
+{ profiles, ... }:
+{
   imports = with profiles; [
     core.third-party
     filesystems.simple-uefi
@@ -11,12 +12,16 @@
   rnl.virtualisation.guest = {
     description = "Checker para projetos de Procura e Planeamento";
     createdBy = "diogo.cardoso";
-    maintainers = ["ines.lynce" "david.pissarra"];
+    maintainers = [
+      "ines.lynce"
+      "david.pissarra"
+    ];
 
+    autostart = false;
     vcpu = 4;
     memory = 4096;
 
-    interfaces = [{source = "dmz";}];
-    disks = [{source.dev = "/dev/zvol/dpool/volumes/pp-checker";}];
+    interfaces = [ { source = "dmz"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/pp-checker"; } ];
   };
 }

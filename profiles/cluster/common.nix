@@ -3,19 +3,41 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   slurmProlog = pkgs.writeShellScript "slurm-prolog.sh" ''
     #!/bin/sh
     set -e
+    # send stdout/stderr to journal
+    exec > >(${pkgs.systemd}/bin/systemd-cat -t "slurm-prolog.sh/$SLURM_JOB_USER") 2>&1
+
     # Ensure subuid/subgid assignments exist for job user for container usage
     PAM_USER=$SLURM_JOB_USER ${pkgs.subidappend}/bin/subidappend
 
-    # Make systemd create /run/user/<uid> (for container usage)
-    ${pkgs.systemd}/bin/loginctl enable-linger $SLURM_JOB_USER
+    COUNTER_PATH=/run/slurm-count-"$SLURM_JOB_USER"
+    (
+      ${pkgs.util-linux}/bin/flock -e 200
+
+      if [ ! -f "$COUNTER_PATH" ] || [[ "$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")" == "0" ]]; then
+        # Make systemd create /run/user/<uid> (for container usage)
+        ${pkgs.systemd}/bin/loginctl enable-linger "$SLURM_JOB_USER"
+
+        echo 1 > "$COUNTER_PATH"
+      else
+        # count number of concurrent jobs from the same user to avoid calling
+        # disable-linger prematurely in Slurm's Epilog
+        prev_count="$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")"
+        echo $(( prev_count + 1 )) > "$COUNTER_PATH"
+      fi
+    ) 200>"$COUNTER_PATH.lock"
   '';
   slurmTaskProlog = pkgs.writeShellScript "slurm-taskprolog.sh" ''
     #!/bin/sh
     set -e
+    # send stderr to journal
+    # don't send stdout: Slurm needs it to set env vars!
+    exec 2> >(${pkgs.systemd}/bin/systemd-cat -t "slurm-task-prolog.sh/$SLURM_JOB_USER")
+
     # set DOCKER_HOST for container usage
     echo export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
     echo export HOME=$CLUSTER_HOME
@@ -23,27 +45,44 @@
   slurmEpilog = pkgs.writeShellScript "slurm-epilog.sh" ''
     #!/bin/sh
     set -e
-    # systemd can now clear up /run/user/<uid> and other resources
-    # TODO: fix race condition with other jobs from same user in same node
-    ${pkgs.systemd}/bin/loginctl disable-linger $SLURM_JOB_USER
+    # send stdout/stderr to journal
+    exec > >(${pkgs.systemd}/bin/systemd-cat -t "slurm-epilog.sh/$SLURM_JOB_USER") 2>&1
+
+    COUNTER_PATH=/run/slurm-count-"$SLURM_JOB_USER"
+    (
+      ${pkgs.util-linux}/bin/flock -e 200
+
+      count="$(${pkgs.coreutils}/bin/cat "$COUNTER_PATH")"
+      count="$(( count - 1 ))"
+
+      # only call disable-linger when all jobs from the user have completed
+      if [[ $count -le 0 ]]; then
+        echo 0 > "$COUNTER_PATH"
+
+        # systemd can now clear up /run/user/<uid> and other resources
+        ${pkgs.systemd}/bin/loginctl disable-linger "$SLURM_JOB_USER"
+      else
+        echo "$count" > "$COUNTER_PATH"
+      fi
+    ) 200>"$COUNTER_PATH.lock"
   '';
-in {
+in
+{
   services.slurm = {
     controlMachine = lib.mkDefault "borg";
     clusterName = lib.mkDefault "RNL-Cluster";
     dbdserver.dbdHost = lib.mkDefault "borg";
     nodeName = lib.mkDefault [
-      "lab0p[1-6] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab0,i5-4460"
+      "lab0p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab0,i5-7500"
       "lab1p[1-12] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab1,i5-7500"
-      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=15360 Features=lab2,i5-11500"
-      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=15360 Features=lab3,i5-10500,rtx3060ti"
+      "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=15360 Features=lab2,i5-11500"
+      "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=15360 Features=lab3,i5-10500,rtx3060ti"
       "lab4p[1-10] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab4,i5-7500"
-      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab5,i5-12500T"
+      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=2 RealMemory=15360 Features=lab5,i5-12500T"
       "lab6p[1-9] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=15360 Features=lab6,i5-8500"
-      "lab7p[1-9] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab7,i5-7500"
     ];
     partitionName = lib.mkDefault [
-      "compute Nodes=lab0p[1-6],lab1p[1-12],lab2p[1-20],lab3p[1-10],lab4p[1-10],lab5p[1-20],lab6p[1-9],lab7p[1-9] Default=YES MaxTime=20160 DefaultTime=30 State=UP"
+      "compute Nodes=lab0p[1-9],lab1p[1-12],lab2p[1-20],lab3p[1-10],lab4p[1-10],lab5p[1-20],lab6p[1-9] Default=YES MaxTime=20160 DefaultTime=30 State=UP"
     ];
     procTrackType = "proctrack/cgroup";
     extraConfig = ''
@@ -53,14 +92,21 @@ in {
       # set ReturnToService=1 to avoid this. However, this requires rebooting nodes using slurm, always.
       # So the system must use this facility to reboot: requires internal tooling to make `reboot` use slurm internally, changing DE behavior (dunno how).
       ReturnToService=2
+
+      # slurmd sometimes takes longer than expected to kill jobs, causing nodes to drain.
+      # According to internet people this is due to a mismatch between the default timeout
+      # used in task/cgroup (120s) and the default UnkillableStepTimeout (60s).
+      # reference: https://support.schedmd.com/show_bug.cgi?id=3941#c7
+      # Note: UnkillableStepTimeout MUST be at least 5x MessageTimeout (10s by default).
+      UnkillableStepTimeout=128
+
       TaskPlugin=task/cgroup,task/affinity
       TreeWidth=120 # Each slurmd daemon can communicate with up to 120 other slurmd daemons
       SelectType=select/cons_tres
       SelectTypeParameters=CR_CPU_Memory
       JobAcctGatherType=jobacct_gather/cgroup
       PrologFlags=Contain
-      DefMemPerCPU=0
-      DefMemPerGPU=1024
+      DefMemPerCPU=1024
       GresTypes=gpu,mps
 
       MpiDefault=pmix
@@ -108,12 +154,19 @@ in {
   };
 
   # Setup cirrus
-  environment.systemPackages = [pkgs.glusterfs pkgs.mpi];
+  environment.systemPackages = [
+    pkgs.glusterfs
+    pkgs.mpi
+  ];
 
   fileSystems."/mnt/cirrus" = {
     device = lib.mkDefault "dredd:/mnt/data/cirrus";
     fsType = "nfs";
-    options = ["noauto" "x-systemd.automount" "nfsvers=4.2"];
+    options = [
+      "noauto"
+      "x-systemd.automount"
+      "nfsvers=4.2"
+    ];
   };
 
   environment.shellInit = ''

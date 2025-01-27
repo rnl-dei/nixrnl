@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   assertions = [
     {
       assertion = config.users.users.root.hashedPassword != null;
@@ -26,13 +23,32 @@
   boot.loader.efi.canTouchEfiVariables = false;
 
   # Generic kernel modules to support everything
-  boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ehci_pci" "mpt3sas" "ahci" "usb_storage" "usbhid" "sd_mod" "sr_mod" "isci"];
+  boot.initrd.availableKernelModules = [
+    "nvme"
+    "xhci_pci"
+    "ehci_pci"
+    "mpt3sas"
+    "ahci"
+    "usb_storage"
+    "usbhid"
+    "sd_mod"
+    "sr_mod"
+    "isci"
+  ];
 
   # Enable HDD/SSD temperature monitoring
   hardware.sensor.hddtemp = {
     enable = true;
-    drives = lib.mkDefault ["/dev/sd*" "/dev/nvme*"];
+    drives = lib.mkDefault [
+      "/dev/sd?"
+      "/dev/nvme?"
+    ];
     unit = "C";
+  };
+
+  services.prometheus.exporters.smartctl = {
+    enable = true;
+    openFirewall = true;
   };
 
   rnl.labels.type = lib.mkDefault "physical";

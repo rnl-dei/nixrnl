@@ -16,8 +16,8 @@ stdenv.mkDerivation rec {
     hash = "sha256-HkDIfo+Jry+a37dqtPSBp9SOcgxwObIYv3ss4zhT9No=";
     stripRoot = false;
   };
-  buildInputs = [pkgs.linuxKernel.packages.linux_6_1.nvidia_x11];
-  nativeBuildInputs = [makeWrapper];
+  buildInputs = [ pkgs.linuxKernel.packages.linux_6_1.nvidia_x11 ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
@@ -29,6 +29,6 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "NVIDIA GPU exporter for prometheus using nvidia-smi binary";
     license = licenses.mit;
-    maintainers = ["martim.monis"];
+    maintainers = [ "martim.monis" ];
   };
 }

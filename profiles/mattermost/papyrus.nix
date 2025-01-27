@@ -1,10 +1,6 @@
+{ config, pkgs, ... }:
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  imports = [./common.nix];
+  imports = [ ./common.nix ];
 
   age.secrets."papyrus-private.env" = {
     file = ../../secrets/papyrus-private-env.age;
@@ -12,7 +8,6 @@
 
   services.mattermost = {
     environmentFile = config.age.secrets."papyrus-private.env".path;
-
     # Reference: https://docs.mattermost.com/configure/configuration-settings.html
     extraConfig = {
       ServiceSettings = {
@@ -44,6 +39,9 @@
       };
     };
 
-    plugins = with pkgs.mattermostPlugins; [playbooks rssfeed];
+    plugins = with pkgs.mattermostPlugins; [
+      playbooks
+      rssfeed
+    ];
   };
 }

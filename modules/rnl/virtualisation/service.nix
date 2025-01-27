@@ -1,8 +1,5 @@
+{ pkgs, lib, ... }:
 {
-  pkgs,
-  lib,
-  ...
-}: {
   arch,
   autostart,
   boot,
@@ -18,20 +15,22 @@
   maxMemoryDiff,
   memory,
   name,
-  timeout,
   uefi,
   vcpu,
   directKernel,
   qemuGuestAgent,
   ...
-}: let
+}:
+let
   mkInterface = options: ''
     <interface type='${options.type}'>
       ${lib.optionalString (options.mac != null) "<mac address='${options.mac}'/>"}
       ${lib.optionalString (options.type == "bridge") "<source bridge='${options.source}'/>"}
       ${lib.optionalString (options.type == "network") "<source network='default'/>"}
       <model type='virtio'/>
-      <address type='${options.addressType}' ${lib.optionalString (options.addressBus != null) "bus='${options.addressBus}'"} ${lib.optionalString (options.addressSlot != null) "slot='${options.addressSlot}'"} />
+      <address type='${options.addressType}' ${
+        lib.optionalString (options.addressBus != null) "bus='${options.addressBus}'"
+      } ${lib.optionalString (options.addressSlot != null) "slot='${options.addressSlot}'"} />
     </interface>
   '';
 
@@ -41,7 +40,11 @@
       ${lib.optionalString (options.type == "file") "<source file='${options.source.file}'/>"}
       ${lib.optionalString (options.type == "block") "<source dev='${options.source.dev}'/>"}
       <target dev='${options.target.dev}' bus='${options.target.bus}'/>
-      ${lib.optionalString (options.bootOrder != null && boot == []) "<boot order='${toString options.bootOrder}'/>"}
+      ${
+        lib.optionalString (
+          options.bootOrder != null && boot == [ ]
+        ) "<boot order='${toString options.bootOrder}'/>"
+      }
     </disk>
   '';
 
@@ -57,29 +60,57 @@
 
   cdroms' = builtins.map mkCdrom cdroms;
 
-  disks' = lib.zipListsWith (disk: position: (
-    disk
-    // {
-      target = let
-        bus = disk.target.bus;
-        types = {
-          virtio = "vd";
-          ide = "hd";
-          sata = "sd";
-        };
-        dev =
-          if disk.target.dev == null
-          then ((types.${bus}) + position)
-          else disk.target.dev;
-      in {inherit bus dev;};
-    }
-  )) (disks ++ cdroms') ["a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p"]; # Support up to 16 disks
+  disks' =
+    lib.zipListsWith
+      (
+        disk: position:
+        (
+          disk
+          // {
+            target =
+              let
+                bus = disk.target.bus;
+                types = {
+                  virtio = "vd";
+                  ide = "hd";
+                  sata = "sd";
+                };
+                dev = if disk.target.dev == null then ((types.${bus}) + position) else disk.target.dev;
+              in
+              {
+                inherit bus dev;
+              };
+          }
+        )
+      )
+      (disks ++ cdroms')
+      [
+        "a"
+        "b"
+        "c"
+        "d"
+        "e"
+        "f"
+        "g"
+        "h"
+        "i"
+        "j"
+        "k"
+        "l"
+        "m"
+        "n"
+        "o"
+        "p"
+      ]; # Support up to 16 disks
 
-  xmlConfigFile = pkgs.writeText "libvirt-guest-${name}.xml" (''
+  xmlConfigFile = pkgs.writeText "libvirt-guest-${name}.xml" (
+    ''
       <domain type='kvm'>
         <name>${name}</name>
         <uuid>UUID</uuid>
-        <description>${description} ${lib.optionalString (createdBy != null) "(created by ${createdBy})"}</description>
+        <description>${description} ${
+          lib.optionalString (createdBy != null) "(created by ${createdBy})"
+        }</description>
         <memory unit='MiB'>${toString (memory + maxMemoryDiff)}</memory>
         <currentMemory unit='MiB'>${toString memory}</currentMemory>
         <vcpu placement='static'>${toString vcpu}</vcpu>
@@ -128,11 +159,13 @@
           </rng>
         </devices>
       </domain>
-    '');
-in {
-  after = ["libvirtd.service"];
-  requires = ["libvirtd.service"];
-  wantedBy = ["multi-user.target"];
+    ''
+  );
+in
+{
+  after = [ "libvirtd.service" ];
+  requires = [ "libvirtd.service" ];
+  wantedBy = [ "multi-user.target" ];
   serviceConfig = {
     Type = "oneshot";
     RemainAfterExit = true;
