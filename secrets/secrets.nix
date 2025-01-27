@@ -102,7 +102,7 @@ in
   "root-at-www-ssh-key.age".publicKeys = users ++ [ www ];
   "roundcube-www-db-password.age".publicKeys = users ++ [ www ];
   "slurmdbd-borg-db-password.age".publicKeys = users ++ [ borg ];
-  "syncoid-at-caixote-ssh-key.age".publicKeys = users ++ [caixote];
+  "syncoid-at-caixote-ssh-key.age".publicKeys = users ++ [ caixote ];
   "tardis-grafana-env.age".publicKeys = users ++ [ tardis ];
   "tardis-healthchecksio-url.age".publicKeys = users ++ [ tardis ];
   "tardis-snmp-exporter-env.age".publicKeys = users ++ [ tardis ];
