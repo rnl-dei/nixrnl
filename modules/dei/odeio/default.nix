@@ -62,65 +62,75 @@ let
 
   mkDeployScript =
     site:
-    pkgs.writeScriptBin "deploy-${cfg.sites."${site}".serviceName}" ''
-      # TODO: use writeShellApplication
-           set -e # stop on error
+    pkgs.writeShellApplication {
+      name = "deploy-${cfg.sites."${site}".serviceName}";
 
-           # Colors
-           RED="\e[1;31m"
-           GRN="\e[1;32m"
-           YEL="\e[1;93m"
-           BLU="\e[1;94m"
-           CLR="\e[0m"
+      runtimeInputs = with pkgs; [
+        gnugrep
+        toybox
+        systemd
+      ];
 
-           error_msg() {
-             echo -e "''${RED}ERROR:''${CLR} $1"
-             exit 1
-           }
+      text = ''
+        set -e # stop on error
 
-           check_build_dir() {
-             DIRECTORY="$1"
-             if [ ! -d "$DIRECTORY" ]; then
-               error_msg "Could not find build $DIRECTORY"
-             fi
-           }
+        # Colors
+        RED="\e[1;31m"
+        GRN="\e[1;32m"
+        YEL="\e[1;93m"
+        BLU="\e[1;94m"
+        CLR="\e[0m"
 
-           HOSTNAME="''${HOSTNAME:-$(cat /proc/sys/kernel/hostname)}"
-           BUILDS_DIR="${cfg.builds.directory}"
-           STATE_DIR="${cfg.sites."${site}".stateDir}"
-           SITE="${site}"
+        error_msg() {
+          echo -e "''${RED}ERROR:''${CLR} $1"
+          exit 1
+        }
 
-           if (! ls $BUILDS_DIR &>/dev/null); then
-             error_msg "No $BUILDS_DIR directory found."
-           fi
+        check_build_dir() {
+          DIRECTORY="$1"
+          if [ ! -d "$DIRECTORY" ]; then
+            error_msg "Could not find build $DIRECTORY"
+          fi
+        }
 
-           LAST_BUILD_STAMP="$(ls -t $BUILDS_DIR | ${pkgs.gnugrep}/bin/grep '^[[:digit:]]\+$' | head -n 1)"
-           if [ -z "$LAST_BUILD_STAMP" ]; then
-             error_msg "There is no build. Please copy a build to $BUILDS_DIR."
-           fi
-           BUILD_STAMP="''${1:-$LAST_BUILD_STAMP}"
-           BUILD="$BUILDS_DIR/$BUILD_STAMP"
+        HOSTNAME="''${HOSTNAME:-$(cat /proc/sys/kernel/hostname)}"
+        BUILDS_DIR="${cfg.builds.directory}"
+        STATE_DIR="${cfg.sites."${site}".stateDir}"
 
-           check_build_dir $BUILD
+        if (! ls $BUILDS_DIR &>/dev/null); then
+          error_msg "No $BUILDS_DIR directory found."
+        fi
 
-           echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)? "
-           read -n1 -r
-           echo
+        # shellcheck disable=SC2012 # (info): Use find instead of ls to better handle non-alphanumeric filenames.
+        # shellcheck disable=SC2010 # (warning): Don't use ls | grep. Use a glob or a for loop with a condition to allow non-alphanumeric filenames.
+        LAST_BUILD_STAMP="$(ls -t $BUILDS_DIR | grep '^[[:digit:]]\+$' | head -n 1)"
+        if [ -z "$LAST_BUILD_STAMP" ]; then
+          error_msg "There is no build. Please copy a build to $BUILDS_DIR."
+        fi
+        BUILD_STAMP="''${1:-$LAST_BUILD_STAMP}"
+        BUILD="$BUILDS_DIR/$BUILD_STAMP"
 
-           if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-             echo -e "''${YEL}Aborting...''${CLR}"
-             exit 3
-           fi
+        check_build_dir "$BUILD"
 
-           # Delete old build
-           ${pkgs.toybox}/bin/rm -rf "$STATE_DIR/www"
+        echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, created at $(date -d @"$BUILD_STAMP") (y/N)? "
+        read -n1 -r
+        echo
 
-           # Create symbolic links to new build
-           ${pkgs.toybox}/bin/ln -s "$BUILD" "$STATE_DIR/www"
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+          echo -e "''${YEL}Aborting...''${CLR}"
+          exit 3
+        fi
+
+        # Delete old build
+        rm -rf "$STATE_DIR/www"
+
+        # Create symbolic links to new build
+        ln -s "$BUILD" "$STATE_DIR/www"
 
 
-           echo -e "''${GRN}ODEIO ${site} successfully deployed.''${CLR}"
-    '';
+        echo -e "''${GRN}ODEIO ${site} successfully deployed.''${CLR}"
+      '';
+    };
 in
 {
   options.dei.odeio = {
