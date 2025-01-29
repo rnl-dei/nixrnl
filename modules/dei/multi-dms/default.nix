@@ -23,264 +23,291 @@ let
   environmentDirSystemd = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
   caddyConfigsDir = "${cfg.dataDir}/caddy-configs";
-  systemctl = "${pkgs.systemd}/bin/systemctl";
+  # Database dump to use for populating DMS databases.
+  dbDumpFile = "${cfg.dataDir}/common/latest.sql";
 
   common = ''
-    # max length for container name is 11
-    # therefore, we use hash of branch name and trim to 7, 
-    # so the end result is e.g 'dms-a4a8114' (always 11 chars).
-
+     # max length for container name is 11
+     # therefore, we use hash of branch name and trim to 7, 
+     # so the end result is e.g 'dms-a4a8114' (always 11 chars).
 
     get_db_container_name() {
-        # Hash the input string and convert it to an integer within the specified range
-        local hash
-        local min_port="$1"
-        local max_port="$2"
-        # Calculate range
-        local range=$((max_port - min_port + 1))
+         # Hash the input string and convert it to an integer within the specified range
+         local hash
+         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
+         echo "dms-$hash" # container name will always be 11 chars, which is max. allowed.
+     }
 
-        # Hash the input string and convert it to an integer within the specified range
-        local hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
-        local port=$(( (0x$hash % range) + min_port ))
-        echo -n "$port"
-    }
+     get_port() {
+         local min_port="$1"
+         local max_port="$2"
 
-    db_dump_file="${cfg.dataDir}/common/latest.sql"
+         # Calculate range
+         local range=$((max_port - min_port + 1))
+
+         # Hash the input string and convert it to an integer within the specified range
+         local hash
+         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
+         local port=$(( (0x$hash % range) + min_port ))
+         echo -n "$port"
+     }
+
   '';
 
-  preStartScript = pkgs.writeScriptBin "multi-dms-prestart" ''
-    #!${pkgs.bash}/bin/bash
-    set -xo pipefail 
+  preStartScript = pkgs.writeShellApplication {
+    name = "multi-dms-prestart";
 
-    echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
+    runtimeInputs = with pkgs; [
+      mariadb
+      systemd
+    ];
+    text = ''
+      echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
-    ${common}
-    db_container_name="$(get_db_container_name)"
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
+      ${common}
+      db_container_name=$(get_db_container_name)
+      backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
+      db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
-    create_db() {
-      local db_name="$1"
-      local db_port="$2"
+      create_db() {
+        local db_name="$1"
+        local db_port="$2"
 
-      local db_container_config=${./db_container.nix}
+        local db_container_config=${./db_container.nix}
 
-      # Check if arguments are provided
-      if [[ -z "$db_name" || -z "$db_port" ]]; then
-        echo "Usage: create_db <db_name> <db_port>"
-        return 1
-      fi
-
-      nixos-container create "$db_name" \
-       --port "tcp:$db_port:3306" \
-       --config-file $db_container_config
-      
-      nixos-container start "$db_name"
-    }
-
-    populate_db() {
-      local db_port="$1"
-
-      # Check if arguments are provided
-      if [[ -z "$db_port" ]]; then
-        echo "Usage: populate_db <db_port>"
-        return 1
-      fi
-
-      # Because Blatta is too slow for create-destroy DBs on system stop/start,
-      # we only populate the DB once and don't automatically destroy it.
-      if test -f "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"; then
-        echo "Refusing to re-populate the database."
-        return
-      fi
-
-      ${pkgs.mariadb}/bin/mysql \
-        -h ${cfg.database.host} \
-        --port="$db_port" \
-        -u dms -p"$DB_PASSWORD" \
-        dms < "$db_dump_file"
-
-      touch "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"
-    }
-
-    add_caddy_vhost() {
-      local backend_port="$2"
-
-      # Check if arguments are provided
-      if [[ -z "$backend_port" ]]; then
-        echo "Usage: add_caddy_vhost <backend_port>"
-        return 1
-      fi
-
-      touch "${caddyConfigsDir}/$ENVIRONMENT_NAME"
-
-      cat > "${caddyConfigsDir}/$ENVIRONMENT_NAME" << EOL
-    dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt {
-      log {
-              output file /var/log/caddy/access-dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt.log
-      }
-
-      encode zstd gzip
-
-      handle /raa/* {
-              header Access-Control-Allow-Origin "https://rnl.tecnico.ulisboa.pt/"
-      }
-      handle_path /api/* {
-              reverse_proxy "http://localhost:$backend_port"
-      }
-
-      # Note: /public/* untested - may be broken!
-      handle /public/* {
-        root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/public
-        try_files {path} {path}/ /index.txt
-        file_server
-      }
-
-      handle {
-        root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/www
-        try_files {path} {path}/ /index.html
-        file_server
-      }
-    }
-
-    EOL
-    ${systemctl} reload caddy
-    }
-
-    create_db "$db_container_name" "$db_port"
-    add_caddy_vhost "$backend_port"
-    sleep 1
-    populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
-  '';
-
-  postStopScript = pkgs.writeScriptBin "multi-dms-poststop" ''
-    #!${pkgs.bash}/bin/bash
-    set -xo pipefail 
-    echo "I am stick!"
-
-    ${common}
-    db_container_name=$(get_db_container_name)
-
-    # Remove caddy virtualhost
-    rm ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
-    ${systemctl} reload caddy
-
-    # Stop DB (when fast hypervisor, it may be better to destroy and create DBs on start/stop) 
-    nixos-container stop "$db_container_name"
-  '';
-
-  startScript = pkgs.writeScriptBin "multi-dms-start" ''
-    #!${pkgs.bash}/bin/bash
-    exec ${cfg.backend.command}
-  '';
-
-  deployScript = pkgs.writeScriptBin "multi-dms-deploy" ''
-    #!${pkgs.bash}/bin/bash
-
-    # Add '-x' (e.g -euxo) if debugging this script.
-    set -euo pipefail
-
-    # Colors
-    RED="\e[1;31m"
-    #GRN="\e[1;32m"
-    YEL="\e[1;93m"
-    BLU="\e[1;94m"
-    CLR="\e[0m"
-
-    error_msg() {
-      echo -e "''${RED}ERROR:''${CLR} $1"
-      exit 1
-    }
-
-
-    # Check if arguments are provided
-    if  [[ $# -ne 1 && $# -ne 2 ]]; then
-      echo "Usage: $0 <environment name without 'multi-dms/' prefix> [build timestamp]"
-      exit 1
-    fi
-
-    ENVIRONMENT_NAME=$1
-    # -----
-    service_name="multi-dms@$ENVIRONMENT_NAME.service"
-    builds_dir="${buildsDir}/$ENVIRONMENT_NAME"
-    echo "Environment name: $ENVIRONMENT_NAME"
-    echo "Build directory: $builds_dir"
-    # ----    
-
-    check_build_dir() {
-      local DIRECTORY="$1"
-      if [ ! -d "$DIRECTORY" ]; then
-        error_msg "Could not find build $DIRECTORY"
-      elif [ ! -f "$DIRECTORY/dms.jar" ]; then
-        error_msg "Missing $DIRECTORY/dms.jar"
-      elif [ ! -d "$DIRECTORY/www" ]; then
-        error_msg "Missing $DIRECTORY/www"
-      fi
-    }
-
-    if (! ls "$builds_dir" &>/dev/null); then
-      error_msg "No $builds_dir directory found."
-    fi
-
-    # shellcheck disable=SC2012 # (info): Use find instead of ls to better handle non-alphanumeric filenames.
-    LAST_BUILD_STAMP="$(ls -t "$builds_dir" | ${pkgs.gnugrep}/bin/grep '^[[:digit:]]\+$' | head -n 1)"
-    if [ -z "$LAST_BUILD_STAMP" ]; then
-      error_msg "There is no (last) build. Please copy a build to $builds_dir."
-    fi
-    BUILD_STAMP="''${2:-$LAST_BUILD_STAMP}"
-    BUILD="$builds_dir/$BUILD_STAMP"
-    check_build_dir "$BUILD"
-
-    # Only prompt for confirmation if not specifying a build to use.
-    if [[ $# -ne 2 ]]; then
-        BUILD="$builds_dir/$BUILD_STAMP"
-        echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP) (y/N)?"
-        read -n1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-          echo -e "''${YEL}Aborting...''${CLR}"
-          exit 3
+        # Check if arguments are provided
+        if [[ -z "$db_name" || -z "$db_port" ]]; then
+          echo "Usage: create_db <db_name> <db_port>"
+          return 1
         fi
-        BUILD_STAMP=$LAST_BUILD_STAMP
-    else
-      echo "Deploying build $BUILD, commit timestamp: $(${pkgs.toybox}/bin/date -d @$BUILD_STAMP)..."
-    fi
 
-    ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
-    # ----
-    # Implementation
+        nixos-container create "$db_name" \
+         --port "tcp:$db_port:3306" \
+         --config-file $db_container_config || true
+        
+        nixos-container start "$db_name"
+      }
 
-    ${common}
-    db_container_name=$(get_db_container_name)
-    backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
-    db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
+      populate_db() {
+        local db_port="$1"
 
-    # Delete any old deployment leftovers
-    echo "Deleting (possible) leftover dms.jar and www...."
-    ${systemctl} stop "$service_name"
-    ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/www"
-    ${pkgs.toybox}/bin/rm -rf "$ENVIRONMENT_DIR/dms.jar"
+        # Check if arguments are provided
+        if [[ -z "$db_port" ]]; then
+          echo "Usage: populate_db <db_port>"
+          return 1
+        fi
+
+        # Because Blatta is too slow for create-destroy DBs on system stop/start,
+        # we only populate the DB once and don't automatically destroy it.
+        if test -f "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"; then
+          echo "Refusing to re-populate the database."
+          return
+        fi
+
+        mysql \
+          -h ${cfg.database.host} \
+          --port="$db_port" \
+          -u dms -p"$DB_PASSWORD" \
+          dms < "${dbDumpFile}"
+
+        touch "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"
+      }
+
+      add_caddy_vhost() {
+        local backend_port="$1"
+
+        # Check if arguments are provided
+        if [[ -z "$backend_port" ]]; then
+          echo "Usage: add_caddy_vhost <backend_port>"
+          return 1
+        fi
+
+        touch "${caddyConfigsDir}/$ENVIRONMENT_NAME"
+
+        cat > "${caddyConfigsDir}/$ENVIRONMENT_NAME" << EOL
+      dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt {
+        log {
+                output file /var/log/caddy/access-dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt.log
+        }
+
+        encode zstd gzip
+
+        handle /raa/* {
+                header Access-Control-Allow-Origin "https://rnl.tecnico.ulisboa.pt/"
+        }
+        handle_path /api/* {
+                reverse_proxy "http://localhost:$backend_port"
+        }
+
+        # Note: /public/* untested - may be broken!
+        handle /public/* {
+          root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/public
+          try_files {path} {path}/ /index.txt
+          file_server
+        }
+
+        handle {
+          root * ${cfg.dataDir}/environments/$ENVIRONMENT_NAME/www
+          try_files {path} {path}/ /index.html
+          file_server
+        }
+      }
+
+      EOL
+      systemctl reload caddy
+      }
+
+      create_db "$db_container_name" "$db_port"
+      add_caddy_vhost "$backend_port"
+      sleep 1
+      populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
+    '';
+
+  };
+
+  postStopScript = pkgs.writeShellApplication {
+    name = "multi-dms-poststop";
+
+    runtimeInputs = with pkgs; [ systemd ];
+    text = ''
+      echo "Start multi-dms post stop script"
+
+      ${common}
+      db_container_name=$(get_db_container_name)
+
+      # Remove caddy virtualhost
+      rm -f ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
+      systemctl reload caddy
+
+      # Stop DB (when fast hypervisor, it may be better to destroy and create DBs on start/stop) 
+      nixos-container stop "$db_container_name"
+    '';
+  };
+
+  startScript = pkgs.writeShellApplication {
+    name = "multi-dms-start";
+    text = ''
+      exec ${cfg.backend.command}
+    '';
+  };
+
+  deployScript = pkgs.writeShellApplication {
+    name = "multi-dms-deploy";
+
+    runtimeInputs = with pkgs; [
+      systemd
+      gnugrep
+      # Note: use toybox instead of busybox because busybox `date` does not
+      # Because `date` from busybox does not seem to support parsing UNIX timestamps.
+      toybox
+    ];
+    text = ''
+      # Add '-x' (e.g -euxo) if debugging this script.
+      set -euo pipefail
+
+      # Colors
+      RED="\e[1;31m"
+      #GRN="\e[1;32m"
+      YEL="\e[1;93m"
+      BLU="\e[1;94m"
+      CLR="\e[0m"
+
+      error_msg() {
+        echo -e "''${RED}ERROR:''${CLR} $1"
+        exit 1
+      }
 
 
-    echo "Init new environment..."
-    echo "Environment's container DB name is '$db_container_name'".
-    echo "You can access it with e.g 'machinectl shell $db_container_name'."
-    mkdir -p "$ENVIRONMENT_DIR"
-    ${pkgs.toybox}/bin/ln -s "$BUILD/dms.jar" "$ENVIRONMENT_DIR/dms.jar"
-    ${pkgs.toybox}/bin/ln -s "$BUILD/www" "$ENVIRONMENT_DIR/www"
-    echo "BACKEND_PORT=$backend_port" > "$ENVIRONMENT_DIR/dms.env"
-    echo "DB_PORT=$db_port" >> "$ENVIRONMENT_DIR/dms.env"
-    echo "DMS_URL=https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt" >> "$ENVIRONMENT_DIR/dms.env"
+      # Check if arguments are provided
+      if  [[ $# -ne 1 && $# -ne 2 ]]; then
+        echo "Usage: $0 <environment name without 'multi-dms/' prefix> [build timestamp]"
+        exit 1
+      fi
+
+      ENVIRONMENT_NAME=$1
+      # -----
+      service_name="multi-dms@$ENVIRONMENT_NAME.service"
+      builds_dir="${buildsDir}/$ENVIRONMENT_NAME"
+      echo "Environment name: $ENVIRONMENT_NAME"
+      echo "Build directory: $builds_dir"
+      # ----    
+
+      check_build_dir() {
+        local DIRECTORY="$1"
+        if [ ! -d "$DIRECTORY" ]; then
+          error_msg "Could not find build $DIRECTORY"
+        elif [ ! -f "$DIRECTORY/dms.jar" ]; then
+          error_msg "Missing $DIRECTORY/dms.jar"
+        elif [ ! -d "$DIRECTORY/www" ]; then
+          error_msg "Missing $DIRECTORY/www"
+        fi
+      }
+
+      if (! ls "$builds_dir" &>/dev/null); then
+        error_msg "No $builds_dir directory found."
+      fi
+
+      # shellcheck disable=SC2012 # (info): Use find instead of ls to better handle non-alphanumeric filenames.
+      # shellcheck disable=SC2010 # (warning): Don't use ls | grep. Use a glob or a for loop with a condition to allow non-alphanumeric filenames.
+      LAST_BUILD_STAMP="$(ls -t "$builds_dir" | grep '^[[:digit:]]\+$' | head -n 1)"
+      if [ -z "$LAST_BUILD_STAMP" ]; then
+        error_msg "There is no (last) build. Please copy a build to $builds_dir."
+      fi
+      BUILD_STAMP="''${2:-$LAST_BUILD_STAMP}"
+      BUILD="$builds_dir/$BUILD_STAMP"
+      check_build_dir "$BUILD"
+
+      # Only prompt for confirmation if not specifying a build to use.
+      if [[ $# -ne 2 ]]; then
+          BUILD="$builds_dir/$BUILD_STAMP"
+          echo -e -n "Are you sure you want to deploy build ''${BLU}$BUILD''${CLR}, commit created at $(date -d @"$BUILD_STAMP") (y/N)?"
+          read -n1 -r
+          echo
+          if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo -e "''${YEL}Aborting...''${CLR}"
+            exit 3
+          fi
+          BUILD_STAMP=$LAST_BUILD_STAMP
+      else
+        echo "Deploying build $BUILD, commit timestamp: $(date -d @"$BUILD_STAMP")..."
+      fi
+
+      ENVIRONMENT_DIR="${environmentsDir}/$ENVIRONMENT_NAME"
+      # ----
+      # Implementation
+
+      ${common}
+      db_container_name=$(get_db_container_name)
+      backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
+      db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
+
+      # Delete any old deployment leftovers
+      echo "Deleting (possible) leftover dms.jar and www...."
+      systemctl stop "$service_name"
+      rm -rf "$ENVIRONMENT_DIR/www"
+      rm -rf "$ENVIRONMENT_DIR/dms.jar"
 
 
-    # Start DMS environment and reload caddy
-    echo "Starting service $service_name . The first time might take a while."
-    ${systemctl} start "$service_name"
-    echo "Started DMS."
-    echo "Environment status:"
-    ${systemctl} status "$service_name" --no-block --no-pager
-    echo "Environment URL: https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt"
-  '';
+      echo "Init new environment..."
+      echo "Environment's container DB name is '$db_container_name'".
+      echo "You can access it with e.g 'machinectl shell $db_container_name'."
+      mkdir -p "$ENVIRONMENT_DIR"
+      ln -s "$BUILD/dms.jar" "$ENVIRONMENT_DIR/dms.jar"
+      ln -s "$BUILD/www" "$ENVIRONMENT_DIR/www"
+      echo "BACKEND_PORT=$backend_port" > "$ENVIRONMENT_DIR/dms.env"
+      echo "DB_PORT=$db_port" >> "$ENVIRONMENT_DIR/dms.env"
+      echo "DMS_URL=https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt" >> "$ENVIRONMENT_DIR/dms.env"
+
+
+      # Start DMS environment and reload caddy
+      echo "Starting service $service_name . The first time might take a while."
+      systemctl start "$service_name"
+      echo "Started DMS."
+      echo "Environment status:"
+      systemctl status "$service_name" --no-block --no-pager
+      echo "Environment URL: https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt"
+    '';
+  };
 in
 {
   options.dei.multi-dms = {
@@ -354,7 +381,7 @@ in
       command = mkOption {
         type = types.str;
         default =
-          "${cfg.backend.java} -jar ${environmentsDir}/$ENVIRONMENT_NAME/dms.jar --server.port=$BACKEND_PORT"
+          "${cfg.backend.java} -jar ${environmentsDir}/\"$ENVIRONMENT_NAME\"/dms.jar --server.port=\"$BACKEND_PORT\""
           + (concatStringsSep " " cfg.backend.extraArgs);
         description = "Command to start the DMS backend";
       };
