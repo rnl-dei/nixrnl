@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  deiTeamWebsitePort = 3000;
+in
 {
   imports = with profiles; [
     core.dei
@@ -59,13 +62,9 @@
   # DEI
   services.nginx.virtualHosts.dei = {
     serverName = config.networking.fqdn;
-    serverAliases = [
-      "equipa.dei.tecnico.ulisboa.pt"
-      "equipa.${config.networking.fqdn}"
-    ];
     enableACME = true;
     forceSSL = true;
-    locations."/".return = "307 https://dei.tecnico.ulisboa.pt"; # TODO: Fix team website
+    locations."/".return = "307 https://dei.tecnico.ulisboa.pt";
   };
 
   # DMS
@@ -200,6 +199,39 @@
 
   age.secrets."dms-prod-db-password" = {
     file = ../secrets/dms-prod-db-password.age;
+  };
+
+  services.nginx.virtualHosts."dei-team" = {
+    serverName = "equipa.dei.tecnico.ulisboa.pt";
+    enableACME = true;
+    forceSSL = true;
+    locations = {
+      "/".proxyPass = "http://localhost:${toString deiTeamWebsitePort}";
+    };
+  };
+
+  services.nginx.virtualHosts.redirect-team = {
+    serverName = "equipa.${config.networking.fqdn}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/".return = "301 https://equipa.dei.tecnico.ulisboa.pt$request_uri$is_args$args";
+  };
+
+  virtualisation.oci-containers.containers."watchtower" = {
+    image = "containrrr/watchtower:1.7.1";
+    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    environment = {
+      "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
+      "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
+    };
+  };
+
+  virtualisation.oci-containers.containers."dei-team-website" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/dei/website:latest";
+    ports = [ "${toString deiTeamWebsitePort}:80" ];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
   };
 
   # GlitchTip
