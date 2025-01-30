@@ -75,6 +75,14 @@ in
     sites.default.serverName = "dms.dei.tecnico.ulisboa.pt";
   };
 
+  # ODEIO
+  dei.odeio = {
+    builds.authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHIpnBeT+Pe1LZt1lAmQzNLCxHSc/8Md1qrUCzfziuBf odeio-CI" # GitLab CI
+    ];
+    sites.default.serverName = "observatorio.dei.tecnico.ulisboa.pt";
+  };
+
   rnl.db-cluster = {
     ensureDatabases = [
       "dms"
@@ -94,6 +102,13 @@ in
         };
       }
     ];
+  };
+
+  services.nginx.virtualHosts.redirect-odeio = {
+    serverName = "observatorio.${config.networking.fqdn}";
+    enableACME = true;
+    forceSSL = true;
+    locations."/".return = "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
   };
 
   services.nginx.virtualHosts.redirect-dms = {

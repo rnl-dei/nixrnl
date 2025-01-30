@@ -85,6 +85,13 @@
     ];
   };
 
+  # ODEIO
+  dei.odeio = {
+    builds.authorizedKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHIpnBeT+Pe1LZt1lAmQzNLCxHSc/8Md1qrUCzfziuBf odeio-CI" # GitLab CI
+    ];
+    sites.default.serverName = "odeio.${config.networking.fqdn}";
+  };
   rnl.db-cluster = {
     ensureDatabases = [ "dms_blatta" ];
     ensureUsers = [
