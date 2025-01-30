@@ -13,7 +13,10 @@
 
   # Storage
   rnl.storage.disks = {
-    root = [ "/dev/disk/by-id/" ];
+    root = [
+      "/dev/disk/by-id/ata-WDC_WDS100T1R0A-68A4W0_235117800243"
+      "/dev/disk/by-id/ata-WDC_WDS100T1R0A-68A4W0_23510Z802102"
+    ];
     data = [
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5EG5L"
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5PAJL"
