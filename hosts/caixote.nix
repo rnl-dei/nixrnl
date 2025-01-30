@@ -23,6 +23,7 @@
   };
 
   # Networking
+  networking.hostId = "33ac0996";
   networking.interfaces.eno1 = {
     ipv4 = {
       addresses = [

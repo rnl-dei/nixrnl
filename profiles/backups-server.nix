@@ -2,8 +2,8 @@
 let
   # Get all the hosts that have sanoid enabled
   hosts = lib.filterAttrs (
-    name: name.config.services.sanoid.enable
-  ) builtins.attrNames nixosConfigurations;
+    _name: nixosConfig: nixosConfig.config.services.sanoid.enable
+  ) nixosConfigurations;
 
   # Get list of datasets for each host
   datasets = lib.flatten (
