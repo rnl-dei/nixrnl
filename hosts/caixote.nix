@@ -27,7 +27,6 @@
 
   # Networking
   networking.hostId = "33ac0996";
-  networking.hostname = "caixote";
   networking.interfaces.eno1 = {
     ipv4 = {
       addresses = [
