@@ -27,12 +27,13 @@
 
   # Networking
   networking.hostId = "33ac0996";
+  networking.hostname = "caixote";
   networking.interfaces.eno1 = {
     ipv4 = {
       addresses = [
         {
           address = "193.136.164.65";
-          prefixLength = 25;
+          prefixLength = 26;
         }
       ];
       routes = [
