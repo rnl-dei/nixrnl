@@ -2,7 +2,7 @@
 {
   imports = with profiles; [
     core.rnl
-    filesystems.zfs-raid6
+    filesystems.zfs-raid5
     os.nixos
     type.physical
 
