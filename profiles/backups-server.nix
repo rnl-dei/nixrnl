@@ -25,7 +25,7 @@ in
 {
   services.syncoid = {
     enable = true;
-    interval = lib.mkDefault "*-*-* 12:38:00";
+    interval = lib.mkDefault "*-*-* 03:30:00";
     commands = lib.listToAttrs (
       lib.map (dataset: {
         name = dataset.source;
