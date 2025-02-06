@@ -2,8 +2,8 @@
 let
   # Get all the hosts that have sanoid enabled
   hosts = lib.filterAttrs (
-    name: name.config.services.sanoid.enable
-  ) builtins.attrNames nixosConfigurations;
+    _name: nixosConfig: nixosConfig.config.services.sanoid.enable
+  ) nixosConfigurations;
 
   # Get list of datasets for each host
   datasets = lib.flatten (
@@ -25,7 +25,7 @@ in
 {
   services.syncoid = {
     enable = true;
-    interval = lib.mkDefault "*-*-* 3:30:00";
+    interval = lib.mkDefault "*-*-* 03:30:00";
     commands = lib.listToAttrs (
       lib.map (dataset: {
         name = dataset.source;
