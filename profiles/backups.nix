@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   services.sanoid = {
     enable = true;
@@ -22,12 +27,19 @@
       };
     };
   };
-
-  # Allow caixote to get the snapshots
-  services.syncoid.enable = true;
-  users.users."${config.services.syncoid.user}".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM6TPOIkgSoqhathevsglhNtvydbpHSudnxF2Eg/PNWs syncoid@caixote"
-  ];
+  users.groups.syncoid = { };
+  users.users."${config.services.syncoid.user}" = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM6TPOIkgSoqhathevsglhNtvydbpHSudnxF2Eg/PNWs syncoid@caixote"
+    ];
+    isSystemUser = true;
+    group = "syncoid";
+    shell = "/bin/sh";
+    packages = [
+      pkgs.lzop
+      pkgs.mbuffer
+    ];
+  };
   systemd.services.syncoid-permissions =
     let
       datasets = lib.mapAttrsToList (
@@ -38,7 +50,10 @@
         }:
         (lib.optionalString (!recursive) "-l ") + name
       ) config.services.sanoid.datasets;
-      permissions = [ "send" ]; # TODO: Might need to add permissions
+      permissions = [
+        "send"
+        "snapshot"
+      ]; # TODO: Might need to add permissions
       user = config.services.syncoid.user;
 
       buildAllowCommand =

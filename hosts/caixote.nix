@@ -2,7 +2,7 @@
 {
   imports = with profiles; [
     core.rnl
-    filesystems.zfs-raid6
+    filesystems.zfs-raid5
     os.nixos
     type.physical
 
@@ -13,7 +13,10 @@
 
   # Storage
   rnl.storage.disks = {
-    root = [ "/dev/disk/by-id/" ];
+    root = [
+      "/dev/disk/by-id/ata-WDC_WDS100T1R0A-68A4W0_235117800243"
+      "/dev/disk/by-id/ata-WDC_WDS100T1R0A-68A4W0_23510Z802102"
+    ];
     data = [
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5EG5L"
       "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5PAJL"
@@ -23,19 +26,20 @@
   };
 
   # Networking
-  networking.interfaces.eno1 = {
+  networking.hostId = "33ac0996";
+  networking.interfaces.enp1s0 = {
     ipv4 = {
       addresses = [
         {
           address = "193.136.164.65";
-          prefixLength = 25;
+          prefixLength = 26;
         }
       ];
       routes = [
         {
           address = "0.0.0.0";
           prefixLength = 0;
-          via = "193.136.154.126";
+          via = "193.136.164.126";
         }
       ];
     };
