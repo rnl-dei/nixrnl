@@ -1,4 +1,10 @@
-{ lib, nixosConfigurations, ... }:
+{
+  config,
+  lib,
+  options,
+  nixosConfigurations,
+  ...
+}:
 let
   # Get all the hosts that have sanoid enabled
   hosts = lib.filterAttrs (
@@ -25,6 +31,7 @@ in
 {
   services.syncoid = {
     enable = true;
+    localTargetAllow = options.services.syncoid.localTargetAllow.default ++ [ "destroy" ];
     interval = lib.mkDefault "*-*-* 03:30:00";
     commands = lib.listToAttrs (
       lib.map (dataset: {
