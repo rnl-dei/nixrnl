@@ -54,6 +54,8 @@
         "send"
         "snapshot"
         "hold"
+        "mount"
+        "destroy"
       ]; # TODO: Might need to add permissions
       user = config.services.syncoid.user;
 
