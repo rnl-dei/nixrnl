@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   profiles,
   inputs,
   nixosConfigurations,
@@ -9,16 +8,21 @@
 let
   inherit (lib.rnl) rakeLeaves;
 
-  rnlPkgs = (
-    lib.mapAttrsRecursive (_: path: (pkgs.callPackage path { inherit inputs; })) (rakeLeaves ../pkgs)
-  );
+  rnlPkgs =
+    pkgs:
+    (lib.mapAttrsRecursive (_: path: (pkgs.callPackage path { inherit inputs; })) (rakeLeaves ../pkgs));
+
+  argsPkgs = {
+    config.allowUnfree = true;
+  };
   /*
     *
-    Synopsis: mkPkgs overlays
+    Synopsis: mkPkgs system overlays
 
     Generate an attribute set representing Nix packages with custom overlays.
 
     Inputs:
+    - system: The target system platform (e.g., "x86_64-linux")
     - overlays: An attribute set of overlays to apply on top of the main Nixpkgs.
 
     Output Format:
@@ -29,26 +33,11 @@ let
     *
   */
   mkPkgs =
-    overlays:
-    let
-      argsPkgs = {
-        system = "x86_64-linux"; # FIXME: Allow other systems
-        config.allowUnfree = true;
-      };
-    in
+    system: overlays:
     import inputs.nixpkgs (
       {
-        overlays = [
-          (_self: _super: {
-            unstable = import inputs.unstable argsPkgs;
-            allowOpenSSL = import inputs.nixpkgs (
-              argsPkgs // { config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; }
-            );
-            allowSquid = import inputs.nixpkgs (
-              argsPkgs // { config.permittedInsecurePackages = [ "squid-5.9" ]; }
-            );
-          })
-        ] ++ lib.attrValues overlays;
+        inherit system;
+        overlays = lib.attrValues overlays;
       }
       // argsPkgs
     );
@@ -70,7 +59,7 @@ let
   */
   mkOverlays =
     overlaysDir:
-    lib.mapAttrsRecursive (_: module: import module { inherit rakeLeaves inputs; }) (
+    lib.mapAttrsRecursive (_: module: import module { inherit rakeLeaves inputs argsPkgs; }) (
       lib.rnl.rakeLeaves overlaysDir
     );
 
@@ -97,13 +86,12 @@ let
 
   /*
     *
-    Synopsis: mkHost hostname  { system, hostPath, extraModules ? [] }
+    Synopsis: mkHost hostname  { hostPath, extraModules ? [] }
 
     Generate a NixOS system configuration for the specified hostname.
 
     Inputs:
     - hostname: The hostname for the target NixOS system.
-    - system: The target system platform (e.g., "x86_64-linux").
     - hostPath: The path to the directory containing host-specific Nix configurations.
     - extraModules: An optional list of additional NixOS modules to include in the configuration.
 
@@ -116,20 +104,21 @@ let
   mkHost =
     hostname:
     {
-      system,
+      overlays ? [ ],
       hostPath,
       extraModules ? [ ],
       ...
     }:
     lib.nixosSystem {
-      inherit system pkgs lib;
       specialArgs = {
         inherit profiles inputs nixosConfigurations;
       };
       modules =
         (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
         ++ [
+          { nixpkgs.overlays = lib.attrValues overlays; }
           { networking.hostName = hostname; }
+          { nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux"; }
           hostPath
           #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
@@ -145,6 +134,7 @@ let
     Generate a set of NixOS system configurations for the hosts defined in the specified directory.
 
     Inputs:
+    - overlays: An attribute set of overlays to apply on top of the main Nixpkgs.
     - hostsDir: The path to the directory containing host-specific configurations.
 
     Output Format:
@@ -156,7 +146,7 @@ let
     *
   */
   mkHosts =
-    hostsDir:
+    overlays: hostsDir:
     lib.listToAttrs (
       lib.lists.flatten (
         lib.mapAttrsToList
@@ -172,11 +162,10 @@ let
               cfg = {
                 inherit
                   hostPath
-                  pkgs
+                  overlays
                   profiles
                   inputs
                   ;
-                system = "x86_64-linux";
                 aliases = null;
               } // hostCfg;
 

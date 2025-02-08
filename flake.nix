@@ -78,18 +78,17 @@
       ...
     }@inputs:
     let
+      inherit (self) outputs;
       lib = nixpkgs.lib.extend (
         self: _super:
         import ./lib {
           inherit inputs profiles nixosConfigurations;
           lib = self;
-          pkgs = rnlPkgs; # TODO RG: pkgs/rnlPkgs should be a perSystem attribute.
         }
       );
 
       overlays = lib.rnl.mkOverlays ./overlays;
-      rnlPkgs = lib.rnl.mkPkgs overlays;
-      nixosConfigurations = lib.rnl.mkHosts ./hosts;
+      nixosConfigurations = lib.rnl.mkHosts overlays ./hosts;
       profiles = lib.rnl.mkProfiles ./profiles;
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
@@ -116,10 +115,12 @@
           config,
           pkgs,
           inputs',
-          # system,
+          system,
           ...
         }:
         {
+          # _module.args.debug = true;
+          _module.args.pkgs = lib.rnl.mkPkgs system outputs.overlays;
 
           devShells.default = pkgs.mkShell {
             packages =
@@ -135,7 +136,7 @@
             '';
           };
 
-          legacyPackages = (lib.rnl.rnlPkgs);
+          legacyPackages = (lib.rnl.rnlPkgs) pkgs;
 
           pre-commit.settings.hooks = {
             # Nix
@@ -158,7 +159,6 @@
               pass_filenames = false; # must configure excludes through typos.toml
               settings.configPath = "./typos.toml";
             };
-
             #TODO: consider adding git commit e-mail check as pre-commit-hook
           };
         };
