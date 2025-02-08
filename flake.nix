@@ -1,8 +1,12 @@
 {
   description = "NixOS @ RNL";
 
-  # TODO RG: flakeConfig for binary cache?
-
+  nixConfig = {
+    extra-substituters = [ "https://proxy.cache.rnl.tecnico.ulisboa.pt?priority=38" ];
+    extra-trusted-public-keys = [
+      "proxy.cache.rnl.tecnico.ulisboa.pt:nqg28rqC5jNdevtd7DLIpvUPDBmv2D8hhWy0REBh5lU="
+    ];
+  };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
