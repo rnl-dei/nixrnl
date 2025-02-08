@@ -13,8 +13,8 @@ stdenv.mkDerivation rec {
   buildInputs = [
     bash
     vault-bin
-    inputs.nixos-anywhere.packages.x86_64-linux.nixos-anywhere # Used to deploy
-    inputs.agenix.packages.x86_64-linux.agenix # Used to decrypt host keys
+    inputs.nixos-anywhere.packages.${stdenv.system}.nixos-anywhere # Used to deploy
+    inputs.agenix.packages.${stdenv.system}.agenix # Used to decrypt host keys
   ];
   nativeBuildInputs = [ makeWrapper ];
   installPhase = ''

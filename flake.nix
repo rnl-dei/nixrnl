@@ -109,7 +109,7 @@
 
       # list of useful attributes, for reference:
       # perSystem = { config, self', inputs', pkgs, system, ... }: {
-      # debug = true;
+      debug = true;
       perSystem =
         {
           config,
@@ -123,7 +123,7 @@
         in
 
         {
-          # _module.args.debug = true;
+          _module.args.debug = true;
           _module.args.pkgs = lib.rnl.mkPkgs system outputs.overlays;
 
           devShells.default = pkgs.mkShell {
