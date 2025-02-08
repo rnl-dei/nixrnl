@@ -11,8 +11,6 @@
     # rnl-config.url = "git+ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config";
     # rnl-config.inputs.nixpkgs.follows = "nixpkgs";
 
-    # TODO RG: some other inputs here have flake-parts as an input.
-    # Make them follow this one.
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
@@ -25,6 +23,7 @@
     nixos-anywhere.inputs.nixos-stable.follows = "nixpkgs";
     nixos-anywhere.inputs.disko.follows = "disko";
     nixos-anywhere.inputs.treefmt-nix.follows = "treefmt-nix";
+    nixos-anywhere.inputs.flake-parts.follows = "flake-parts";
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -51,7 +50,6 @@
     ist-delegate-election.inputs.flake-utils.follows = "flake-utils";
 
     # Runs checks before committing
-    # TODO: has been renamed to git-hooks
     git-hooks.url = "github:cachix/git-hooks.nix";
     git-hooks.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
