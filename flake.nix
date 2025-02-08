@@ -109,7 +109,7 @@
 
       # list of useful attributes, for reference:
       # perSystem = { config, self', inputs', pkgs, system, ... }: {
-      debug = true;
+      # debug = true;
       perSystem =
         {
           config,
@@ -118,6 +118,10 @@
           system,
           ...
         }:
+        let
+          rnlPkgs = (lib.rnl.rnlPkgs) pkgs;
+        in
+
         {
           # _module.args.debug = true;
           _module.args.pkgs = lib.rnl.mkPkgs system outputs.overlays;
@@ -136,7 +140,7 @@
             '';
           };
 
-          legacyPackages = (lib.rnl.rnlPkgs) pkgs;
+          legacyPackages = rnlPkgs;
 
           pre-commit.settings.hooks = {
             # Nix
