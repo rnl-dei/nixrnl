@@ -30,7 +30,7 @@
 
     # Language
     jdk17
-    unstable.swiProlog
+    swi-prolog
     julia
     rustc
     cargo
@@ -46,7 +46,7 @@
     file
     libqalculate
     lsof
-    mysql
+    mariadb
     nmap
     postgresql
     unzip

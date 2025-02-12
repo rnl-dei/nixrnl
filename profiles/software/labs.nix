@@ -55,7 +55,7 @@
     openfst
 
     # LP
-    unstable.swiPrologWithGui
+    swi-prolog-gui
 
     # OC
     papi
@@ -78,7 +78,9 @@
 
     (lib.hiPrio (
       python3.withPackages (
-        ps: with ps; [
+        ps:
+        with ps;
+        [
           # General
           pip
           requests
@@ -146,7 +148,6 @@
               pkgs.graphviz
             ];
           })
-          keras
           (buildPythonPackage rec {
             pname = "keras-bert";
             version = "0.89.0";
@@ -250,6 +251,7 @@
             ];
           })
         ]
+        ++ [ unstable.python3Packages.keras ]
       )
     ))
   ];

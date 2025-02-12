@@ -117,7 +117,7 @@ in
 
   # Configure shell
   programs.bash = {
-    enableCompletion = true;
+    completion.enable = true;
     enableLsColors = true;
     # TODO: Add auto logout on tty[1-6] after 30 minutes of inactivity
   };
