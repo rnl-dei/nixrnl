@@ -49,8 +49,10 @@ in
           include ${config.services.nginx.package}/conf/uwsgi_params;
         '';
         "~ ^/tv([^\\r\\n]*)$".return = "301 https://tv.${config.rnl.domain}$1$is_args$args";
-        "~ ^/labs-matrix([^\\r\\n]*)$".return = "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
-        "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return = "301 https://webmail.${config.rnl.domain}$2$is_args$args";
+        "~ ^/labs-matrix([^\\r\\n]*)$".return =
+          "301 https://labs-matrix.${config.rnl.domain}$1$is_args$args";
+        "~ ^/(webmail|roundcube)([^\\r\\n]*)$".return =
+          "301 https://webmail.${config.rnl.domain}$2$is_args$args";
         "~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
         # Misc
         "/robots.txt".root = pkgs.writeTextDir "robots.txt" ''
@@ -86,7 +88,8 @@ in
       enableACME = true;
       addSSL = true;
       locations."~ ^/forum([^\\r\\n]*)$".return = "301 https://forum.${config.rnl.domain}$1$is_args$args";
-      locations."~ ^/([^\\r\\n]*)$".return = "301 https://${config.services.nginx.virtualHosts.www.serverName}/$1$is_args$args";
+      locations."~ ^/([^\\r\\n]*)$".return =
+        "301 https://${config.services.nginx.virtualHosts.www.serverName}/$1$is_args$args";
     };
     "forum-redirect" = {
       serverName = "forum.rnl.ist.utl.pt";

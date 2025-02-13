@@ -108,7 +108,8 @@ in
     serverName = "observatorio.${config.networking.fqdn}";
     enableACME = true;
     forceSSL = true;
-    locations."/".return = "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return =
+      "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
   };
 
   services.nginx.virtualHosts.redirect-dms = {
@@ -116,7 +117,8 @@ in
     serverAliases = [ "dms.${config.rnl.domain}" ];
     enableACME = true;
     forceSSL = true;
-    locations."/".return = "301 https://${config.dei.dms.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return =
+      "301 https://${config.dei.dms.sites.default.serverName}$request_uri$is_args$args";
   };
 
   # Bind mount /mnt/data/dms to /var/lib/dei/dms/default
@@ -171,7 +173,8 @@ in
     serverAliases = [ "deic.${config.networking.fqdn}" ];
     enableACME = true;
     forceSSL = true;
-    locations."/".return = "301 https://${config.dei.phdms.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return =
+      "301 https://${config.dei.phdms.sites.default.serverName}$request_uri$is_args$args";
   };
 
   # Bind mount /mnt/data/phdms to /var/lib/dei/phdms/default

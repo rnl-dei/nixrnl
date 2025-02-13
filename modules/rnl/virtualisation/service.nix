@@ -40,11 +40,9 @@ let
       ${lib.optionalString (options.type == "file") "<source file='${options.source.file}'/>"}
       ${lib.optionalString (options.type == "block") "<source dev='${options.source.dev}'/>"}
       <target dev='${options.target.dev}' bus='${options.target.bus}'/>
-      ${
-        lib.optionalString (
-          options.bootOrder != null && boot == [ ]
-        ) "<boot order='${toString options.bootOrder}'/>"
-      }
+      ${lib.optionalString (
+        options.bootOrder != null && boot == [ ]
+      ) "<boot order='${toString options.bootOrder}'/>"}
     </disk>
   '';
 

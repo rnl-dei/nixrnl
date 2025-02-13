@@ -85,13 +85,11 @@ in
         in
         ''
           ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'${user.host}' ${authOption};"
-            ${
-              concatStringsSep "\n" (
-                mapAttrsToList (database: permission: ''
-                  echo "GRANT ${permission} ON ${database} TO \`${user.name}\`@\`${user.host}\`;"
-                '') user.ensurePermissions
-              )
-            }
+            ${concatStringsSep "\n" (
+              mapAttrsToList (database: permission: ''
+                echo "GRANT ${permission} ON ${database} TO \`${user.name}\`@\`${user.host}\`;"
+              '') user.ensurePermissions
+            )}
           ) | ${package}/bin/mysql -N
         ''
       ) cfg.ensureUsers}

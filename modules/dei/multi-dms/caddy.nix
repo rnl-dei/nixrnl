@@ -20,7 +20,7 @@ mkIf cfg.enable {
   ];
 
   systemd.tmpfiles.rules = [
-    # Make sure temporary selfsigned nixos CA cert is readable by Caddy 
+    # Make sure temporary selfsigned nixos CA cert is readable by Caddy
     "z /var/lib/acme/.minica 0755 acme acme -"
     "z /var/lib/acme/.minica/cert.pem 0644 acme acme -"
   ];

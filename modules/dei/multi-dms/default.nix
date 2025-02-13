@@ -10,7 +10,7 @@ let
   #   References:
   #  - https://nixos.org/manual/nixos/stable/#ch-containers
   #  - unironically, `cat $(which nixos-container)`
-  #  - `systemctl cat container@` 
+  #  - `systemctl cat container@`
   #  - https://smallstep.com/docs/step-ca/certificate-authority-server-production/ (For caddy/nginx setup)
   #       (mirror: https://web.archive.org/web/20241108121229/https://smallstep.com/docs/step-ca/certificate-authority-server-production/)
 
