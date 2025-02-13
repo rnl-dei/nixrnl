@@ -32,6 +32,7 @@
     # CPD
     intel-oneapi-vtune
     mpi
+    mpi.dev
 
     # Comp
     bison

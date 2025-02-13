@@ -157,6 +157,7 @@ in
   environment.systemPackages = [
     pkgs.glusterfs
     pkgs.mpi
+    pkgs.mpi.dev
   ];
 
   fileSystems."/mnt/cirrus" = {
