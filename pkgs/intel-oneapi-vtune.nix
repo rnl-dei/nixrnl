@@ -7,7 +7,6 @@
   electron,
   expat,
   fetchurl,
-  ffmpeg,
   gtk3,
   kmod,
   lib,
@@ -76,7 +75,6 @@ stdenv.mkDerivation rec {
   ];
 
   runtimeDependencies = [
-    ffmpeg
     udev # Will crash on launch without udev.
   ];
 
@@ -101,6 +99,10 @@ stdenv.mkDerivation rec {
     # desktop item
     mkdir -p "$out/share/applications"
     ln -s "${desktopItem}/share/applications/vtune-gui.desktop" "$out/share/applications"
+  '';
+
+  preFixup = ''
+    gappsWrapperArgs+=(--prefix LD_LIBRARY_PATH : "$out/opt/intel/oneapi/vtune/${version}/bin64/")
   '';
 
   desktopItem = makeDesktopItem {
