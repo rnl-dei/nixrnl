@@ -81,7 +81,7 @@ in
       [1;31mSafeguard[0m your work by saving to AFS or your computer before logging out.
 
       Please [1;31mdo not perform computation on this machine.[0m Use the cluster instead.
-      Processes consuming excessive ammounts of RAM/CPU on this machine will be
+      Processes consuming excessive amounts of RAM/CPU on this machine will be
       terminated without warning.
 
       ------------------------------------------------

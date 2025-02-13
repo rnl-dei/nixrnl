@@ -53,9 +53,9 @@ else
     USER_ID=$(id -u --name "$PAM_USER")
 fi
 
-# send error emails. send_email [subject sufix] [body]
+# send error emails. send_email [subject suffix] [body]
 function send_email {
-    echo "send_email: subject_sufix: '$1', body: '$2'"
+    echo "send_email: subject_suffix: '$1', body: '$2'"
 
     echo -e "\
 From: ${USER_ID:-user-not-set}@$(hostname --fqdn)
