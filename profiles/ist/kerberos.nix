@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   # Setup Kerberos
   security.krb5 = {
@@ -21,4 +21,6 @@
       };
     };
   };
+
+  programs.ssh.package = pkgs.openssh_gssapi;
 }
