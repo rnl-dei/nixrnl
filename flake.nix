@@ -46,7 +46,6 @@
     # Runs checks before committing
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs";
 
     # We only have these inputs to pass to other dependencies and
     # avoid having multiple versions in our flake.
