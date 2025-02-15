@@ -1,26 +1,13 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
-  hardware.nvidia-container-toolkit.enable = true;
-
-  # Make sure opengl is enabled
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
-
-  # Tell Xorg to use the nvidia driver
+  hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia = {
-    # Modesetting is needed for most wayland compositors
-    modesetting.enable = true;
+  # It is suggested to use the open source kernel modules on Turing or
+  # later GPUs (RTX series, GTX 16xx), and the closed source modules otherwise.
+  hardware.nvidia.open = true;
 
-    # Enable the nvidia settings menu
-    nvidiaSettings = true;
-
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
+  hardware.nvidia-container-toolkit.enable = true;
 
   # Enable cuda support
   # nixpkgs.config.cudaSupport = true; is not viable, tries to recompile the universe and fails.
