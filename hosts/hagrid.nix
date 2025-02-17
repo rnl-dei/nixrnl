@@ -134,6 +134,7 @@
           "prohmakas"
           "marte"
           "sazed"
+		  "peras"
         ];
       }
     );
