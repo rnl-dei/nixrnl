@@ -394,7 +394,7 @@
   }
   {
     # Hugo Pereira
-    publicKey = "UicL612diQOAtKJqp8yjvdLW8uzfPwgY9YtiFofc0kI=";
+    publicKey = "pSzprPKBUujxDkPSVVnFnquqh8i7ym63APd3oF0s00A=";
     lastOctet = 80;
   }
 ]
