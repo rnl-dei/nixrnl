@@ -15,8 +15,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID97/zlRwgxhnOyqHcawWjlL9XjbdmrWbYwayj1bG67I rafael.girao@vin[jan '25]"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1lwuhiBZjUIzFikFCrzyp1jppOZSvlyc1/JZDvvqgD simao.sanguinho@macbook"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJYSbX6p2JOTjroVejNWYndyf9LX/yzDyHO8nY32JGf sanguinho@nixos"
-	"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K hugo.s.pereira@tecnico.ulisboa.pt-laptop"
-	"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPUjjonJmUrvapi4yxFB8vhQV5Hmf/QholYVDrZjjzkL hugsouper785@gmail.com-desktop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K hugo.s.pereira@tecnico.ulisboa.pt-laptop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPUjjonJmUrvapi4yxFB8vhQV5Hmf/QholYVDrZjjzkL hugsouper785@gmail.com-desktop"
   ];
 
   rnl.githook.emailDestination = "robots-dei@${config.rnl.domain}";
