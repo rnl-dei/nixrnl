@@ -66,7 +66,7 @@ in
   "host-keys/www.age".publicKeys = deployMachines;
 
   # GitLab runners tokens
-  "gitlab-runners/es-24-env.age".publicKeys = users ++ [ labs ];
+  "gitlab-runners/es-25-env.age".publicKeys = users ++ [ labs ];
 
   # Secrets
   "abuseipdb-api-key.age".publicKeys = users ++ [
