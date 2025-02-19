@@ -5,6 +5,9 @@
   profiles,
   ...
 }:
+let
+  docsWebsitePort = 3000;
+in
 {
   imports = with profiles; [
     webserver
@@ -12,6 +15,8 @@
     dokuwiki.wiki
     containers.docker
   ];
+
+  age.secrets."container-weaver-deploy-token".file = ../secrets/container-weaver-deploy-token.age;
 
   # Weaver
   services.nginx.virtualHosts.weaver = {
@@ -101,6 +106,38 @@
       virtualRouterId = 88;
       interface = lib.mkDefault "enp1s0";
       virtualIps = [ { addr = "2001:690:2100:81::88/64"; } ]; # weaver IPv6
+    };
+  };
+
+  # Documentation
+  services.nginx.virtualHosts."docs" = {
+    serverName = "docs.rnl.tecnico.ulisboa.pt";
+    enableACME = true;
+    forceSSL = true;
+    locations = {
+      "/".proxyPass = "http://localhost:${toString docsWebsitePort}";
+    };
+  };
+
+  virtualisation.oci-containers.containers."watchtower" = {
+    image = "containrrr/watchtower:1.7.1";
+    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    environment = {
+      "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
+      "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
+    };
+  };
+
+  virtualisation.oci-containers.containers."docs-website" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/dei/DEI-RNL-Docs:latest";
+    login = {
+      registry = "registry.rnl.tecnico.ulisboa.pt";
+      username = "weaver";
+      passwordFile = config.age.secrets."container-weaver-deploy-token".path;
+    };
+    ports = [ "${toString docsWebsitePort}:80" ];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
     };
   };
 }
