@@ -119,15 +119,6 @@ in
     };
   };
 
-  virtualisation.oci-containers.containers."watchtower" = {
-    image = "containrrr/watchtower:1.7.1";
-    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
-    environment = {
-      "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
-      "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
-    };
-  };
-
   virtualisation.oci-containers.containers."docs-website" = {
     image = "registry.rnl.tecnico.ulisboa.pt/dei/dei-rnl-docs:latest";
     login = {
