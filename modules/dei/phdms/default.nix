@@ -10,6 +10,7 @@ let
   sites = filterAttrs (_: v: v.enable) cfg.sites;
   webserver = config.services.nginx;
   uwsgi = config.services.uwsgi;
+  phdmsDeps = pkgs.dei.phdmsDeps;
 
   siteOpts =
     {
@@ -119,6 +120,10 @@ in
 
     services.uwsgi = {
       enable = true;
+      # PHDMS tries to use 'SafeConfigParser' class which has been removed in python3.12.
+      # It's been deprecate since 3.2 .
+      # Forcing uwsgi to use python3.11 because of this
+      package = lib.mkForce phdmsDeps.uwsgiDEI;
       user = webserver.user;
       group = webserver.group;
       plugins = [ "python3" ];
@@ -131,7 +136,59 @@ in
             chdir = "${siteCfg.stateDir}/deic";
             wsgi-file = "${siteCfg.stateDir}/deic/deic/wsgi.py";
             socket = siteCfg.socket;
-            virtualenv = "${siteCfg.stateDir}/venv";
+            # pythonPackages = self: with self; [ ]
+            pythonPackages =
+              self:
+              with self;
+              [
+                pdfkit
+                wcwidth
+                sqlparse
+                six
+                sentry-sdk
+                redis
+                pytz
+                python-dateutil
+                pymeeus
+                phonenumbers
+                # psycopg2
+                mock
+                korean-lunar-calendar
+                holidays
+                hijri-converter
+                django_3
+                # django
+                (django-widget-tweaks.override { django = django_3; })
+                (django-picklefield.override { django = django_3; })
+                (django-filter.override { django = django_3; })
+                (django-formtools.override { django = django_3; })
+                (django-extensions.override { django = django_3; })
+                (django-countries.override {
+                  django = django_3;
+                  # checks were failing.
+                  pytest-django = null;
+                  pytestCheckHook = null;
+                })
+                (django-cleanup.override { django = django_3; })
+                convertdate
+                blessed
+                babel
+                asgiref
+                arrow
+              ]
+              ++ (with phdmsDeps; [
+                # Packages unavailable in nixpkgs 24.11, or whose version in nixpkgs is not the one phdms needs.
+                django-q # exist in nixpkgs, but marked as broken.
+                django-unused-media
+                django-file-resubmit
+                django-crispy-forms
+                django-phonenumber-field
+                pypdftk
+                psycopg2
+                # django
+              ]);
+            # ]));
+
             env = mapAttrsToList (n: v: "${n}=${v}") siteCfg.environment;
           };
         }) sites;
