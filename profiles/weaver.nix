@@ -6,7 +6,7 @@
   ...
 }:
 let
-  docsWebsitePort = 3000;
+  docsWebsitePort = 3030;
 in
 {
   imports = with profiles; [
