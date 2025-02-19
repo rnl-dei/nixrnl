@@ -129,7 +129,7 @@ in
   };
 
   virtualisation.oci-containers.containers."docs-website" = {
-    image = "registry.rnl.tecnico.ulisboa.pt/dei/DEI-RNL-Docs:latest";
+    image = "registry.rnl.tecnico.ulisboa.pt/dei/dei-rnl-docs:latest";
     login = {
       registry = "registry.rnl.tecnico.ulisboa.pt";
       username = "weaver";
