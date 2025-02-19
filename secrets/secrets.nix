@@ -87,6 +87,7 @@ in
     borg
     labs
   ];
+  "container-weaver-deploy-token.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
