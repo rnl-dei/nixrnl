@@ -100,6 +100,12 @@ in
     services.uwsgi = {
       enable = true;
       user = webserver.user;
+
+      # modules/phdms/default.nix also sets uwsgi package - nix complains both can't
+      # mkForce the package at the same time
+      # package = lib.mkForce phdmsDeps.uwsgiDEI;
+      # See comment there on why this is needed.
+
       group = webserver.group;
       plugins = [ "python3" ];
       instance = {
@@ -111,7 +117,12 @@ in
             chdir = "${siteCfg.stateDir}/leicalumni";
             wsgi-file = "${siteCfg.stateDir}/leicalumni/leicalumni/wsgi.py";
             socket = siteCfg.socket;
-            virtualenv = "${siteCfg.stateDir}/venv";
+            pythonPackages =
+              self: with self; [
+                django_3
+                (django-multiselectfield.override { django = django_3; })
+                mysqlclient
+              ];
             env = mapAttrsToList (n: v: "${n}=${v}") siteCfg.environment;
           };
         }) sites;
