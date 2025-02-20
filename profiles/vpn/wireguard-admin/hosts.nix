@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octet used: 78
+# Last octet used: 80
 [
   {
     # André Aparício
@@ -391,5 +391,10 @@
     # Simão Sanguinho
     publicKey = "5AZu5F+jiG9BEhyUZgvFzNucjAH7IwDG+Ardlfm9ECA=";
     lastOctet = 79;
+  }
+  {
+    # Hugo Pereira
+    publicKey = "pSzprPKBUujxDkPSVVnFnquqh8i7ym63APd3oF0s00A=";
+    lastOctet = 80;
   }
 ]
