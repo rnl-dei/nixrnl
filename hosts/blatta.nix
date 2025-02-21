@@ -35,7 +35,7 @@
     defaultGateway6.address = "2001:690:2100:83::ffff:1";
   };
 
-  rnl.labels.location = "chapek";
+  rnl.labels.location = "dredd";
 
   rnl.virtualisation.guest = {
     description = "VM de testes para o DEI";
