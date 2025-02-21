@@ -108,8 +108,7 @@ in
     serverName = "observatorio.${config.networking.fqdn}";
     enableACME = true;
     forceSSL = true;
-    locations."/".return =
-      "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return = "301 https://${config.dei.odeio.sites.default.serverName}$request_uri$is_args$args";
   };
 
   services.nginx.virtualHosts.redirect-dms = {
@@ -117,8 +116,7 @@ in
     serverAliases = [ "dms.${config.rnl.domain}" ];
     enableACME = true;
     forceSSL = true;
-    locations."/".return =
-      "301 https://${config.dei.dms.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return = "301 https://${config.dei.dms.sites.default.serverName}$request_uri$is_args$args";
   };
 
   # Bind mount /mnt/data/dms to /var/lib/dei/dms/default
@@ -173,8 +171,7 @@ in
     serverAliases = [ "deic.${config.networking.fqdn}" ];
     enableACME = true;
     forceSSL = true;
-    locations."/".return =
-      "301 https://${config.dei.phdms.sites.default.serverName}$request_uri$is_args$args";
+    locations."/".return = "301 https://${config.dei.phdms.sites.default.serverName}$request_uri$is_args$args";
   };
 
   # Bind mount /mnt/data/phdms to /var/lib/dei/phdms/default
@@ -235,6 +232,8 @@ in
     locations."/".return = "301 https://equipa.dei.tecnico.ulisboa.pt$request_uri$is_args$args";
   };
 
+  age.secrets."container-dei-deploy-token".file = ../secrets/container-dei-deploy-token.age;
+
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
     volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
@@ -247,6 +246,11 @@ in
   virtualisation.oci-containers.containers."dei-team-website" = {
     image = "registry.rnl.tecnico.ulisboa.pt/dei/website:latest";
     ports = [ "${toString deiTeamWebsitePort}:80" ];
+    login = {
+      registry = "registry.rnl.tecnico.ulisboa.pt";
+      username = "dei";
+      passwordFile = config.age.secrets."container-dei-deploy-token".path;
+    };
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };

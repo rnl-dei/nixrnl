@@ -75,6 +75,7 @@ in
   ];
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
+  "container-dei-deploy-token.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-database-env.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
