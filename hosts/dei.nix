@@ -216,6 +216,13 @@ in
     file = ../secrets/dms-prod-db-password.age;
   };
 
+  # Docker config.json with deploy token to access all containers in "DEI" group
+  age.secrets."dei-dei-docker-config.json" = {
+    file = ../secrets/dei-dei-docker-config.json.age;
+    path = "/root/.docker/config.json";
+    symlink = true;
+  };
+
   services.nginx.virtualHosts."dei-team" = {
     serverName = "equipa.dei.tecnico.ulisboa.pt";
     enableACME = true;
@@ -232,11 +239,12 @@ in
     locations."/".return = "301 https://equipa.dei.tecnico.ulisboa.pt$request_uri$is_args$args";
   };
 
-  age.secrets."container-dei-deploy-token".file = ../secrets/container-dei-deploy-token.age;
-
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
-    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    volumes = [
+      "/var/run/docker.sock:/var/run/docker.sock"
+      "${config.age.secrets."dei-dei-docker-config.json".path}:/config.json"
+    ];
     environment = {
       "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
       "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
@@ -246,11 +254,6 @@ in
   virtualisation.oci-containers.containers."dei-team-website" = {
     image = "registry.rnl.tecnico.ulisboa.pt/dei/website:latest";
     ports = [ "${toString deiTeamWebsitePort}:80" ];
-    login = {
-      registry = "registry.rnl.tecnico.ulisboa.pt";
-      username = "dei";
-      passwordFile = config.age.secrets."container-dei-deploy-token".path;
-    };
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";
     };

@@ -75,7 +75,7 @@ in
   ];
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
-  "container-dei-deploy-token.age".publicKeys = users ++ [ dei ];
+  "dei-dei-docker-config.json.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-database-env.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
@@ -88,7 +88,7 @@ in
     borg
     labs
   ];
-  "container-weaver-deploy-token.age".publicKeys = users ++ [ weaver ];
+  "weaver-rnl-docker-config.json.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
