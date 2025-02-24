@@ -1,11 +1,13 @@
 { }:
 {
+  environment.etc."hedgedoc.env".text = "some text and options and such";
   services.hedgedoc = {
     enable = true;
+    environmentFile="/etc/hedgedoc.env";
     settings = {
       #dbURL = "algo@algo"; # probably will error out.
       port=80;
-      
+
     };
   };
 }
