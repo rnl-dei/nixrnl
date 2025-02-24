@@ -16,7 +16,12 @@ in
     containers.docker
   ];
 
-  age.secrets."container-weaver-deploy-token".file = ../secrets/container-weaver-deploy-token.age;
+  # Docker config.json with deploy token to access all containers in "RNL" group
+  age.secrets."weaver-rnl-docker-config.json" = {
+    file = ../secrets/weaver-rnl-docker-config.json.age;
+    path = "/root/.docker/config.json";
+    symlink = true;
+  };
 
   # Weaver
   services.nginx.virtualHosts.weaver = {
@@ -65,7 +70,11 @@ in
   # Watchtower
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
-    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    volumes = [
+      "/var/run/docker.sock:/var/run/docker.sock"
+      "${config.age.secrets."weaver-rnl-docker-config.json".path}:/config.json"
+
+    ];
     environment = {
       "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
       "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
@@ -121,11 +130,6 @@ in
 
   virtualisation.oci-containers.containers."docs-website" = {
     image = "registry.rnl.tecnico.ulisboa.pt/rnl/rnl-dei-docs:latest";
-    login = {
-      registry = "registry.rnl.tecnico.ulisboa.pt";
-      username = "weaver";
-      passwordFile = config.age.secrets."container-weaver-deploy-token".path;
-    };
     ports = [ "${toString docsWebsitePort}:80" ];
     labels = {
       "com.centurylinklabs.watchtower.enable" = "true";

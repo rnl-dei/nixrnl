@@ -219,6 +219,13 @@ in
     file = ../secrets/dms-prod-db-password.age;
   };
 
+  # Docker config.json with deploy token to access all containers in "DEI" group
+  age.secrets."dei-dei-docker-config.json" = {
+    file = ../secrets/dei-dei-docker-config.json.age;
+    path = "/root/.docker/config.json";
+    symlink = true;
+  };
+
   services.nginx.virtualHosts."dei-team" = {
     serverName = "equipa.dei.tecnico.ulisboa.pt";
     enableACME = true;
@@ -237,7 +244,10 @@ in
 
   virtualisation.oci-containers.containers."watchtower" = {
     image = "containrrr/watchtower:1.7.1";
-    volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+    volumes = [
+      "/var/run/docker.sock:/var/run/docker.sock"
+      "${config.age.secrets."dei-dei-docker-config.json".path}:/config.json"
+    ];
     environment = {
       "WATCHTOWER_LABEL_ENABLE" = "true"; # Filter containers by label "com.centurylinklabs.watchtower.enable"
       "WATCHTOWER_POLL_INTERVAL" = "300"; # 5 minutes
