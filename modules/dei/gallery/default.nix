@@ -25,8 +25,10 @@ in
 
     mediaDir = mkOption {
       type = types.path;
+      default = "${cfg.stateDir}/media";
       description = "Location where media will be stored";
     };
+
     serverName = mkOption {
       type = types.str;
       description = "Webserver URL";
@@ -39,7 +41,7 @@ in
     };
 
     port = mkOption {
-      types = types.int;
+      type = types.int;
       default = 2342;
 
     };
@@ -61,7 +63,7 @@ in
       enableACME = true;
       forceSSL = true;
       locations."/" = {
-        proxypass = "http://localhost:${cfg.port}";
+        proxyPass = "http://localhost:${toString cfg.port}";
         proxyWebsockets = true;
       };
     };
@@ -69,7 +71,7 @@ in
       enable = true;
       originalsPath = "${cfg.mediaDir}";
       storagePath = "${cfg.stateDir}";
-      passwordFile = ""; # FIXME
+      passwordFile = "/root/gallery/tmp_pwd"; # FIXME
       settings = cfg.settings;
     };
   };
