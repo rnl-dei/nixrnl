@@ -17,8 +17,6 @@
     netbox
   ];
 
-  age.secrets."container-weaver-deploy-token".file = ../secrets/container-weaver-deploy-token.age;
-
   # Networking
   networking = {
     interfaces.enp1s0 = {
