@@ -38,7 +38,7 @@
 
     interfaces = [ { source = "priv"; } ];
     disks = [
-      { source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
+      #{ source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
       { source.dev = "/dev/zvol/dpool/data/hedgedoc"; }
     ];
   };
