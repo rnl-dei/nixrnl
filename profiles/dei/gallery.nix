@@ -1,6 +1,11 @@
 {
   config,
+<<<<<<< HEAD
   lib,
+=======
+  # lib,
+  # pkgs,
+>>>>>>> 415b7bb (profiles/dei/gallery: fix path to password secret)
   ...
 }:
 let
@@ -83,7 +88,10 @@ in
   };
 
   age.secrets."dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
+<<<<<<< HEAD
   age.secrets."dei-photoprism-oidc-secret".file = ../../secrets/dei-photoprism-oidc-secret.age;
+=======
+>>>>>>> 415b7bb (profiles/dei/gallery: fix path to password secret)
 
   fileSystems."/var/lib/private/photoprism" = {
     device = "/mnt/data/gallery";
