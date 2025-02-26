@@ -78,6 +78,7 @@ in
   "dei-dei-docker-config.json.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-database-env.age".publicKeys = users ++ [ dei ];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [ dei ];
+  "dei-photoprism-admin-password.age".publicKeys = users ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
   "helios-env.age".publicKeys = users ++ [ selene ];
