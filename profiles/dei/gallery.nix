@@ -1,5 +1,5 @@
 {
-  # config,
+  config,
   # lib,
   # pkgs,
   ...
@@ -31,7 +31,7 @@ in
     originalsPath = "/var/lib/photoprism/originals";
 
     # storagePath = "${mediaDir}/storage";
-    passwordFile = age.secrets."dei-photoprism-admin-password".path;
+    passwordFile = config.age.secrets."dei-photoprism-admin-password".path;
     settings = {
       PHOTOPRISM_INDEX_WORKERS = toString 1;
       PHOTOPRISM_INDEX_SCHEDULE = "@daily";
@@ -72,12 +72,11 @@ in
     ];
   };
 
-  # TODO: bindmount - template here.
-  # Bind mount /mnt/data/dms to /var/lib/dei/dms/default
-  # fileSystems."${config.dei.dms.sites.default.stateDir}" = {
-  #   device = "/mnt/data/dms";
-  #   options = [ "bind" ];
-  # };
-  age.secrets."dei-photoprism-admin-password".file = ../secrets/dei-photoprism-admin-password.age;
+  age.secrets."dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
+
+  fileSystems."/var/lib/private/photoprism" = {
+    device = "/mnt/data/gallery";
+    options = [ "bind" ];
+  };
 
 }
