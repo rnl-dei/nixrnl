@@ -32,14 +32,14 @@
 
   rnl.labels.location = "dredd";
 
-  rnl.storage.disks.data = [ "/dev/vdb" ];
+  #  rnl.storage.disks.data = [ "/dev/vdb" ];
 
   rnl.virtualisation.guest = {
     description = "Hedgedoc machine";
     createdBy = "vasco.morais";
 
     vcpu = 1;
-
+    memory = 4096;
     interfaces = [ { source = "priv"; } ];
     disks = [
       #{ source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
