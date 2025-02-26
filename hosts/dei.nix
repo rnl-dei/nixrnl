@@ -108,11 +108,6 @@ in
     ];
   };
 
-  dei.gallery = {
-    enable = true;
-    stateDir = "/var/lib/dei/gallery"; # FIXME get real storage location for gallery
-    serverName = "eventos.dei.tecnico.ulisboa.pt";
-  };
   services.nginx.virtualHosts.redirect-odeio = {
     serverName = "observatorio.${config.networking.fqdn}";
     enableACME = true;
