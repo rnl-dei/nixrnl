@@ -1,4 +1,5 @@
 {
+  # config,
   # lib,
   # pkgs,
   ...
@@ -7,8 +8,9 @@
 let
   serverName = "eventos.dei.tecnico.ulisboa.pt";
   # required by systemd.
-  mediaDir = "/var/lib/private/photoprism";
+  # mediaDir = "/var/lib/private/photoprism";
   port = 2342;
+  title = "Eventos DEI";
 in
 {
   # https://nixos.wiki/wiki/PhotoPrism
@@ -24,12 +26,50 @@ in
   };
   services.photoprism = {
     enable = true;
-    originalsPath = "${mediaDir}/originals";
-    storagePath = "${mediaDir}/storage";
+    # originalsPath = "${mediaDir}/originals";
+    # originalsPath = "/var/lib/private/photoprism/originals";
+    originalsPath = "/var/lib/photoprism/originals";
+
+    # storagePath = "${mediaDir}/storage";
     passwordFile = "/root/gallery/tmp_pwd"; # FIXME
     settings = {
+      PHOTOPRISM_INDEX_WORKERS = toString 1;
+      PHOTOPRISM_INDEX_SCHEDULE = "@daily";
+      PHOTOPRISM_DISABLE_SETTINGS = toString true;
+      PHOTOPRISM_DISABLE_RESTART = toString true;
+      PHOTOPRISM_DISABLE_WEBDAV = toString true;
+      PHOTOPRISM_DISABLE_PLACES = toString true;
+      PHOTOPRISM_DISABLE_TENSORFLOW = toString true;
+      PHOTOPRISM_DEFAULT_LOCALE = "pt_PT";
+      PHOTOPRISM_DEFAULT_TIMEZONE = "GMT";
+      PHOTOPRISM_APP_NAME = title;
+      PHOTOPRISM_SITE_URL = "https://${serverName}";
+      PHOTOPRISM_SITE_AUTHOR = "Departamento de Engenharia Informática";
+      PHOTOPRISM_SITE_TITLE = title;
+      PHOTOPRISM_SITE_CAPTION = "Galeria do Departamento de Engenharia Informática do IST";
+      PHOTOPRISM_DISABLE_TLS = toString true;
+
+      # PHOTOPRISM_DATABASE_DRIVER = "mysql";
+      # PHOTOPRISM_DATABASE_DSN = "TODO" #TODO;
       #TODO
+
+      #TODO
+
     };
+  };
+
+  rnl.db-cluster = {
+    ensureDatabases = [
+      "gallery"
+    ];
+    ensureUsers = [
+      {
+        name = "gallery";
+        ensurePermissions = {
+          "gallery.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
   };
 
   # TODO: bindmount - template here.
