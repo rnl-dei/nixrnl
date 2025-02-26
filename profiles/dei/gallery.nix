@@ -31,7 +31,7 @@ in
     originalsPath = "/var/lib/photoprism/originals";
 
     # storagePath = "${mediaDir}/storage";
-    passwordFile = "/root/gallery/tmp_pwd"; # FIXME
+    passwordFile = age.secrets."dei-photoprism-admin-password".path;
     settings = {
       PHOTOPRISM_INDEX_WORKERS = toString 1;
       PHOTOPRISM_INDEX_SCHEDULE = "@daily";
@@ -78,5 +78,6 @@ in
   #   device = "/mnt/data/dms";
   #   options = [ "bind" ];
   # };
+  age.secrets."dei-photoprism-admin-password".file = ../secrets/dei-photoprism-admin-password.age;
 
 }
