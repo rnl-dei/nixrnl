@@ -1,4 +1,4 @@
-{ config, profiles, ... }:
+{ config, ... }:
 {
   age.secrets."hedgedoc-fenix-api" = {
     file = ../secrets/hedgedoc-fenix-api.age;
@@ -29,7 +29,7 @@
       CMD_OAUTH2_PROVIDERNAME=Fénix
   */
   #MISSING: CMD_OAUTH2_CLIENT_SECRET=<very secret!>
-  
+
   services.hedgedoc = {
     enable = true;
     environmentFile = "/etc/hedgedoc.env";
