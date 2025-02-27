@@ -20,6 +20,10 @@
       { source.dev = "/dev/zvol/dpool/data/hedgedoc"; }
     ];
   };
+  age.secrets."hedgedoc-fenix-api" = {
+    file = ../secrets/hedgedoc-fenix-api.age;
+    owner = "hedgedoc";
+  };
   # Networking
   networking = {
     defaultGateway.address = "193.136.164.126";
