@@ -1,3 +1,4 @@
+{ config, profiles, ... }:
 {
   age.secrets."hedgedoc-fenix-api" = {
     file = ../secrets/hedgedoc-fenix-api.age;
