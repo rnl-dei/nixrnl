@@ -23,6 +23,10 @@
       CMD_OAUTH2_PROVIDERNAME=Fénix
   */
   #MISSING: CMD_OAUTH2_CLIENT_SECRET=<very secret!>
+  age.secrets."hedgedoc-fenix-api" = {
+    file = ../secrets/hedgedoc-fenix-api.age;
+    owner = "hedgedoc";
+  };
   services.hedgedoc = {
     enable = true;
     environmentFile = "/etc/hedgedoc.env";
