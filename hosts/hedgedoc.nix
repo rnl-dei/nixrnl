@@ -6,8 +6,20 @@
     os.nixos
     type.vm
     hedgedoc
+    webserver
   ];
+  rnl.virtualisation.guest = {
+    description = "Hedgedoc machine";
+    createdBy = "vasco.morais";
 
+    vcpu = 1;
+    memory = 4096;
+    interfaces = [ { source = "priv"; } ];
+    disks = [
+      #{ source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
+      { source.dev = "/dev/zvol/dpool/data/hedgedoc"; }
+    ];
+  };
   # Networking
   networking = {
     defaultGateway.address = "193.136.164.126";
@@ -34,16 +46,4 @@
 
   #  rnl.storage.disks.data = [ "/dev/vdb" ];
 
-  rnl.virtualisation.guest = {
-    description = "Hedgedoc machine";
-    createdBy = "vasco.morais";
-
-    vcpu = 1;
-    memory = 4096;
-    interfaces = [ { source = "priv"; } ];
-    disks = [
-      #{ source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
-      { source.dev = "/dev/zvol/dpool/data/hedgedoc"; }
-    ];
-  };
 }
