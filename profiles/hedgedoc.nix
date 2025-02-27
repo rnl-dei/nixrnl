@@ -1,10 +1,12 @@
 { config, ... }:
 {
+  let
   age.secrets."hedgedoc-fenix-api" = {
     file = ../secrets/hedgedoc-fenix-api.age;
     owner = "hedgedoc";
   };
   decrypted = pkgs.agenix.decryptFile config.age.secrets."hedgedoc-fenix-api".path;
+  in{
   environment.etc."hedgedoc.env".text = ''
     CMD_PORT=3000
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
@@ -33,6 +35,7 @@
   services.hedgedoc = {
     enable = true;
     environmentFile = "/etc/hedgedoc.env";
+  };
   };
 }
 
