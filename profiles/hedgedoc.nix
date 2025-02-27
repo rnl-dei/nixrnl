@@ -4,6 +4,7 @@
     file = ../secrets/hedgedoc-fenix-api.age;
     owner = "hedgedoc";
   };
+  decrypted = pkgs.agenix.decryptFile config.age.secrets."hedgedoc-fenix-api".file;
   environment.etc."hedgedoc.env".text = ''
     CMD_PORT=3000
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
@@ -16,7 +17,7 @@
     CMD_OAUTH2_AUTHORIZATION_URL=https://fenix.tecnico.ulisboa.pt/oauth/userdialog
     CMD_OAUTH2_CLIENT_ID=288540197912778
     CMD_OAUTH2_PROVIDERNAME=Fénix
-    CMD_OAUTH2_CLIENT_SECRET=${config.age.secrets."hedgedoc-fenix-api"}
+    CMD_OAUTH2_CLIENT_SECRET=${decrypted}
   '';
   /**
       hegdedoc oauth stuff
