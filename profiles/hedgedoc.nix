@@ -1,4 +1,8 @@
 {
+  age.secrets."hedgedoc-fenix-api" = {
+    file = ../secrets/hedgedoc-fenix-api.age;
+    owner = "hedgedoc";
+  };
   environment.etc."hedgedoc.env".text = ''
     CMD_PORT=3000
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
@@ -23,10 +27,7 @@
       CMD_OAUTH2_PROVIDERNAME=Fénix
   */
   #MISSING: CMD_OAUTH2_CLIENT_SECRET=<very secret!>
-  age.secrets."hedgedoc-fenix-api" = {
-    file = ../secrets/hedgedoc-fenix-api.age;
-    owner = "hedgedoc";
-  };
+  
   services.hedgedoc = {
     enable = true;
     environmentFile = "/etc/hedgedoc.env";
