@@ -1,8 +1,10 @@
 {
   environment.etc."hedgedoc.env".text = ''
-    CMD_PORT=80
+    CMD_PORT=3000
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
     CMD_HOST=localhost
+    CMD_ALLOW_EMAIL_REGISTER=false
+    CMD_EMAIL=false
   '';
   /**
       hegdedoc oauth stuff

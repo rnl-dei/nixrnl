@@ -41,7 +41,12 @@
 
     };
   };
-
+  services.nginx.virtualHosts.hedgedoc = {
+    serverName = "hedgedoc.rnl.tecnico.ulisboa.pt";
+    enableACME = true;
+    forceSSL = true;
+    locations."/".proxyPass = "http://localhost:3000";
+  };
   rnl.labels.location = "dredd";
 
   #  rnl.storage.disks.data = [ "/dev/vdb" ];
