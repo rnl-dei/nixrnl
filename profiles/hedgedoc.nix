@@ -19,6 +19,7 @@
     CMD_OAUTH2_CLIENT_ID=288540197912778
     CMD_OAUTH2_PROVIDERNAME=Fénix
     CMD_OAUTH2_CLIENT_SECRET=@secret@
+    CMD_ALLOW_ANONYMOUS=false
   '';
 
   system.activationScripts."hedgedoc-fenix-api" = ''
