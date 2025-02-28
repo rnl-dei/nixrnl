@@ -17,7 +17,7 @@
     CMD_OAUTH2_AUTHORIZATION_URL=https://fenix.tecnico.ulisboa.pt/oauth/userdialog
     CMD_OAUTH2_CLIENT_ID=288540197912778
     CMD_OAUTH2_PROVIDERNAME=Fénix
-    CMD_OAUTH2_CLIENT_SECRET=${builtins.readFile config.age.secrets."hedgedoc-fenix-api".path}
+    CMD_OAUTH2_CLIENT_SECRET=$(cat "${config.age.secrets.hedgedoc-fenix-api.path}")
   '';
   /**
       hegdedoc oauth stuff
