@@ -20,6 +20,7 @@
     CMD_OAUTH2_PROVIDERNAME=Fénix
     CMD_OAUTH2_CLIENT_SECRET=@secret@
     CMD_ALLOW_ANONYMOUS=false
+    NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt
   '';
 
   system.activationScripts."hedgedoc-fenix-api" = ''
