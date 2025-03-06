@@ -1,5 +1,6 @@
 let
   # Public SSH keys of users
+  ## RNL
   torvalds = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP/rKlyYzFscsso96forbN2Y6IJ5yitGPS9Nci5n9vps";
   raijin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n";
   raidou = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif";
@@ -8,6 +9,10 @@ let
   geoff = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICG5lKQD5jhYAT7hOLLV/3nD6IJ6BG/2OKIl/Ry5lRDg";
   aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ";
   lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
+
+  ## DEI
+  sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
+  prohmakas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPsWjCFMvLBFUhxCG1KbsTbrDoFvUgJHmGD3rWvHHkO"; # jose.pereira
 
   users = [
     torvalds
@@ -18,6 +23,11 @@ let
     geoff
     aurelius
     lilb
+  ];
+
+  deiUsers = [
+    sazed
+    prohmakas
   ];
 
   deployMachines = users ++ [ ];
@@ -75,9 +85,11 @@ in
   ];
   "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
   "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
-  "dei-dei-docker-config.json.age".publicKeys = users ++ [ dei ];
-  "dei-glitchtip-database-env.age".publicKeys = users ++ [ dei ];
-  "dei-glitchtip-secret-key.age".publicKeys = users ++ [ dei ];
+  "dei-dei-docker-config.json.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-glitchtip-database-env.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-glitchtip-secret-key.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-photoprism-admin-password.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-photoprism-oidc-secret.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
   "helios-env.age".publicKeys = users ++ [ selene ];
