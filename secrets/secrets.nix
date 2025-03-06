@@ -80,7 +80,7 @@ in
   "dei-glitchtip-secret-key.age".publicKeys = users ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
-  "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
+  "hedgedoc-gitlab-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
