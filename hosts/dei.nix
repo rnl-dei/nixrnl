@@ -1,9 +1,11 @@
 {
   config,
+  lib,
   profiles,
   pkgs,
   ...
 }:
+with lib;
 let
   deiTeamWebsitePort = 3000;
 in
@@ -17,6 +19,8 @@ in
     containers.docker
     webserver
     fail2ban
+
+    dei.gallery
   ];
 
   # Networking
