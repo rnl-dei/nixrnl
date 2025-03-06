@@ -1,20 +1,16 @@
 {
   config,
-  # lib,
-  # pkgs,
+  lib,
   ...
 }:
-# with lib;
 let
+  cfg = config.services.photoprism;
   serverName = "eventos.dei.tecnico.ulisboa.pt";
-  # required by systemd.
-  # mediaDir = "/var/lib/private/photoprism";
   port = 2342;
   title = "Eventos DEI";
 in
 {
   # https://nixos.wiki/wiki/PhotoPrism
-  # NOTE: Ensure mediaDir and its subfolders (originals, storage) exist before photoprism starts.
   services.nginx.virtualHosts.gallery = {
     inherit serverName;
     enableACME = true;
@@ -26,12 +22,8 @@ in
   };
   services.photoprism = {
     enable = true;
-    # originalsPath = "${mediaDir}/originals";
-    # originalsPath = "/var/lib/private/photoprism/originals";
     originalsPath = "/var/lib/photoprism/originals";
-
-    # storagePath = "${mediaDir}/storage";
-    passwordFile = config.age.secrets."dei-photoprism-admin-password".path;
+    # Replaced with explicit `LoadCredential`
     settings = {
       PHOTOPRISM_INDEX_WORKERS = toString 1;
       PHOTOPRISM_INDEX_SCHEDULE = "@daily";
@@ -49,30 +41,49 @@ in
       PHOTOPRISM_SITE_CAPTION = "Galeria do Departamento de Engenharia Informática do IST";
       PHOTOPRISM_DISABLE_TLS = toString true;
 
+      # OpenID Connect configuration
+      PHOTOPRISM_OIDC_URI = "https://gitlab.rnl.tecnico.ulisboa.pt";
+      PHOTOPRISM_OIDC_SCOPES = "openid email profile"; # default also includes 'address' which gitlab doesn't seem to mention
+      PHOTOPRISM_OIDC_CLIENT = "9e0d78e249f0a6de0adf645684c39ff6b0beb84e485f56bac03e049db0ab3fde";
+      PHOTOPRISM_OIDC_REGISTER = toString true;
+
+      # Database configuration
+      # TODO
       # PHOTOPRISM_DATABASE_DRIVER = "mysql";
-      # PHOTOPRISM_DATABASE_DSN = "TODO" #TODO;
-      #TODO
-
-      #TODO
-
+      # PHOTOPRISM_DATABASE_DSN = "";
     };
   };
 
+  systemd.services.photoprism.serviceConfig = {
+    LoadCredential = lib.mkForce [
+      "PHOTOPRISM_ADMIN_PASSWORD:${config.age.secrets."dei-photoprism-admin-password".path}"
+      "PHOTOPRISM_OIDC_SECRET:${config.age.secrets."dei-photoprism-oidc-secret".path}"
+    ];
+  };
+
+  # Overrides the script set in nixpkgs to also support the oidc secret credential.
+  systemd.services.photoprism.script = lib.mkForce ''
+    export PHOTOPRISM_ADMIN_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_ADMIN_PASSWORD")
+    export PHOTOPRISM_OIDC_SECRET=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_OIDC_SECRET")
+    exec ${cfg.package}/bin/photoprism start
+  '';
+
   rnl.db-cluster = {
     ensureDatabases = [
-      "gallery"
+      "dei-gallery"
     ];
     ensureUsers = [
       {
-        name = "gallery";
+        name = "dei-gallery";
         ensurePermissions = {
-          "gallery.*" = "ALL PRIVILEGES";
+          "dei-gallery.*" = "ALL PRIVILEGES";
         };
       }
     ];
   };
 
   age.secrets."dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
+  age.secrets."dei-photoprism-oidc-secret".file = ../../secrets/dei-photoprism-oidc-secret.age;
 
   fileSystems."/var/lib/private/photoprism" = {
     device = "/mnt/data/gallery";
