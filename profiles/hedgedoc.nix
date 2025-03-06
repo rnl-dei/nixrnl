@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
 {
-  age.secrets."hedgedoc-fenix-api" = {
-    file = ../secrets/hedgedoc-fenix-api.age;
+  age.secrets."hedgedoc-gitlab-api" = {
+    file = ../secrets/hedgedoc-gitlab-api.age;
     owner = "hedgedoc";
   };
 
-  #decrypted = pkgs.agenix.decryptFile config.age.secrets."hedgedoc-fenix-api".path;
+  #decrypted = pkgs.agenix.decryptFile config.age.secrets."hedgedoc-gitlab-api".path;
   environment.etc."hedgedoc.env".text = ''
     CMD_PORT=3000
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
