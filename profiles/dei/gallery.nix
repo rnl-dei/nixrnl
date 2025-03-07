@@ -52,6 +52,8 @@ in
       PHOTOPRISM_OIDC_SCOPES = "openid email profile"; # default also includes 'address' which gitlab doesn't seem to mention
       PHOTOPRISM_OIDC_CLIENT = "9e0d78e249f0a6de0adf645684c39ff6b0beb84e485f56bac03e049db0ab3fde";
       PHOTOPRISM_OIDC_REGISTER = toString false;
+      PHOTOPRISM_OIDC_PROVIDER = "Fénix";
+      # PHOTOPRISM_OIDC_ICON = ""; # TODO: what kind of image is photoprism expecting??
 
       # Database configuration
       PHOTOPRISM_DATABASE_DRIVER = "mysql";
