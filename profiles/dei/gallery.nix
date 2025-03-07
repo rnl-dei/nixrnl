@@ -33,7 +33,7 @@ in
     settings = {
       PHOTOPRISM_INDEX_WORKERS = toString 1;
       PHOTOPRISM_INDEX_SCHEDULE = "@daily";
-      PHOTOPRISM_DISABLE_SETTINGS = toString true;
+      PHOTOPRISM_DISABLE_SETTINGS = toString false; # Allow user management as admin
       PHOTOPRISM_DISABLE_RESTART = toString true;
       PHOTOPRISM_DISABLE_WEBDAV = toString true;
       PHOTOPRISM_DISABLE_PLACES = toString true;
