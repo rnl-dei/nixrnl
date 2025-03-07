@@ -51,7 +51,7 @@ in
       PHOTOPRISM_OIDC_URI = "https://gitlab.rnl.tecnico.ulisboa.pt";
       PHOTOPRISM_OIDC_SCOPES = "openid email profile"; # default also includes 'address' which gitlab doesn't seem to mention
       PHOTOPRISM_OIDC_CLIENT = "9e0d78e249f0a6de0adf645684c39ff6b0beb84e485f56bac03e049db0ab3fde";
-      PHOTOPRISM_OIDC_REGISTER = toString true;
+      PHOTOPRISM_OIDC_REGISTER = toString false;
 
       # Database configuration
       PHOTOPRISM_DATABASE_DRIVER = "mysql";
