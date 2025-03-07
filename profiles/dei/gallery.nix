@@ -75,13 +75,13 @@ in
 
   rnl.db-cluster = {
     ensureDatabases = [
-      "dei-gallery"
+      "deigallery"
     ];
     ensureUsers = [
       {
-        name = "dei-gallery";
+        name = "deigallery";
         ensurePermissions = {
-          "dei-gallery.*" = "ALL PRIVILEGES";
+          "deigallery.*" = "ALL PRIVILEGES";
         };
       }
     ];
