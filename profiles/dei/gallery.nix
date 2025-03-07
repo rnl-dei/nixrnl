@@ -8,6 +8,7 @@ let
   serverName = "eventos.dei.tecnico.ulisboa.pt";
   port = 2342;
   title = "Eventos DEI";
+  dbName = "deigallery";
 in
 {
   # https://nixos.wiki/wiki/PhotoPrism
@@ -48,9 +49,10 @@ in
       PHOTOPRISM_OIDC_REGISTER = toString true;
 
       # Database configuration
-      # TODO
-      # PHOTOPRISM_DATABASE_DRIVER = "mysql";
-      # PHOTOPRISM_DATABASE_DSN = "";
+      PHOTOPRISM_DATABASE_DRIVER = "mysql";
+      PHOTOPRISM_DATABASE_SERVER = "db.rnl.tecnico.ulisboa.pt:3306";
+      PHOTOPRISM_DATABASE_NAME = "${dbName}";
+      PHOTOPRISM_DATABASE_USER = "${dbName}";
     };
   };
 
@@ -58,6 +60,7 @@ in
     LoadCredential = lib.mkForce [
       "PHOTOPRISM_ADMIN_PASSWORD:${config.age.secrets."dei-photoprism-admin-password".path}"
       "PHOTOPRISM_OIDC_SECRET:${config.age.secrets."dei-photoprism-oidc-secret".path}"
+      "PHOTOPRISM_DATABASE_PASSWORD:${config.age.secrets."dei-photoprism-db-password".path}"
     ];
   };
 
@@ -65,25 +68,29 @@ in
   systemd.services.photoprism.script = lib.mkForce ''
     export PHOTOPRISM_ADMIN_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_ADMIN_PASSWORD")
     export PHOTOPRISM_OIDC_SECRET=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_OIDC_SECRET")
+    export PHOTOPRISM_DATABASE_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_DATABASE_PASSWORD")
     exec ${cfg.package}/bin/photoprism start
   '';
 
+  age.secrets = {
+    "dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
+    "dei-photoprism-oidc-secret".file = ../../secrets/dei-photoprism-oidc-secret.age;
+    "dei-photoprism-db-password".file = ../../secrets/dei-photoprism-db-password.age;
+  };
+
   rnl.db-cluster = {
     ensureDatabases = [
-      "deigallery"
+      "${dbName}"
     ];
     ensureUsers = [
       {
-        name = "deigallery";
+        name = "${dbName}";
         ensurePermissions = {
-          "deigallery.*" = "ALL PRIVILEGES";
+          "${dbName}.*" = "ALL PRIVILEGES";
         };
       }
     ];
   };
-
-  age.secrets."dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
-  age.secrets."dei-photoprism-oidc-secret".file = ../../secrets/dei-photoprism-oidc-secret.age;
 
   fileSystems."/var/lib/private/photoprism" = {
     device = "/mnt/data/gallery";
