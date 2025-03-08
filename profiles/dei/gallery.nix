@@ -1,11 +1,7 @@
 {
   config,
-<<<<<<< HEAD
   lib,
-=======
-  # lib,
-  # pkgs,
->>>>>>> 415b7bb (profiles/dei/gallery: fix path to password secret)
+  pkgs,
   ...
 }:
 let
@@ -14,6 +10,29 @@ let
   port = 2342;
   title = "Eventos DEI";
   dbName = "deigallery";
+
+  sourceSecrets = ''
+    PHOTOPRISM_ADMIN_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_ADMIN_PASSWORD")
+    PHOTOPRISM_OIDC_SECRET=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_OIDC_SECRET")
+    PHOTOPRISM_DATABASE_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_DATABASE_PASSWORD")
+    export PHOTOPRISM_ADMIN_PASSWORD
+    export PHOTOPRISM_OIDC_SECRET
+    export PHOTOPRISM_DATABASE_PASSWORD
+  '';
+
+  mgmtPkg = pkgs.writeShellApplication {
+    name = "photoprism-mgmt";
+
+    runtimeEnv = cfg.settings;
+
+    runtimeInputs = [ cfg.package ];
+
+    text = ''
+      export CREDENTIALS_DIRECTORY=/run/credentials/photoprism.service
+      ${sourceSecrets}
+      exec photoprism "$@"
+    '';
+  };
 in
 {
   # https://nixos.wiki/wiki/PhotoPrism
@@ -73,9 +92,7 @@ in
 
   # Overrides the script set in nixpkgs to also support the oidc secret credential.
   systemd.services.photoprism.script = lib.mkForce ''
-    export PHOTOPRISM_ADMIN_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_ADMIN_PASSWORD")
-    export PHOTOPRISM_OIDC_SECRET=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_OIDC_SECRET")
-    export PHOTOPRISM_DATABASE_PASSWORD=$(cat "$CREDENTIALS_DIRECTORY/PHOTOPRISM_DATABASE_PASSWORD")
+    ${sourceSecrets}
     exec ${cfg.package}/bin/photoprism start
   '';
 
@@ -98,16 +115,11 @@ in
       }
     ];
   };
-
-  age.secrets."dei-photoprism-admin-password".file = ../../secrets/dei-photoprism-admin-password.age;
-<<<<<<< HEAD
-  age.secrets."dei-photoprism-oidc-secret".file = ../../secrets/dei-photoprism-oidc-secret.age;
-=======
->>>>>>> 415b7bb (profiles/dei/gallery: fix path to password secret)
-
+  
   fileSystems."/var/lib/private/photoprism" = {
     device = "/mnt/data/gallery";
     options = [ "bind" ];
   };
 
+  users.users.root.packages = [ mgmtPkg ];
 }
