@@ -90,6 +90,7 @@ in
   "dei-glitchtip-database-env.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-glitchtip-secret-key.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-photoprism-admin-password.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-photoprism-db-password.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-photoprism-oidc-secret.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
