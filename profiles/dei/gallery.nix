@@ -115,7 +115,7 @@ in
       }
     ];
   };
-  
+
   fileSystems."/var/lib/private/photoprism" = {
     device = "/mnt/data/gallery";
     options = [ "bind" ];
