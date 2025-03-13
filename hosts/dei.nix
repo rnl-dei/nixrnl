@@ -8,6 +8,7 @@
 with lib;
 let
   deiTeamWebsitePort = 3000;
+  backupsDir = "/var/lib/dei/backups";
 in
 {
   imports = with profiles; [
@@ -160,13 +161,21 @@ in
     description = "Backup DMS production database";
     script = ''
       set -eu
-      ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > /root/dms_backups/dms_backup_$(date +%F).sql
+      ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ${backupsDir}/dms/dms_backup_$(date +%F).sql
+      # Delete all backups older than 60 days.
+      ${lib.getExe pkgs.findutils} -mtime 31 -delete ${backupsDir}/dms
     '';
     serviceConfig = {
       Type = "oneshot";
       User = "root";
       EnvironmentFile = config.age.secrets."dms-prod-db-password".path;
     };
+  };
+
+  # Bind mount /mnt/data/backups to backupsDir
+  fileSystems."${backupsDir}" = {
+    device = "/mnt/data/backups";
+    options = [ "bind" ];
   };
 
   # PhDMS
