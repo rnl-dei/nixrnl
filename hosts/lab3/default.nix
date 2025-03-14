@@ -1,4 +1,8 @@
-{ profiles, lib, ... }:
+{
+  profiles,
+  pkgs,
+  ...
+}:
 {
   imports = with profiles; [
     core.rnl
@@ -18,7 +22,21 @@
 
   rnl.monitoring.amt = true;
 
+  users.users.exo = {
+    isNormalUser = true;
+    description = "Simple user to run exo";
+  };
+
   systemd.services.exo = {
-    environment = lib.mkForce { };
+    description = "exo";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    environment = { };
+    serviceConfig = {
+      User = "exo";
+      Type = "simple";
+      ExecStart = "/bin/sh -lc '${pkgs.exo}/bin/exo'";
+      Restart = "always";
+    };
   };
 }
