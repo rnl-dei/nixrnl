@@ -1,4 +1,4 @@
-{ profiles, ... }:
+{ profiles, lib, ... }:
 {
   imports = with profiles; [
     core.rnl
@@ -17,4 +17,8 @@
   rnl.labels.location = "inf1-p2-lab3";
 
   rnl.monitoring.amt = true;
+
+  systemd.services.exo = {
+    environment = lib.mkForce { };
+  };
 }
