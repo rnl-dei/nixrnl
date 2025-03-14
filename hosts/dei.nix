@@ -160,10 +160,10 @@ in
   systemd.services."backup-prod-db" = {
     description = "Backup DMS production database";
     script = ''
-      set -eu
+      set -euo pipefail
       ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ${backupsDir}/dms/dms_backup_$(date +%F).sql
       # Delete all backups older than 60 days.
-      ${lib.getExe pkgs.findutils} -mtime 31 -delete ${backupsDir}/dms
+      ${lib.getExe pkgs.findutils} ${backupsDir}/dms  ${backupsDir}/dms -mtime 31 -delete 
     '';
     serviceConfig = {
       Type = "oneshot";
