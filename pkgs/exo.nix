@@ -5,6 +5,7 @@
   python3Packages,
   gitUpdater,
   system ? builtins.currentSystem,
+  ...
 }:
 
 let

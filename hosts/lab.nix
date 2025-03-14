@@ -19,24 +19,4 @@
 
   # Disable ping monitoring
   rnl.monitoring.ping = false;
-
-  users.users.exo = {
-    isNormalUser = true;
-    description = "Simple user to run exo";
-  };
-
-  systemd.services.exo = {
-    description = "exo";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-    environment = {
-      CPU = "1";
-    };
-    serviceConfig = {
-      User = "exo";
-      Type = "simple";
-      ExecStart = "${pkgs.exo}/bin/exo";
-      Restart = "always";
-    };
-  };
 }
