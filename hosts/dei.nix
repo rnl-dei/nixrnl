@@ -294,8 +294,7 @@ in
   # NOTE: If changing its value, see `man sshd_config` for ChrootDirectory requisites.
   services.openssh.extraConfig = ''
     Match group blatta
-      ChrootDirectory /libvirtjail/%u
-      ChrootDirectory ${backupsDir}
+      ChrootDirectory ${backupsDir}/dms
       X11Forwarding no
       AllowTcpForwarding no
       PasswordAuthentication no
