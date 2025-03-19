@@ -275,6 +275,33 @@ in
     };
   };
 
+  # ---
+  # Allow `blatta` to programmatically access `dei`'s DMS backups.
+  # ---
+  # Equivalent to 'user_allow_other' in /etc/fuse.conf
+  programs.fuse.userAllowOther = true;
+
+  users.groups.blatta = { };
+  users.users.blatta = {
+    group = "blatta";
+    uid = 1050;
+    shell = null;
+    isSystemUser = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV root@blatta"
+    ];
+  };
+  # NOTE: If changing its value, see `man sshd_config` for ChrootDirectory requisites.
+  services.openssh.extraConfig = ''
+    Match group blatta
+      ChrootDirectory /libvirtjail/%u
+      ChrootDirectory ${backupsDir}
+      X11Forwarding no
+      AllowTcpForwarding no
+      PasswordAuthentication no
+      ForceCommand internal-sftp
+  '';
+
   # GlitchTip
   services.glitchtip = {
     enable = true;
