@@ -19,6 +19,9 @@ let
       {
         inherit system;
       };
+  myTinygrad = unstable.tinygrad.override {
+    cudaSupport = true;
+  };
 in
 
 unstable.python3Packages.buildPythonApplication rec {
@@ -61,7 +64,7 @@ unstable.python3Packages.buildPythonApplication rec {
     scapy
     tqdm
     transformers
-    tinygrad
+    myTinygrad
     uvloop
   ];
 
