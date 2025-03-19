@@ -14,12 +14,17 @@ let
     import
       (fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "0lad6jan49sywk6xzgcivc4h3ln7grhjhb8q8jv2jwhwlgrfrxvh";
+        sha256 = "sha256:0aics7ak6d6gd2fz12yq7hgs2gs8izlpmf6imhbr9amywgk1l72g";
         # You can add a hash for reproducibility
       })
       {
         inherit system;
+        config.allowUnfree = true;
       };
+  myTinygrad = unstable.python3Packages.tinygrad.override {
+    cudaSupport = true;
+
+  };
 in
 
 unstable.python3Packages.buildPythonApplication rec {
@@ -62,7 +67,7 @@ unstable.python3Packages.buildPythonApplication rec {
     scapy
     tqdm
     transformers
-    tinygrad
+    myTinygrad
     uvloop
   ];
 
