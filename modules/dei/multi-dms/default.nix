@@ -157,7 +157,7 @@ let
       systemctl reload caddy
       }
 
-      create_db "$db_container_name" "$db_port"
+      create_db "$db_container_name" "$db_port" || true
       add_caddy_vhost "$backend_port"
       sleep 1
       populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
@@ -450,6 +450,8 @@ in
     systemd.services."multi-dms@" = {
       description = "DEI Management System Backend (%i)";
       after = [ "network.target" ];
+      restartIfChanged = false;
+      stopIfChanged = false;
 
       path = with pkgs; [
         bash
