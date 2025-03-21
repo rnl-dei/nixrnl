@@ -31,7 +31,9 @@
     description = "exo";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    environment = { };
+    environment = {
+      # # EXO_HOME = "$CLUSTER_HOME";
+    };
     serviceConfig = {
       User = "exo";
       Type = "simple";

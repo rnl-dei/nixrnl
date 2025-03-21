@@ -14,7 +14,7 @@ let
     import
       (fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "sha256:0aics7ak6d6gd2fz12yq7hgs2gs8izlpmf6imhbr9amywgk1l72g";
+        sha256 = "sha256:053xxy1bn35d9088h3rznhqkqq7lnnhn4ahrilwik8l4b6k8inlq";
         # You can add a hash for reproducibility
       })
       {
