@@ -8,9 +8,6 @@ with lib;
 let
 
   #   References:
-  #  - https://nixos.org/manual/nixos/stable/#ch-containers
-  #  - unironically, `cat $(which nixos-container)`
-  #  - `systemctl cat container@`
   #  - https://smallstep.com/docs/step-ca/certificate-authority-server-production/ (For caddy/nginx setup)
   #       (mirror: https://web.archive.org/web/20241108121229/https://smallstep.com/docs/step-ca/certificate-authority-server-production/)
 
@@ -23,34 +20,21 @@ let
   environmentDirSystemd = "${environmentsDir}/%i";
   # Directory where caddy will look for extra configuration files.
   caddyConfigsDir = "${cfg.dataDir}/caddy-configs";
-  # Database dump to use for populating DMS databases.
-  dbDumpFile = "${cfg.dataDir}/common/latest.sql";
 
   common = ''
-     # max length for container name is 11
-     # therefore, we use hash of branch name and trim to 7, 
-     # so the end result is e.g 'dms-a4a8114' (always 11 chars).
+    get_port() {
+        local min_port="$1"
+        local max_port="$2"
 
-    get_db_container_name() {
-         # Hash the input string and convert it to an integer within the specified range
-         local hash
-         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-7)
-         echo "dms-$hash" # container name will always be 11 chars, which is max. allowed.
-     }
+        # Calculate range
+        local range=$((max_port - min_port + 1))
 
-     get_port() {
-         local min_port="$1"
-         local max_port="$2"
-
-         # Calculate range
-         local range=$((max_port - min_port + 1))
-
-         # Hash the input string and convert it to an integer within the specified range
-         local hash
-         hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
-         local port=$(( (0x$hash % range) + min_port ))
-         echo -n "$port"
-     }
+        # Hash the input string and convert it to an integer within the specified range
+        local hash
+        hash=$(echo -n "$ENVIRONMENT_NAME" | sha256sum | cut -c1-8)
+        local port=$(( (0x$hash % range) + min_port ))
+        echo -n "$port"
+    }
 
   '';
 
@@ -60,58 +44,38 @@ let
     runtimeInputs = with pkgs; [
       mariadb
       systemd
+      docker
+      wait4x # tool to wait for port or service to enter requested state
     ];
     text = ''
       echo "Start pre-start script for DMS deployment $ENVIRONMENT_NAME"
 
       ${common}
-      db_container_name=$(get_db_container_name)
       backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
       db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
-      create_db() {
-        local db_name="$1"
-        local db_port="$2"
-
-        local db_container_config=${./db_container.nix}
-
-        # Check if arguments are provided
-        if [[ -z "$db_name" || -z "$db_port" ]]; then
-          echo "Usage: create_db <db_name> <db_port>"
-          return 1
-        fi
-
-        nixos-container create "$db_name" \
-         --port "tcp:$db_port:3306" \
-         --config-file $db_container_config || true
+      create_db() { 
+        # ENVIRONMENT_NAME=potato
+        # DB_PORT=69420
+        IMG_NAME=mariadb:10.11.11
+        ENV_FILE=/var/lib/dei/multi-dms/common/dms.env
+        DUMP_FILE=$(readlink -f /var/lib/dei/multi-dms/common/latest.sql)
+        DUMP_FILE_NAME="$(basename "$DUMP_FILE")"
         
-        nixos-container start "$db_name"
+        docker container create \
+           --hostname="$ENVIRONMENT_NAME" \
+           -p "$db_port":3306 \
+           --rm \
+           --name="$ENVIRONMENT_NAME" \
+           --volume "$DUMP_FILE:/docker-entrypoint-initdb.d/$DUMP_FILE_NAME:ro" \
+           --env-file="$ENV_FILE" \
+           $IMG_NAME 
+           # $ENVIRONMENT_NAME
+           # --env-file=
+        
+        docker container start "$ENVIRONMENT_NAME"
       }
 
-      populate_db() {
-        local db_port="$1"
-
-        # Check if arguments are provided
-        if [[ -z "$db_port" ]]; then
-          echo "Usage: populate_db <db_port>"
-          return 1
-        fi
-
-        # Because Blatta is too slow for create-destroy DBs on system stop/start,
-        # we only populate the DB once and don't automatically destroy it.
-        if test -f "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"; then
-          echo "Refusing to re-populate the database."
-          return
-        fi
-
-        mysql \
-          -h ${cfg.database.host} \
-          --port="$db_port" \
-          -u dms -p"$DB_PASSWORD" \
-          dms < "${dbDumpFile}"
-
-        touch "${environmentsDir}/$ENVIRONMENT_NAME/_multi-dms-db-init"
-      }
 
       add_caddy_vhost() {
         local backend_port="$1"
@@ -156,11 +120,12 @@ let
       EOL
       systemctl reload caddy
       }
+      create_db
 
-      create_db "$db_container_name" "$db_port" || true
+      # Wait for database to be up and running
+      wait4x --quiet --timeout 300s mysql "dms:$DB_PASSWORD@tcp(localhost:$db_port)/dms"
+
       add_caddy_vhost "$backend_port"
-      sleep 1
-      populate_db "$db_port" #NOTE: this is very, very, very slow to be doing on-demand on blatta's current hypervisor.
     '';
 
   };
@@ -168,19 +133,22 @@ let
   postStopScript = pkgs.writeShellApplication {
     name = "multi-dms-poststop";
 
-    runtimeInputs = with pkgs; [ systemd ];
+    runtimeInputs = with pkgs; [
+      systemd
+      docker
+    ];
     text = ''
       echo "Start multi-dms post stop script"
 
       ${common}
-      db_container_name=$(get_db_container_name)
 
       # Remove caddy virtualhost
       rm -f ${caddyConfigsDir}/"$ENVIRONMENT_NAME"
       systemctl reload caddy
 
-      # Stop DB (when fast hypervisor, it may be better to destroy and create DBs on start/stop) 
-      nixos-container stop "$db_container_name"
+      # Destroy database container and all its anonymous volumes.
+      # Don't fail if container does not exist/is already stopped/etc.
+      docker container stop "$ENVIRONMENT_NAME" || true
     '';
   };
 
@@ -277,7 +245,6 @@ let
       # Implementation
 
       ${common}
-      db_container_name=$(get_db_container_name)
       backend_port=$(get_port ${toString cfg.backend.minPort} ${toString cfg.backend.maxPort})
       db_port=$(get_port ${toString cfg.database.minPort} ${toString cfg.database.maxPort})
 
@@ -289,8 +256,6 @@ let
 
 
       echo "Init new environment..."
-      echo "Environment's container DB name is '$db_container_name'".
-      echo "You can access it with e.g 'machinectl shell $db_container_name'."
       mkdir -p "$ENVIRONMENT_DIR"
       ln -s "$BUILD/dms.jar" "$ENVIRONMENT_DIR/dms.jar"
       ln -s "$BUILD/www" "$ENVIRONMENT_DIR/www"
@@ -300,7 +265,7 @@ let
 
 
       # Start DMS environment and reload caddy
-      echo "Starting service $service_name . The first time might take a while."
+      echo "Starting service $service_name - this might take a minute." 
       systemctl start "$service_name"
       echo "Started DMS."
       echo "Environment status:"
@@ -339,7 +304,7 @@ in
     database = {
       host = mkOption {
         type = types.str;
-        default = "10.233.1.1";
+        default = "127.0.0.1";
         description = "Database host address";
       };
       minPort = mkOption {

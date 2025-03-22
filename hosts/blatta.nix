@@ -10,7 +10,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-
+    containers.docker # required for multi-dms
     webserver
   ];
 
