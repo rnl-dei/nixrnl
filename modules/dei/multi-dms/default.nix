@@ -58,8 +58,8 @@ let
         # ENVIRONMENT_NAME=potato
         # DB_PORT=69420
         IMG_NAME=mariadb:10.11.11
-        ENV_FILE=/var/lib/dei/multi-dms/common/dms.env
-        DUMP_FILE=$(readlink -f /var/lib/dei/multi-dms/common/latest.sql)
+        ENV_FILE=${cfg.backend.environmentFile}
+        DUMP_FILE=$(readlink -f ${cfg.dataDir}/common/latest.sql)
         DUMP_FILE_NAME="$(basename "$DUMP_FILE")"
         
         docker container create \
@@ -70,8 +70,6 @@ let
            --volume "$DUMP_FILE:/docker-entrypoint-initdb.d/$DUMP_FILE_NAME:ro" \
            --env-file="$ENV_FILE" \
            $IMG_NAME 
-           # $ENVIRONMENT_NAME
-           # --env-file=
         
         docker container start "$ENVIRONMENT_NAME"
       }
@@ -95,6 +93,8 @@ let
         }
 
         encode zstd gzip
+        header +Set-Cookie "multi_dms_host=dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt; Domain=blatta.rnl.tecnico.ulisboa.pt"
+         
 
         handle /raa/* {
                 header Access-Control-Allow-Origin "https://rnl.tecnico.ulisboa.pt/"
@@ -123,7 +123,8 @@ let
       create_db
 
       # Wait for database to be up and running
-      wait4x --quiet --timeout 300s mysql "dms:$DB_PASSWORD@tcp(localhost:$db_port)/dms"
+      # wait4x is very noisy while waiting for mariadb to be alive (even with --quiet) - redirect everything to /dev/null.
+      wait4x --quiet --timeout 300s mysql "dms:$DB_PASSWORD@tcp(localhost:$db_port)/dms" > /dev/null 2>&1
 
       add_caddy_vhost "$backend_port"
     '';
@@ -407,8 +408,10 @@ in
     #         The first handle directive that matches will win.
     services.caddy.virtualHosts."fenix-dms-gw.blatta.rnl.tecnico.ulisboa.pt".extraConfig = ''
       encode zstd gzip
+
       handle {
-        redir {header.Referer}login?{query}
+        # redir {header.Referer}login?{query}
+        redir https://{http.request.cookie.multi_dms_host}/login?{query}
       }
     '';
 
