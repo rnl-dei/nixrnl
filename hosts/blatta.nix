@@ -70,6 +70,29 @@
     '';
   };
 
+  # Pull prod db backups from dei machine
+  systemd.timers."pull-prod-db" = {
+    description = "Pull DMS DB Backups timer";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 03:00:00";
+      Unit = "pull-prod-db.service";
+    };
+  };
+
+  systemd.services."pull-prod-db" = {
+    description = "Pull DMS DB Backups";
+    script = ''
+      set -euo pipefail
+      ${pkgs.openssh}/bin/scp blatta@dei.rnl.tecnico.ulisboa.pt:/dms_backup_$(date +%F).sql /root/dms_backups/
+      ln -sf /root/dms_backups/$(date +%F).sql /root/dms_backups/latest.sql
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
   # Services
   dei.dms = {
     builds.authorizedKeys = [
