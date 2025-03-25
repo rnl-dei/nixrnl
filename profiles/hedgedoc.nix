@@ -13,7 +13,7 @@
     CMD_DOMAIN=hedgedoc.rnl.tecnico.ulisboa.pt
     CMD_HOST=localhost
     CMD_ALLOW_EMAIL_REGISTER=false
-    CMD_EMAIL=false
+    CMD_EMAIL=true
     CMD_ALLOW_ANONYMOUS=false
     CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR=username
     CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR=username
