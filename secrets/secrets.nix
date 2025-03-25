@@ -103,7 +103,10 @@ in
     borg
     labs
   ];
-  "weaver-rnl-docker-config.json.age".publicKeys = users ++ [ weaver ];
+  "weaver-rnl-docker-config.json.age".publicKeys = users ++ [
+    weaver
+    www
+  ];
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
