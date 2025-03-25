@@ -9,6 +9,7 @@ let
   rnlWebsitePort = 3000;
   tvClientPort = 1336;
   tvCMSPort = 1337;
+  qrWebsitePort = 3031;
   # labsMatrixPort = 3001;
   # shortenerPort = 3002;
 
@@ -449,5 +450,29 @@ in
   age.secrets."root-at-www-ssh.key" = {
     file = ../secrets/root-at-www-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
+  };
+
+  age.secrets."weaver-rnl-docker-config.json" = {
+    file = ../secrets/weaver-rnl-docker-config.json.age;
+    path = "/root/.docker/config.json";
+    symlink = true;
+  };
+
+  # QR
+  services.nginx.virtualHosts."qr" = {
+    serverName = "qr.rnl.tecnico.ulisboa.pt";
+    enableACME = true;
+    forceSSL = true;
+    locations = {
+      "/".proxyPass = "http://localhost:${toString qrWebsitePort}";
+    };
+  };
+
+  virtualisation.oci-containers.containers."qr" = {
+    image = "registry.rnl.tecnico.ulisboa.pt/rnl/qr:latest";
+    ports = [ "${toString qrWebsitePort}:80" ];
+    labels = {
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
   };
 }
