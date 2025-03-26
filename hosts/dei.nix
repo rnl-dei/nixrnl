@@ -160,10 +160,10 @@ in
   systemd.services."backup-prod-db" = {
     description = "Backup DMS production database";
     script = ''
-      set -eu
+      set -euo pipefail
       ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ${backupsDir}/dms/dms_backup_$(date +%F).sql
       # Delete all backups older than 60 days.
-      ${lib.getExe pkgs.findutils} -mtime 31 -delete ${backupsDir}/dms
+      ${lib.getExe pkgs.findutils} ${backupsDir}/dms  ${backupsDir}/dms -mtime 31 -delete 
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -274,6 +274,32 @@ in
       "com.centurylinklabs.watchtower.enable" = "true";
     };
   };
+
+  # ---
+  # Allow `blatta` to programmatically access `dei`'s DMS backups.
+  # ---
+  # Equivalent to 'user_allow_other' in /etc/fuse.conf
+  programs.fuse.userAllowOther = true;
+
+  users.groups.blatta = { };
+  users.users.blatta = {
+    group = "blatta";
+    uid = 1050;
+    shell = null;
+    isSystemUser = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV root@blatta"
+    ];
+  };
+  # NOTE: If changing its value, see `man sshd_config` for ChrootDirectory requisites.
+  services.openssh.extraConfig = ''
+    Match group blatta
+      ChrootDirectory ${backupsDir}/dms
+      X11Forwarding no
+      AllowTcpForwarding no
+      PasswordAuthentication no
+      ForceCommand internal-sftp
+  '';
 
   # GlitchTip
   services.glitchtip = {
