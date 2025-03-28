@@ -288,7 +288,7 @@ in
     shell = null;
     isSystemUser = true;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV root@blatta"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHDKNC2nEDLyLA9epWoVZnJnkAVGTTRYRFUAsSPGIRfT root@blatta"
     ];
   };
   # NOTE: If changing its value, see `man sshd_config` for ChrootDirectory requisites.
