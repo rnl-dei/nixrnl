@@ -1,0 +1,10 @@
+. {
+
+    hosts ./hosts rnl.tencnico.ulisboa.pt {
+        fallthrough
+    }
+    file ./oldstyleDNS rnl.tecnico.ulisboa.pt{
+        reload 5s
+    }
+    forward . 1.1.1.1
+}
