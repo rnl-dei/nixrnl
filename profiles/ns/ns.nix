@@ -29,7 +29,7 @@ in
         directoryMode = "0755";
       };
     };
-
+    environment.etc."hosts" = builtins.readFile ./hosts;
     services.coredns = {
       package = pkg;
       enable = true;

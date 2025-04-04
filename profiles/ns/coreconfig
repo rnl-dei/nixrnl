@@ -2,7 +2,7 @@
     unbound {
         except rnl.tecnico.ulisboa.pt
     }
-    hosts ./hosts rnl.tencnico.ulisboa.pt {
+    hosts rnl.tencnico.ulisboa.pt {
         fallthrough
     }
     file ./oldstyleDNS rnl.tecnico.ulisboa.pt{
