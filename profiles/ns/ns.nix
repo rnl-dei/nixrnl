@@ -21,6 +21,10 @@ in
 {
   options = { };
   config = {
+    environment.systemPackages = with pkgs; [
+      dig
+      dogdns
+    ];
     rnl.githook = {
       enable = true;
       hooks.dns-config = {
@@ -29,7 +33,8 @@ in
         directoryMode = "0755";
       };
     };
-    environment.etc."hosts" = builtins.readFile ./hosts;
+    environment.etc."oldstyleDNS".source = ./oldDNS;
+    environment.etc."coredns-hosts".source = ./hosts;
     services.coredns = {
       package = pkg;
       enable = true;

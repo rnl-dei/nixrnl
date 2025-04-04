@@ -1,8 +1,9 @@
 . {
+    root /etc
     unbound {
         except rnl.tecnico.ulisboa.pt
     }
-    hosts rnl.tencnico.ulisboa.pt {
+    hosts /etc/coredns-hosts rnl.tencnico.ulisboa.pt {
         fallthrough
     }
     file ./oldstyleDNS rnl.tecnico.ulisboa.pt{
