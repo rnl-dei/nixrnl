@@ -3,6 +3,13 @@
 ;; IPv4: 193.136.164.129-190
 ;; IPv6: 2001:690:2100:83::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+@       IN      SOA     ns.rnl.tecnico.ulisboa.pt. rnl.rnl.tecnico.ulisboa.pt. (
+                                2025040200      ; Serial - yyyymmdd##
+                                28800           ; Refresh every 8 hours
+                                3600            ; Retry every 1 hours
+                                604800          ; Expire after a week
+                                86400 )         ; Minimum ttl of 1 day
+;
 
 nexus		IN	A	193.136.164.129		; Shell para alunos (IP virtual para nexus1/2)
 		IN	AAAA	2001:690:2100:83::129

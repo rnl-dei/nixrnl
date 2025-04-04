@@ -1,8 +1,7 @@
 . {
+    log
     root /etc
-    unbound {
-        except rnl.tecnico.ulisboa.pt
-    }
+
     hosts /etc/coredns-hosts rnl.tencnico.ulisboa.pt {
         fallthrough
     }
