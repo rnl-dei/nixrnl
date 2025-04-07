@@ -5,7 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.ns
+    ns.master
   ];
   rnl.virtualisation.guest = {
     description = "Name Server";
