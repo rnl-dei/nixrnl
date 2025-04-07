@@ -1,5 +1,4 @@
 { pkgs, ... }:
-let
 
 {
   options = { };
@@ -20,7 +19,10 @@ let
     #environment.etc."coredns-hosts".source = ./hosts;
     services.bind = {
       enable = true;
-      zones."rnl.martins.com.pt".file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
+      zones."rnl.tecnico.ulisboa.pt" = {
+        master = true;
+        file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
+      };
     };
   };
 }

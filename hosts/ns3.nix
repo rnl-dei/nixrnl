@@ -5,7 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.slave
+    ns.master
   ];
   rnl.virtualisation.guest = {
     description = "Name Server";
@@ -24,7 +24,7 @@
   #TODO
   networking = {
     defaultGateway.address = "193.136.164.126";
-    defaultGateway6.address = "2001:690:2100:80::ffff:1";
+    defaultGateway6.address = "2001:690:2100:81::ffff:1";
 
     interfaces.enp1s0 = {
       ipv4.addresses = [
