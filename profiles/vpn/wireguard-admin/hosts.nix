@@ -397,4 +397,9 @@
     publicKey = "pSzprPKBUujxDkPSVVnFnquqh8i7ym63APd3oF0s00A=";
     lastOctet = 80;
   }
+  {
+    # Vasco Petinga
+    publicKey = "SSsT1TMq1EoFvfcu7i/jT6ILCDIAim0px43Wy1AuHgU=";
+    lastOctet = 81;
+  }
 ]
