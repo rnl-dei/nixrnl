@@ -35,7 +35,7 @@
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:80::99";
+          address = "2001:690:2100:81::99";
           prefixLength = 64;
         }
       ];
