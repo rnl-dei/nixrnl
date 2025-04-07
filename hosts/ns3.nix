@@ -23,7 +23,7 @@
   # Networking
   #TODO
   networking = {
-    defaultGateway.address = "193.136.164.62";
+    defaultGateway.address = "193.136.164.126";
     defaultGateway6.address = "2001:690:2100:80::ffff:1";
 
     interfaces.enp1s0 = {
