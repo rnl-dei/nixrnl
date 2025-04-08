@@ -44,13 +44,11 @@
   };
 
   rnl.labels.location = "dredd";
-  users.users.root.
   #  rnl.storage.disks.data = [ "/dev/vdb" ];
-  age.secrets."root-at-ns3-ssh.key" =
-    {
-      file = ../secrets/root-at-ns3-ssh-key.age;
-      path = "/root/.ssh/id_ed25519";
-      owner = "root";
-    };
+  age.secrets."root-at-ns3-ssh.key" = {
+    file = ../secrets/root-at-ns3-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+    owner = "root";
+  };
 
 }
