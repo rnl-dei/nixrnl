@@ -11,14 +11,14 @@
 
   rnl.virtualisation.guest = {
     description = "VM de Introdução a SO Prodigi";
-    createdBy = "nuno.alves";
-    maintainers = [ "alberto.abad" ];
+    createdBy = "francisco.martins";
+    maintainers = [ "miguel.pardal" ];
 
-    memory = 6144;
+    memory = 16384;
 
     interfaces = [
       {
-        source = "dmz";
+        source = "priv";
         mac = "52:54:00:51:b3:11";
       }
     ];
