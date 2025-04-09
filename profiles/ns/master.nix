@@ -39,6 +39,11 @@
         slaves = ["193.136.164.2"];
         file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
       };
+      zones."rnl.ist.utl.pt" = {
+        master = true;
+        slaves = ["193.136.164.2"];
+        file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
+      };
     };
   };
 }
