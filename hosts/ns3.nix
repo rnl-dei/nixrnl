@@ -15,13 +15,11 @@
     memory = 2048;
     interfaces = [ { source = "pub"; } ];
     disks = [
-      #{ source.dev = "/dev/zvol/dpool/volumes/hedgedoc"; }
       { source.dev = "/dev/zvol/dpool/data/ns3"; }
     ];
   };
 
   # Networking
-  #TODO
   networking = {
     defaultGateway.address = "193.136.164.126";
     defaultGateway6.address = "2001:690:2100:81::ffff:1";
@@ -44,7 +42,6 @@
   };
 
   rnl.labels.location = "dredd";
-  #  rnl.storage.disks.data = [ "/dev/vdb" ];
   age.secrets."root-at-ns3-ssh.key" = {
     file = ../secrets/root-at-ns3-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
