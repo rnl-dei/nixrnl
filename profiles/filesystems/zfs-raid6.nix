@@ -10,6 +10,16 @@
       devices = [ device ];
     }) config.rnl.storage.disks.root;
   };
+  
+  # Enable autoscrub to avoid bitrot
+  services.zfs.autoScrub={
+    enable = true;
+    pools =[
+      dpool
+      rpool
+    ];
+
+  };
 
   # Use ZFS with mirror on root disks and raid6 on data disks
   rnl.storage.layout = lib.mkForce "zfs-raid6";
