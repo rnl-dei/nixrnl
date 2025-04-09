@@ -10,13 +10,13 @@
       devices = [ device ];
     }) config.rnl.storage.disks.root;
   };
-  
+
   # Enable autoscrub to avoid bitrot
   services.zfs.autoScrub={
     enable = true;
     pools =[
-      dpool
-      rpool
+      "dpool"
+      "rpool"
     ];
 
   };

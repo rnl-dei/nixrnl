@@ -15,12 +15,12 @@
   services.zfs.autoScrub={
     enable = true;
     pools =[
-      dpool
-      rpool
+      "dpool"
+      "rpool"
     ];
 
   };
-  
+
   # Use ZFS with mirror on root disks and raid5 on data disks
   rnl.storage.layout = lib.mkForce "zfs-raid5";
 }
