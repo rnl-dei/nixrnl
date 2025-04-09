@@ -12,9 +12,9 @@
   };
 
   # Enable autoscrub to avoid bitrot
-  services.zfs.autoScrub={
+  services.zfs.autoScrub = {
     enable = true;
-    pools =[
+    pools = [
       "dpool"
       "rpool"
     ];
