@@ -26,6 +26,10 @@
         #secretFile = config.age.secrets."ns-access-token".path;
       };
     };
+    networking.firewall={
+      allowedTCPPorts = [53];
+      allowedUDPPorts = [53];
+    };
     #environment.etc."oldstyleDNS".source = ./oldDNS;
     #environment.etc."coredns-hosts".source = ./hosts;
     services.bind = {
