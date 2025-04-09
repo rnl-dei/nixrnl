@@ -15,7 +15,7 @@
     ];
     age.secrets."ns-access-token" = {
       file = ../../secrets/ns-githook-token.age;
-      owner = "hedgedoc";
+      owner = "root";
     };
     rnl.githook = {
       enable = true;
