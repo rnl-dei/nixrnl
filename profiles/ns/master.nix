@@ -6,6 +6,7 @@
     environment.systemPackages = with pkgs; [
       dig
       dogdns
+      git
       #the following are needed to build the dns packaged
       pull-repo
       gnumake
