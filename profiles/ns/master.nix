@@ -6,7 +6,11 @@
     environment.systemPackages = with pkgs; [
       dig
       dogdns
+      #the following are needed to build the dns packaged
       pull-repo
+      gnumake
+      ipv6calc
+      gnum4
     ];
     age.secrets."ns-access-token" = {
       file = ../../secrets/ns-githook-token.age;
