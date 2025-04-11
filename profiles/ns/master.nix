@@ -3,15 +3,8 @@
 {
   options = { };
   config = {
-    environment.systemPackages = with pkgs; [
-      dig
-      dogdns
-      git
-      #the following are needed to build the dns packaged
-      pull-repo
-      gnumake
-      ipv6calc
-      gnum4
+    imports = with profiles; [
+      ns.generic
     ];
     age.secrets."ns-access-token" = {
       file = ../../secrets/ns-githook-token.age;
@@ -26,12 +19,6 @@
         #secretFile = config.age.secrets."ns-access-token".path;
       };
     };
-    networking.firewall={
-      allowedTCPPorts = [53];
-      allowedUDPPorts = [53];
-    };
-    #environment.etc."oldstyleDNS".source = ./oldDNS;
-    #environment.etc."coredns-hosts".source = ./hosts;
     services.bind = {
       enable = true;
       zones."rnl.tecnico.ulisboa.pt" = {
