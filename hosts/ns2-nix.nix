@@ -21,8 +21,8 @@
 
   # Networking
   networking = {
-    defaultGateway.address = "193.136.164.126";
-    defaultGateway6.address = "2001:690:2100:81::ffff:1";
+    defaultGateway.address = "193.136.164.62";
+    defaultGateway6.address = "2001:690:2100:80::ffff:1";
 
     interfaces.enp1s0 = {
       ipv4.addresses = [
@@ -33,7 +33,7 @@
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:81::2";
+          address = "2001:690:2100:80::2";
           prefixLength = 64;
         }
       ];
