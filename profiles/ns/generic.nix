@@ -10,9 +10,9 @@
     ipv6calc
     gnum4
   ];
-  networking.firewall={
-    allowedTCPPorts = [53];
-    allowedUDPPorts = [53];
+  networking.firewall = {
+    allowedTCPPorts = [ 53 ];
+    allowedUDPPorts = [ 53 ];
   };
   services.bind.cacheNetworks = [
     "127.0.0.1"
