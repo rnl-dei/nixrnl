@@ -5,18 +5,17 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.slave
+    ns.master
   ];
   rnl.virtualisation.guest = {
-    description = "Secondary Name Server";
+    description = "Primary Name Server";
     createdBy = "francisco.martins";
 
     vcpu = 1;
-    memory = 2048;
+    memory = 1024;
     interfaces = [ { source = "pub"; } ];
     disks = [
-      # TODO RENAME DATA SET IN HYPERVISOR
-      { source.dev = "/dev/zvol/dpool/data/ns2"; }
+      { source.dev = "/dev/zvol/dpool/data/ns1"; }
     ];
   };
 
@@ -28,13 +27,13 @@
     interfaces.enp1s0 = {
       ipv4.addresses = [
         {
-          address = "193.136.164.2";
+          address = "193.136.164.1";
           prefixLength = 26;
         }
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:80::2";
+          address = "2001:690:2100:80::1";
           prefixLength = 64;
         }
       ];
@@ -42,7 +41,7 @@
     };
   };
 
-  rnl.labels.location = "dredd";
+  rnl.labels.location = "chapek";
 
 
 }
