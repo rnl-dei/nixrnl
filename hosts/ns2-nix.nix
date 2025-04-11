@@ -5,7 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.master
+    ns.slave
   ];
   rnl.virtualisation.guest = {
     description = "Name Server";
@@ -27,13 +27,13 @@
     interfaces.enp1s0 = {
       ipv4.addresses = [
         {
-          address = "193.136.164.99";
+          address = "193.136.164.2";
           prefixLength = 26;
         }
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:81::99";
+          address = "2001:690:2100:81::2";
           prefixLength = 64;
         }
       ];

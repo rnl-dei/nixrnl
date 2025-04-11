@@ -13,6 +13,7 @@
       enable = true;
       zones."rnl.tecnico.ulisboa.pt" = {
         master = false;
+        file = "/var/lib/slave-dns-config/rnl.tecnico.ulisboa.pt";
         masters = [ "193.136.164.1" ];
       };
     };
