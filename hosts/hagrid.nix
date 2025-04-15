@@ -127,7 +127,6 @@
           "pikachu"
           "geoff"
           "thor"
-          "raijin"
           "raidou"
         ];
         dei = [
