@@ -23,7 +23,7 @@
     "10.16.80.0/20" # IPs privados IST da RNL
   ];
   age.secrets."root-at-ns-ssh.key" = {
-    file = ../secrets/root-at-ns-ssh-key.age;
+    file = ../../secrets/root-at-ns-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
     owner = "root";
   };
