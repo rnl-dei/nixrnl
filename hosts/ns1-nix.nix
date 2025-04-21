@@ -5,7 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.master
+    #ns.master
   ];
   rnl.virtualisation.guest = {
     description = "Primary Name Server";
@@ -42,6 +42,5 @@
   };
 
   rnl.labels.location = "chapek";
-
 
 }

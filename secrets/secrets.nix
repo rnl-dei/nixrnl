@@ -46,7 +46,8 @@ let
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
   lga = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvmznnQfLbA1Jw3EPuXf48JHojUXR7tLEb/ikTG2QFB";
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
-  ns3 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
+  #s1 = "";
+  ns2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
   papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
   tardis = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGOUuCvrnWbXGFZAl5n7W/IGgwmNauGUBzY1hdeIkoY";
@@ -110,7 +111,7 @@ in
   ];
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
-  "ns-githook-token.age".publicKeys = users ++ [ ns3 ];
+  "ns-githook-token.age".publicKeys = users ++ [ ns2 ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
@@ -119,7 +120,7 @@ in
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [ papyrus ];
-  "root-at-ns-ssh-key.age".publicKeys = users ++ [ ns3 ];
+  "root-at-ns-ssh-key.age".publicKeys = users ++ [ ns2 ];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [ selene ];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [ thomas ];
   "root-at-www-ssh-key.age".publicKeys = users ++ [ www ];
