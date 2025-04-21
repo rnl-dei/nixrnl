@@ -119,7 +119,7 @@ in
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [ papyrus ];
-  "root-at-ns3-ssh-key.age".publicKeys = users ++ [ ns3 ];
+  "root-at-ns-ssh-key.age".publicKeys = users ++ [ ns3 ];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [ selene ];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [ thomas ];
   "root-at-www-ssh-key.age".publicKeys = users ++ [ www ];

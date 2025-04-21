@@ -1,11 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, profiles, ... }:
 
 {
+  imports = with profiles; [
+    ns.generic
+  ];
   options = { };
   config = {
-    imports = with profiles; [
-      ns.generic
-    ];
+
     environment.systemPackages = with pkgs; [
       dig
       dogdns

@@ -1,11 +1,12 @@
-{ config, ... }:
+{ config, profiles, ... }:
 
 {
+  imports = with profiles; [
+    ns.generic
+  ];
   options = { };
   config = {
-    imports = with profiles; [
-      ns.generic
-    ];
+
     age.secrets."ns-access-token" = {
       file = ../../secrets/ns-githook-token.age;
       owner = "root";
