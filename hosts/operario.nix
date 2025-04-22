@@ -21,7 +21,7 @@
     };
     interfaces = [
       {
-        source = "pub";
+        source = "dmz";
         mac = "52:54:00:72:fd:58";
       }
     ];
