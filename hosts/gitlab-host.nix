@@ -10,7 +10,7 @@
   rnl.labels.location = "atlas";
 
   rnl.virtualisation.guest = {
-    description = "Runners Gitlab";
+    description = "Gitlab Host";
     createdBy = "francisco.martins";
 
     uefi = false;
@@ -21,14 +21,22 @@
     };
     interfaces = [
       {
-        source = "dmz";
-        mac = "52:54:00:72:fd:58";
+        source = "pub";
+        mac = "52:54:00:1f:9f:65";
+      }
+      {
+        source = "priv";
+        mac = "52:54:00:76:70:53";
       }
     ];
     disks = [
       {
         type = "file";
-        source.file = "/mnt/data/operario.img";
+        source.file = "/mnt/data/gitlab-host.img";
+      }
+      {
+        type = "file";
+        source.file = "/mnt/data/gitlab-data.img";
       }
     ];
   };
