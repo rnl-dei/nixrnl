@@ -14,28 +14,32 @@
   rnl.storage = {
     disks = {
       root = [
-        "/dev/disk/by-id/ata-ADATA_SU900_2J1020057939"
-        "/dev/disk/by-id/ata-ADATA_SU900_2J1020053177"
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800312"
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800356"
       ];
       data = [
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M1KGZVF"
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M7KK9PF"
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17M9KEZAF"
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17MQK05LF"
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0HF"
-        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA400_17N1KH0IF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0SF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0VF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0XF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64BK4I2F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64BK4I4F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64DK05GF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64FKDG4F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64GK029F"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5RPRL"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5T10L"
       ];
     };
   };
 
   # Networking
   networking = {
-    hostId = "a3df128g"; # Randomly generated
+    hostId = "b5747d70"; # Randomly generated
 
     bonds.bond0 = {
       interfaces = [
-        "enp6s0"
-        "enp7s0"
+        "enp33s0f2"
+        "enp33s0f3"
       ];
       driverOptions.mode = "802.3ad";
     };
