@@ -203,9 +203,7 @@
   ];
 
   # Add specific ssh key for thesis student
-  users.users.root.openssh.authorizedKeys.keys =
-    (users.users.root.openssh.authorizedKeys.keys or [ ])
-    ++ [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkgxDz3Z1k23/QMM1vYTcb2BvGb4/X3NmoxwEZM4Ntb joao_ferreira"
-    ];
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkgxDz3Z1k23/QMM1vYTcb2BvGb4/X3NmoxwEZM4Ntb joao_ferreira"
+  ];
 }
