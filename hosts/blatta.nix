@@ -201,4 +201,10 @@
       ${pkgs.fortune}/bin/fortune | ${pkgs.cowsay}/bin/cowsay -f "$(ls ${pkgs.cowsay}/share/cowsay/cows | ${pkgs.gnugrep}/bin/grep ".cow$" | ${pkgs.toybox}/bin/shuf -n 1)" | ${pkgs.lolcat}/bin/lolcat -f
     '')
   ];
+
+  # Add specific ssh key for thesis student
+  users.users.root.openssh.authorizedKeys.keys = 
+    (users.users.root.openssh.authorizedKeys.keys or []) ++ [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkgxDz3Z1k23/QMM1vYTcb2BvGb4/X3NmoxwEZM4Ntb joao_ferreira"
+    ];
 }
