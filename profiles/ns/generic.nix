@@ -23,10 +23,14 @@
       "192.168.0.0/16" # IPs privados internos da RNL
       "10.16.80.0/20" # IPs privados IST da RNL
     ];
-    forwarders = [
-      "1.1.1.1"
-      "1.0.0.1"
-    ];
+    zones."." = {
+      extraConfig = " type hint;
+                    file named.cache";
+    };
+    # forwarders = [
+    #   "1.1.1.1"
+    #   "1.0.0.1"
+    # ];
   };
   age.secrets."root-at-ns-ssh.key" = {
     file = ../../secrets/root-at-ns-ssh-key.age;
