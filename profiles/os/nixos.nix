@@ -25,9 +25,11 @@
       # This entry exists in the original NIX_PATH but makes no sense in our machines,
       # as /etc/nixos/configuration.nix does not even exist.
       # "nixos-configuration=/etc/nixos/configuration.nix"
-
-      "/nix/var/nix/profiles/per-user/root/channels"
     ];
+
+    # Intead of channels, we have a flake.
+    # Also, $HOME/.nix-defexpr/channels is yet another link to the store on AFS user homes.
+    channel.enable = false;
 
     # Generally useful nix option defaults
     settings = {
