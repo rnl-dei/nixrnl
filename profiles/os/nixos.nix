@@ -27,7 +27,7 @@
       # "nixos-configuration=/etc/nixos/configuration.nix"
     ];
 
-    # Intead of channels, we have a flake.
+    # Instead of channels, we have a flake.
     # Also, $HOME/.nix-defexpr/channels is yet another link to the store on AFS user homes.
     channel.enable = false;
 
