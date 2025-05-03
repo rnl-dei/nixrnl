@@ -30,6 +30,8 @@ let
 in
 {
   services.openssh.knownHosts = {
+    "atlas.rnl.tecnico.ulisboa.pt".publicKey =
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMqwR4SAmX8xFuYuNRT7H8/+ktak30cdL6uE0MKcJ7IM";
     "chapek.rnl.tecnico.ulisboa.pt".publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICD+onNrj/XB0SgTgqZAZWjpJX67LrvVHq/V1KoxtR1U";
     "dredd.rnl.tecnico.ulisboa.pt".publicKey =
