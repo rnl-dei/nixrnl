@@ -7,7 +7,7 @@
     type.vm
   ];
 
-  rnl.labels.location = "chapek";
+  rnl.labels.location = "atlas";
 
   rnl.virtualisation.guest = {
     description = "URL shortener da RNL";
