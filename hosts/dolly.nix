@@ -44,7 +44,7 @@
     defaultGateway6.address = "2001:690:2100:84:ffff:ffff:ffff:1";
   };
 
-  users.users.root.hashedPassword = "$6$fBxN95kuNpq4Nxhq$Rev.mpIltLW7keZoT/LLtuamiggGTpBtfs.Z.8ztxin9TI9ZksIUNYeOvc4RgQF.n.nlGAlXRI4IBxyFj3VSa/";
+  users.users.root.hashedPassword = "$6$MCkbho3x/A5sP6hN$m0w6oxl8h8fj1QcVm6Eu9OIQUdjZRNcs.qP/qw.s7K1nrWdsOwp1fQUsJIV0k3DO5PxrOu/UIR/b5XZSyXwML0";
 
   environment.shellAliases = {
     create-torrent = "transmission-create -p -t udp://tracker.${config.rnl.domain}:31000";
