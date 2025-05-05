@@ -103,7 +103,7 @@
     defaultGateway6.address = "2001:690:2100:81::ffff:1";
   };
 
-  users.users.root.hashedPassword = "$y$j9T$mSKm3wqjxllzvs/o32GRI/$6FO9UTHhvmDPzDTV3nKHYe74WQ.OJSgx7EznQAVmt88";
+  users.users.root.hashedPassword = "$6$fX4/nBpHDkTqbWwZ$hK.fbN258SPLJVVGjySbjUYbnMQRq9ddmBX57wqlR0tQnltVrBKfijmVRhBdDykaniVG7TYFiE63xId.m1Tko1";
 
   boot.kernel.sysctl = {
     "net.ipv6.conf.default.accept_ra" = 0;
