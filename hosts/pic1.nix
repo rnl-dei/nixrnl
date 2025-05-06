@@ -7,21 +7,21 @@
     type.vm
   ];
 
-  rnl.labels.location = "dredd";
+  rnl.labels.location = "atlas";
 
   rnl.virtualisation.guest = {
-    description = "VM de Introdução a SO Prodigi";
+    description = "VM de Pic";
     createdBy = "francisco.martins";
-    maintainers = [ "miguel.pardal" ];
+    maintainers = [ "nuno.lopes" ];
 
-    memory = 16384;
-
+    memory = 131072;
+    vcpu = 32;
     interfaces = [
       {
         source = "pub";
         mac = "52:54:00:51:b3:11";
       }
     ];
-    disks = [ { source.dev = "/dev/zvol/dpool/data/so-prodigi"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/pic1"; } ];
   };
 }
