@@ -20,7 +20,7 @@
     interfaces = [
       {
         source = "pub";
-        mac = "52:54:00:51:b3:11";
+        mac = "f2:52:5c:f2:21:75";
       }
     ];
     disks = [ { source.dev = "/dev/zvol/dpool/data/rates-backend"; } ];
