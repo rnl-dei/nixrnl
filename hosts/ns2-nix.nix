@@ -5,7 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    ns.slave
+    ns.master
   ];
   rnl.virtualisation.guest = {
     description = "Secondary Name Server";
@@ -43,6 +43,5 @@
   };
 
   rnl.labels.location = "dredd";
-
 
 }
