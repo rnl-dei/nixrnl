@@ -9,7 +9,7 @@
     age.secrets."rnl-slack-config" = {
       file = ../../secrets/rnl-slack-conf.age;
       owner = "root";
-      name = "/run/agenix/rnl-slack.conf";
+      name = "rnl-slack.conf";
     };
     age.secrets."ns-access-token" = {
       file = ../../secrets/ns-githook-token.age;
