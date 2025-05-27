@@ -28,8 +28,8 @@
       max-cache-size 768M;";
     extraConfig = '''';
     forwarders = [
-      "1.1.1.1"
-      "1.0.0.1"
+      "193.136.128.1"
+      "193.136.128.2"
     ];
   };
   age.secrets."root-at-ns-ssh.key" = {
