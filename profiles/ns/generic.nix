@@ -24,10 +24,13 @@
       "10.16.80.0/20" # IPs privados IST da RNL
     ];
     extraOptions = "
-    recursion yes;
-    max-cache-size 768M;";
+      recursion yes;
+      max-cache-size 768M;";
     extraConfig = '''';
-
+    forwarders = [
+      "1.1.1.1"
+      "1.0.0.1"
+    ];
   };
   age.secrets."root-at-ns-ssh.key" = {
     file = ../../secrets/root-at-ns-ssh-key.age;
