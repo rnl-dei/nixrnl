@@ -119,6 +119,10 @@ in
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
+  "rnl-slack-conf.age".publicKeys = users ++ [
+    ns
+    ns2
+  ];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [ blatta ];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
