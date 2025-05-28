@@ -46,6 +46,8 @@ let
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
   lga = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvmznnQfLbA1Jw3EPuXf48JHojUXR7tLEb/ikTG2QFB";
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
+  ns = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4xYTAuqXBeBDEGbbw9DQKitz6O9Pr3JXj7kyktac4u";
+  ns2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
   papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
   tardis = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGOUuCvrnWbXGFZAl5n7W/IGgwmNauGUBzY1hdeIkoY";
@@ -113,9 +115,17 @@ in
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
+  "rnl-slack-conf.age".publicKeys = users ++ [
+    ns
+    ns2
+  ];
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [ blatta ];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
+  "root-at-ns-ssh-key.age".publicKeys = users ++ [
+    ns
+    ns2
+  ];
   "root-at-papyrus-ssh-key.age".publicKeys = users ++ [ papyrus ];
   "root-at-selene-ssh-key.age".publicKeys = users ++ [ selene ];
   "root-at-thomas-ssh-key.age".publicKeys = users ++ [ thomas ];
