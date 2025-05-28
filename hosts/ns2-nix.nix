@@ -15,7 +15,6 @@
     memory = 2048;
     interfaces = [ { source = "pub"; } ];
     disks = [
-      # TODO RENAME DATA SET IN HYPERVISOR
       { source.dev = "/dev/zvol/dpool/data/ns2"; }
     ];
   };
