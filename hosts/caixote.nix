@@ -60,7 +60,7 @@
     };
   };
 
-  users.users.root.hashedPassword = "$6$JSNcoOgVW6XB.igm$CrUbf0aOr3n0Yf96Uc2tc7hteMO3HjJIlt..Seyo.ZNDbi1Ci18GmOh2kIHoxS7vNxLKYnIViRmJxtE6GcJsU/";
+  users.users.root.hashedPassword = "$y$j9T$2YHEln/13WMdXzEZ7zNy71$6K3diCQ.XdiMKuhRTrrTGyw/avGtlxupZcP3gN7lzFB";
 
   age.secrets."syncoid-at-caixote-ssh.key" = {
     file = ../secrets/syncoid-at-caixote-ssh-key.age;

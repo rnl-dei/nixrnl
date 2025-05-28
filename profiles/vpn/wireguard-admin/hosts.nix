@@ -397,4 +397,14 @@
     publicKey = "pSzprPKBUujxDkPSVVnFnquqh8i7ym63APd3oF0s00A=";
     lastOctet = 80;
   }
+  {
+    # Vasco Petinga
+    publicKey = "SSsT1TMq1EoFvfcu7i/jT6ILCDIAim0px43Wy1AuHgU=";
+    lastOctet = 81;
+  }
+  {
+    # João Ferreira
+    publicKey = "GonMgHNyG/vEfYxQBQQd+1Met36lrEg73Z2ZjQ4q+G4=";
+    lastOctet = 82;
+  }
 ]

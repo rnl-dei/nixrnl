@@ -23,14 +23,17 @@ let
   });
 in
 {
-  networking.nat.enable = true;
+  networking.nat = {
+    enable = true;
+    enableIPv6 = true;
+    internalInterfaces = [ "wg0" ];
+  };
   assertions = [
     {
       assertion = config.networking.nat.externalInterface != null;
       message = "networking.nat.externalInterface must be set";
     }
   ];
-  networking.nat.internalInterfaces = [ "wg0" ];
   networking.firewall = {
     allowedUDPPorts = [ listenPort ];
   };
@@ -41,18 +44,22 @@ in
     owner = "root";
   };
 
+  # Reference:
+  # - https://wiki.nixos.org/wiki/WireGuard
   networking.wireguard.interfaces = {
     wg0 = {
       inherit listenPort;
       privateKeyFile = config.age.secrets."wireguard-admin-private.key".path;
       ips = [ "192.168.20.254/24" ];
       postSetup = ''
-        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 192.168.20.0/24 -o ${outInterface} -j MASQUERADE
+        ${pkgs.iptables}/bin/iptables  -t nat -A POSTROUTING -s 192.168.20.0/24          -o ${outInterface} -j MASQUERADE
+        ${pkgs.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fd92:3315:9e43:c490::/64 -o ${outInterface} -j MASQUERADE
       '';
 
       # This undoes the above command
       postShutdown = ''
-        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 192.168.20.0/24 -o ${outInterface} -j MASQUERADE
+        ${pkgs.iptables}/bin/iptables  -t nat -D POSTROUTING -s 192.168.20.0/24          -o ${outInterface} -j MASQUERADE
+        ${pkgs.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fd92:3315:9e43:c490::/64 -o ${outInterface} -j MASQUERADE
       '';
 
       peers = mkPeers hosts;

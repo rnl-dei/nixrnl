@@ -24,6 +24,9 @@ stdenv.mkDerivation rec {
     sed -i 's/\/usr\/bin\/ar/\/usr\/bin\/env ar/' source/tools/Config/unix.vars
     cp -r ./* $out
     ln -s $out/pin $out/intel64/bin/* $out/bin
+
+    echo "{ pkgs ? import <nixpkgs> {} }: pkgs.mkShell { nativeBuildInputs = [ pkgs.gcc11 ];}" \
+    > $out/source/tools/shell.nix
   '';
 
   meta = with lib; {

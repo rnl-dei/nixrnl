@@ -63,6 +63,11 @@ sections:
         icon: si-vault
         url: https://vault.rnl.tecnico.ulisboa.pt/
         id: 3_1370_vault
+      - title: Docs
+        description: New docs
+        icon: fas fa-sharp fa-regular fa-book
+        url: https://docs.rnl.tecnico.ulisboa.pt
+        id: 4_1370_docs
   - name: System Monitoring
     icon: fas fa-monitor-heart-rate
     items:

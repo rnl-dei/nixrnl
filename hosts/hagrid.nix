@@ -45,7 +45,7 @@
     defaultGateway6.address = "2001:690:2100:82::ffff:1";
   };
 
-  users.users.root.hashedPassword = "$6$4llYIsPcdW8Og7ca$E2FWDD9ToDLPuP.GdUGrO4k5J3UFjsBK2fQbfl.KFdbAzB9hyFWUG0U3ZLnd0KxrWf0tZkzNvF2PG9r/QE.oY0";
+  users.users.root.hashedPassword = "$6$A7MC8jCXqKAK4M2Q$N3ZRcHZGeaHWxOkBiVtLFmsu09RYooSMHTVV3VAF7FMC9N/tG3DS1B0qaRUH.wtycZ4J/8wOC242WocHHwXnh.";
 
   # Set this because of wireguard
   networking.nat.externalInterface = "enp2s0";

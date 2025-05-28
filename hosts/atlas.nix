@@ -14,28 +14,32 @@
   rnl.storage = {
     disks = {
       root = [
-        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_22234X802979"
-        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_22234X803010"
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800312"
+        "/dev/disk/by-id/ata-WDC_WDS500G1R0A-68A4W0_241332800356"
       ];
       data = [
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E4MKRK"
-        "/dev/disk/by-id/ata-TOSHIBA_DT01ACA300_Z2P5D71AS"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E2ZN2Y"
-        "/dev/disk/by-id/ata-TOSHIBA_DT01ACA300_Z2P5M5XAS"
-        "/dev/disk/by-id/ata-TOSHIBA_DT01ACA300_Z2P5JJPAS"
-        "/dev/disk/by-id/ata-ST3000VN000-1HJ166_W6A0J5JN"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0SF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0VF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X631KI0XF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64BK4I2F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64BK4I4F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64DK05GF"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64FKDG4F"
+        "/dev/disk/by-id/ata-TOSHIBA_MG03ACA300_X64GK029F"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5RPRL"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5T10L"
       ];
     };
   };
 
   # Networking
   networking = {
-    hostId = "d5cc31cd"; # Randomly generated
+    hostId = "b5747d70"; # Randomly generated
 
     bonds.bond0 = {
       interfaces = [
-        "eno1"
-        "eno2"
+        "enp33s0f2"
+        "enp33s0f3"
       ];
       driverOptions.mode = "802.3ad";
     };
@@ -87,13 +91,13 @@
     interfaces.priv = {
       ipv4.addresses = [
         {
-          address = "193.136.164.71";
+          address = "193.136.164.72";
           prefixLength = 26;
         }
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:81::71";
+          address = "2001:690:2100:81::72";
           prefixLength = 64;
         }
       ];
@@ -103,7 +107,7 @@
     defaultGateway6.address = "2001:690:2100:81::ffff:1";
   };
 
-  users.users.root.hashedPassword = "$6$fX4/nBpHDkTqbWwZ$hK.fbN258SPLJVVGjySbjUYbnMQRq9ddmBX57wqlR0tQnltVrBKfijmVRhBdDykaniVG7TYFiE63xId.m1Tko1";
+  users.users.root.hashedPassword = "$6$HhIgDw5zqnOgg9MX$aY3mjExigBCu7bgY95EQkxBBX68azEtcqVLthx7EBHSqROa.06NKeDVG9ryqpSHbhdgwnc5xCM0jXry4CDIn61";
 
   boot.kernel.sysctl = {
     "net.ipv6.conf.default.accept_ra" = 0;

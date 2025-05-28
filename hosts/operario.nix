@@ -10,8 +10,8 @@
   rnl.labels.location = "atlas";
 
   rnl.virtualisation.guest = {
-    description = "URL shortener da RNL";
-    createdBy = "nuno.alves";
+    description = "Runners Gitlab";
+    createdBy = "francisco.martins";
 
     uefi = false;
 
@@ -28,7 +28,7 @@
     disks = [
       {
         type = "file";
-        source.file = "/mnt/data/lvm/kutt.img";
+        source.file = "/mnt/data/operario.img";
       }
     ];
   };

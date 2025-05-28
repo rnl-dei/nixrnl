@@ -47,7 +47,7 @@
   # Disable ping IPv6 monitoring
   rnl.monitoring.ping6 = false;
 
-  users.users.root.hashedPassword = "$6$x2GVjFi0iJZCwQ2l$omZcbZkgxAtdc.oNda1AhdMEQizTAmEfNmHk6IKuGZoFMd.7Bf9mfWjF2gvQxIzwLtKxPmADSCk9FqQbH.C3E0";
+  users.users.root.hashedPassword = "$y$j9T$XVc15CHspL.GfxlaAg3q0.$cQ35fQkTWyG/q674Ikf2IL67rSFlvE34FmgMOPhZEt6";
 
   services.mysql.settings.mysqld.wsrep_node_address = "192.168.21.1";
 
