@@ -111,10 +111,6 @@ in
   ];
   "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
   "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
-  "ns-githook-token.age".publicKeys = users ++ [
-    ns
-    ns2
-  ];
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
