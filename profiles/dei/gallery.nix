@@ -43,6 +43,10 @@ in
     locations."/" = {
       proxyPass = "http://localhost:${toString port}";
       proxyWebsockets = true;
+      extraConfig = ''
+        client_max_body_size 5000M;
+        proxy_buffering off;
+      '';
     };
   };
   services.photoprism = {
