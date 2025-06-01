@@ -248,8 +248,8 @@
     lastOctet = 43;
   }
   {
-    # Nuno Alves - torvalds (desktop)
-    publicKey = "TkFMRTtlGZtYQN/GHXvno680MxJtxz9QummWVyveRxc=";
+    # Nuno Alves - tim (laptop)
+    publicKey = "P9DB4SAHDZ72qHtH1h85TjX3XY1DGP39Q1TV3U7Z0Sw=";
     lastOctet = 44;
   }
   {
