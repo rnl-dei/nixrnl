@@ -407,4 +407,9 @@
     publicKey = "GonMgHNyG/vEfYxQBQQd+1Met36lrEg73Z2ZjQ4q+G4=";
     lastOctet = 82;
   }
+  {
+    # Nuno Dendas
+    publicKey = "p29uzr0MV0owPYWT7na/fqlOmbVtf/uAPYNzYlLLqQU=";
+    lastOctet = 83;
+  }
 ]
