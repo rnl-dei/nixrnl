@@ -205,5 +205,6 @@
   # Add specific ssh key for thesis student
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkgxDz3Z1k23/QMM1vYTcb2BvGb4/X3NmoxwEZM4Ntb joao_ferreira"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID0doCaLhrkoMn8Rs52XhiBmqWd0V1l2vUYX0dlrVWfe nuno.briers.dendas@tecnico.ulisboa.pt"
   ];
 }
