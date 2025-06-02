@@ -412,4 +412,9 @@
     publicKey = "p29uzr0MV0owPYWT7na/fqlOmbVtf/uAPYNzYlLLqQU=";
     lastOctet = 83;
   }
+  {
+    # Vicente Duarte
+    publicKey = "62wURjiYNfqC85aSCHmsjMZKRDvQe5KJ2m2ITy3eW0k=";
+    lastOctet = 84;
+  }
 ]
