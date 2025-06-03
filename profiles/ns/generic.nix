@@ -4,6 +4,7 @@
     dig
     dogdns
     git
+    bind
     #the following are needed to build the dns packaged
     pull-repo
     gnumake
