@@ -1,8 +1,8 @@
-{ config, profiles, ... }:
+{ profiles, ... }:
 {
   imports = with profiles; [
     core.rnl
-    filesystems.zfs-raid6
+    filesystems.simple-uefi
     os.nixos
     type.vm
   ];
@@ -13,23 +13,26 @@
     description = "VM for supporting ftp transition";
     createdBy = "vasco.petinga";
 
-    uefi = false;
+    memory = 8192;
+    vcpu = 4;
 
-    directKernel = {
-      kernel = config.rnl.virtualisation.kernels.shell;
-      cmdline = "root=/dev/vda console=hvc0 clocksource=kvm-clock";
-    };
     interfaces = [
       {
         source = "dmz";
         mac = "17:5e:54:fe:ec:52";
       }
     ];
-    disks = [
+    disks = [ { source.dev = "/dev/zvol/dpool/volumes/ftp-vm"; } ];
+  };
+
+  networking = {
+    interfaces.enp1s0.ipv4.addresses = [
       {
-        type = "file";
-        source.file = "/mnt/data/lvm/ftp.img";
+        address = "193.136.164.178";
+        prefixLength = 26;
       }
     ];
+
+    defaultGateway.address = "193.136.164.190";
   };
 }
