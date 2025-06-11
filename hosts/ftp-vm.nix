@@ -7,7 +7,7 @@
     type.vm
   ];
 
-  rnl.labels.location = "atlas";
+  rnl.labels.location = "neo";
 
   rnl.virtualisation.guest = {
     description = "VM for supporting ftp transition";
