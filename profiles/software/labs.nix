@@ -4,8 +4,8 @@
 
   environment.systemPackages = with pkgs; [
     # Browser
-    firefox
-    chromium
+    #firefox
+    #chromium
 
     # Misc
     gimp
