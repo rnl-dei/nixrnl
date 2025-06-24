@@ -86,6 +86,14 @@ in
     '';
   };
 
+  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
+  age.secrets."root-at-ftp-vm-ssh.key" = {
+    # HACK: The root-at-ftp-ssh-key is same as host key. GENERATE NEW ONE
+    file = ../secrets/root-at-ftp-vm-ssh-key.age;
+    path = "/root/.ssh/id_ed25519";
+    owner = "root";
+  };
+
   services.nginx.virtualHosts.ftp = {
     default = true;
     serverName = lib.mkDefault "${config.networking.fqdn}";
