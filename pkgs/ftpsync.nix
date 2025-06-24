@@ -8,7 +8,7 @@
   ...
 }:
 stdenv.mkDerivation rec {
-  pname = "archvsync";
+  pname = "ftpsync";
   version = "20180513";
 
   # FIXME: Bring these hashes to date?
