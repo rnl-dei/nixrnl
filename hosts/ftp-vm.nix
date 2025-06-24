@@ -65,6 +65,27 @@ in
     };
   };
 
+  # TODO: Might not work
+  systemd.services."remake-ftp-site" = {
+    description = "Remake FTP homepage";
+    startAt = "*-*-* 02:14:00";
+    path = [
+      pkgs.bash
+      pkgs.gnum4
+      pkgs.gnumake
+      pkgs.gawk
+      (pkgs.python3.withPackages (ps: [
+        ps.jinja2
+        ps.pyyaml
+      ]))
+    ];
+    script = ''
+      #!/usr/bin/env bash
+      cd ${config.rnl.githook.hooks.ftp-site.path}
+      make
+    '';
+  };
+
   services.nginx.virtualHosts.ftp = {
     default = true;
     serverName = lib.mkDefault "${config.networking.fqdn}";
