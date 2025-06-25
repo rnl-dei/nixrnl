@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   imports = [ ./common.nix ];
 
@@ -34,20 +34,24 @@
     SystemMaxUse=50G
     SystemKeepFree=80G
   '';
-  services.systemd.deal-with-slurmd-boot = {
+  systemd.services.deal-with-slurmd-boot = {
     description = "Restarts slurmd until a node is ready.";
     wantedBy = [ "multi-user.target" ];
+    after = [ "slurmd.service" ];
+    environment = {
+      PATH = lib.mkForce "/run/current-system/sw/bin/:$PATH";
+    };
     # If multiple attempts of the service are needed, slurmd should only make 1 reservation because of the fixed name
     script = ''
       hostname=$(hostname)
-      reservation_name="${hostname}-boot"
-      scontrol create reservation ReservationName=$reservation_name  user=root starttime=now \
-        duration=infinite flags=maint nodes="$hostname"
+      reservation_name="$(hostname)-boot"
+      scontrol create reservation ReservationName=$reservation_name user=root starttime=now \
+        duration=infinite flags=maint nodes=$hostname || :
       success=1
         for i in {1..100}; do
-          srun -w "$hostname" hostname
+          srun --reservation=$reservation_name -w $hostname hostname || :
           if [ $? -eq 0 ]; then
-            scontrol delete ReservationName=$hostname
+            scontrol delete ReservationName=$reservation_name
             success=0
             break
           fi
