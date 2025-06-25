@@ -34,4 +34,32 @@
     SystemMaxUse=50G
     SystemKeepFree=80G
   '';
+  services.systemd.deal-with-slurmd-boot = {
+    description = "Restarts slurmd until a node is ready.";
+    wantedBy = [ "multi-user.target" ];
+    # If multiple attempts of the service are needed, slurmd should only make 1 reservation because of the fixed name
+    script = ''
+      hostname=$(hostname)
+      reservation_name="${hostname}-boot"
+      scontrol create reservation ReservationName=$reservation_name  user=root starttime=now \
+        duration=infinite flags=maint nodes="$hostname"
+      success=1
+        for i in {1..100}; do
+          srun -w "$hostname" hostname
+          if [ $? -eq 0 ]; then
+            scontrol delete ReservationName=$hostname
+            success=0
+            break
+          fi
+          systemctl restart slurmd
+          sleep $i
+      done
+      if [ $success -eq 0 ]; then
+        echo "Successfully started slurmd after $i tries."
+      else
+        echo "Failed to start slurmd."
+        return 1
+      fi
+    '';
+  };
 }
