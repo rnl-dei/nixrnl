@@ -44,6 +44,7 @@ in
     enable = true;
     localTargetAllow = options.services.syncoid.localTargetAllow.default ++ [ "destroy" ];
     interval = lib.mkDefault "*-*-* 03:30:00";
+    commonArgs = [ "--delete-target-snapshots" ];
     commands = lib.listToAttrs (
       lib.map (dataset: {
         name = dataset.source;

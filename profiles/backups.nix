@@ -11,9 +11,9 @@
 
     templates = {
       data = {
-        monthly = 1; # Keep 6 monthly snapshots
-        daily = 7; # Keep 15 daily snapshots
-        hourly = 24; # Keep 24 hourly snapshots
+        monthly = 1; # Keep 1 monthly snapshots
+        daily = 15; # Keep 15 daily snapshots
+        hourly = 48; # Keep 48 hourly snapshots
 
         autoprune = true;
         autosnap = true;
