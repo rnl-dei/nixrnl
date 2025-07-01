@@ -37,6 +37,8 @@ in
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICD+onNrj/XB0SgTgqZAZWjpJX67LrvVHq/V1KoxtR1U";
     "dredd.rnl.tecnico.ulisboa.pt".publicKey =
       "AAAAC3NzaC1lZDI1NTE5AAAAIKq8lZJU6rJgiIIYlg9HEIu5qIWUQnyUj7eUyeGQ4oTT";
+    "neo.rnl.tecnico.ulisboa.pt".publicKey =
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGckV+nXGRynCIWo55D2tRQCCgr9Kkbsf8vHB9BhSddG";
     "zion.rnl.tecnico.ulisboa.pt".publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO2fI+xb0S8dOzY8VD3cGRwqG4CfJfEVwcE7cMyymToz";
   };
