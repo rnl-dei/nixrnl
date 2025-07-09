@@ -8,7 +8,7 @@
   ...
 }:
 stdenv.mkDerivation rec {
-  pname = "ftpsync";
+  pname = "archvsync";
   version = "20180513";
 
   # FIXME: Bring these hashes to date?
@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
         --prefix PATH : "${lib.makeBinPath buildInputs}"
     '';
 
-  meta = with lib; {
+  meta = {
     homepage = "https://salsa.debian.org/mirror-team/archvsync/";
     description = "Script to synchronize Debian archive mirrors";
     platforms = [ "x86_64-linux" ];
