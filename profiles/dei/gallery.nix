@@ -61,6 +61,7 @@ in
       PHOTOPRISM_DISABLE_WEBDAV = toString true;
       PHOTOPRISM_DISABLE_PLACES = toString true;
       PHOTOPRISM_DISABLE_TENSORFLOW = toString true;
+      PHOTOPRISM_ORIGINALS_LIMIT = "-1"; # unlimited size for uploads
       PHOTOPRISM_DEFAULT_LOCALE = "pt_PT";
       PHOTOPRISM_DEFAULT_TIMEZONE = "GMT";
       PHOTOPRISM_APP_NAME = title;
