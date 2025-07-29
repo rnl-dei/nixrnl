@@ -38,7 +38,8 @@
             "*.*" = "ALL PRIVILEGES";
           };
         }
-      ] ++ (map (u: u // { host = "localhost"; }) config.services.mysql.ensureUsers);
+      ]
+      ++ (map (u: u // { host = "localhost"; }) config.services.mysql.ensureUsers);
     in
     {
       enable = lib.mkForce true;

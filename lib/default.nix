@@ -9,5 +9,6 @@ in
 {
   rnl = {
     inherit listModulesRecursive;
-  } // lib.foldr (path: acc: acc // (import path args)) { } (listModulesRecursive ./.);
+  }
+  // lib.foldr (path: acc: acc // (import path args)) { } (listModulesRecursive ./.);
 }

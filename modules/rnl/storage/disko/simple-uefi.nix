@@ -59,5 +59,6 @@ in
 {
   disk = {
     inherit root;
-  } // data;
+  }
+  // data;
 }

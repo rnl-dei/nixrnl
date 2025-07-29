@@ -80,7 +80,8 @@ in
           #DATABASE_URL = "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB";
           CELERY_WORKER_AUTOSCALE = "1,3";
           CELERY_WORKER_MAX_TASKS_PER_CHILD = "10000";
-        } // cfg.extraEnvironment;
+        }
+        // cfg.extraEnvironment;
         network = "glitchtip"; # FIXME: You need to create this network manually
       in
       {
