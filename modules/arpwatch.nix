@@ -61,7 +61,8 @@ let
             "-f '${config.datafile}'"
             (optionalString (config.targetEmail != null) "-w '${config.targetEmail}'")
             (optionalString (config.fromEmail != null) "-W '${config.fromEmail}'")
-          ] ++ config.extraFlags;
+          ]
+          ++ config.extraFlags;
         };
 
         extraFlags = mkOption {
