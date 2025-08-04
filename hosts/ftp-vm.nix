@@ -6,7 +6,27 @@
   ...
 }:
 let
-  motd = "PLACEHOLDER FTP";
+  motd = ''
+          _____  _   _ _
+         |  __ \| \ | | |
+         | |__) |  \| | |
+         |  _  /| . ` | |
+         | | \ \| |\  | |___
+         |_|  \_\_| \_|_____|
+
+         RNL FTP/Rsync Server
+
+      ftp.rnl.tecnico.ulisboa.pt
+
+      IP Address: 193.136.164.178
+    IPv6 Address: Not yet
+
+     Rede das Novas Licenciaturas
+           Tecnico Lisboa
+          Lisboa - Portugal
+
+    Email: rnl@rnl.tecnico.ulisboa.pt
+  '';
 in
 {
   imports = with profiles; [
@@ -17,6 +37,7 @@ in
 
     webserver
     mirrors.mxlinux.isos
+    mirrors.ubuntu.releases
   ];
 
   rnl.labels.location = "neo";
@@ -48,7 +69,7 @@ in
     defaultGateway.address = "193.136.164.190";
   };
 
-  environment.systemPackages = [ pkgs.ftpsync ];
+  environment.systemPackages = [ pkgs.archvsync ];
 
   users.motd = motd;
 
@@ -57,6 +78,7 @@ in
     motd = builtins.toFile "motd" motd;
   };
 
+  # TODO: End of website is borked (no catci)
   rnl.githook = {
     enable = true;
     hooks.ftp-site = {
@@ -65,7 +87,7 @@ in
     };
   };
 
-  # TODO: Might not work
+  # TODO: Seems to WOrk
   systemd.services."remake-ftp-site" = {
     description = "Remake FTP homepage";
     startAt = "*-*-* 02:14:00";
@@ -86,13 +108,29 @@ in
     '';
   };
 
-  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
+  # HACK: obvious, cant get key bootstrap to work yet
+  age.identityPaths = [ "/root/tmp.txt" ];
   age.secrets."root-at-ftp-vm-ssh.key" = {
     # HACK: The root-at-ftp-ssh-key is same as host key. GENERATE NEW ONE
     file = ../secrets/root-at-ftp-vm-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
     owner = "root";
   };
+
+  systemd.tmpfiles.rules = [
+    "d /root/.ssh 0755 root root"
+
+    "d /mnt/data/ftp/pub 0770 mirror mirror"
+    "d /mnt/data/ftp/pub/debian 0770 mirror mirror"
+    "d /mnt/data/ftp/pub/ubuntu 0770 mirror mirror"
+    "d /mnt/data/ftp/pub/ubuntu/releases 0770 mirror mirror"
+
+    "d /mnt/data/ftp/tmp 0755 root root"
+
+    "d /mnt/data/ftp/dei 0755 root root"
+    "d /mnt/data/ftp/dei-share 0755 root root"
+    "d /mnt/data/ftp/priv 0755 root root"
+  ];
 
   services.nginx.virtualHosts.ftp = {
     default = true;
@@ -141,17 +179,17 @@ in
         extraConfig = "autoindex off;";
       };
       # TODO: check addresses and stuff
-      "~ ^/priv" = {
-        alias = "/mnt/data/ftp/priv/";
-        extraConfig = ''
-          # Allow access only from the RNL networks
-          allow 193.136.164.0/24;
-          allow 193.136.154.0/24;
-          allow 10.16.80.0/24;
-          allow 2001:690:2100:80::/58;
-          deny all;
-        '';
-      };
+      # "~ ^/priv" = {
+      #   alias = "/mnt/data/ftp/priv/";
+      #   extraConfig = ''
+      #     # Allow access only from the RNL networks
+      #     allow 193.136.164.0/24;
+      #     allow 193.136.154.0/24;
+      #     allow 10.16.80.0/24;
+      #     allow 2001:690:2100:80::/58;
+      #     deny all;
+      #   '';
+      # };
     };
   };
 }
