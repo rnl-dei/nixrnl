@@ -4,6 +4,8 @@ let
   cfg = config.services.glitchtip;
 in
 {
+  disabledModules = [ "services/web-apps/glitchtip.nix" ];
+
   options.services.glitchtip = {
     enable = mkEnableOption (lib.mdDoc "GlitchTip is an open-source, self-hosted error tracking tool.");
 
