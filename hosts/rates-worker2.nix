@@ -7,22 +7,22 @@
     type.vm
   ];
 
-  rnl.labels.location = "dredd";
+  rnl.labels.location = "neo";
 
   rnl.virtualisation.guest = {
-    description = "Backend do sistema RATES";
+    description = "Worker2 do sistema RATES";
     createdBy = "francisco.martins";
     maintainers = [ "luis.macorano" ];
 
     memory = 2048;
-    vcpu = 1;
+    vcpu = 2;
 
     interfaces = [
       {
         source = "dmz";
-        mac = "f2:52:5c:f2:21:75";
+        mac = "f6:09:d2:a3:b9:ef";
       }
     ];
-    disks = [ { source.dev = "/dev/zvol/dpool/data/rates-backend"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/rates-worker2"; } ];
   };
 }
