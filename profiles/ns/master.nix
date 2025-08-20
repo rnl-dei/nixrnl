@@ -71,10 +71,7 @@
         slaves = [ "193.136.164.2" ];
         file = "/var/lib/dns-config/2001:690:2100:8.zone";
       };
-      zones."."={
-        file="/var/lib/dns-config/globalz.one";
-        extraConfig="type hint;";
-      }
+
     };
   };
 }

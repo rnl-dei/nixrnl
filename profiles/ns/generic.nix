@@ -27,11 +27,17 @@
     extraOptions = ''
       recursion yes;
       max-cache-size 768M;'';
-    extraConfig = '''';
+    extraConfig = '' 
+     zone "." {
+	type hint;
+	file "/var/lib/dns-config/gloablz.one";
+    };
+'';
     forwarders = [
       "2001:690:a80:4001::200" # estes dois são ns02.fccn.pt
       "193.136.2.228"
     ];
+     
   };
   age.secrets."root-at-ns-ssh.key" = {
     file = ../../secrets/root-at-ns-ssh-key.age;
