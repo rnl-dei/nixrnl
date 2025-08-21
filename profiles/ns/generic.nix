@@ -11,6 +11,7 @@
     ipv6calc
     gnum4
   ];
+
   networking.firewall = {
     allowedTCPPorts = [ 53 ];
     allowedUDPPorts = [ 53 ];
@@ -27,11 +28,13 @@
     extraOptions = ''
       recursion yes;
       max-cache-size 768M;'';
-    extraConfig = '''';
-    forwarders = [
-      "2001:690:a80:4001::200" # estes dois são ns02.fccn.pt
-      "193.136.2.228"
-    ];
+    extraConfig = ''
+        zone "." {
+          type hint;
+          file "/var/lib/dns-config/gloablz.one";
+      };
+    '';
+
   };
   age.secrets."root-at-ns-ssh.key" = {
     file = ../../secrets/root-at-ns-ssh-key.age;
