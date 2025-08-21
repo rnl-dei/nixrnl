@@ -28,14 +28,11 @@
       recursion yes;
       max-cache-size 768M;'';
     extraConfig = '' 
-     zone "." {
-	type hint;
-	file "/var/lib/dns-config/gloablz.one";
+      zone "." {
+        type hint;
+        file "/var/lib/dns-config/gloablz.one";
     };
-'';
-    forwarders = [
-
-    ];
+    '';
      
   };
   age.secrets."root-at-ns-ssh.key" = {
