@@ -10,7 +10,7 @@
   rnl.labels.location = "dredd";
 
   rnl.virtualisation.guest = {
-    description = "Backend do sistema RATES";
+    description = "Worker do sistema RATES";
     createdBy = "francisco.martins";
     maintainers = [ "luis.macorano" ];
 
