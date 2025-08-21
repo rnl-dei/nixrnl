@@ -7,10 +7,10 @@
     type.vm
   ];
 
-  rnl.labels.location = "dredd";
+  rnl.labels.location = "neo";
 
   rnl.virtualisation.guest = {
-    description = "Worker do sistema RATES";
+    description = "Worker2 do sistema RATES";
     createdBy = "francisco.martins";
     maintainers = [ "luis.macorano" ];
 
@@ -20,9 +20,9 @@
     interfaces = [
       {
         source = "dmz";
-        mac = "ba:c2:02:b2:54:eb";
+        mac = "f6:09:d2:a3:b9:ef";
       }
     ];
-    disks = [ { source.dev = "/dev/zvol/dpool/data/rates-worker"; } ];
+    disks = [ { source.dev = "/dev/zvol/dpool/data/rates-worker2"; } ];
   };
 }

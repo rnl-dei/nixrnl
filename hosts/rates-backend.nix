@@ -19,7 +19,7 @@
 
     interfaces = [
       {
-        source = "pub";
+        source = "dmz";
         mac = "f2:52:5c:f2:21:75";
       }
     ];
