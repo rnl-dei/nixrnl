@@ -11,6 +11,7 @@
     ipv6calc
     gnum4
   ];
+
   networking.firewall = {
     allowedTCPPorts = [ 53 ];
     allowedUDPPorts = [ 53 ];
@@ -27,13 +28,13 @@
     extraOptions = ''
       recursion yes;
       max-cache-size 768M;'';
-    extraConfig = '' 
-      zone "." {
-        type hint;
-        file "/var/lib/dns-config/gloablz.one";
-    };
+    extraConfig = ''
+        zone "." {
+          type hint;
+          file "/var/lib/dns-config/gloablz.one";
+      };
     '';
-     
+
   };
   age.secrets."root-at-ns-ssh.key" = {
     file = ../../secrets/root-at-ns-ssh-key.age;
