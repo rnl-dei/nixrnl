@@ -8,7 +8,7 @@
 }:
 stdenv.mkDerivation rec {
   pname = "arpwatch";
-  version = "3.6";
+  version = "3.7";
 
   src = fetchurl {
     url = "https://ee.lbl.gov/downloads/${pname}/${pname}-${version}.tar.gz";
