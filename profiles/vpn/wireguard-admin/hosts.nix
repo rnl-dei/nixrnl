@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octet used: 80
+# Last octet used: 85
 [
   {
     # André Aparício
@@ -416,5 +416,10 @@
     # Vicente Duarte
     publicKey = "62wURjiYNfqC85aSCHmsjMZKRDvQe5KJ2m2ITy3eW0k=";
     lastOctet = 84;
+  }
+  {
+    # Hugo Vicente
+    publicKey = "hzcequGQ8m7HX91Rft3gArYcFARBf6ex8H95Sw6Z1zc=";
+    lastOctet = 85;
   }
 ]
