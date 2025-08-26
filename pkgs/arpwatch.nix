@@ -8,15 +8,17 @@
 }:
 stdenv.mkDerivation rec {
   pname = "arpwatch";
-  version = "3.6";
+  version = "3.8";
 
   src = fetchurl {
     url = "https://ee.lbl.gov/downloads/${pname}/${pname}-${version}.tar.gz";
-    sha256 = "sha256-+GUp/lf9taL/VBO8E8JFBj+Zs790JCH9MTMnIXW+gVY=";
+    sha256 = "sha256-x2NAnzU0uLPxGRc82SpLnUI3i2xmbMALJVzANtMYspw=";
   };
 
   patchPhase = ''
     sed -i '1i#include <time.h>' report.c
+    sed -i 's/\<_getshort\>/ns_get16/g' dns.c
+    # This package currently is using a deprecated function. Solution found here: https://s.rnl.pt/UvUQ9X
   '';
 
   preInstall = ''
