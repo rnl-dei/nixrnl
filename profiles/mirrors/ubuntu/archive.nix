@@ -3,7 +3,7 @@
   pkgs,
   ...
 }:
-let
+let # NOTE: Test script
   script = ''
     fatal() {
       echo "$1"
