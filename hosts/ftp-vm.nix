@@ -36,8 +36,39 @@ in
     type.vm
 
     webserver
-    mirrors.mxlinux.isos
-    mirrors.ubuntu.releases
+
+    # WARNING: Before enabling check the mirror for notes
+
+    # TO consider
+    # fedora
+    # void
+    # alpine
+    # tails
+    # freebsd
+    # other foss software?
+
+    # No mirror files for
+    # sabayon (probably stop now that gentoo has bins?)
+    # UBCD
+
+    # mirrors.archlinux # 130 GB
+    # mirrors.debian.archive # 1.44tb
+    # mirrors.debian.cd # huge, maybe filter source?
+    mirrors.debian.security # 155GB
+    # mirrors.cygwin # 115 gb
+    # mirrors.gentoo.distfiles # 800GB +
+    mirrors.gentoo.portage # <1Gb
+    # mirrors.linuxmint.isos # 200 GB
+    # mirrors.linuxmint.packages # 50GB
+    mirrors.mxlinux.isos # 47 GB
+    # mirrors.mxlinux.packages # 200 GB
+    # mirrors.openbsd # 1.36 Tb
+    # mirrors.opensuse # 6.79 Tb
+    # mirrors.qubesos 1 TB
+    # mirrors.ubuntu.archive # 3.23 Tb
+    mirrors.ubuntu.releases # 45 GB
+    # mirrors.videolan 100GB?
+    # mirrors.zorinos 183 GB and fill https://zorin.com/os/mirrors/
   ];
 
   rnl.labels.location = "neo";
@@ -108,8 +139,7 @@ in
     '';
   };
 
-  # HACK: obvious, cant get key bootstrap to work yet
-  age.identityPaths = [ "/root/tmp.txt" ];
+  age.identityPaths = [ "/root/.ssh/id_ed25519" ];
   age.secrets."root-at-ftp-vm-ssh.key" = {
     # HACK: The root-at-ftp-ssh-key is same as host key. GENERATE NEW ONE
     file = ../secrets/root-at-ftp-vm-ssh-key.age;
