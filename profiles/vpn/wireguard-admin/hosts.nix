@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octet used: 85
+# Last octet used: 87
 [
   {
     # André Aparício
@@ -333,7 +333,7 @@
     lastOctet = 67;
   }
   {
-    # Mateus Pinho - laptop
+    # Mateus Pinho - raidou
     publicKey = "KZ30K5nOdi57PY/tToTR/Y3EC//ladvNZN5PTUIsog0=";
     lastOctet = 68;
   }
@@ -421,5 +421,15 @@
     # Hugo Vicente
     publicKey = "hzcequGQ8m7HX91Rft3gArYcFARBf6ex8H95Sw6Z1zc=";
     lastOctet = 85;
+  }
+  {
+    # Mateus Pinho - kiryu
+    publicKey = "VU6a8MG+c3KaAEonK/5nFHY/NcfeDi7vRAVVTMhVkz0=";
+    lastOctet = 86;
+  }
+  {
+    # Mateus Pinho - joker
+    publicKey = "JClHVazDG2JxYrnRdivSw5RZOI3Nv7yUT0/LgIAlbBk=";
+    lastOctet = 87;
   }
 ]
