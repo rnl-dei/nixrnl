@@ -273,6 +273,7 @@ in
     root = "/var/www/labs-matrix";
     locations."/".index = "index.html";
     locations."/labs-matrix".return = "301 /";
+    locations."~\.(git|sh|py)$".return = "404"; # attempt to hide scripts and files that are, in theory, private
   };
   systemd.services.labs-matrix = {
     description = "Update labs-matrix website";
