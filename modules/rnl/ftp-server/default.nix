@@ -28,9 +28,14 @@ let
           type = types.str;
           description = "Source to sync from";
         };
-        target = mkOption {
+        target.path = mkOption {
           type = types.str;
           description = "Target to sync to";
+        };
+        target.create = mkOption {
+          type = types.bool;
+          description = "Create the folder of target";
+          default = true;
         };
         timer = mkOption {
           type = types.either (types.listOf types.str) types.str;
@@ -57,7 +62,7 @@ let
           description = "Arguments to pass to the script";
           default = [
             config.source
-            config.target
+            config.target.path
             "--stats"
             "--recursive"
             "--links"
@@ -100,11 +105,20 @@ let
       serviceConfig = {
         User = value.user;
         Group = value.group;
+        Environment = ''"UNIT_NAME=rnl-mirror-${name}"'';
+        SyslogIdentifier = ''"rnl-mirror-${name}"'';
       };
       startAt = value.timer;
       script = value.script;
     } value.extraServiceConfig;
   }) cfg.mirrors;
+
+  tmpfilesRules = lib.mapAttrsToList (
+    mirror:
+    (
+      if mirror.target.create then "d ${mirror.target.path} 0770 ${mirror.user} ${mirror.group}" else null
+    )
+  ) cfg.mirrors;
 in
 {
   options.rnl.ftp-server = {
@@ -158,6 +172,8 @@ in
       home = cfg.stateDir;
     };
     users.groups.mirror = { };
+
+    systemd.tmpfiles.rules = tmpfilesRules;
 
     services.rsyncd = {
       enable = cfg.enableRsync;
