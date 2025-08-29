@@ -41,7 +41,7 @@ let
   dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
   dolly = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUCwy4EIMsdjFtfRI0F78+WDgA7g0/5W1ZdiFcri7v2";
-  ftp = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINVYxFjjIbn7lDj+pUipS1poPvLSQgnIxHxQpyLOxhCO";
+  ftp = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTlqX+ez+yqJs8o+HAwQwkknktD3B2ipzKtkpFjEWUt";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   hedgedoc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpzgegXNKlCuGmJExDkrfWDAa6kyREPLvNMc1N927yJ";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
@@ -124,7 +124,7 @@ in
   "root-at-blatta-ssh-key.age".publicKeys = users ++ [ blatta ];
   "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
   "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
-  "root-at-ftp-vm-ssh-key.age".publicKeys = users ++ [ ftp ];
+  "root-at-ftp-ssh-key.age".publicKeys = users ++ [ ftp ];
   "root-at-ns-ssh-key.age".publicKeys = users ++ [
     ns
     ns2

@@ -6,14 +6,14 @@
 {
   rnl.ftp-server.mirrors.debian-cd = rec {
     source = "rsync://ftp.rnl.tecnico.ulisboa.pt/pub/debian-cd";
-    target = "/mnt/data/ftp/pub/debian-cd";
+    target.path = "/mnt/data/ftp/pub/debian-cd";
     timer = "*-*-* 21:00:00"; # Every day at 21:00
     command = "${pkgs.archvsync}/bin/ftpsync";
     args = lib.mkForce [ ];
     # FIXME: exclude stupidly big files for now
     extraServiceConfig.environment = {
       RSYNC_SOURCE = source;
-      TO = target;
+      TO = target.path;
       # RSYNC_EXTRA = config.rnl.ftp-server.mirror.debian-cd.args;
       ARCH_INCLUDE = "arm";
       # ARCH_EXCLUDE = "source";

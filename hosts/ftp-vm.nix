@@ -139,10 +139,8 @@ in
     '';
   };
 
-  age.identityPaths = [ "/root/.ssh/id_ed25519" ];
-  age.secrets."root-at-ftp-vm-ssh.key" = {
-    # HACK: The root-at-ftp-ssh-key is same as host key. GENERATE NEW ONE
-    file = ../secrets/root-at-ftp-vm-ssh-key.age;
+  age.secrets."root-at-ftp-ssh.key" = {
+    file = ../secrets/root-at-ftp-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
     owner = "root";
   };
@@ -151,9 +149,13 @@ in
     "d /root/.ssh 0755 root root"
 
     "d /mnt/data/ftp/pub 0770 mirror mirror"
+
+    #HACK: Distro with subdirs for various mirrors dont create properly with tmpfiles.d
     "d /mnt/data/ftp/pub/debian 0770 mirror mirror"
+    "d /mnt/data/ftp/pub/gentoo 0770 mirror mirror"
     "d /mnt/data/ftp/pub/ubuntu 0770 mirror mirror"
-    "d /mnt/data/ftp/pub/ubuntu/releases 0770 mirror mirror"
+
+    # "d /mnt/data/ftp/pub/ubuntu/releases 0770 mirror mirror"
 
     "d /mnt/data/ftp/tmp 0755 root root"
 

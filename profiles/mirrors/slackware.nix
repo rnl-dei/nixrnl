@@ -21,7 +21,7 @@ in
 {
   rnl.ftp-server.mirrors.slackware = {
     source = "rsync://slackware.uk/slackware/";
-    target = "/mnt/data/ftp/pub/slackware";
+    target.path = "/mnt/data/ftp/pub/slackware";
     extraArgs = [
       "--exclude-from ${exclude}"
       "--delete-excluded"
