@@ -25,6 +25,8 @@
       "192.168.0.0/16" # IPs privados internos da RNL
       "10.16.80.0/20" # IPs privados IST da RNL
     ];
+    #Empty on purpose, otherwise it will try to use itself or the other ns as a forwarder, creating a loop
+    forwarders = [ ];
     extraOptions = ''
       recursion yes;
       max-cache-size 768M;'';
