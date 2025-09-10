@@ -24,6 +24,7 @@
       zones."rnl.tecnico.ulisboa.pt" = {
         master = true;
         file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
+        slaves = [ "any" ];
       };
       zones."rnl.ist.utl.pt" = {
         master = true;
