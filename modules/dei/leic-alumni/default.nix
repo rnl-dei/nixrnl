@@ -119,8 +119,8 @@ in
             socket = siteCfg.socket;
             pythonPackages =
               self: with self; [
-                django_3
-                (django-multiselectfield.override { django = django_3; })
+                django
+                django-multiselectfield
                 mysqlclient
               ];
             env = mapAttrsToList (n: v: "${n}=${v}") siteCfg.environment;

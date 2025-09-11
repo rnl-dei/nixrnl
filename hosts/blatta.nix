@@ -2,6 +2,7 @@
   config,
   pkgs,
   profiles,
+  lib,
   ...
 }:
 {
@@ -185,6 +186,20 @@
 
   # MailHog
   services.mailhog.enable = true;
+  # NOTE: conflito entre core.rnl sendmail e o mailhog
+  # forcing o module do mailhog (https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/mail/mailhog.nix)
+  services.mail.sendmailSetuidWrapper = {
+    source = lib.mkForce (
+      lib.getExe (
+        pkgs.writeShellScriptBin "mailhog-sendmail" ''
+          exec ${lib.getExe pkgs.mailhog} sendmail $@
+        ''
+      )
+    );
+    owner = lib.mkForce "nobody";
+    group = lib.mkForce "nogroup";
+  };
+
   services.nginx.virtualHosts.mailhog = {
     serverName = "mailhog.${config.networking.fqdn}";
     enableACME = true;

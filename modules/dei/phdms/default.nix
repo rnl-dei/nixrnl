@@ -63,8 +63,7 @@ let
           default = {
             PATH_WKHTMLTOPDF = "${pkgs.allowOpenSSL.wkhtmltopdf-bin}/bin/wkhtmltopdf";
             PATH = makeBinPath ([ pkgs.pdftk ] ++ config.extraPackages);
-          }
-          // config.extraEnvironment;
+          } // config.extraEnvironment;
           description = "Environment variables to the uWSGI socket";
         };
 
@@ -157,20 +156,14 @@ in
                 korean-lunar-calendar
                 holidays
                 hijri-converter
-                django_3
-                # django
-                (django-widget-tweaks.override { django = django_3; })
-                (django-picklefield.override { django = django_3; })
-                (django-filter.override { django = django_3; })
-                (django-formtools.override { django = django_3; })
-                (django-extensions.override { django = django_3; })
-                (django-countries.override {
-                  django = django_3;
-                  # checks were failing.
-                  pytest-django = null;
-                  pytestCheckHook = null;
-                })
-                (django-cleanup.override { django = django_3; })
+                django
+                django-widget-tweaks
+                django-picklefield
+                django-filter
+                django-formtools
+                django-extensions
+                django-countries
+                django-cleanup
                 convertdate
                 blessed
                 babel

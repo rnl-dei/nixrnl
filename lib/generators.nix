@@ -31,11 +31,6 @@ let
       argsPkgs = {
         system = "x86_64-linux"; # FIXME: Allow other systems
         config.allowUnfree = true;
-        # DEI - PHDMS
-        config.permittedInsecurePackages = [
-          "python3.12-django-3.2.25"
-          "python3.11-django-3.2.25"
-        ];
       };
     in
     import inputs.nixpkgs (
@@ -50,8 +45,7 @@ let
               argsPkgs // { config.permittedInsecurePackages = [ "squid-5.9" ]; }
             );
           })
-        ]
-        ++ lib.attrValues overlays;
+        ] ++ lib.attrValues overlays;
       }
       // argsPkgs
     );
@@ -181,8 +175,7 @@ let
                   ;
                 system = "x86_64-linux";
                 aliases = null;
-              }
-              // hostCfg;
+              } // hostCfg;
 
               hostCfg = lib.optionalAttrs (type == "directory" && builtins.pathExists configPath) (
                 import configPath args
