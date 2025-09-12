@@ -55,7 +55,7 @@ let
     build-system = [ pth.pkgs.setuptools-scm ];
     pyproject = true;
 
-    dependencies = [ pth.pkgs.django_3 ];
+    dependencies = [ pth.pkgs.django ];
 
     doCheck = false;
   };
