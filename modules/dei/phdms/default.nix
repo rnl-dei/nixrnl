@@ -63,7 +63,8 @@ let
           default = {
             PATH_WKHTMLTOPDF = "${pkgs.allowOpenSSL.wkhtmltopdf-bin}/bin/wkhtmltopdf";
             PATH = makeBinPath ([ pkgs.pdftk ] ++ config.extraPackages);
-          } // config.extraEnvironment;
+          }
+          // config.extraEnvironment;
           description = "Environment variables to the uWSGI socket";
         };
 
