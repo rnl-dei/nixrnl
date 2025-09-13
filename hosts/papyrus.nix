@@ -37,7 +37,7 @@
   };
 
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
-  fileSystems."${config.services.mattermost.statePath}" = {
+  fileSystems."${config.services.mattermost.dataDir}" = {
     device = "/mnt/data/mattermost";
     options = [ "bind" ];
   };
