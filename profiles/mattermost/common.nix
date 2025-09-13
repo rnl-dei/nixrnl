@@ -25,10 +25,10 @@
     forceSSL = true;
     locations = {
       "/" = {
-        proxyPass = "http://mattermost";
+        proxyPass = "http://127.0.0.1:${toString config.services.mattermost.port}";
       };
       "~ /api/v[0-9]+/(users/)?websocket$" = {
-        proxyPass = "http://mattermost";
+        proxyPass = "http://127.0.0.1:${toString config.services.mattermost.port}";
         proxyWebsockets = true;
         extraConfig = ''
           client_max_body_size 100M;
