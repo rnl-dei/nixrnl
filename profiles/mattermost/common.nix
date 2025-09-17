@@ -27,11 +27,20 @@
       "/" = {
         proxyPass = "http://127.0.0.1:${toString config.services.mattermost.port}";
       };
+      # i really have my doubts about the increased file size in this endpoint, if there are any issues increase it again
       "~ /api/v[0-9]+/(users/)?websocket$" = {
         proxyPass = "http://127.0.0.1:${toString config.services.mattermost.port}";
         proxyWebsockets = true;
         extraConfig = ''
-          client_max_body_size 100M;
+          client_max_body_size 10M;
+        '';
+      };
+      "~ /api/v[0-9]+/files$" = {
+        proxyPass = "http://127.0.0.1:${toString config.services.mattermost.port}";
+        proxyWebsockets = true;
+        # change the value of the line below this one to increase upload size.
+        extraConfig = ''
+          client_max_body_size 200M;
         '';
       };
     };
