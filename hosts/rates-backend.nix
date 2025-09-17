@@ -14,7 +14,7 @@
     createdBy = "francisco.martins";
     maintainers = [ "luis.macorano" ];
 
-    memory = 2048;
+    memory = 4096;
     vcpu = 1;
 
     interfaces = [
