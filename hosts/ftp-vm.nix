@@ -174,6 +174,8 @@ in
     extraConfig = ''
       autoindex on;
       autoindex_exact_size off;
+
+      if_modified_since exact;
     '';
 
     locations = {
