@@ -68,6 +68,7 @@ in
           # Global
           User-agent: *
           Disallow: /forum/
+          Disallow: /img/equipa/
         '';
         "/twitter-msg".root = pkgs.writeTextDir "twitter-msg" "";
       };
