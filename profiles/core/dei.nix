@@ -15,6 +15,7 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPUjjonJmUrvapi4yxFB8vhQV5Hmf/QholYVDrZjjzkL hugsouper785@gmail.com-desktop"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC4YWMJalggVNDmlHSzIiefhAL4xChC0aV3vcgI7ut9Z mbenjamim@rola"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIClrL9lcMtX0vWyN/BG63/sC89nGaceaMfjMJG6sysLE vicente@msi"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOjglLGS9X3of/2ZpM9jTCgT7QYPFK4VSVFmCJ81UhUD vicente.duarte@tecnico.ulisboa.pt-workstation"
   ];
 
   rnl.githook.emailDestination = "robots-dei@${config.rnl.domain}";
