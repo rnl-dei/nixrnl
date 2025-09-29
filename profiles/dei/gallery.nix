@@ -44,7 +44,7 @@ in
       proxyPass = "http://localhost:${toString port}";
       proxyWebsockets = true;
       extraConfig = ''
-        client_max_body_size 5000M;
+        client_max_body_size 10000M;
         proxy_read_timeout 3600s;
         proxy_connect_timeout 3600s;
         proxy_send_timeout 3600s;
