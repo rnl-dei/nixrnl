@@ -285,7 +285,7 @@ in
   users.users.blatta = {
     group = "blatta";
     uid = 1050;
-    shell = null;
+    shell = pkgs.shadow;
     isSystemUser = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHDKNC2nEDLyLA9epWoVZnJnkAVGTTRYRFUAsSPGIRfT root@blatta"
