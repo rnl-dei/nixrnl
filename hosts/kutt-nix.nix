@@ -42,7 +42,7 @@
       }
     ];
 
-    ipv6.addresses = [
+    interfaces.enp1s0.ipv6.addresses = [
       {
         address = "2001:690:2100:83::179";
         prefixLength = 64;
