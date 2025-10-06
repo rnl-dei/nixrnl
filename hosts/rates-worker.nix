@@ -15,7 +15,7 @@
     maintainers = [ "luis.macorano" ];
 
     memory = 4096;
-    vcpu = 2;
+    vcpu = 5;
 
     interfaces = [
       {
