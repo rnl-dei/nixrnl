@@ -5,10 +5,10 @@
     filesystems.labs
     os.nixos
     type.lab
-
+    exam
     labs
     cluster.client
-    gitlab-runner.es
+    # gitlab-runner.es
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
