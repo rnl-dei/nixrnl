@@ -5,7 +5,6 @@
     filesystems.labs
     os.nixos
     type.lab
-    exam
     labs
     cluster.client
     nvidia
