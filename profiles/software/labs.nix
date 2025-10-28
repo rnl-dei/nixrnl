@@ -101,7 +101,8 @@
           scikit-learn
           statsmodels
           torch-bin
-
+          folium
+          geopy
           # FP (LEFT)
           # (buildPythonPackage rec {
           #   pname = "bnf";
@@ -120,6 +121,18 @@
           # lizard # Broken (23.11)
           # pygame
           # pysimplegui
+
+          # DAUP
+
+          (buildPythonPackage rec {
+            pname = "pythonds3";
+            version = "3.1.0";
+            src = fetchPypi {
+              inherit pname version;
+              sha256 = "sha256-oAnaH/Utg+l/md6PvdQ0xeExCRTpZuLdAvyOY82NDIM=";
+            };
+            doCheck = false;
+          })
 
           # PRI
           nltk
