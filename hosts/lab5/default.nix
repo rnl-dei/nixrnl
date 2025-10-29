@@ -7,6 +7,7 @@
     type.lab
     labs
     cluster.client
+    intel-gpu
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
