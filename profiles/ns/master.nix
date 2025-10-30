@@ -29,6 +29,7 @@
       zones."rnl.ist.utl.pt" = {
         master = true;
         file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
+        slaves = [ "any" ];
       };
       zones."89.16.10.in-addr.arpa" = {
         master = true;
