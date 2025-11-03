@@ -437,4 +437,9 @@
     publicKey = "PWdmek1KVClfWnXGTMWEax7TDhdwDTlN87KF3VouLyA=";
     lastOctet = 88;
   }
+  {
+    # Leonardo Neves - laptop
+    publicKey = "HSNpt4/6jVY1dNFU72dn1rWpYF1oRu48ipMGrDOTeTQ=";
+    lastOctet = 89;
+  }
 ]
