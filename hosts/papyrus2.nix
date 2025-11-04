@@ -1,5 +1,5 @@
 {
-  #config,
+  config,
   profiles,
   pkgs,
   ...
@@ -11,8 +11,8 @@
     os.nixos
     type.vm
 
-    #mattermost.papyrus2
-    #webserver
+    mattermost.papyrus2
+    webserver
   ];
 
   environment.systemPackages = [
@@ -43,59 +43,52 @@
   services.mysql.enable = true; # temporarily enable mysql to make the migration
   services.mysql.package = pkgs.mysql80;
 
-  services.postgresql.enable = true; # should be moved to papyrus2 profile
-
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
-  #  fileSystems."${config.services.mattermost.dataDir}" = {
-  #    device = "/mnt/data/mattermost";
-  #    options = [ "bind" ];
-  #  };
+  fileSystems."${config.services.mattermost.dataDir}" = {
+    device = "/mnt/data/mattermost";
+    options = [ "bind" ];
+  };
 
-  #  rnl.db-cluster = {
-  #    ensureDatabases = [ "mattermost" ];
-  #    ensureUsers = [
-  #      {
-  #        name = "mattermost";
-  #        ensurePermissions = {
-  #          "mattermost.*" = "ALL PRIVILEGES";
-  #        };
-  #      }
-  #    ];
-  #  };
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_16;
+    ensureDatabases = [ "mattermost" ];
+    #ensureUsers."mmuser".ensureDBOwnership = true; # as of NixOS 24.05, ensurePermissions is deprecated.
+  };
 
   # Wheatley Bot
-  #  rnl.wheatley = {
-  #    enable = true;
-  #    instances.default = {
-  #      mattermost.url = config.services.mattermost.siteUrl;
-  #      mattermost.tokenFile = config.age.secrets."papyrus-wheatley.token".path;
-  #      configFile = "${config.rnl.githook.hooks.wheatley-config.path}/config.yml";
-  #    };
-  #  };
+  rnl.wheatley = {
+    enable = true;
+    instances.default = {
+      mattermost.url = config.services.mattermost.siteUrl;
+      mattermost.tokenFile = config.age.secrets."papyrus-wheatley.token".path;
+      configFile = "${config.rnl.githook.hooks.wheatley-config.path}/config.yml";
+    };
+  };
 
-  #  rnl.githook = {
-  #    enable = true;
-  #    hooks.wheatley-config = {
-  #      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/wheatley-config.git";
-  #      path = "/etc/wheatley";
-  #      directoryMode = "0755";
-  #      hookScript = pkgs.writeText "wheatley-config-hook" ''
-  #        # TODO: This should be done in githook
-  #        ${pkgs.git}/bin/git pull origin master
-  #        ${pkgs.systemdMinimal}/bin/systemctl restart wheatley.service
-  #      '';
-  #    };
-  #  };
+  rnl.githook = {
+    enable = true;
+    hooks.wheatley-config = {
+      url = "git@gitlab.rnl.tecnico.ulisboa.pt:/rnl/wheatley-config.git";
+      path = "/etc/wheatley";
+      directoryMode = "0755";
+      hookScript = pkgs.writeText "wheatley-config-hook" ''
+        # TODO: This should be done in githook
+        ${pkgs.git}/bin/git pull origin master
+        ${pkgs.systemdMinimal}/bin/systemctl restart wheatley.service
+      '';
+    };
+  };
 
   age.secrets."root-at-papyrus-ssh.key" = {
     file = ../secrets/root-at-papyrus-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
   };
 
-  #  age.secrets."papyrus-wheatley.token" = {
-  #    file = ../secrets/papyrus-wheatley-token.age;
-  #    owner = config.rnl.wheatley.user;
-  #  };
+  age.secrets."papyrus-wheatley.token" = {
+    file = ../secrets/papyrus-wheatley-token.age;
+    owner = config.rnl.wheatley.user;
+  };
 
   rnl.labels.location = "neo";
 
@@ -115,7 +108,7 @@
 
     disks = [
       { source.dev = "/dev/zvol/dpool/volumes/papyrus2"; }
-      #{ source.dev = "/dev/zvol/dpool/data/papyrus2"; }
+      { source.dev = "/dev/zvol/dpool/data/papyrus2"; }
     ];
   };
 }

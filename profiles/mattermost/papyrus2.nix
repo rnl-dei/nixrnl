@@ -2,12 +2,13 @@
 {
   imports = [ ./common.nix ];
 
-  age.secrets."papyrus-private.env" = {
-    file = ../../secrets/papyrus-private-env.age;
+  age.secrets."papyrus2-private.env" = {
+    file = ../../secrets/papyrus2-private-env.age;
   };
 
   services.mattermost = {
-    environmentFile = config.age.secrets."papyrus-private.env".path;
+    environmentFile = config.age.secrets."papyrus2-private.env".path;
+    database.fromEnvironment = true;
     # Reference: https://docs.mattermost.com/configure/configuration-settings.html
     settings = {
       ServiceSettings = {
