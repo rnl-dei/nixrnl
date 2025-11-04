@@ -15,6 +15,10 @@
     #webserver
   ];
 
+  environment.systemPackages = [
+    pkgs.pgloader
+  ];
+
   # Networking
   networking = {
     interfaces.enp1s0 = {
@@ -35,6 +39,10 @@
     defaultGateway.address = "193.136.164.62";
     defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
+
+  services.mysql.enable = true; # temporarily enable mysql to make the migration
+
+  services.postgresql.enable = true; # should be moved to papyrus2 profile
 
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
   #  fileSystems."${config.services.mattermost.dataDir}" = {
