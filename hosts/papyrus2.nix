@@ -93,7 +93,6 @@
   rnl.virtualisation.guest = {
     description = "VM com o papyrus de testes para suportar a migração de DBs";
     createdBy = "vasco.morais";
-    interfaces = [ { source = "pub"; } ];
 
     memory = 2048;
     vcpu = 2;
