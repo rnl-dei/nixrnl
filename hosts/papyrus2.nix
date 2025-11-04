@@ -43,6 +43,12 @@
   services.mysql.enable = true; # temporarily enable mysql to make the migration
   services.mysql.package = pkgs.mysql80;
 
+  services.mysql.settings = {
+    mysqld = {
+      default-authentication-plugin = "mysql_native_password";
+    };
+  };
+
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
   fileSystems."${config.services.mattermost.dataDir}" = {
     device = "/mnt/data/mattermost";
