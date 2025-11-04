@@ -41,6 +41,7 @@
   };
 
   services.mysql.enable = true; # temporarily enable mysql to make the migration
+  services.mysql.package = pkgs.mysql80;
 
   services.postgresql.enable = true; # should be moved to papyrus2 profile
 
