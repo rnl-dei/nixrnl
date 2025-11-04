@@ -1,7 +1,7 @@
 {
   #config,
   profiles,
-  #pkgs,
+  pkgs,
   ...
 }:
 {
