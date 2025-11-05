@@ -452,4 +452,10 @@
     publicKey = "/YLW+6T/k3us/bMhvyWnDwvDF4xqMiTsdWZQRPgbY2w=";
     lastOctet = 91;
   }
+  {
+    # Jose Araujo - laptop
+    publicKey = "FnXCNCDW+FGqGCGcd77yv5yKqgWsdmGj8e1AvfiFAi8=";
+    lastOctet = 92;
+  }
+
 ]
