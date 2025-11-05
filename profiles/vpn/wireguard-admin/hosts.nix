@@ -447,4 +447,9 @@
     publicKey = "d4AoiPi4lJaPc5wZqorC3+Z2A66+UHJnkDMOil8UgVI=";
     lastOctet = 90;
   }
+  {
+    # Paulo Chen - laptop
+    publicKey = "/YLW+6T/k3us/bMhvyWnDwvDF4xqMiTsdWZQRPgbY2w=";
+    lastOctet = 91;
+  }
 ]
