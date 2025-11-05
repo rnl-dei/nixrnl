@@ -114,7 +114,6 @@ in
   "open-sessions-key.age".publicKeys = users ++ [ labs ];
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
-  "papyrus2-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
   "rnl-slack-conf.age".publicKeys = users ++ [
     ns

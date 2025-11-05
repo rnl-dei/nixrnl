@@ -8,6 +8,7 @@
 
   services.mattermost = {
     environmentFile = config.age.secrets."papyrus-private.env".path;
+    database.fromEnvironment = true;
     # Reference: https://docs.mattermost.com/configure/configuration-settings.html
     settings = {
       ServiceSettings = {
@@ -21,7 +22,7 @@
         MaxUsersPerTeam = 100;
       };
       SqlSettings = {
-        DriverName = "mysql";
+        DriverName = "postgres";
         # Set DataSource through environment variable
       };
       EmailSettings = {
