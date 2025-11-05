@@ -18,6 +18,7 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHvLx61S/EayEzpVLvvFfwa58mIImMIU/PuAUes/t2RT leonardo.neves@virtus"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN5+deDNLsW+PjJ6fCo4WMqyQm6xA0lbfDkJ3IWg16y0 paulo.chen@alucard"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFlyAPbpCY33eSGsbohPS824PvrEYUGf2v2ORuKBfIo6 miguel.carvalho@mlc"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqHh9LuuxoEpgRVcJy8BrYtvJm4oxdwUPU5BQkKO41h jose.araujo@zmws"
   ];
 
   rnl.githook.emailDestination = "robots-dei@${config.rnl.domain}";
