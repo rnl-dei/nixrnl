@@ -432,4 +432,30 @@
     publicKey = "JClHVazDG2JxYrnRdivSw5RZOI3Nv7yUT0/LgIAlbBk=";
     lastOctet = 87;
   }
+  {
+    # João Viegas - laptop
+    publicKey = "PWdmek1KVClfWnXGTMWEax7TDhdwDTlN87KF3VouLyA=";
+    lastOctet = 88;
+  }
+  {
+    # Leonardo Neves - laptop
+    publicKey = "HSNpt4/6jVY1dNFU72dn1rWpYF1oRu48ipMGrDOTeTQ=";
+    lastOctet = 89;
+  }
+  {
+    # Miguel Carvalho - laptop
+    publicKey = "d4AoiPi4lJaPc5wZqorC3+Z2A66+UHJnkDMOil8UgVI=";
+    lastOctet = 90;
+  }
+  {
+    # Paulo Chen - laptop
+    publicKey = "/YLW+6T/k3us/bMhvyWnDwvDF4xqMiTsdWZQRPgbY2w=";
+    lastOctet = 91;
+  }
+  {
+    # Jose Araujo - laptop
+    publicKey = "FnXCNCDW+FGqGCGcd77yv5yKqgWsdmGj8e1AvfiFAi8=";
+    lastOctet = 92;
+  }
+
 ]
