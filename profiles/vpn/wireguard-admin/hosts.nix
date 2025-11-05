@@ -442,4 +442,9 @@
     publicKey = "HSNpt4/6jVY1dNFU72dn1rWpYF1oRu48ipMGrDOTeTQ=";
     lastOctet = 89;
   }
+  {
+    # Miguel Carvalho - laptop
+    publicKey = "d4AoiPi4lJaPc5wZqorC3+Z2A66+UHJnkDMOil8UgVI=";
+    lastOctet = 90;
+  }
 ]
