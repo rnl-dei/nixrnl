@@ -98,6 +98,7 @@ in
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
   "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
+  "immich-json.age".publicKeys = users ++ [ blatta ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
   "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];
