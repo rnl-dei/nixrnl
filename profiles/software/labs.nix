@@ -58,6 +58,9 @@
     # LP
     swi-prolog-gui
 
+    # SO
+    ncurses
+
     # OC
     papi
     gnuplot
