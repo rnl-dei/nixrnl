@@ -31,7 +31,7 @@ in
     port = 2283;
     accelerationDevices = null; # this means all btw
     environment = {
-      IMMICH_CONFIG_FILE = secrets-json-path;
+      IMMICH_CONFIG_FILE = "/run/agenix/immich-json";
     };
   };
 
@@ -43,8 +43,8 @@ in
 
   services.nginx.virtualHosts.immich = {
     serverName = "eventos.dei.tecnico.ulisboa.pt";
-    enableACME = true;
-    forceSSL = true;
+    enableACME = false;
+    forceSSL = false;
     locations."/" = {
       proxyPass = "http://[::1]:${toString config.services.immich.port}";
       proxyWebsockets = true;
