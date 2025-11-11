@@ -42,7 +42,7 @@ in
   };
 
   services.nginx.virtualHosts.immich = {
-    serverName = "immich.blatta.rnl.tecnico.ulisboa.pt";
+    serverName = "eventos.dei.tecnico.ulisboa.pt";
     enableACME = true;
     forceSSL = true;
     locations."/" = {
