@@ -43,8 +43,8 @@ in
 
   services.nginx.virtualHosts.immich = {
     serverName = "eventos.dei.tecnico.ulisboa.pt";
-    enableACME = false;
-    forceSSL = false;
+    enableACME = true;
+    forceSSL = true;
     locations."/" = {
       proxyPass = "http://[::1]:${toString config.services.immich.port}";
       proxyWebsockets = true;
