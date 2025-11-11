@@ -7,13 +7,13 @@
     type.vm
   ];
 
-  rnl.labels.location = "chapek";
+  rnl.labels.location = "neo";
 
   rnl.virtualisation.guest = {
     description = "Domain Controller do domínio WINRNL (Backup)";
 
     uefi = false;
-    memory = 8192;
+    memory = 12288;
     vcpu = 8;
 
     interfaces = [
