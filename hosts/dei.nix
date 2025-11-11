@@ -21,7 +21,8 @@ in
     webserver
     fail2ban
 
-    dei.gallery
+    # dei.gallery # old photo storage (photoprism)
+    dei.immich
   ];
 
   # Networking
