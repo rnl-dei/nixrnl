@@ -13,7 +13,7 @@
     description = "Domain Controller do domínio WINRNL (Backup)";
 
     uefi = false;
-    memory = 8192;
+    memory = 12288;
     vcpu = 8;
 
     interfaces = [
