@@ -10,6 +10,7 @@ let
   deiUsers = [
     sazed
     prohmakas
+    pyrus
   ];
 
   deployMachines = users ++ [ ];
