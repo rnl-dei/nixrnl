@@ -21,7 +21,7 @@ let
 in
 {
   age.secrets.immich-json = {
-    file = ../secrets/immich-json.age;
+    file = ../../secrets/immich-json.age;
     owner = "immich";
     path = secrets-json-path;
   };
