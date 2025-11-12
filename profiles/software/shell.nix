@@ -64,6 +64,9 @@
     gradle
     maven
 
+    ncurses
+    ncurses.dev
+
     (python3.withPackages (
       ps: with ps; [
         # General
@@ -77,7 +80,11 @@
   # The following two lines are needed for the C++ headers to be found outside a
   # nix-shell with this package.
   # https://discourse.nixos.org/t/c-header-includes-in-nixos/17410/2
-  environment.extraOutputsToInstall = [ "flex" ];
-  environment.variables.C_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.papi}/include:${pkgs.pin}/source/include";
-  environment.variables.CPLUS_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.pin}/source/include";
+  environment.extraOutputsToInstall = [
+    "flex"
+    "dev"
+  ];
+  environment.variables.LIBRARY_PATH = "${pkgs.ncurses}/lib";
+  environment.variables.C_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.papi}/include:${pkgs.pin}/source/include:${pkgs.ncurses.dev}/include";
+  environment.variables.CPLUS_INCLUDE_PATH = "${pkgs.flex}/include:${pkgs.pin}/source/include:${pkgs.ncurses.dev}/include";
 }
