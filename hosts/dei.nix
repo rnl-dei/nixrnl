@@ -21,7 +21,8 @@ in
     webserver
     fail2ban
 
-    dei.gallery
+    # dei.gallery # old photo storage (photoprism)
+    dei.immich
   ];
 
   # Networking
@@ -303,7 +304,7 @@ in
 
   # GlitchTip
   services.glitchtip = {
-    enable = true;
+    enable = false;
     glitchtipImage = "glitchtip/glitchtip:v4.0";
     secretKeyFile = config.age.secrets."dei-glitchtip-secret-key".path;
     databaseEnvFile = config.age.secrets."dei-glitchtip-database-env".path;
