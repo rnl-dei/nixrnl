@@ -9,6 +9,7 @@ let
   lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
   teto = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe";
   hugopc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGl9k5fgE3FibMGrIqop8qneMuQWZa6JSrh1DzIa9j1j";
+  rnl-simaolavos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR";
 
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
@@ -23,6 +24,7 @@ let
     lilb
     teto
     hugopc
+    rnl-simaolavos
   ];
 
   deiUsers = [
