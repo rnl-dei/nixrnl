@@ -457,5 +457,10 @@
     publicKey = "FnXCNCDW+FGqGCGcd77yv5yKqgWsdmGj8e1AvfiFAi8=";
     lastOctet = 92;
   }
-
+    {
+    # Simao Lavos - ThinkPad
+    publicKey = "hwAkhYJUSWO919jkZq52UC5MX3ktqhTl+E326crTtAc=";
+    lastOctet = 93;
+  }
+  
 ]
