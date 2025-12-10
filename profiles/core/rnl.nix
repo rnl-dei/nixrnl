@@ -163,6 +163,7 @@ in
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ @aurelius"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe @teto"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHk16LFBL889mUIOfJ2qubsa9bO/loUbbC2/hRbtuwxo @hugopc"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR @rnl-simaolavos"
     ];
   };
 
