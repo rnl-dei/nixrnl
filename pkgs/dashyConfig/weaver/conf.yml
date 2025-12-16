@@ -43,6 +43,10 @@ sections:
         icon: fas fa-envelope fa-xl
         url: https://webmail.rnl.tecnico.ulisboa.pt
         id: 4_702_rnlwebmail
+      - title: TVs (Updated)
+        icon: fas fa-tv
+        url: https://hikvision.rnl.tecnico.ulisboa.pt
+        id: 5_702_tvs
   - name: Documentation
     icon: fas fa-book
     items:
