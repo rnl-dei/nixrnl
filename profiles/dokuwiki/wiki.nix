@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 {
   services.dokuwiki.sites."wiki" = {
-    enable = true;
     settings = {
       # Basic
       title = "RNL Wiki";
