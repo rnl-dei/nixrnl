@@ -11,8 +11,8 @@ let
       (pkgs.fetchFromGitHub {
         owner = "NixOS";
         repo = "nixpkgs";
-        rev = "b6a8526";
-        sha256 = "sha256-rXXuz51Bq7DHBlfIjN7jO8Bu3du5TV+3DSADBX7/9YQ=";
+        rev = "818d778";
+        sha256 = "sha256-gZM60xxr2p7+V5aHAutgjhGitxD71QacwA/P/Z4RUnw=";
       })
       {
         system = pkgs.system;
@@ -32,6 +32,7 @@ in
     accelerationDevices = null; # this means all btw
     environment = {
       IMMICH_CONFIG_FILE = "/run/agenix/immich-json";
+      HF_XET_CACHE = "/var/cache/immich/huggingface-xet";
     };
   };
 
