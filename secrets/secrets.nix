@@ -9,11 +9,12 @@ let
   lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
   teto = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe";
   hugopc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGl9k5fgE3FibMGrIqop8qneMuQWZa6JSrh1DzIa9j1j";
+  rnl-simaolavos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR";
 
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
   prohmakas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPsWjCFMvLBFUhxCG1KbsTbrDoFvUgJHmGD3rWvHHkO"; # jose.pereira
-
+  pyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K"; # hugo.pereira
   users = [
     raijin
     raidou
@@ -23,11 +24,13 @@ let
     lilb
     teto
     hugopc
+    rnl-simaolavos
   ];
 
   deiUsers = [
     sazed
     prohmakas
+    pyrus
   ];
 
   deployMachines = users ++ [ ];
@@ -69,6 +72,7 @@ in
   "host-keys/hagrid.age".publicKeys = deployMachines;
   "host-keys/labs.age".publicKeys = deployMachines;
   "host-keys/lga.age".publicKeys = deployMachines;
+  "host-keys/neo.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
@@ -98,6 +102,7 @@ in
   "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
   "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
+  "immich-json.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
   "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];

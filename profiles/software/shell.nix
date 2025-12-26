@@ -9,6 +9,7 @@
     nano
     neovim
     vim
+    helix
 
     # Compiler
     gcc
