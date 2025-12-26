@@ -36,22 +36,17 @@
     defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
 
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_16;
+    ensureDatabases = [ "mattermost" ];
+    #ensureUsers."mmuser".ensureDBOwnership = true; # as of NixOS 24.05, ensurePermissions is deprecated. i don't know the syntax of this yet.
+  };
+
   # Bind mount /mnt/data/mattermost to /var/lib/mattermost
   fileSystems."${config.services.mattermost.dataDir}" = {
     device = "/mnt/data/mattermost";
     options = [ "bind" ];
-  };
-
-  rnl.db-cluster = {
-    ensureDatabases = [ "mattermost" ];
-    ensureUsers = [
-      {
-        name = "mattermost";
-        ensurePermissions = {
-          "mattermost.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
   };
 
   # Wheatley Bot
@@ -94,6 +89,9 @@
 
   rnl.virtualisation.guest = {
     description = "Servidor de comunicação interna";
+
+    memory = 2048;
+    vcpu = 2;
 
     interfaces = [ { source = "pub"; } ];
     disks = [
