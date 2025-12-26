@@ -69,7 +69,9 @@ let
            --name="$ENVIRONMENT_NAME" \
            --volume "$DUMP_FILE:/docker-entrypoint-initdb.d/$DUMP_FILE_NAME:ro" \
            --env-file="$ENV_FILE" \
-           $IMG_NAME 
+           $IMG_NAME \
+           --character-set-server=utf8mb4 \
+           --collation-server=utf8mb4_unicode_ci
         
         docker container start "$ENVIRONMENT_NAME"
       }
