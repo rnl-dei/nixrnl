@@ -131,10 +131,7 @@
           "raidou"
         ];
         dei = [
-          "prohmakas"
-          "marte"
-          "sazed"
-          "peras"
+          "pyrus"
         ];
       }
     );
