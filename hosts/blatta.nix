@@ -15,6 +15,7 @@
     containers.docker # required for multi-dms
     webserver
     dei.nextcloud
+    dei.s3
   ];
 
   # Networking
