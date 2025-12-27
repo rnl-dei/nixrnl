@@ -99,6 +99,9 @@ in
   "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
   "immich-json.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
   "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];
