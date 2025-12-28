@@ -13,6 +13,7 @@
     package = pkgs.garage_2;
     environmentFile = config.age.secrets.garage-env-file.path;
     settings = {
+      replication_factor = 1;
       rpc_bind_addr = "[::]:3901";
       s3_api = {
         api_bind_addr = "[::]:3900";
