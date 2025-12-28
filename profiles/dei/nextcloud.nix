@@ -91,8 +91,8 @@
     };
   };
 
-  systemd.services.nextcloud-oidc-provider = {
-    description = "Register OIDC Fenix (Gitlab) Login in Nextcloud";
+  systemd.services.nextcloud-runtime-config = {
+    description = "Nextcloud runtime settings (OIDC & OnlyOffice)";
     after = [ "nextcloud-setup.service" ];
     requires = [ "nextcloud-setup.service" ];
     wantedBy = [ "multi-user.target" ];
