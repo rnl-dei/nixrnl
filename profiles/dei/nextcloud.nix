@@ -14,6 +14,8 @@
   age.secrets.dei-onlyoffice-jwt = {
     file = ../../secrets/dei-onlyoffice-jwt.age;
     owner = "onlyoffice";
+    group = "nextcloud"; # to allow Nextcloud to read the JWT secret
+    mode = "440"; # read for owner and group only
     path = "/var/lib/onlyoffice/dei-onlyoffice-jwt";
   };
 
@@ -64,7 +66,6 @@
       onlyoffice = {
         DocumentServerUrl = "https://${config.services.onlyoffice.hostname}/";
 
-        # how to set jwt_secret in here via the age secret?
         jwt_header = "Authorization";
 
         verify_peer_off = true;
@@ -116,7 +117,11 @@
           --clientsecret="$OIDC_CLIENT_SECRET" \
           --discoveryuri="${discoveryUrl}" \
           --scope="openid email profile" \
-          --mapping-uid="nickname" \
+          --mapping-uid="nickname"
+
+        OO_SECRET=$(cat ${config.age.secrets.dei-onlyoffice-jwt.path})
+
+        ${nextcloudOcc} config:app:set onlyoffice jwt_secret --value="$OO_SECRET"
       '';
   };
 
