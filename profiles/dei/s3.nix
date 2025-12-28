@@ -44,7 +44,7 @@ in
         root_domain = "${s3-dei-domain}";
       };
       admin = {
-        api_bind_addr = "0.0.0.0:3903";
+        api_bind_addr = "[::]:3903";
         metrics_require_token = true;
       };
     };
