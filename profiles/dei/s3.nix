@@ -1,11 +1,17 @@
 {
   pkgs,
+  config,
   ...
 }:
 {
+  age.secrets.garage-env-file = {
+    file = ../../secrets/dei-garage-env-file.age;
+    owner = "garage";
+  };
   services.garage = {
     enable = true;
     package = pkgs.garage_2;
+    environmentFile = config.age.secrets.dei-nextcloud-oidc.path;
     settings = {
       rpc_bind_addr = "[::]:3901";
       s3_api = {
