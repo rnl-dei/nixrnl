@@ -5,8 +5,6 @@
 }:
 let
   s3-dei-domain = "s3.blatta.${config.rnl.domain}";
-  s3-admin-dei-domain = "s3-admin.blatta.${config.rnl.domain}";
-
 in
 {
   age.secrets.garage-env-file = {
@@ -19,6 +17,9 @@ in
     serverName = "${s3-dei-domain}";
     enableACME = true;
     forceSSL = true;
+    extraConfig = ''
+      client_max_body_size 0;
+    '';
     locations."/" = {
       proxyPass = "http://[::1]:3900";
     };
