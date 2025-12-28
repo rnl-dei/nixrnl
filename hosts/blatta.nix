@@ -46,8 +46,8 @@
     createdBy = "nuno.alves";
     maintainers = [ "dei" ];
 
-    vcpu = 4;
-    memory = 4096;
+    vcpu = 6;
+    memory = 12288;
 
     interfaces = [ { source = "dmz"; } ];
     disks = [ { source.dev = "/dev/zvol/dpool/volumes/blatta"; } ];

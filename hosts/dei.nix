@@ -55,8 +55,8 @@ in
     createdBy = "nuno.alves";
     maintainers = [ "dei" ];
 
-    vcpu = 4;
-    memory = 4096;
+    vcpu = 6;
+    memory = 8192;
 
     interfaces = [ { source = "pub"; } ];
     disks = [
@@ -164,7 +164,7 @@ in
       set -euo pipefail
       ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ${backupsDir}/dms/dms_backup_$(date +%F).sql
       # Delete all backups older than 60 days.
-      ${lib.getExe pkgs.findutils} ${backupsDir}/dms  ${backupsDir}/dms -mtime 31 -delete 
+      ${lib.getExe pkgs.findutils} ${backupsDir}/dms  ${backupsDir}/dms -mtime 31 -delete
     '';
     serviceConfig = {
       Type = "oneshot";
