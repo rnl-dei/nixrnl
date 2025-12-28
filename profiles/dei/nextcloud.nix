@@ -5,6 +5,12 @@
 }:
 
 {
+  age.secrets.dei-nextcloud-secretFile = {
+    file = ../../secrets/dei-nextcloud-secretFile.age;
+    owner = "nextcloud";
+    path = "/var/lib/nextcloud/dei-nextcloud-secretFile";
+  };
+
   age.secrets.dei-nextcloud-admin-pass = {
     file = ../../secrets/dei-nextcloud-admin-pass.age;
     owner = "nextcloud";
@@ -83,14 +89,34 @@
     database.createLocally = true;
     configureRedis = true;
 
+    # This is just for the s3 settings atm
+    secretFile = config.age.secrets.dei-nextcloud-secretFile.path;
+
     config = {
       dbtype = "pgsql";
 
       adminpassFile = config.age.secrets.dei-nextcloud-admin-pass.path;
       adminuser = "dei-admin";
+
+      # S3 Object Storage for File Storage Backend
+      objectstore.s3 = {
+        enable = true;
+
+        useSsl = true;
+        region = "garage";
+        usePathStyle = true;
+
+        hostname = "${config.services.garage.settings.s3_api.root_domain}";
+        bucket = "nextcloud-bucket";
+        secretFile = config.age.secrets.dei-nextcloud-secretFile.path; # will be replaced at runtime
+        key = "placeholder"; # will be overwritten at runtime
+      };
     };
   };
 
+  # There are some settings that are not possible to set via the Nextcloud config,
+  # so we create a systemd service that runs once after Nextcloud setup to apply them
+  # all this to have an "declarative" configuration via Nix
   systemd.services.nextcloud-runtime-config = {
     description = "Nextcloud runtime settings (OIDC & OnlyOffice)";
     after = [ "nextcloud-setup.service" ];
@@ -99,17 +125,28 @@
 
     serviceConfig = {
       Type = "oneshot";
-      User = "nextcloud";
     };
 
     script =
       let
         nextcloudOcc = "${config.services.nextcloud.occ}/bin/nextcloud-occ";
+        jq = "${pkgs.jq}/bin/jq";
 
+        # OIDC stuff
         providerId = "Fenix";
         discoveryUrl = "https://gitlab.rnl.tecnico.ulisboa.pt/.well-known/openid-configuration";
+
+        # External Storage S3 stuff
+        mountPoint = "Secretaria";
+        bucketName = "team-test";
       in
       ''
+        # Enable the external storage app
+        ${nextcloudOcc} app:enable files_external
+
+
+
+        # Configure OIDC provider
         source ${config.age.secrets.dei-nextcloud-oidc.path}
 
         ${nextcloudOcc} user_oidc:provider ${providerId} \
@@ -119,9 +156,52 @@
           --scope="openid email profile" \
           --mapping-uid="nickname"
 
+
+
+        # Configure OnlyOffice JWT secret
         OO_SECRET=$(cat ${config.age.secrets.dei-onlyoffice-jwt.path})
 
         ${nextcloudOcc} config:app:set onlyoffice jwt_secret --value="$OO_SECRET"
+
+
+
+        # Configure External Storage S3
+        S3_KEY=$(${jq} -r '.objectstore.arguments.key' ${config.age.secrets.dei-nextcloud-secretFile.path})
+        S3_SECRET=$(${jq} -r '.objectstore.arguments.secret' ${config.age.secrets.dei-nextcloud-secretFile.path})
+
+        # Check if mount point already exists
+        MOUNT_ID=$(
+          ${nextcloudOcc} files_external:list --output=json |
+          ${jq} -r --arg mp "${mountPoint}" '
+            .[] 
+            | select(.mount_point | endswith($mp)) 
+            | .mount_id
+          ' | head -n1
+        )
+
+        # if not, create it
+        if [ -z "$MOUNT_ID" ]; then
+
+          MOUNT_ID=$(
+            ${nextcloudOcc} files_external:create \
+              -c bucket="${bucketName}" \
+              -c hostname="${config.services.garage.settings.s3_api.root_domain}" \
+              -c region="garage" \
+              -c use_ssl=true \
+              -c use_path_style=true \
+              -c useMultipartCopy=true \
+              -c key="$S3_KEY" \
+              -c secret="$S3_SECRET" \
+              "${mountPoint}" amazons3 amazons3::accesskey \
+              --output=json
+          )
+        fi
+
+        # always reset groups to ensure correct ones
+        ${nextcloudOcc} files_external:applicable --remove-all "$MOUNT_ID"
+        ${nextcloudOcc} files_external:applicable --add-group="Secretaria" "$MOUNT_ID"
+        ${nextcloudOcc} files_external:applicable --add-group="admin" "$MOUNT_ID"
+
       '';
   };
 
