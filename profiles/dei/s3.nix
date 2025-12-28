@@ -23,14 +23,6 @@ in
       proxyPass = "http://[::1]:3900";
     };
   };
-  services.nginx.virtualHosts."${s3-admin-dei-domain}" = {
-    serverName = "${s3-admin-dei-domain}";
-    enableACME = true;
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://[::1]:3903";
-    };
-  };
   services.garage = {
     enable = true;
     package = pkgs.garage_2;
