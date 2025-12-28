@@ -9,8 +9,8 @@ let
 
 in
 {
-  age.secrets.garage-env-file = {
-    file = ../../secrets/dei-garage-env-file.age;
+  age.secrets.garage-env-file.env = {
+    file = ../../secrets/dei-garage-env-file.env.age;
     owner = "garage";
   };
 
@@ -33,7 +33,7 @@ in
   services.garage = {
     enable = true;
     package = pkgs.garage_2;
-    environmentFile = config.age.secrets.garage-env-file.path;
+    environmentFile = config.age.secrets.garage-env-file.env.path;
     settings = {
       replication_factor = 1;
       rpc_bind_addr = "[::]:3901";
