@@ -16,6 +16,7 @@
     webserver
     dei.nextcloud
     dei.s3
+    dei.nextcloud-s3
   ];
 
   # Networking
