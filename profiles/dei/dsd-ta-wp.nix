@@ -23,8 +23,8 @@
     autoPrune.enable = true;
     dockerCompat = true;
   };
-  services.nginx.virtualHosts."dsd-ta.dei.rnl.tecnico.ulisboa.pt" = {
-    serverName = "dsd-ta.dei.rnl.tecnico.ulisboa.pt";
+  services.nginx.virtualHosts."dei-tas.dei.rnl.tecnico.ulisboa.pt" = {
+    serverName = "dei-tas.dei.rnl.tecnico.ulisboa.pt";
     enableACME = true;
     forceSSL = true;
     locations."/" = {
