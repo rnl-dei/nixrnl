@@ -17,12 +17,6 @@
     owner = "docker";
     path = "/etc/wordpress-db.env";
   };
-  # Runtime
-  virtualisation.podman = {
-    enable = true;
-    autoPrune.enable = true;
-    dockerCompat = true;
-  };
   services.nginx.virtualHosts."dei-tas.blatta.rnl.tecnico.ulisboa.pt" = {
     serverName = "dei-tas.blatta.rnl.tecnico.ulisboa.pt";
     enableACME = true;
@@ -39,9 +33,6 @@
     {
       "${matchAll}".allowedUDPPorts = [ 53 ];
     };
-
-  virtualisation.oci-containers.backend = "podman";
-
   # Containers
   virtualisation.oci-containers.containers."wordpress-db" = {
     image = "mysql:8.0";
