@@ -7,6 +7,7 @@
 }:
 
 {
+  # Runtime
   age.secrets.wordpress-env-file = {
     file = ../../secrets/dei-wordpress-env-file.env.age;
     owner = "docker";
@@ -25,14 +26,6 @@
       proxyPass = "http://[::1]:3129";
     };
   };
-  # Enable container name DNS for all Podman networks.
-  networking.firewall.interfaces =
-    let
-      matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
-    in
-    {
-      "${matchAll}".allowedUDPPorts = [ 53 ];
-    };
   # Containers
   virtualisation.oci-containers.containers."wordpress-db" = {
     image = "mysql:8.0";
@@ -49,23 +42,26 @@
       "--network=wordpress_default"
     ];
   };
-  systemd.services."podman-wordpress-db" = {
+  systemd.services."docker-wordpress-db" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
+      RestartMaxDelaySec = lib.mkOverride 90 "1m";
+      RestartSec = lib.mkOverride 90 "100ms";
+      RestartSteps = lib.mkOverride 90 9;
     };
     after = [
-      "podman-network-wordpress_default.service"
-      "podman-volume-wordpress_db.service"
+      "docker-network-wordpress_default.service"
+      "docker-volume-wordpress_db.service"
     ];
     requires = [
-      "podman-network-wordpress_default.service"
-      "podman-volume-wordpress_db.service"
+      "docker-network-wordpress_default.service"
+      "docker-volume-wordpress_db.service"
     ];
     partOf = [
-      "podman-compose-wordpress-root.target"
+      "docker-compose-wordpress-root.target"
     ];
     wantedBy = [
-      "podman-compose-wordpress-root.target"
+      "docker-compose-wordpress-root.target"
     ];
   };
   virtualisation.oci-containers.containers."wordpress-wordpress" = {
@@ -86,71 +82,74 @@
       "--network=wordpress_default"
     ];
   };
-  systemd.services."podman-wordpress-wordpress" = {
+  systemd.services."docker-wordpress-wordpress" = {
     serviceConfig = {
       Restart = lib.mkOverride 90 "always";
+      RestartMaxDelaySec = lib.mkOverride 90 "1m";
+      RestartSec = lib.mkOverride 90 "100ms";
+      RestartSteps = lib.mkOverride 90 9;
     };
     after = [
-      "podman-network-wordpress_default.service"
-      "podman-volume-wordpress_wordpress.service"
+      "docker-network-wordpress_default.service"
+      "docker-volume-wordpress_wordpress.service"
     ];
     requires = [
-      "podman-network-wordpress_default.service"
-      "podman-volume-wordpress_wordpress.service"
+      "docker-network-wordpress_default.service"
+      "docker-volume-wordpress_wordpress.service"
     ];
     partOf = [
-      "podman-compose-wordpress-root.target"
+      "docker-compose-wordpress-root.target"
     ];
     wantedBy = [
-      "podman-compose-wordpress-root.target"
+      "docker-compose-wordpress-root.target"
     ];
   };
 
   # Networks
-  systemd.services."podman-network-wordpress_default" = {
-    path = [ pkgs.podman ];
+  systemd.services."docker-network-wordpress_default" = {
+    path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStop = "podman network rm -f wordpress_default";
+      ExecStop = "docker network rm -f wordpress_default";
     };
     script = ''
-      podman network inspect wordpress_default || podman network create wordpress_default
+      docker network inspect wordpress_default || docker network create wordpress_default
     '';
-    partOf = [ "podman-compose-wordpress-root.target" ];
-    wantedBy = [ "podman-compose-wordpress-root.target" ];
+    partOf = [ "docker-compose-wordpress-root.target" ];
+    wantedBy = [ "docker-compose-wordpress-root.target" ];
   };
 
   # Volumes
-  systemd.services."podman-volume-wordpress_db" = {
-    path = [ pkgs.podman ];
+  systemd.services."docker-volume-wordpress_db" = {
+    path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
     };
     script = ''
-      podman volume inspect wordpress_db || podman volume create wordpress_db
+      docker volume inspect wordpress_db || docker volume create wordpress_db
     '';
-    partOf = [ "podman-compose-wordpress-root.target" ];
-    wantedBy = [ "podman-compose-wordpress-root.target" ];
+    partOf = [ "docker-compose-wordpress-root.target" ];
+    wantedBy = [ "docker-compose-wordpress-root.target" ];
   };
-  systemd.services."podman-volume-wordpress_wordpress" = {
-    path = [ pkgs.podman ];
+  systemd.services."docker-volume-wordpress_wordpress" = {
+    path = [ pkgs.docker ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
     };
     script = ''
-      podman volume inspect wordpress_wordpress || podman volume create wordpress_wordpress
+      docker volume inspect wordpress_wordpress || docker volume create wordpress_wordpress
     '';
-    partOf = [ "podman-compose-wordpress-root.target" ];
-    wantedBy = [ "podman-compose-wordpress-root.target" ];
+    partOf = [ "docker-compose-wordpress-root.target" ];
+    wantedBy = [ "docker-compose-wordpress-root.target" ];
   };
 
   # Root service
   # When started, this will automatically create all resources and start
   # the containers. When stopped, this will teardown all resources.
-  systemd.targets."podman-compose-wordpress-root" = {
+  systemd.targets."docker-compose-wordpress-root" = {
     unitConfig = {
       Description = "Root target generated by compose2nix.";
     };
