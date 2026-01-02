@@ -10,12 +10,10 @@
   # Runtime
   age.secrets.wordpress-env-file = {
     file = ../../secrets/dei-wordpress-env-file.env.age;
-    owner = "docker";
     path = "/etc/wordpress.env";
   };
   age.secrets.wordpress-db-env-file = {
     file = ../../secrets/dei-wordpress-db-env-file.env.age;
-    owner = "docker";
     path = "/etc/wordpress-db.env";
   };
   services.nginx.virtualHosts."dei-tas.blatta.rnl.tecnico.ulisboa.pt" = {
