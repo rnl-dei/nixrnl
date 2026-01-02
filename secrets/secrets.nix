@@ -104,6 +104,8 @@ in
   "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "dei-garage-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "dei-wordpress-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "dei-wordpress-db-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
   "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];

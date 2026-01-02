@@ -16,6 +16,7 @@
     webserver
     dei.nextcloud
     dei.s3
+    dei.dsd-ta-wp
     dei.nextcloud-s3
   ];
 

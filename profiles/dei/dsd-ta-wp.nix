@@ -23,8 +23,8 @@
     autoPrune.enable = true;
     dockerCompat = true;
   };
-  services.nginx.virtualHosts."dei-tas.dei.rnl.tecnico.ulisboa.pt" = {
-    serverName = "dei-tas.dei.rnl.tecnico.ulisboa.pt";
+  services.nginx.virtualHosts."dei-tas.blatta.rnl.tecnico.ulisboa.pt" = {
+    serverName = "dei-tas.blatta.rnl.tecnico.ulisboa.pt";
     enableACME = true;
     forceSSL = true;
     locations."/" = {
@@ -48,12 +48,7 @@
     environmentFiles = [
       /etc/wordpress-db.env
     ];
-    environment = {
-      "MYSQL_DATABASE" = "exampledb";
-      "MYSQL_PASSWORD" = "examplepass";
-      "MYSQL_RANDOM_ROOT_PASSWORD" = "1";
-      "MYSQL_USER" = "exampleuser";
-    };
+
     volumes = [
       "wordpress_db:/var/lib/mysql:rw"
     ];
@@ -87,12 +82,7 @@
     environmentFiles = [
       /etc/wordpress.env
     ];
-    environment = {
-      "WORDPRESS_DB_HOST" = "db";
-      "WORDPRESS_DB_NAME" = "exampledb";
-      "WORDPRESS_DB_PASSWORD" = "examplepass";
-      "WORDPRESS_DB_USER" = "exampleuser";
-    };
+
     volumes = [
       "wordpress_wordpress:/var/www/html:rw"
     ];
