@@ -23,7 +23,14 @@
     autoPrune.enable = true;
     dockerCompat = true;
   };
-
+  services.nginx.virtualHosts."dsd-ta.dei.rnl.tecnico.ulisboa.pt" = {
+    serverName = "dsd-ta.dei.rnl.tecnico.ulisboa.pt";
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://[::1]:3129";
+    };
+  };
   # Enable container name DNS for all Podman networks.
   networking.firewall.interfaces =
     let
