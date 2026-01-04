@@ -19,7 +19,7 @@ with lib;
     };
     environmentPath = mkOption {
       type = types.path;
-      default = "";
+      default = null;
       description = "Path to environmnet File potentially including secrets";
     };
   };
