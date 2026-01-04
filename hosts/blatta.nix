@@ -56,12 +56,13 @@
 
   rnl.internalHost = true; # Use Vault to generate certificates
   age.secrets.garage-env-file = {
-    file = ../../secrets/dei-garage-env-file.env.age;
+    file = ../secrets/dei-garage-env-file.env.age;
     owner = "garage";
     path = "/etc/garage.env";
   };
   dei.s3.enable = true;
   dei.s3.serverName = "s3.blatta.${config.rnl.domain}";
+  dei.s3.environmentPath = /. + config.age.secrets.garage-env-file;
   services.nginx.virtualHosts.blatta = {
     serverName = "${config.networking.fqdn}";
     enableACME = true;
