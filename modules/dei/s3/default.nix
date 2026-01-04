@@ -19,7 +19,7 @@ with lib;
     };
     environmentPath = mkOption {
       type = types.path;
-      default = /etc/garage.env;
+      default = /var/lib/garage.env;
       description = "Path to environmnet File potentially including secrets";
     };
   };

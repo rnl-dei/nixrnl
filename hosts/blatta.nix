@@ -58,7 +58,7 @@
   age.secrets.garage-env-file = {
     file = ../secrets/dei-garage-env-file.env.age;
     owner = "garage";
-    path = "/etc/garage.env";
+    path = "/var/lib/garage.env";
   };
   dei.s3.enable = true;
   dei.s3.serverName = "s3.blatta.${config.rnl.domain}";
