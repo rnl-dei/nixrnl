@@ -263,6 +263,16 @@
                       pkgs.python3Packages.numpy
                     ];
                   })
+                  # Test SSOF Jan 2026
+                  (buildPythonPackage rec {
+                    pname = "astexport";
+                    version = "1.3.0";
+                    src = fetchPypi {
+                      inherit pname version;
+                      sha256 = "sha256-Wp0se5c0GLvEvVE4o2gnbBrPe2LKo/YpLepnA4rdTvY=";
+                    };
+                    doCheck = false;
+                  })
                 ];
               })
             ];
