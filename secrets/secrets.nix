@@ -43,6 +43,7 @@ let
   dolly = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUCwy4EIMsdjFtfRI0F78+WDgA7g0/5W1ZdiFcri7v2";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   hedgedoc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpzgegXNKlCuGmJExDkrfWDAa6kyREPLvNMc1N927yJ";
+  kutt = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsaudiuMfXo6D070OvF16g2rH83lxXjrwpqQp0x1XrB";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
   lga = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvmznnQfLbA1Jw3EPuXf48JHojUXR7tLEb/ikTG2QFB";
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
@@ -69,6 +70,7 @@ in
   "host-keys/hagrid.age".publicKeys = deployMachines;
   "host-keys/labs.age".publicKeys = deployMachines;
   "host-keys/lga.age".publicKeys = deployMachines;
+  "host-keys/kutt.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
@@ -148,4 +150,7 @@ in
   "wireguard-admin-private-key.age".publicKeys = users ++ [ hagrid ];
   "www-tv-client-secret-env.age".publicKeys = users ++ [ www ];
   "www-tv-cms-secret-env.age".publicKeys = users ++ [ www ];
+  "kutt-env.age".publicKeys = users ++ [ kutt ];
+  "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
+  "kutt-registry.age".publicKeys = users ++ [ kutt ];
 }
