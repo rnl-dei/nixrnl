@@ -7,7 +7,6 @@
     type.lab
     labs
     cluster.client
-    exam
   ];
 
   # Disable IPv6 since there is a bug on the network card
