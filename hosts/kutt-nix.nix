@@ -71,5 +71,23 @@ in
       forceSSL = true;
       locations."/".proxyPass = "http://localhost:${toString kutt_port}";
     };
+    "rnl.pt" = {
+      serverName = "rnl.pt";
+      enableACME = true;
+      forceSSL = true;
+      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
+    };
+    "dei.pt" = {
+      serverName = "dei.pt";
+      enableACME = true;
+      forceSSL = true;
+      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
+    };
+    "eventos.dei.pt" = {
+      serverName = "eventos.dei.pt";
+      enableACME = true;
+      forceSSL = true;
+      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
+    };
   };
 }
