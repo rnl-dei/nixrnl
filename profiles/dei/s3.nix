@@ -4,7 +4,7 @@
   ...
 }:
 let
-  s3-dei-domain = "s3.blatta.${config.rnl.domain}";
+  s3-dei-domain = "s3.dei.${config.rnl.domain}";
 in
 {
   age.secrets.garage-env-file = {

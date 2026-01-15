@@ -46,7 +46,7 @@
     enable = true;
     package = pkgs.nextcloud31;
 
-    hostName = "dei-drive.blatta.rnl.tecnico.ulisboa.pt";
+    hostName = "drive.dei.tecnico.ulisboa.pt";
 
     maxUploadSize = "16G";
     https = true;
@@ -58,7 +58,25 @@
 
     extraAppsEnable = true;
     extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps) groupfolders onlyoffice user_oidc;
+      inherit (config.services.nextcloud.package.packages.apps)
+        groupfolders
+        onlyoffice
+        user_oidc
+        deck
+        mail
+        tasks
+        calendar
+        contacts
+        ;
+
+      libresign = pkgs.fetchNextcloudApp {
+        appName = "libresign";
+        appVersion = "11.6.0";
+        url = "https://github.com/LibreSign/libresign/releases/download/v11.6.0/libresign-v11.6.0.tar.gz";
+        sha256 = "ddae9486fe7a69ab79632542bf60add20ce985c41c76803f505d31e501c5229c";
+        license = "agpl3Plus";
+      };
+
     };
 
     settings = {
@@ -156,7 +174,7 @@
 
   services.onlyoffice = {
     enable = true;
-    hostname = "onlyoffice.blatta.rnl.tecnico.ulisboa.pt";
+    hostname = "onlyoffice.dei.rnl.tecnico.ulisboa.pt";
 
     jwtSecretFile = config.age.secrets.dei-onlyoffice-jwt.path;
   };
