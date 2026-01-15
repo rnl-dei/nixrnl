@@ -20,7 +20,7 @@ with lib;
     environmentPath = mkOption {
       type = types.path;
       default = null;
-      description = "Path to environmnet File potentially including secrets";
+      description = "Path to environment File potentially including secrets";
     };
   };
   config = {

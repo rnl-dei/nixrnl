@@ -16,7 +16,7 @@ in
     filesystems.simple-uefi
     os.nixos
     type.vm
-
+    dei.dsd-ta-wp
     containers.docker
     webserver
     fail2ban

@@ -2,7 +2,6 @@
 {
   pkgs,
   lib,
-  config,
   ...
 }:
 
@@ -16,7 +15,7 @@
     file = ../../secrets/dei-wordpress-db-env-file.env.age;
     path = "/etc/wordpress-db.env";
   };
-  services.nginx.virtualHosts."dei-tas.blatta.rnl.tecnico.ulisboa.pt" = {
+  services.nginx.virtualHosts."dei-tas.tecnico.ulisboa.pt" = {
     serverName = "dei-tas.blatta.rnl.tecnico.ulisboa.pt";
     enableACME = true;
     forceSSL = true;
