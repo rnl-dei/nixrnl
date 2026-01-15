@@ -23,6 +23,9 @@ in
 
     # dei.gallery # old photo storage (photoprism)
     dei.immich
+
+    dei.nextcloud
+    dei.nextcloud-s3
   ];
 
   # Networking
@@ -64,6 +67,15 @@ in
       { source.dev = "/dev/zvol/dpool/data/dei"; }
     ];
   };
+
+  age.secrets.garage-env-file = {
+    file = ../secrets/dei-garage-env-file.env.age;
+    owner = "garage";
+    path = "/etc/garage.env";
+  };
+  dei.s3.enable = true;
+  dei.s3.serverName = "s3.dei.${config.rnl.domain}";
+  dei.s3.environmentPath = config.age.secrets.garage-env-file.path;
 
   # DEI
   services.nginx.virtualHosts.dei = {
