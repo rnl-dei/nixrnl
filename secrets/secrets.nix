@@ -99,11 +99,11 @@ in
   "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
   "immich-json.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ blatta ];
-  "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ blatta ];
-  "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ blatta ];
-  "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ blatta ];
-  "dei-garage-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-garage-env-file.env.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-wordpress-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "dei-wordpress-db-env-file.env.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
