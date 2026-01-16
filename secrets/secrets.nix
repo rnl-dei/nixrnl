@@ -103,7 +103,13 @@ in
   "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-garage-env-file.env.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-garage-env-file.env.age".publicKeys =
+    users
+    ++ deiUsers
+    ++ [
+      dei
+      blatta
+    ];
   "dei-wordpress-env-file.env.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-wordpress-db-env-file.env.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];

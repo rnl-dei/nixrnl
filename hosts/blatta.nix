@@ -15,7 +15,6 @@
     containers.docker # required for multi-dms
     webserver
     #dei.nextcloud
-    dei.dsd-ta-wp
     #dei.nextcloud-s3
   ];
 
