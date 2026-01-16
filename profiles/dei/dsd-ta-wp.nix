@@ -2,6 +2,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 
@@ -9,14 +10,12 @@
   # Runtime
   age.secrets.wordpress-env-file = {
     file = ../../secrets/dei-wordpress-env-file.env.age;
-    path = "/etc/wordpress.env";
   };
   age.secrets.wordpress-db-env-file = {
     file = ../../secrets/dei-wordpress-db-env-file.env.age;
-    path = "/etc/wordpress-db.env";
   };
   services.nginx.virtualHosts."dei-tas.tecnico.ulisboa.pt" = {
-    serverName = "dei-tas.blatta.rnl.tecnico.ulisboa.pt";
+    serverName = "dei-tas.tecnico.ulisboa.pt";
     enableACME = true;
     forceSSL = true;
     locations."/" = {
@@ -27,7 +26,7 @@
   virtualisation.oci-containers.containers."wordpress-db" = {
     image = "mysql:8.0";
     environmentFiles = [
-      /etc/wordpress-db.env
+      config.age.secrets.wordpress-db-env-file.path
     ];
 
     volumes = [
@@ -64,7 +63,7 @@
   virtualisation.oci-containers.containers."wordpress-wordpress" = {
     image = "wordpress";
     environmentFiles = [
-      /etc/wordpress.env
+      config.age.secrets.wordpress-env-file.path
     ];
 
     volumes = [
