@@ -75,6 +75,7 @@ in
   "host-keys/lga.age".publicKeys = deployMachines;
   "host-keys/kutt.age".publicKeys = deployMachines;
   "host-keys/neo.age".publicKeys = deployMachines;
+  "host-keys/kutt.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
