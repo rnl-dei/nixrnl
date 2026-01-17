@@ -89,5 +89,11 @@ in
       forceSSL = true;
       locations."/".proxyPass = "http://localhost:${toString kutt_port}";
     };
+    "noticias.dei.pt" = {
+      serverName = "noticias.dei.pt";
+      enableACME = true;
+      forceSSL = true;
+      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
+    };
   };
 }
