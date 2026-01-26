@@ -63,10 +63,11 @@
         onlyoffice
         user_oidc
         deck
-        mail
+        #mail
         tasks
         calendar
         contacts
+        files_automatedtagging
         ;
 
       libresign = pkgs.fetchNextcloudApp {
@@ -74,6 +75,30 @@
         appVersion = "11.6.0";
         url = "https://github.com/LibreSign/libresign/releases/download/v11.6.0/libresign-v11.6.0.tar.gz";
         sha256 = "ddae9486fe7a69ab79632542bf60add20ce985c41c76803f505d31e501c5229c";
+        license = "agpl3Plus";
+      };
+
+      fulltextsearch = pkgs.fetchNextcloudApp {
+        appName = "fulltextsearch";
+        appVersion = "31.0.1";
+        url = "https://github.com/nextcloud-releases/fulltextsearch/releases/download/31.0.1/fulltextsearch-31.0.1.tar.gz";
+        sha256 = "sha256-8kSSFo2rdWIsL25qn6DfSdUqCCXCXMy1o0IcIXLKPJ8=";
+        license = "agpl3Plus";
+      };
+
+      fulltextsearch_elasticsearch = pkgs.fetchNextcloudApp {
+        appName = "fulltextsearch_elasticsearch";
+        appVersion = "31.0.2";
+        url = "https://github.com/nextcloud-releases/fulltextsearch_elasticsearch/releases/download/31.0.2/fulltextsearch_elasticsearch-31.0.2.tar.gz";
+        sha256 = "sha256-x+OkbLLRb0GMCqPT4+PQsEXMDkaLqW0+q0WoXRqNqN0=";
+        license = "agpl3Plus";
+      };
+
+      files_fulltextsearch = pkgs.fetchNextcloudApp {
+        appName = "files_fulltextsearch";
+        appVersion = "31.0.0";
+        url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/31.0.0/files_fulltextsearch-31.0.0.tar.gz";
+        sha256 = "sha256-gfe7FnGR7qxfUOQr/ZjPNikIWL06WzTp5tjdyLknapE=";
         license = "agpl3Plus";
       };
 
@@ -178,4 +203,43 @@
 
     jwtSecretFile = config.age.secrets.dei-onlyoffice-jwt.path;
   };
+
+  fileSystems."/var/lib/elasticsearch" = {
+    device = "/mnt/data/elasticsearch";
+    options = [ "bind" ];
+  };
+
+  services.elasticsearch = {
+    enable = true;
+    package = pkgs.elasticsearch7; # Nextcloud works best with ES 7.x or 8.x
+
+    plugins = [ pkgs.elasticsearchPlugins.ingest-attachment ];
+
+    # Listen only on localhost for security
+    listenAddress = "127.0.0.1";
+    port = 9200;
+
+    # Limit memory usage (Adjust Xms and Xmx based on your available RAM)
+    # 1g is usually enough for personal/small team use.
+    extraJavaOptions = [
+      "-Xms1g"
+      "-Xmx1g"
+    ];
+  };
+
+  systemd.services.phpfpm-nextcloud.path = with pkgs; [
+    # for elasticsearch:
+    perl
+    which
+    poppler_utils # pdftotext
+    tesseract # OCR
+    catdoc # .doc
+    gawk
+    gnugrep
+
+    # for libresign:
+    jdk17_headless
+    pdftk
+    openssl
+  ];
 }
