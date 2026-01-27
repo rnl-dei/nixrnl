@@ -70,15 +70,15 @@
     "flake-compat": {
       "flake": false,
       "locked": {
-        "lastModified": 1696426674,
-        "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
-        "owner": "edolstra",
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "NixOS",
         "repo": "flake-compat",
-        "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
         "type": "github"
       },
       "original": {
-        "owner": "edolstra",
+        "owner": "NixOS",
         "repo": "flake-compat",
         "type": "github"
       }
@@ -199,11 +199,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1726841844,
-        "narHash": "sha256-Dz87WM49bIO+NbnM6apTQdUCxP0Ks7bMpcfTpS20RIU=",
+        "lastModified": 1762904259,
+        "narHash": "sha256-S+OMQ3y+hfeThrjFxcpoPnQQTtp42vNybo2mnhNiIsk=",
         "owner": "diogotcorreia",
         "repo": "ist-delegate-election",
-        "rev": "5b6328d70602edbd5f040bf99c8792b41dff9b41",
+        "rev": "4846a8d174b22378dd7ecaaedea93a2018b83a77",
         "type": "github"
       },
       "original": {
@@ -411,10 +411,31 @@
         "opensessions": "opensessions",
         "poetry2nix": "poetry2nix",
         "pre-commit-hooks": "pre-commit-hooks",
+        "system-manager": "system-manager",
         "systems": "systems",
         "treefmt-nix": "treefmt-nix",
         "unstable": "unstable",
         "wolbridge": "wolbridge"
+      }
+    },
+    "system-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769540330,
+        "narHash": "sha256-WzysIinRbyFE86NW6+BhzeURmEFH2KeHN1CJQZq+27g=",
+        "owner": "numtide",
+        "repo": "system-manager",
+        "rev": "55ff1d85efbd7c49bfba92247d98893aa802a9f2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "system-manager",
+        "type": "github"
       }
     },
     "systems": {
