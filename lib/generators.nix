@@ -50,7 +50,8 @@ let
               argsPkgs // { config.permittedInsecurePackages = [ "squid-5.9" ]; }
             );
           })
-        ] ++ lib.attrValues overlays;
+        ]
+        ++ lib.attrValues overlays;
       }
       // argsPkgs
     );
@@ -135,6 +136,7 @@ let
           hostPath
           #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
+          inputs.system-manager.nixosModules.system-manager
           inputs.agenix.nixosModules.age
         ]
         ++ extraModules;
@@ -180,7 +182,8 @@ let
                   ;
                 system = "x86_64-linux";
                 aliases = null;
-              } // hostCfg;
+              }
+              // hostCfg;
 
               hostCfg = lib.optionalAttrs (type == "directory" && builtins.pathExists configPath) (
                 import configPath args
