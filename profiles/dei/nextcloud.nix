@@ -41,7 +41,10 @@
     enableACME = true;
     forceSSL = true;
   };
-
+  environment.systemPackages = with pkgs; [
+    jre21_minimal
+    pdftk
+  ];
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud31;
@@ -57,6 +60,7 @@
     };
 
     extraAppsEnable = true;
+
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
