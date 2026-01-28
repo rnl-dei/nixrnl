@@ -3,8 +3,7 @@
   lib,
   rnl-keys,
   ...
-}:
-{
+}: {
   nixpkgs.config = {
     build-users-group = "nixbld";
   };
