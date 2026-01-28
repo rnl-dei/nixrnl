@@ -1,10 +1,8 @@
 { ... }:
 {
-  environment.etc.ssh = {
-    test = {
-      text = ''
-        yep. this works. fun
-      '';
-    };
+  environment.etc."ssh/test" = {
+    text = ''
+      yep. this works. fun
+    '';
   };
 }
