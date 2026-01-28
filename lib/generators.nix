@@ -122,7 +122,7 @@ let
       extraModules ? [ ],
       ...
     }:
-    lib.nixosSystem {
+    inputs.system-manager.lib.makeSystemConfig {
       inherit system pkgs lib;
       specialArgs = {
         inherit profiles inputs;
@@ -132,9 +132,6 @@ let
         ++ [
           { networking.hostName = hostname; }
           hostPath
-          #inputs.rnl-config.nixosModules.rnl
-          inputs.system-manager
-          inputs.agenix.nixosModules.age
         ]
         ++ extraModules;
     };
