@@ -1,4 +1,4 @@
-{ config, profiles, ... }:
+{ profiles, ... }:
 {
   imports = with profiles; [
     os.susetmbleweed

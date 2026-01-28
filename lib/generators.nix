@@ -97,7 +97,117 @@ let
   */
 
   mkProfiles = profilesDir: rakeLeaves profilesDir;
+  /*
+    *
+    Synopsis: mkHyper hostname  { system, hostPath, extraModules ? [] }
 
+    Generate a system-manager system configuration for the specified hostname, made for hypervisors.
+
+    Inputs:
+    - hostname: The hostname for the target OpenSuse system.
+    - system: The target system platform (e.g., "x86_64-linux").
+    - hostPath: The path to the directory containing host-specific Nix configurations.
+    - extraModules: An optional list of additional NixOS modules to include in the configuration.
+
+    Output Format:
+    A systemConfigs system configuration representing the specified hostname. The function generates a SystemManager system configuration using the provided parameters and additional modules. It inherits attributes from `pkgs`, `lib`, `profiles`, `inputs`, `systemConfigs`, and other custom modules.
+
+    *
+  */
+  mkHyper =
+    hostname:
+    {
+      system,
+      hostPath,
+      extraModules ? [ ],
+      ...
+    }:
+    lib.nixosSystem {
+      inherit system pkgs lib;
+      specialArgs = {
+        inherit profiles inputs;
+      };
+      modules =
+        (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
+        ++ [
+          { networking.hostName = hostname; }
+          hostPath
+          #inputs.rnl-config.nixosModules.rnl
+          inputs.system-manager
+          inputs.agenix.nixosModules.age
+        ]
+        ++ extraModules;
+    };
+  /*
+    *
+    Synopsis: mkHypers hostsDir
+
+    Generate a set of SystemManager system configurations for the hosts defined in the specified directory.
+
+    Inputs:
+    - hostsDir: The path to the directory containing host-specific configurations.
+
+    Output Format:
+    An attribute set representing SystemManager system configurations for the hosts
+    found in the `hostsDir`. The function scans the `hostsDir` directory
+    for host-specific Nix configurations and generates a set of SystemManager
+    system configurations for each host. The resulting attribute set maps
+    hostnames to their corresponding SystemManager system configurations.
+    *
+  */
+  mkHypers =
+    hostsDir:
+    lib.listToAttrs (
+      lib.lists.flatten (
+        lib.mapAttrsToList
+          (
+            name: type:
+            let
+              # Get hostname from host path
+              hostPath = hostsDir + "/${name}";
+              configPath = hostPath + "/configuration.nix";
+              hostname = lib.removeSuffix ".nix" (builtins.baseNameOf hostPath);
+
+              # Merge default configuration with host configuration (if it exists)
+              cfg = {
+                inherit
+                  hostPath
+                  pkgs
+                  profiles
+                  inputs
+                  ;
+                system = "x86_64-linux";
+                aliases = null;
+              }
+              // hostCfg;
+
+              hostCfg = lib.optionalAttrs (type == "directory" && builtins.pathExists configPath) (
+                import configPath args
+              );
+
+              # Remove aliases from host configuration
+              # and merge aliases with hosts
+              aliases' =
+                if (cfg.aliases != null) then
+                  cfg.aliases
+                else
+                  {
+                    ${hostname} = {
+                      extraModules = [ ];
+                    };
+                  };
+              cfg' = lib.filterAttrs (name: _: name != "aliases") cfg;
+              aliases = lib.mapAttrs (_: value: (value // cfg')) aliases';
+            in
+            (lib.mapAttrsToList (hostname: alias: {
+              name = hostname;
+              value = mkHyper hostname alias;
+            }) aliases)
+          )
+          # Ignore hosts starting with an underscore
+          (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))
+      )
+    );
   /*
     *
     Synopsis: mkHost hostname  { system, hostPath, extraModules ? [] }
@@ -136,7 +246,6 @@ let
           hostPath
           #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
-          inputs.system-manager.nixosModules.system-manager
           inputs.agenix.nixosModules.age
         ]
         ++ extraModules;
@@ -346,6 +455,7 @@ in
 {
   inherit
     mkProfiles
+    mkHypers
     mkHosts
     mkPkgs
     mkOverlays
