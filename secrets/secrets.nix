@@ -1,39 +1,18 @@
-let
+{rnl-keys, ...}: let
   # Public SSH keys of users
-  ## RNL
-  raijin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n";
-  raidou = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif";
-  pikachu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY";
-  geoff = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKEEja9gFy3l2Yd8cbPlAIDjdkXZXTLdmfHYstN4wgF/";
-  aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ";
-  lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
-  teto = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe";
-  hugopc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGl9k5fgE3FibMGrIqop8qneMuQWZa6JSrh1DzIa9j1j";
-  rnl-simaolavos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR";
-
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
   prohmakas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPsWjCFMvLBFUhxCG1KbsTbrDoFvUgJHmGD3rWvHHkO"; # jose.pereira
-  pyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K"; # hugo.pereira
-  users = [
-    raijin
-    raidou
-    pikachu
-    geoff
-    aurelius
-    lilb
-    teto
-    hugopc
-    rnl-simaolavos
-  ];
+
+  users = rnl-keys.rnl-keys;
 
   deiUsers = [
     sazed
     prohmakas
-    pyrus
+    #pyrus
   ];
 
-  deployMachines = users ++ [ ];
+  deployMachines = users ++ [];
 
   # Public SSH host keys of hosts
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
@@ -59,8 +38,7 @@ let
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
   www = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5cj7QcYEz9cSmbQS1ZbmDjQUVdsT9AsmyJdFbZNOg/ www";
-in
-{
+in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;
