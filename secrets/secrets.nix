@@ -1,4 +1,4 @@
-{rnl-keys, ...}: let
+let
   # Public SSH keys of users
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
