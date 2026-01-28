@@ -1,11 +1,11 @@
-{rnl-keys, ...}: let
+let
   # Public SSH keys of users
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
   prohmakas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPsWjCFMvLBFUhxCG1KbsTbrDoFvUgJHmGD3rWvHHkO"; # jose.pereira
 
-  users = rnl-keys.rnl-keys;
-
+  usersglobal = import ../profiles/core/keys.nix;
+  users = usersglobal.rnl-keys;
   deiUsers = [
     sazed
     prohmakas
