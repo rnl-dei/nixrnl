@@ -10,12 +10,14 @@
   };
   environment.etc = {
     "ssh/sshd_config.d/authorized_keys" = {
+      mode = "644";
       text = ''
         AuthorizedKeysFile .ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
       '';
 
     };
     "ssh/authorized_keys.d/root" = {
+      mode = "644";
       text = lib.strings.concatStringsSep "\n" (
         rnl-keys.rnl-keys
         ++ [
