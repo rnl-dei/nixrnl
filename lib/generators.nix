@@ -122,13 +122,11 @@ let
       ...
     }:
     inputs.system-manager.lib.makeSystemConfig {
-      modules =
-        (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
-        ++ [
-          { environment.etc.test.text = hostname; }
-          hostPath
-        ]
-        ++ extraModules;
+      modules = [
+        { environment.etc.test.text = hostname; }
+        hostPath
+      ]
+      ++ extraModules;
     };
   /*
     *
