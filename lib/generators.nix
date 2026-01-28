@@ -123,6 +123,7 @@ let
     }:
     inputs.system-manager.lib.makeSystemConfig {
       extraSpecialArgs = {
+        rnl-keys = import ../profiles/core/keys.nix;
         inherit profiles inputs;
       };
       modules = [
@@ -233,6 +234,7 @@ let
     lib.nixosSystem {
       inherit system pkgs lib;
       specialArgs = {
+        rnl-keys = import ../profiles/core/keys.nix;
         inherit profiles inputs nixosConfigurations;
       };
       modules =
