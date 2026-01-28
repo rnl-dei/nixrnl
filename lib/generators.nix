@@ -115,6 +115,7 @@ let
     *
   */
   mkHyper =
+    hostname:
     {
       hostPath,
       extraModules ? [ ],
@@ -124,6 +125,7 @@ let
       modules =
         (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
         ++ [
+          { environment.etc.test.text = hostname; }
           hostPath
         ]
         ++ extraModules;
@@ -188,9 +190,9 @@ let
               cfg' = lib.filterAttrs (name: _: name != "aliases") cfg;
               aliases = lib.mapAttrs (_: value: (value // cfg')) aliases';
             in
-            (lib.mapAttrsToList (hostname: {
+            (lib.mapAttrsToList (hostname: alias: {
               name = hostname;
-              value = mkHyper;
+              value = mkHyper hostname alias;
             }) aliases)
           )
           # Ignore hosts starting with an underscore
