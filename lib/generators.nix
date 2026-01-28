@@ -123,7 +123,12 @@ let
     }:
     inputs.system-manager.lib.makeSystemConfig {
       modules = [
-        { environment.etc.test.text = hostname; }
+        {
+          environment.etc.test.text = hostname;
+          nixpkgs.hostPlatform = {
+            system = "x86_64-linux";
+          };
+        }
         hostPath
       ]
       ++ extraModules;
