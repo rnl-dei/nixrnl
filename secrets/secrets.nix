@@ -1,39 +1,18 @@
-let
+{rnl-keys, ...}: let
   # Public SSH keys of users
-  ## RNL
-  raijin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n";
-  raidou = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif";
-  pikachu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY";
-  geoff = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKEEja9gFy3l2Yd8cbPlAIDjdkXZXTLdmfHYstN4wgF/";
-  aurelius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ";
-  lilb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi";
-  teto = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe";
-  hugopc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGl9k5fgE3FibMGrIqop8qneMuQWZa6JSrh1DzIa9j1j";
-  rnl-simaolavos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR";
-
   ## DEI
   sazed = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG7foe85vNDLm0vyVVugR8ThC1VjHuAtqAQ/K2AAVE9r"; # rafael.girao
   prohmakas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFPsWjCFMvLBFUhxCG1KbsTbrDoFvUgJHmGD3rWvHHkO"; # jose.pereira
-  pyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K"; # hugo.pereira
-  users = [
-    raijin
-    raidou
-    pikachu
-    geoff
-    aurelius
-    lilb
-    teto
-    hugopc
-    rnl-simaolavos
-  ];
+
+  users = rnl-keys.rnl-keys;
 
   deiUsers = [
     sazed
     prohmakas
-    pyrus
+    #pyrus
   ];
 
-  deployMachines = users ++ [ ];
+  deployMachines = users ++ [];
 
   # Public SSH host keys of hosts
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
@@ -58,8 +37,7 @@ let
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
   www = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5cj7QcYEz9cSmbQS1ZbmDjQUVdsT9AsmyJdFbZNOg/ www";
-in
-{
+in {
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;
@@ -83,74 +61,86 @@ in
   "host-keys/www.age".publicKeys = deployMachines;
 
   # GitLab runners tokens
-  "gitlab-runners/es-25-env.age".publicKeys = users ++ [ labs ];
+  "gitlab-runners/es-25-env.age".publicKeys = users ++ [labs];
 
   # Secrets
-  "abuseipdb-api-key.age".publicKeys = users ++ [
-    hagrid
-    lga
-  ];
-  "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
-  "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [ dealer ];
-  "dei-dei-docker-config.json.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-glitchtip-database-env.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-glitchtip-secret-key.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-photoprism-admin-password.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-photoprism-db-password.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-photoprism-oidc-secret.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dms-prod-db-password.age".publicKeys = users ++ [ dei ];
-  "dollars-binary-cache-key.age".publicKeys = users ++ [ dollars ];
-  "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
-  "helios-env.age".publicKeys = users ++ [ selene ];
-  "immich-json.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
-  "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
-  "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];
-  "munge-key.age".publicKeys = users ++ [
-    borg
-    labs
-  ];
-  "weaver-rnl-docker-config.json.age".publicKeys = users ++ [
-    weaver
-    www
-  ];
-  "netbox-weaver-env-py.age".publicKeys = users ++ [ weaver ];
-  "netbox-weaver-secret-key.age".publicKeys = users ++ [ weaver ];
-  "open-sessions-key.age".publicKeys = users ++ [ labs ];
-  "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
-  "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
-  "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
-  "rnl-slack-conf.age".publicKeys = users ++ [
-    ns
-    ns2
-  ];
-  "root-at-blatta-ssh-key.age".publicKeys = users ++ [ blatta ];
-  "root-at-dealer-ssh-key.age".publicKeys = users ++ [ dealer ];
-  "root-at-dei-ssh-key.age".publicKeys = users ++ [ dei ];
-  "root-at-ns-ssh-key.age".publicKeys = users ++ [
-    ns
-    ns2
-  ];
-  "root-at-papyrus-ssh-key.age".publicKeys = users ++ [ papyrus ];
-  "root-at-selene-ssh-key.age".publicKeys = users ++ [ selene ];
-  "root-at-thomas-ssh-key.age".publicKeys = users ++ [ thomas ];
-  "root-at-www-ssh-key.age".publicKeys = users ++ [ www ];
-  "roundcube-www-db-password.age".publicKeys = users ++ [ www ];
-  "slurmdbd-borg-db-password.age".publicKeys = users ++ [ borg ];
-  "syncoid-at-caixote-ssh-key.age".publicKeys = users ++ [ caixote ];
-  "tardis-grafana-env.age".publicKeys = users ++ [ tardis ];
-  "tardis-healthchecksio-url.age".publicKeys = users ++ [ tardis ];
-  "tardis-snmp-exporter-env.age".publicKeys = users ++ [ tardis ];
-  "transmission-labs-settings-json.age".publicKeys = users ++ [
-    dollars
-    dolly
-    labs
-  ];
-  "vault-cer.age".publicKeys = users ++ [ vault ];
-  "vault-key.age".publicKeys = users ++ [ vault ];
-  "vault-storage-hcl.age".publicKeys = users ++ [ vault ];
-  "windows-labs-image-key.age".publicKeys = users ++ [ labs ];
-  "wireguard-admin-private-key.age".publicKeys = users ++ [ hagrid ];
-  "www-tv-client-secret-env.age".publicKeys = users ++ [ www ];
-  "www-tv-cms-secret-env.age".publicKeys = users ++ [ www ];
+  "abuseipdb-api-key.age".publicKeys =
+    users
+    ++ [
+      hagrid
+      lga
+    ];
+  "ansible-infra-vault-pass-txt.age".publicKeys = users ++ [dealer];
+  "ansible-windows-vault-pass-txt.age".publicKeys = users ++ [dealer];
+  "dei-dei-docker-config.json.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dei-glitchtip-database-env.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dei-glitchtip-secret-key.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dei-photoprism-admin-password.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dei-photoprism-db-password.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dei-photoprism-oidc-secret.age".publicKeys = users ++ deiUsers ++ [dei];
+  "dms-prod-db-password.age".publicKeys = users ++ [dei];
+  "dollars-binary-cache-key.age".publicKeys = users ++ [dollars];
+  "hedgedoc-fenix-api.age".publicKeys = users ++ [hedgedoc];
+  "helios-env.age".publicKeys = users ++ [selene];
+  "immich-json.age".publicKeys = users ++ deiUsers ++ [dei];
+  "ist-delegate-election-env.age".publicKeys = users ++ [selene];
+  "moodle-agl-db-password.age".publicKeys = users ++ [agl];
+  "moodle-lga-db-password.age".publicKeys = users ++ [lga];
+  "munge-key.age".publicKeys =
+    users
+    ++ [
+      borg
+      labs
+    ];
+  "weaver-rnl-docker-config.json.age".publicKeys =
+    users
+    ++ [
+      weaver
+      www
+    ];
+  "netbox-weaver-env-py.age".publicKeys = users ++ [weaver];
+  "netbox-weaver-secret-key.age".publicKeys = users ++ [weaver];
+  "open-sessions-key.age".publicKeys = users ++ [labs];
+  "open-sessions-db-uri.age".publicKeys = users ++ [www];
+  "papyrus-private-env.age".publicKeys = users ++ [papyrus];
+  "papyrus-wheatley-token.age".publicKeys = users ++ [papyrus];
+  "rnl-slack-conf.age".publicKeys =
+    users
+    ++ [
+      ns
+      ns2
+    ];
+  "root-at-blatta-ssh-key.age".publicKeys = users ++ [blatta];
+  "root-at-dealer-ssh-key.age".publicKeys = users ++ [dealer];
+  "root-at-dei-ssh-key.age".publicKeys = users ++ [dei];
+  "root-at-ns-ssh-key.age".publicKeys =
+    users
+    ++ [
+      ns
+      ns2
+    ];
+  "root-at-papyrus-ssh-key.age".publicKeys = users ++ [papyrus];
+  "root-at-selene-ssh-key.age".publicKeys = users ++ [selene];
+  "root-at-thomas-ssh-key.age".publicKeys = users ++ [thomas];
+  "root-at-www-ssh-key.age".publicKeys = users ++ [www];
+  "roundcube-www-db-password.age".publicKeys = users ++ [www];
+  "slurmdbd-borg-db-password.age".publicKeys = users ++ [borg];
+  "syncoid-at-caixote-ssh-key.age".publicKeys = users ++ [caixote];
+  "tardis-grafana-env.age".publicKeys = users ++ [tardis];
+  "tardis-healthchecksio-url.age".publicKeys = users ++ [tardis];
+  "tardis-snmp-exporter-env.age".publicKeys = users ++ [tardis];
+  "transmission-labs-settings-json.age".publicKeys =
+    users
+    ++ [
+      dollars
+      dolly
+      labs
+    ];
+  "vault-cer.age".publicKeys = users ++ [vault];
+  "vault-key.age".publicKeys = users ++ [vault];
+  "vault-storage-hcl.age".publicKeys = users ++ [vault];
+  "windows-labs-image-key.age".publicKeys = users ++ [labs];
+  "wireguard-admin-private-key.age".publicKeys = users ++ [hagrid];
+  "www-tv-client-secret-env.age".publicKeys = users ++ [www];
+  "www-tv-cms-secret-env.age".publicKeys = users ++ [www];
 }

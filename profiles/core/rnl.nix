@@ -3,9 +3,9 @@
   pkgs,
   lib,
   config,
+  rnl-keys,
   ...
-}:
-let
+}: let
   RNLCert = builtins.fetchurl {
     url = "https://rnl.tecnico.ulisboa.pt/ca/cacert/cacert.pem";
     sha256 = "1jiqx6s86hlmpp8k2172ki6b2ayhr1hyr5g2d5vzs41rnva8bl63";
@@ -15,8 +15,7 @@ let
     url = "https://vault.rnl.tecnico.ulisboa.pt/v1/ssh-client-signer/public_key";
     sha256 = "1dizakgfzr5khi73mpwr4iqhmbkc82x9jswfm8kgzysgqwn6cz6c";
   };
-in
-{
+in {
   environment = {
     systemPackages = with pkgs; [
       # Editors
@@ -77,12 +76,12 @@ in
       "2001:690:2100:82::1"
       "2001:690:2100:82::2"
     ];
-    search = [ config.rnl.domain ];
+    search = [config.rnl.domain];
   };
 
   # Configure NTP
   time.timeZone = "Europe/Lisbon";
-  networking.timeServers = [ "ntp.rnl.tecnico.ulisboa.pt" ];
+  networking.timeServers = ["ntp.rnl.tecnico.ulisboa.pt"];
 
   # Configure locale
   console.keyMap = "pt-latin9";
@@ -126,14 +125,14 @@ in
   # Configure OpenSSH
   services.openssh = {
     enable = true;
-    ports = [ 22 ];
+    ports = [22];
     settings = {
       # UseDNS = true;
       PermitRootLogin = "without-password";
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
     };
-    authorizedKeysFiles = lib.mkForce [ "/etc/ssh/authorized_keys.d/%u" ];
+    authorizedKeysFiles = lib.mkForce ["/etc/ssh/authorized_keys.d/%u"];
     extraConfig = lib.mkOrder 10 ''
       # Allow login using Vault signed certificates
       TrustedUserCAKeys ${SSHTrustedCA}
@@ -154,17 +153,7 @@ in
   users.mutableUsers = false; # Disable manual user management
   users.users.root = {
     description = lib.mkForce "Root user to be used by RNL admins";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n @raijin"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif @raidou"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY @pikachu"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKEEja9gFy3l2Yd8cbPlAIDjdkXZXTLdmfHYstN4wgF/ @geoff"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi @lilb"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ @aurelius"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe @teto"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHk16LFBL889mUIOfJ2qubsa9bO/loUbbC2/hRbtuwxo @hugopc"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR @rnl-simaolavos"
-    ];
+    openssh.authorizedKeys.keys = rnl-keys.rnl-keys;
   };
 
   # Configure email
@@ -186,7 +175,7 @@ in
   };
 
   # Add certificates
-  security.pki.certificateFiles = [ "${RNLCert}" ];
+  security.pki.certificateFiles = ["${RNLCert}"];
 
   # Disable sudo by default because it's not needed
   security.sudo.enable = false;
@@ -195,23 +184,20 @@ in
   services.prometheus.exporters.node = {
     enable = lib.mkDefault true;
     openFirewall = true; # Open port 9100 (TCP)
-    extraFlags = [ "--collector.textfile.directory=/etc/node-exporter-textfiles" ];
+    extraFlags = ["--collector.textfile.directory=/etc/node-exporter-textfiles"];
   };
 
-  environment.etc."node-exporter-textfiles/rev.prom".source = pkgs.runCommandLocal "rev.prom" { } ''
+  environment.etc."node-exporter-textfiles/rev.prom".source = pkgs.runCommandLocal "rev.prom" {} ''
     echo "node_host_rev ${
-      if
-        inputs.self ? shortRev # Check if shortRev is defined
-      then
-        "$((16#${inputs.self.shortRev}))" # Convert from hex to decimal
-      else
-        "-1"
+      if inputs.self ? shortRev # Check if shortRev is defined
+      then "$((16#${inputs.self.shortRev}))" # Convert from hex to decimal
+      else "-1"
     }" > $out
   '';
 
   programs.ssh.knownHosts = {
     gitlab-rnl-ed25519 = {
-      hostNames = [ "gitlab.${config.rnl.domain}" ];
+      hostNames = ["gitlab.${config.rnl.domain}"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMGaP0hqVNDA7CPiPC4zd75JKaNpR2kefJ7qmVEiPtCK";
     };
     labs-rnl-ed25519 = {
