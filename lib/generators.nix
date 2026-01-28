@@ -188,9 +188,9 @@ let
               cfg' = lib.filterAttrs (name: _: name != "aliases") cfg;
               aliases = lib.mapAttrs (_: value: (value // cfg')) aliases';
             in
-            (lib.mapAttrsToList (hostname: alias: {
+            (lib.mapAttrsToList (hostname: {
               name = hostname;
-              value = mkHyper hostname alias;
+              value = mkHyper;
             }) aliases)
           )
           # Ignore hosts starting with an underscore
