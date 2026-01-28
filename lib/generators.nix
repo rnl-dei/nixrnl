@@ -125,9 +125,7 @@ let
       modules = [
         {
           environment.etc.test.text = hostname;
-          nixpkgs.hostPlatform = {
-            system = "x86_64-linux";
-          };
+          nixpkgs.hostPlatform = "x86_64-linux";
         }
         hostPath
       ]
