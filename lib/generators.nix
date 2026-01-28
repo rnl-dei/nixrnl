@@ -126,9 +126,7 @@ let
         {
           environment.etc.test.text = hostname;
           nixpkgs.hostPlatform = "x86_64-linux";
-          config = {
-            system-manager.allowAnyDistro = true;
-          };
+          system-manager.allowAnyDistro = true;
         }
         hostPath
       ]
