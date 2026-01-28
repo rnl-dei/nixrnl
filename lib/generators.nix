@@ -115,22 +115,15 @@ let
     *
   */
   mkHyper =
-    hostname:
     {
-      system,
       hostPath,
       extraModules ? [ ],
       ...
     }:
     inputs.system-manager.lib.makeSystemConfig {
-      inherit system pkgs lib;
-      specialArgs = {
-        inherit profiles inputs;
-      };
       modules =
         (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
         ++ [
-          { networking.hostName = hostname; }
           hostPath
         ]
         ++ extraModules;
@@ -173,7 +166,6 @@ let
                   profiles
                   inputs
                   ;
-                system = "x86_64-linux";
                 aliases = null;
               }
               // hostCfg;
