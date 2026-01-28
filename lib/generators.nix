@@ -122,7 +122,6 @@ let
       ...
     }:
     inputs.system-manager.lib.makeSystemConfig {
-      inherit pkgs lib;
       extraSpecialArgs = {
         inherit profiles inputs;
       };
