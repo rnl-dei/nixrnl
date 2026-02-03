@@ -9,7 +9,7 @@
     build-users-group = "nixbld";
   };
   environment.etc = {
-    "ssh/sshd_config.d/authorized_keys" = {
+    "ssh/sshd_config.d/99-custom-keys.conf" = {
       mode = "644";
       text = ''
         AuthorizedKeysFile .ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
