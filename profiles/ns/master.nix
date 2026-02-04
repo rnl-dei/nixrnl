@@ -54,7 +54,7 @@
       zones."154.136.193.in-addr.arpa" = {
         master = true;
         file = "/var/lib/dns-config/193.136.154.zone";
-        allow-transfer = [
+        slaves = [
           "193.136.128.1"
           "193.136.128.2"
           "193.136.164.1"
@@ -64,7 +64,7 @@
       zones."164.136.193.in-addr.arpa" = {
         master = true;
         file = "/var/lib/dns-config/193.136.164.zone";
-        allow-transfer = [
+        slaves = [
           "193.136.128.1"
           "193.136.128.2"
           "193.136.164.1"
