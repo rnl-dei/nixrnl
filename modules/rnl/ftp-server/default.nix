@@ -114,15 +114,20 @@ let
   }) cfg.mirrors;
 
   tmpfilesRules = lib.mapAttrsToList (
-    mirror:
+    _: mirror:
     (
-      if mirror.target.create then "d ${mirror.target.path} 0770 ${mirror.user} ${mirror.group}" else null
+      if mirror.target.create then "d ${mirror.target.path} 0775 ${mirror.user} ${mirror.group}" else null
     )
   ) cfg.mirrors;
 in
 {
   options.rnl.ftp-server = {
     enable = mkEnableOption "FTP server";
+    passivePorts = mkOption {
+      type = types.listOf types.port;
+      description = "Ports to allow passive access";
+      default = (lib.lists.range 15000 15005);
+    };
     rootDirectory = mkOption {
       type = types.str;
       description = "Directory to serve via rsync";
@@ -202,16 +207,22 @@ in
       enable = cfg.enableFTP;
       anonymousUser = true;
       anonymousUserHome = cfg.rootDirectory;
+      anonymousUserNoPassword = true;
       #rsaCertFile = "${certs.${config.networking.fqdn}.directory}/fullchain.pem";
       #rsaKeyFile = "${certs.${config.networking.fqdn}.directory}/key.pem";
       extraConfig = ''
         allow_anon_ssl=YES
         banner_file=${cfg.motd}
+        pasv_enable=YES
+        # this might not be the best way but find first given pred finds the first matching
+        # so this way it just finds the first...
+        pasv_min_port=${toString (lib.lists.findFirst (_: true) null cfg.passivePorts)}
+        pasv_max_port=${toString (lib.lists.last cfg.passivePorts)}
       '';
     };
 
     networking.firewall.allowedTCPPorts =
       (lib.lists.optional cfg.enableRsync config.services.rsyncd.port)
-      ++ (lib.lists.optional cfg.enableFTP 21);
+      ++ (lib.lists.optional cfg.enableFTP 21 ++ cfg.passivePorts);
   };
 }

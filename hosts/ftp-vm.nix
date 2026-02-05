@@ -146,22 +146,22 @@ in
   };
 
   systemd.tmpfiles.rules = [
-    "d /root/.ssh 0755 root root"
+    "d /root/.ssh 0750 root root"
 
-    "d /mnt/data/ftp/pub 0770 mirror mirror"
+    "d /mnt/data/ftp/pub 0775 mirror mirror"
 
     #HACK: Distro with subdirs for various mirrors dont create properly with tmpfiles.d
-    "d /mnt/data/ftp/pub/debian 0770 mirror mirror"
-    "d /mnt/data/ftp/pub/gentoo 0770 mirror mirror"
-    "d /mnt/data/ftp/pub/ubuntu 0770 mirror mirror"
+    "d /mnt/data/ftp/pub/debian 0775 mirror mirror"
+    "d /mnt/data/ftp/pub/gentoo 0775 mirror mirror"
+    "d /mnt/data/ftp/pub/ubuntu 0775 mirror mirror"
 
     # "d /mnt/data/ftp/pub/ubuntu/releases 0770 mirror mirror"
 
     "d /mnt/data/ftp/tmp 0755 root root"
 
-    "d /mnt/data/ftp/dei 0755 root root"
-    "d /mnt/data/ftp/dei-share 0755 root root"
-    "d /mnt/data/ftp/priv 0755 root root"
+    "d /mnt/data/ftp/dei 0750 root root"
+    "d /mnt/data/ftp/dei-share 0750 root root"
+    "d /mnt/data/ftp/priv 0750 root root"
   ];
 
   services.nginx.virtualHosts.ftp = {
