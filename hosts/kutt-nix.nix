@@ -1,10 +1,27 @@
 {
   profiles,
+  lib,
   ...
 }:
 let
   kutt_state_dir = "/var/lib/kutt";
   kutt_port = 3000;
+
+  createVirtualHost =
+    {
+      source,
+      target ? source,
+    }:
+    {
+      ${source} = {
+        serverName = target;
+        enableACME = true;
+        forceSSL = true;
+        locations."/" = {
+          proxyPass = "http://localhost:${toString kutt_port}";
+        };
+      };
+    };
 in
 {
   imports = with profiles; [
@@ -15,7 +32,7 @@ in
     webserver
     containers.docker
     kutt
-    # future kutt profile here
+    fail2ban
   ];
 
   rnl.labels.location = "atlas";
@@ -64,36 +81,14 @@ in
     defaultGateway6.address = "2001:690:2100:83::ffff:1";
   };
 
-  services.nginx.virtualHosts = {
-    "kutt" = {
-      serverName = "s.rnl.pt";
-      enableACME = true;
-      forceSSL = true;
-      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
-    };
-    "rnl.pt" = {
-      serverName = "rnl.pt";
-      enableACME = true;
-      forceSSL = true;
-      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
-    };
-    "dei.pt" = {
-      serverName = "dei.pt";
-      enableACME = true;
-      forceSSL = true;
-      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
-    };
-    "eventos.dei.pt" = {
-      serverName = "eventos.dei.pt";
-      enableACME = true;
-      forceSSL = true;
-      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
-    };
-    "noticias.dei.pt" = {
-      serverName = "noticias.dei.pt";
-      enableACME = true;
-      forceSSL = true;
-      locations."/".proxyPass = "http://localhost:${toString kutt_port}";
-    };
-  };
+  services.nginx.virtualHosts = lib.mkMerge [
+    (createVirtualHost {
+      source = "kutt";
+      target = "s.rnl.pt";
+    })
+    (createVirtualHost { source = "rnl.pt"; })
+    (createVirtualHost { source = "dei.pt"; })
+    (createVirtualHost { source = "eventos.dei.pt"; })
+    (createVirtualHost { source = "noticias.dei.pt"; })
+  ];
 }
