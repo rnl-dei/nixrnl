@@ -6,7 +6,6 @@
     os.nixos
     type.lab
     labs
-    exam
     cluster.client
   ];
 
