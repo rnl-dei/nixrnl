@@ -214,9 +214,7 @@ in
         allow_anon_ssl=YES
         banner_file=${cfg.motd}
         pasv_enable=YES
-        # this might not be the best way but find first given pred finds the first matching
-        # so this way it just finds the first...
-        pasv_min_port=${toString (lib.lists.findFirst (_: true) null cfg.passivePorts)}
+        pasv_min_port=${toString (builtins.elemAt cfg.passivePorts 0)}
         pasv_max_port=${toString (lib.lists.last cfg.passivePorts)}
       '';
     };
