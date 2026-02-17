@@ -5,7 +5,6 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
-    gitlab-runner
   ];
 
   rnl.labels.location = "atlas";
