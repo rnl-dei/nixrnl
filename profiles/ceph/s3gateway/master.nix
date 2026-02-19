@@ -5,13 +5,12 @@
 }:
 {
   config = {
-    security.acme.acceptTerms = true;
     services.nginx = {
-      enable = true;
+      enable = false;
       virtualHosts = {
         "s3.rnl.tecnico.ulisboa.pt" = {
-          forceSSL = true;
-          enableACME = true;
+          forceSSL = false;
+          enableACME = false;
           locations."/" = {
             proxyPass = "http://localhost:80";
           };
