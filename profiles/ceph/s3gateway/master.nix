@@ -1,24 +1,24 @@
 {
   config,
-
   ...
 }:
 {
   config = {
     services.nginx = {
-      enable = false;
+      enable = true;
       virtualHosts = {
         "s3.rnl.tecnico.ulisboa.pt" = {
-          forceSSL = false;
-          enableACME = false;
+          forceSSL = true;
+          sslCertificate = "/etc/ssl/shared_certs/ssl_cert.crt";
+          sslCertificateKey = "/etc/ssl/shared_certs/ssl_cert.key";
           locations."/" = {
-            proxyPass = "http://localhost:80";
+            proxyPass = "http://localhost:7480";
           };
         };
       };
     };
     environment.etc = {
-      "etc/keepalived/keepalived.conf.test" = {
+      "keepalived/keepalived.conf" = {
         mode = "644";
         text = ''
           vrrp_instance VI_1 {
