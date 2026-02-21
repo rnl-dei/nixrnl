@@ -13,6 +13,9 @@
           sslCertificateKey = "/etc/ssl/shared_certs/ssl_cert.key";
           locations."/" = {
             proxyPass = "http://localhost:7480";
+            extraConfig = ''
+              client_max_body_size 50000M;
+            '';
           };
         };
       };
