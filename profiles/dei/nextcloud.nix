@@ -72,6 +72,8 @@
         calendar
         contacts
         files_automatedtagging
+        spreed # hmmm, this is dangerous...
+        forms
         ;
 
       libresign = pkgs.fetchNextcloudApp {
@@ -103,6 +105,14 @@
         appVersion = "31.0.0";
         url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/31.0.0/files_fulltextsearch-31.0.0.tar.gz";
         sha256 = "sha256-gfe7FnGR7qxfUOQr/ZjPNikIWL06WzTp5tjdyLknapE=";
+        license = "agpl3Plus";
+      };
+
+      flow = pkgs.fetchNextcloudApp {
+        appName = "flow";
+        appVersion = "1.3.0";
+        url = "https://github.com/nextcloud-releases/flow/releases/download/v1.3.0/flow-v1.3.0.tar.gz";
+        sha256 = "sha256-2KUyBb3Y1hnIRKBpaggVk09vBs+q+DlSoJAdDs+TQ18=";
         license = "agpl3Plus";
       };
 
@@ -214,20 +224,17 @@
   };
 
   services.elasticsearch = {
-    enable = true;
-    package = pkgs.elasticsearch7; # Nextcloud works best with ES 7.x or 8.x
+    enable = false;
+    package = pkgs.elasticsearch7;
 
     plugins = [ pkgs.elasticsearchPlugins.ingest-attachment ];
 
-    # Listen only on localhost for security
     listenAddress = "127.0.0.1";
     port = 9200;
 
-    # Limit memory usage (Adjust Xms and Xmx based on your available RAM)
-    # 1g is usually enough for personal/small team use.
     extraJavaOptions = [
-      "-Xms1g"
-      "-Xmx1g"
+      "-Xms2g"
+      "-Xmx2g"
     ];
   };
 
