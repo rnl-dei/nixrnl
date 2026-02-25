@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  imports = [ ./labs.nix ];
+  imports = [ ./common.nix ];
 
   services.gitlab-runner.services = {
     es = {
