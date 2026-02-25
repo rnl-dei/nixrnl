@@ -13,6 +13,6 @@
   };
 
   age.secrets."gl-runner-es.env" = {
-    file = ../../../secrets/gitlab-runners/es-25-env.age;
+    file = ../../../secrets/gitlab-runners/labs/es-labs-env.age;
   };
 }

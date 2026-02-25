@@ -85,7 +85,7 @@ in
   "host-keys/www.age".publicKeys = deployMachines;
 
   # GitLab runners tokens (labs)
-  "gitlab-runners/es-labs-env.age".publicKeys = users ++ [ labs ];
+  "gitlab-runners/labs/es-labs-env.age".publicKeys = users ++ [ labs ];
 
   # GitLab runners tokens (operario)
   "gitlab-runners/co-a-runner.age".publicKeys = users ++ [ operario-nix ];
