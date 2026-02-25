@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  commonRegistrationFlags = "--output-limit 16384 --docker-oom-kill-disable true --docker-shm-size 0";
+  commonRegistrationFlags = "--output-limit=16384 --docker-oom-kill-disable=true --docker-shm-size=0";
   ubuntuImage = "ubuntu:25.10";
   alpineImage = "alpine:latest";
 in
@@ -13,8 +13,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."co-a.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 4"
-        "--docker-memory 4g"
+        "--docker-cpus=4"
+        "--docker-memory=4g"
       ];
       dockerVolumes = [ "/cache" ];
       description = "CO-A runner";
@@ -25,8 +25,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."co-t.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 4"
-        "--docker-memory 4g"
+        "--docker-cpus=4"
+        "--docker-memory=4g"
       ];
       dockerVolumes = [ "/cache" ];
       description = "CO-T runner";
@@ -37,8 +37,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."dei-runner.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 2"
-        "--docker-memory 4g"
+        "--docker-cpus=2"
+        "--docker-memory=4g"
       ];
       dockerVolumes = [
         "/cache"
@@ -51,8 +51,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."dms-runner.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 10"
-        "--docker-memory 10g"
+        "--docker-cpus=10"
+        "--docker-memory=10g"
       ];
       dockerVolumes = [
         "/cache"
@@ -65,8 +65,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."es-runner.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 16"
-        "--docker-memory 32g"
+        "--docker-cpus=16"
+        "--docker-memory=32g"
       ];
       dockerVolumes = [
         "/cache"
@@ -79,8 +79,8 @@ in
       authenticationTokenConfigFile = config.age.secrets."rnl-runner.env".path;
       registrationFlags = [
         commonRegistrationFlags
-        "--docker-cpus 2"
-        "--docker-memory 10g"
+        "--docker-cpus=2"
+        "--docker-memory=10g"
       ];
       dockerVolumes = [ "/cache" ];
       description = "RNL nix";
