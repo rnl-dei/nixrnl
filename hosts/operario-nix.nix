@@ -5,6 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+    gitlab-runner.operario
   ];
 
   rnl.labels.location = "atlas";
@@ -30,6 +31,8 @@
     ];
 
   };
+
+  virtualisation.docker.enable = true; # guarantee that operario has both virt options for the runners, to prevent breaking prev changes to ES config, for example
 
   networking = {
     defaultGateway.address = "193.136.164.190";

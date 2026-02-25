@@ -51,6 +51,7 @@ let
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
   ns = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4xYTAuqXBeBDEGbbw9DQKitz6O9Pr3JXj7kyktac4u";
   ns2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
+  operario-nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHi8RbhO4COVnF1fxPqARnONP//aFsxP0WuICTIug6ET";
   papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
   tardis = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGOUuCvrnWbXGFZAl5n7W/IGgwmNauGUBzY1hdeIkoY";
@@ -74,6 +75,7 @@ in
   "host-keys/lga.age".publicKeys = deployMachines;
   "host-keys/neo.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
+  "host-keys/operario-nix.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/tardis.age".publicKeys = deployMachines;
@@ -84,6 +86,7 @@ in
 
   # GitLab runners tokens
   "gitlab-runners/es-25-env.age".publicKeys = users ++ [ labs ];
+  "gitlab-runners/rnl-runner.age".publicKeys = users ++ [ operario-nix ];
 
   # Secrets
   "abuseipdb-api-key.age".publicKeys = users ++ [
