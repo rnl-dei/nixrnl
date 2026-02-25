@@ -15,9 +15,8 @@
     createdBy = "vasco.morais";
 
     #memory = 65536; # 64GB
-    #cpu = 24;
-    memory = 4096; # lets start with the requirements for our own worker
-    cpu = 4;
+    memory = 8192; # lets start with the requirements for our own worker
+    cpu = 24;
 
     interfaces = [
       {

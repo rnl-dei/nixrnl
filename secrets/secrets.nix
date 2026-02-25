@@ -84,8 +84,15 @@ in
   "host-keys/weaver.age".publicKeys = deployMachines;
   "host-keys/www.age".publicKeys = deployMachines;
 
-  # GitLab runners tokens
-  "gitlab-runners/es-25-env.age".publicKeys = users ++ [ labs ];
+  # GitLab runners tokens (labs)
+  "gitlab-runners/es-labs-env.age".publicKeys = users ++ [ labs ];
+
+  # GitLab runners tokens (operario)
+  "gitlab-runners/co-a-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/co-t-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/es-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/dei-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/dms-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/rnl-runner.age".publicKeys = users ++ [ operario-nix ];
 
   # Secrets
