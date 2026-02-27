@@ -1,7 +1,7 @@
 { ... }:
 {
   system.autoUpgrade = {
-    enable = false;
+    enable = true;
     dates = "04:00";
     randomizedDelaySec = "45min";
     persistent = true;
