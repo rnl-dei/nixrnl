@@ -13,7 +13,7 @@ let
     #pyrus
   ];
 
-  deployMachines = users ++ [];
+  deployMachines = users ++ [ ];
 
   # Public SSH host keys of hosts
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
@@ -39,7 +39,8 @@ let
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
   www = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5cj7QcYEz9cSmbQS1ZbmDjQUVdsT9AsmyJdFbZNOg/ www";
-in {
+in
+{
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;

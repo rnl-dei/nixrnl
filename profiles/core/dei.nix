@@ -2,8 +2,9 @@
   config,
   rnl-keys,
   ...
-}: {
-  imports = [./rnl.nix];
+}:
+{
+  imports = [ ./rnl.nix ];
 
   users.users.root.openssh.authorizedKeys.keys = rnl-keys.dei-keys;
 
