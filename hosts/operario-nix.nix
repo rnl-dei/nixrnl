@@ -14,8 +14,7 @@
     description = "Runners Gitlab em NixOS";
     createdBy = "vasco.morais";
 
-    #memory = 65536; # 64GB
-    memory = 8192; # lets start with the requirements for our own worker
+    memory = 65536; # 64GB
     cpu = 24;
 
     interfaces = [
@@ -40,14 +39,14 @@
     interfaces.enp1s0 = {
       ipv4.addresses = [
         {
-          address = "193.136.164.182";
+          address = "193.136.164.173";
           prefixLength = 26;
         }
       ];
 
       ipv6.addresses = [
         {
-          address = "2001:690:2100:83::182";
+          address = "2001:690:2100:83::173";
           prefixLength = 64;
         }
       ];
