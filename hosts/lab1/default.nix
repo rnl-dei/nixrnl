@@ -7,6 +7,7 @@
     type.lab
     labs
     cluster.client
+    gitlab-runner.labs.es
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];

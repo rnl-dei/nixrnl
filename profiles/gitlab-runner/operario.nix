@@ -72,7 +72,7 @@ in
         "/cache"
       ];
       description = "ES26 runner";
-      limit = 4;
+      limit = 1;
     };
     RNL = {
       dockerImage = ubuntuImage;
