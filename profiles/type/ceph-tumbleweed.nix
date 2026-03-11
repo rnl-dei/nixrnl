@@ -1,20 +1,61 @@
 {
-  config,
   lib,
   rnl-keys,
   ...
 }:
+let
+  generateVlan = (
+    {
+      vlan,
+      uuid,
+      ip ? "127.0.0.1/32",
+    }:
+    ''
+      [connection]
+      id=${vlan}
+      uuid=${uuid}
+      type=vlan
+      interface-name=${vlan}
+      timestamp=1771067691
+
+      [ethernet]
+
+      [vlan]
+      flags=1
+      id=30
+      parent=bond0
+
+      [ipv4]
+      address1=${ip}
+      method=manual
+
+      [ipv6]
+      addr-gen-mode=default
+      method=auto
+
+      [proxy]
+    ''
+  );
+in
 {
-  nixpkgs.config = {
-    build-users-group = "nixbld";
-  };
+  generateVlans =
+    list:
+    builtins.listToAttrs (
+      map (vlan: {
+        name = "NetworkManager/system-connections/${vlan}.nmconnection";
+        value = generateVlan {
+          vlan = vlan;
+          uuid = lib.generateUUID vlan;
+        };
+      }) list
+    );
+
   environment.etc = {
     "ssh/sshd_config.d/99-custom-keys.conf" = {
       mode = "644";
       text = ''
         AuthorizedKeysFile .ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
       '';
-
     };
     "ssh/authorized_keys.d/root" = {
       mode = "644";

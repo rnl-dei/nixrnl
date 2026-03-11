@@ -1,4 +1,9 @@
-{ config, profiles, ... }:
+{
+  lib,
+  config,
+  profiles,
+  ...
+}:
 {
   imports = with profiles; [
     core.rnl
@@ -30,6 +35,18 @@
         "/dev/disk/by-id/ata-TOSHIBA_MG08ACA16TE_74D0A0GNFVGG"
       ];
     };
+  };
+
+  environment.etc = lib.generateVlans [
+    "public"
+    "labs"
+    "dmz"
+    "gia"
+    "portateis"
+  ];
+
+  nixpkgs.config = {
+    build-users-group = "nixbld";
   };
 
   # Networking
