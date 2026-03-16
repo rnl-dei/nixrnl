@@ -1,6 +1,14 @@
-{ pkgs, lib, ... }:
 {
-  imports = [ ./shell.nix ];
+  pkgs,
+  lib,
+  profiles,
+  ...
+}:
+{
+  imports = [
+    ./shell.nix
+    profiles.containers.apptainer
+  ];
 
   environment.systemPackages = with pkgs; [
     # Browser
