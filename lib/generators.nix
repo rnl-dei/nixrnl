@@ -110,6 +110,12 @@ let
     *
   */
   mkHyper =
+    let
+      # Ensure lib has boolToYesNo even if the base lib is older
+      extendedLib = lib // {
+        boolToYesNo = b: if b then "yes" else "no";
+      };
+    in
     hostname:
     {
       hostPath,
@@ -117,15 +123,19 @@ let
       ...
     }:
     inputs.system-manager.lib.makeSystemConfig {
-      extraSpecialArgs = {
+      specialArgs = {
         rnl-keys = import ../profiles/core/keys.nix;
+        lib = extendedLib;
         inherit profiles inputs;
       };
       modules = [
         {
-          environment.etc.test.text = hostname;
-          nixpkgs.hostPlatform = "x86_64-linux";
-          system-manager.allowAnyDistro = true;
+
+          config = {
+            environment.etc.test.text = hostname;
+            nixpkgs.hostPlatform = "x86_64-linux";
+            system-manager.allowAnyDistro = true;
+          };
         }
         hostPath
       ]

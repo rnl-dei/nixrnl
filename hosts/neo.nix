@@ -1,5 +1,4 @@
 {
-  lib,
   config,
   profiles,
   ...
@@ -36,14 +35,6 @@
       ];
     };
   };
-
-  environment.etc = lib.generateVlans [
-    "public"
-    "labs"
-    "dmz"
-    "gia"
-    "portateis"
-  ];
 
   nixpkgs.config = {
     build-users-group = "nixbld";

@@ -38,14 +38,18 @@ let
   );
 in
 {
-  generateVlans =
+  # FIXME:
+  # This makes the function available to any module that imports this profile
+  _module.args.generateVlans =
     list:
     builtins.listToAttrs (
       map (vlan: {
         name = "NetworkManager/system-connections/${vlan}.nmconnection";
-        value = generateVlan {
-          vlan = vlan;
-          uuid = lib.generateUUID vlan;
+        value = {
+          text = generateVlan {
+            vlan = vlan;
+            uuid = lib.rnl.generateUUID vlan;
+          };
         };
       }) list
     );
