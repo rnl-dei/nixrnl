@@ -13,6 +13,20 @@ let
 in
 mkIf cfg.enable {
 
+  age.secrets."blatta.cer" = {
+    file = ../../../secrets/blatta-cer.age;
+    mode = "0400";
+    owner = config.services.caddy.user;
+    group = config.services.caddy.group;
+  };
+
+  age.secrets."blatta.key" = {
+    file = ../../../secrets/blatta-key.age;
+    mode = "0400";
+    owner = config.services.caddy.user;
+    group = config.services.caddy.group;
+  };
+
   services.nginx.defaultListenAddresses = [
     "127.0.0.80"
     # ipv6 has only one loopback address: using only ipv4.
@@ -50,6 +64,13 @@ mkIf cfg.enable {
               vhostConfig.serverName
             else
               "dummy-value-for-localhost.blatta.rnl.tecnico.ulisboa.pt"; # don't know if this is the best approach.
+          # only for *.blatta.rnl.tecnico.ulisboa.pt and blatta.rnl.tecnico.ulisboa.pt
+          # dont know if this best approach
+          tlsConfig =
+            if (lib.hasSuffix "blatta.rnl.tecnico.ulisboa.pt" svName) then
+              "tls ${config.age.secrets."blatta.cer".path} ${config.age.secrets."blatta.key".path}"
+            else
+              "";
         in
         {
           #name = vhostConfig.serverName ? "dms.blatta.rnl.tecnico.ulisboa.pt";
@@ -57,6 +78,7 @@ mkIf cfg.enable {
           # https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#https
           value = {
             extraConfig = ''
+              ${tlsConfig}
               encode zstd gzip
               reverse_proxy https://127.0.0.80 {
                 transport http {

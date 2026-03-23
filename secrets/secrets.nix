@@ -156,6 +156,8 @@ in
     dolly
     labs
   ];
+  "blatta-cer.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "blatta-key.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "vault-cer.age".publicKeys = users ++ [ vault ];
   "vault-key.age".publicKeys = users ++ [ vault ];
   "vault-storage-hcl.age".publicKeys = users ++ [ vault ];
