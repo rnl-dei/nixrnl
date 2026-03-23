@@ -11,7 +11,6 @@
     core.dei
     filesystems.simple-uefi
     os.nixos
-    dei.immich
     type.vm
     containers.docker # required for multi-dms
     webserver
