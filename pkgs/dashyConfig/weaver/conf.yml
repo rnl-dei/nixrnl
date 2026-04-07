@@ -95,6 +95,12 @@ sections:
         icon: fas fa-keyboard
         url: https://labs-matrix.rnl.tecnico.ulisboa.pt
         id: 3_1739_labmatrix
+      - title: Ceph Dashboard
+        description: Dashboard for the ceph storage service
+        icon: fas fa-desktop
+        url: https://hive.rnl.tecnico.ulisboa.pt:8443
+        id: 4_1739_ceph_hive
+
   - name: Misc
     icon: fas fa-microchip
     items:

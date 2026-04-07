@@ -47,6 +47,7 @@ let
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
   ns = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4xYTAuqXBeBDEGbbw9DQKitz6O9Pr3JXj7kyktac4u";
   ns2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
+  operario-nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHi8RbhO4COVnF1fxPqARnONP//aFsxP0WuICTIug6ET";
   papyrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGBZwTqDISf8vAcjWIvQjglURvszemLhwhLaLSbBk2c2";
   selene = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBP2WaNeSaVQ5kwKHjvoWt6oTd8ymdb1I+l3SIkn8ugC";
   tardis = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGOUuCvrnWbXGFZAl5n7W/IGgwmNauGUBzY1hdeIkoY";
@@ -70,6 +71,7 @@ in
   "host-keys/lga.age".publicKeys = deployMachines;
   "host-keys/neo.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
+  "host-keys/operario-nix.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
   "host-keys/selene.age".publicKeys = deployMachines;
   "host-keys/tardis.age".publicKeys = deployMachines;
@@ -78,8 +80,16 @@ in
   "host-keys/weaver.age".publicKeys = deployMachines;
   "host-keys/www.age".publicKeys = deployMachines;
 
-  # GitLab runners tokens
-  "gitlab-runners/es-25-env.age".publicKeys = users ++ [ labs ];
+  # GitLab runners tokens (labs)
+  "gitlab-runners/labs/es-labs-env.age".publicKeys = users ++ [ labs ];
+
+  # GitLab runners tokens (operario)
+  "gitlab-runners/co-a-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/co-t-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/es-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/dei-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/dms-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/rnl-runner.age".publicKeys = users ++ [ operario-nix ];
 
   # Secrets
   "abuseipdb-api-key.age".publicKeys = users ++ [
@@ -155,6 +165,8 @@ in
     dolly
     labs
   ];
+  "blatta-cer.age".publicKeys = users ++ deiUsers ++ [ blatta ];
+  "blatta-key.age".publicKeys = users ++ deiUsers ++ [ blatta ];
   "vault-cer.age".publicKeys = users ++ [ vault ];
   "vault-key.age".publicKeys = users ++ [ vault ];
   "vault-storage-hcl.age".publicKeys = users ++ [ vault ];
