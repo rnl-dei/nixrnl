@@ -12,15 +12,15 @@ let
     {
       mountPoint = "[BLATTA] DMS File Repository";
       bucket = "blatta";
-      groups = [
-        "Secretaria"
-        "DEI"
-      ];
+      groups = [ "DEI" ];
     }
     {
       mountPoint = "DMS File Repository";
-      bucket = "dei";
-      groups = [ "Secretaria" ];
+      bucket = "dei-prod";
+      groups = [
+        "DEI"
+        "Secretaria"
+      ];
     }
   ];
 
@@ -67,10 +67,10 @@ let
     }:
     ''
 
-      # Check if mount point already exists
+      # Check if mount point already exists (strip warnings and ANSI)
       MOUNT_ID=$(
-        ${nextcloudOcc} files_external:list --output=json |
-        sed -n '/^\[/,$p' | \
+        ${nextcloudOcc} files_external:list --output=json --no-ansi |
+        sed -n '/^[{\[]/,$p' | \
         ${pkgs.jq}/bin/jq -r --arg mp "${mountPoint}" '
           .[] 
           | select((.mount_point | sub("^/";"")) == ($mp | sub("^/";"")))
@@ -83,23 +83,22 @@ let
         MOUNT_ID=$(
           ${nextcloudOcc} files_external:create \
             -c bucket="${bucket}" \
-            -c hostname="${config.services.garage.settings.s3_api.root_domain}" \
-            -c region="garage" \
-            -c use_ssl=true \
+            -c hostname="193.136.164.35:7480" \
+            -c use_ssl=false \
             -c use_path_style=true \
             -c useMultipartCopy=true \
             -c key="$S3_KEY" \
             -c secret="$S3_SECRET" \
             "${mountPoint}" amazons3 amazons3::accesskey \
-            --output=json
+            --output=json --no-ansi
         )
       fi
 
       # Reset and apply groups
       if [ ! -z "$MOUNT_ID" ]; then
-        ${nextcloudOcc} files_external:applicable --remove-all "$MOUNT_ID"
+        ${nextcloudOcc} files_external:applicable --remove-all "$MOUNT_ID" --no-ansi
         ${lib.concatMapStringsSep "\n" (
-          g: "${nextcloudOcc} files_external:applicable --add-group=\"${g}\" \"$MOUNT_ID\""
+          g: "${nextcloudOcc} files_external:applicable --add-group=\"${g}\" \"$MOUNT_ID\" --no-ansi"
         ) groups}
       fi
     '';
@@ -108,9 +107,10 @@ let
     { name, groups }:
     ''
 
-      # Check if group folder already exists
+      # Check if group folder already exists (strip warnings and ANSI)
       FOLDER_ID=$(
-        ${nextcloudOcc} groupfolders:list --output=json | \
+        ${nextcloudOcc} groupfolders:list --output=json --no-ansi | \
+        sed -n '/^[{\[]/,$p' | \
         ${pkgs.jq}/bin/jq -r --arg name "${name}" '
           .[] 
           | select(.mount_point == $name)
@@ -120,13 +120,13 @@ let
 
       # If not, create it
       if [ -z "$FOLDER_ID" ]; then
-        FOLDER_ID=$(${nextcloudOcc} groupfolders:create "${name}" | tr -dc '0-9')
+        FOLDER_ID=$(${nextcloudOcc} groupfolders:create "${name}" --no-ansi | tr -dc '0-9')
       fi
 
       # Reset and apply groups
       if [ ! -z "$FOLDER_ID" ]; then
         ${lib.concatMapStringsSep "\n" (g: ''
-          ${nextcloudOcc} groupfolders:group "$FOLDER_ID" "${g.name}" ${g.permissions}
+          ${nextcloudOcc} groupfolders:group "$FOLDER_ID" "${g.name}" ${g.permissions} --no-ansi
         '') groups}
       fi
     '';

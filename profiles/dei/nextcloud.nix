@@ -1,8 +1,21 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
+let
+  ncPkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+      })
+      {
+        system = pkgs.system;
+        config.allowUnfree = true;
+      };
+in
 {
   age.secrets.dei-nextcloud-secretFile = {
     file = ../../secrets/dei-nextcloud-secretFile.age;
@@ -13,15 +26,7 @@
   age.secrets.dei-nextcloud-admin-pass = {
     file = ../../secrets/dei-nextcloud-admin-pass.age;
     owner = "nextcloud";
-    path = "/var/lib/onlyoffice/dei-nextcloud-admin-pass";
-  };
-
-  age.secrets.dei-onlyoffice-jwt = {
-    file = ../../secrets/dei-onlyoffice-jwt.age;
-    owner = "onlyoffice";
-    group = "nextcloud"; # to allow Nextcloud to read the JWT secret
-    mode = "440"; # read for owner and group only
-    path = "/var/lib/onlyoffice/dei-onlyoffice-jwt";
+    path = "/var/lib/nextcloud/dei-nextcloud-admin-pass";
   };
 
   age.secrets.dei-nextcloud-oidc = {
@@ -36,18 +41,29 @@
     forceSSL = true;
   };
 
-  services.nginx.virtualHosts."${config.services.onlyoffice.hostname}" = {
-    serverName = "${config.services.onlyoffice.hostname}";
-    enableACME = true;
-    forceSSL = true;
-  };
-  environment.systemPackages = with pkgs; [
-    jre21_minimal
-    pdftk
-  ];
+  services.nginx.virtualHosts."${config.virtualisation.oci-containers.containers.collabora.environment.server_name
+  }" =
+    {
+      serverName = "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://[::1]:9980";
+        proxyWebsockets = true;
+      };
+    };
+
   services.nextcloud = {
     enable = true;
-    package = pkgs.nextcloud31;
+
+    package =
+      let
+        base = ncPkgs.nextcloud33;
+      in
+      base
+      // {
+        override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
+      };
 
     hostName = "drive.dei.tecnico.ulisboa.pt";
 
@@ -64,7 +80,7 @@
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
-        onlyoffice
+        richdocuments
         user_oidc
         deck
         #mail
@@ -74,37 +90,38 @@
         files_automatedtagging
         spreed # hmmm, this is dangerous...
         forms
+        #user_saml
         ;
 
       libresign = pkgs.fetchNextcloudApp {
         appName = "libresign";
-        appVersion = "11.6.0";
-        url = "https://github.com/LibreSign/libresign/releases/download/v11.6.0/libresign-v11.6.0.tar.gz";
-        sha256 = "ddae9486fe7a69ab79632542bf60add20ce985c41c76803f505d31e501c5229c";
+        appVersion = "13.1.3";
+        url = "https://github.com/LibreSign/libresign/releases/download/v13.1.3/libresign-v13.1.3.tar.gz";
+        sha256 = "sha256-rjyCZX1+vEs2TmMGQs8hI3ty4DbMNH5tBggvhklttiQ=";
         license = "agpl3Plus";
       };
 
       fulltextsearch = pkgs.fetchNextcloudApp {
         appName = "fulltextsearch";
-        appVersion = "31.0.1";
-        url = "https://github.com/nextcloud-releases/fulltextsearch/releases/download/31.0.1/fulltextsearch-31.0.1.tar.gz";
-        sha256 = "sha256-8kSSFo2rdWIsL25qn6DfSdUqCCXCXMy1o0IcIXLKPJ8=";
+        appVersion = "33.0.0";
+        url = "https://github.com/nextcloud-releases/fulltextsearch/releases/download/33.0.0/fulltextsearch-33.0.0.tar.gz";
+        sha256 = "sha256-p7b+PA9z/KHB9ZRDDbO/y6CJFJLhH0xHEFc/rr1H6yg=";
         license = "agpl3Plus";
       };
 
       fulltextsearch_elasticsearch = pkgs.fetchNextcloudApp {
         appName = "fulltextsearch_elasticsearch";
-        appVersion = "31.0.2";
-        url = "https://github.com/nextcloud-releases/fulltextsearch_elasticsearch/releases/download/31.0.2/fulltextsearch_elasticsearch-31.0.2.tar.gz";
-        sha256 = "sha256-x+OkbLLRb0GMCqPT4+PQsEXMDkaLqW0+q0WoXRqNqN0=";
+        appVersion = "33.0.0";
+        url = "https://github.com/nextcloud-releases/fulltextsearch_elasticsearch/releases/download/33.0.0/fulltextsearch_elasticsearch-33.0.0.tar.gz";
+        sha256 = "sha256-Z0A8n2XqtFkS2XpvBGrjSuGS/lkGKGoJEiR0q7UEexE=";
         license = "agpl3Plus";
       };
 
       files_fulltextsearch = pkgs.fetchNextcloudApp {
         appName = "files_fulltextsearch";
-        appVersion = "31.0.0";
-        url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/31.0.0/files_fulltextsearch-31.0.0.tar.gz";
-        sha256 = "sha256-gfe7FnGR7qxfUOQr/ZjPNikIWL06WzTp5tjdyLknapE=";
+        appVersion = "33.0.0";
+        url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/33.0.0/files_fulltextsearch-33.0.0.tar.gz";
+        sha256 = "sha256-5KaE6PSdDaxuEliFtr3zjnFNnRzUhsJU/8M7dvtUwEs=";
         license = "agpl3Plus";
       };
 
@@ -125,13 +142,8 @@
 
       allow_local_remote_servers = true;
 
-      onlyoffice = {
-        DocumentServerUrl = "https://${config.services.onlyoffice.hostname}/";
-
-        jwt_header = "Authorization";
-
-        verify_peer_off = true;
-      };
+      loglevel = 2;
+      log_type = "file";
 
       user_oidc = {
         auto_provision = true;
@@ -140,6 +152,7 @@
 
         login_label = "Login via Fenix";
       };
+
     };
 
     database.createLocally = true;
@@ -158,11 +171,11 @@
       objectstore.s3 = {
         enable = true;
 
-        useSsl = true;
-        region = "garage";
+        useSsl = false;
         usePathStyle = true;
+        verify_bucket_exists = false;
 
-        hostname = "${config.services.garage.settings.s3_api.root_domain}";
+        hostname = "193.136.164.35:7480";
         bucket = "nextcloud-bucket";
         secretFile = config.age.secrets.dei-nextcloud-secretFile.path; # will be replaced at runtime
         key = "placeholder"; # will be overwritten at runtime
@@ -174,10 +187,12 @@
   # so we create a systemd service that runs once after Nextcloud setup to apply them
   # all this to have an "declarative" configuration via Nix
   systemd.services.nextcloud-runtime-config = {
-    description = "Nextcloud runtime settings (OIDC & OnlyOffice)";
+    description = "Nextcloud runtime settings (OIDC)";
     after = [ "nextcloud-setup.service" ];
     requires = [ "nextcloud-setup.service" ];
     wantedBy = [ "multi-user.target" ];
+
+    path = with pkgs; [ openssl ]; # Ensure OpenSSL is available to the OCC script environment
 
     serviceConfig = {
       Type = "oneshot";
@@ -190,6 +205,7 @@
         # OIDC stuff
         providerId = "Fenix";
         discoveryUrl = "https://gitlab.rnl.tecnico.ulisboa.pt/.well-known/openid-configuration";
+
       in
       ''
         # Configure OIDC provider
@@ -201,21 +217,25 @@
           --discoveryuri="${discoveryUrl}" \
           --scope="openid email profile" \
           --mapping-uid="nickname"
-
-
-
-        # Configure OnlyOffice JWT secret
-        OO_SECRET=$(cat ${config.age.secrets.dei-onlyoffice-jwt.path})
-
-        ${nextcloudOcc} config:app:set onlyoffice jwt_secret --value="$OO_SECRET"
       '';
   };
 
-  services.onlyoffice = {
-    enable = true;
-    hostname = "onlyoffice.dei.rnl.tecnico.ulisboa.pt";
+  virtualisation.oci-containers.containers.collabora = {
+    image = "collabora/code:latest";
 
-    jwtSecretFile = config.age.secrets.dei-onlyoffice-jwt.path;
+    environment = {
+      aliasgroup1 = "https://${config.services.nextcloud.hostName}";
+      server_name = "collabora.dei.rnl.tecnico.ulisboa.pt";
+
+      DONT_GEN_SSL_CERT = "1";
+
+      extra_params = "--o:ssl.enable=false --o:ssl.termination=true --o:net.listen=loopback";
+    };
+
+    extraOptions = [
+      "--cap-add=MKNOD"
+      "--network=host"
+    ];
   };
 
   fileSystems."/var/lib/elasticsearch" = {
@@ -238,6 +258,25 @@
     ];
   };
 
+  # 1. Allow LibreSign's downloaded pre-compiled binaries to execute on NixOS
+  programs.nix-ld.enable = true;
+
+  # 2. Forcefully inject the PATH into the PHP-FPM web workers
+  services.phpfpm.pools.nextcloud.phpEnv."PATH" = lib.mkForce (
+    lib.makeBinPath (
+      with pkgs;
+      [
+        poppler_utils
+        openssl
+        jre
+        pdftk
+        which
+        perl
+      ]
+    )
+    + ":/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin"
+  );
+
   systemd.services.phpfpm-nextcloud.path = with pkgs; [
     # for elasticsearch:
     perl
@@ -247,10 +286,49 @@
     catdoc # .doc
     gawk
     gnugrep
+    antiword
+    unrtf
 
-    # for libresign:
-    jdk17_headless
-    pdftk
-    openssl
+    #libresign test
+    jre # Provides native Java for JSignPdf
+    pdftk # Native PDF toolkit
+    openssl # Required for generating the Root CA
   ];
+
+  systemd.services.nextcloud-config-collabora =
+    let
+      inherit (config.services.nextcloud) occ;
+      wopi_url = "http://[::1]:9980";
+      public_wopi_url = "https://${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
+      wopi_allowlist = lib.concatStringsSep "," [
+        "127.0.0.1"
+        "::1"
+      ];
+    in
+    {
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "nextcloud-setup.service"
+        "docker-collabora.service"
+      ];
+      requires = [ "docker-collabora.service" ];
+
+      path = with pkgs; [ curl ];
+
+      script = ''
+        while ! curl -s http://[::1]:9980/hosting/discovery > /dev/null; do
+          sleep 3
+        done
+
+        ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_url --value ${lib.escapeShellArg wopi_url}
+        ${occ}/bin/nextcloud-occ config:app:set richdocuments public_wopi_url --value ${lib.escapeShellArg public_wopi_url}
+        ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_allowlist --value ${lib.escapeShellArg wopi_allowlist}
+        ${occ}/bin/nextcloud-occ richdocuments:setup
+      '';
+
+      serviceConfig = {
+        Type = "oneshot";
+        TimeoutStartSec = "5min";
+      };
+    };
 }
