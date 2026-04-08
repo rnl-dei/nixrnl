@@ -23,7 +23,7 @@ with lib;
       description = "Path to environment File potentially including secrets";
     };
   };
-  config = {
+  config = mkIf config.dei.s3.enable {
 
     services.nginx.virtualHosts."${config.dei.s3.serverName}" = {
       serverName = "${config.dei.s3.serverName}";

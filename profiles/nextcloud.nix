@@ -17,14 +17,6 @@ let
       };
 in
 {
-  /*
-    age.secrets.dei-nextcloud-secretFile = {
-      file = ../../secrets/dei-nextcloud-secretFile.age;
-      owner = "nextcloud";
-      path = "/var/lib/nextcloud/dei-nextcloud-secretFile";
-    };
-  */
-
   age.secrets.nextcloud-admin-pass = {
     file = ../secrets/rnl-nextcloud-admin-pass.age;
     owner = "nextcloud";
@@ -42,20 +34,6 @@ in
     enableACME = true;
     forceSSL = true;
   };
-
-  /*
-    services.nginx.virtualHosts."${config.virtualisation.oci-containers.containers.collabora.environment.server_name
-    }" =
-      {
-        serverName = "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
-        enableACME = true;
-        forceSSL = true;
-        locations."/" = {
-          proxyPass = "http://[::1]:9980";
-          proxyWebsockets = true;
-        };
-      };
-  */
 
   services.nextcloud = {
     enable = true;
@@ -84,7 +62,6 @@ in
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
-        richdocuments
         user_oidc
         calendar
         contacts
@@ -125,6 +102,13 @@ in
         license = "agpl3Plus";
       };
 
+      group_default_quota = pkgs.fetchNextcloudApp {
+        appName = "group_default_quota";
+        appVersion = "0.1.14";
+        url = "https://github.com/icewind1991/group_default_quota/releases/download/v0.1.14/group_default_quota-v0.1.14.tar.gz";
+        sha256 = "sha256-mSmiQhmhTbuNchv1RF6rbxwZAUhYr22z5fCsGA9fh0E=";
+        license = "agpl3Plus";
+      };
     };
 
     settings = {
@@ -150,33 +134,11 @@ in
     database.createLocally = true;
     configureRedis = true;
 
-    /*
-      # This is just for the s3 settings atm
-      secretFile = config.age.secrets.dei-nextcloud-secretFile.path;
-    */
-
     config = {
       dbtype = "pgsql";
 
       adminpassFile = config.age.secrets.nextcloud-admin-pass.path;
       adminuser = "admin";
-      /*
-        # S3 Object Storage for File Storage Backend
-        objectstore.s3 = {
-          enable = true;
-
-          useSsl = false;
-          usePathStyle = true;
-          verify_bucket_exists = false;
-
-          hostname = "193.136.164.35:7480";
-          bucket = "nextcloud-bucket";
-          secretFile = config.age.secrets.dei-nextcloud-secretFile.path; # will be replaced at runtime
-          key = "placeholder"; # will be overwritten at runtime
-
-        };
-        check if s3 is necessary for our nextcloud
-      */
     };
   };
 
@@ -208,34 +170,20 @@ in
         # Configure OIDC provider
         source ${config.age.secrets.nextcloud-oidc.path}
 
-        ${nextcloudOcc} user_oidc:provider ${providerId} \
+        ${nextcloudOcc} -- user_oidc:provider ${providerId} \
           --clientid="$OIDC_CLIENT_ID" \
           --clientsecret="$OIDC_CLIENT_SECRET" \
           --discoveryuri="${discoveryUrl}" \
           --scope="openid email profile" \
           --mapping-uid="nickname"
+
+        ${nextcloudOcc} -- group_default_quota:set \
+          Faculty 5GB
+
+        ${nextcloudOcc} -- group_default_quota:set \
+          Student 1GB
       '';
   };
-
-  /*
-    virtualisation.oci-containers.containers.collabora = {
-      image = "collabora/code:latest";
-
-      environment = {
-        aliasgroup1 = "https://${config.services.nextcloud.hostName}";
-        server_name = "collabora.dei.rnl.tecnico.ulisboa.pt";
-
-        DONT_GEN_SSL_CERT = "1";
-
-        extra_params = "--o:ssl.enable=false --o:ssl.termination=true --o:net.listen=loopback";
-      };
-
-      extraOptions = [
-        "--cap-add=MKNOD"
-        "--network=host"
-      ];
-    };
-  */
 
   fileSystems."/var/lib/elasticsearch" = {
     device = "/mnt/data/elasticsearch";
@@ -288,43 +236,4 @@ in
     antiword
     unrtf
   ];
-
-  /*
-    systemd.services.nextcloud-config-collabora =
-      let
-        inherit (config.services.nextcloud) occ;
-        wopi_url = "http://[::1]:9980";
-        public_wopi_url = "https://${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
-        wopi_allowlist = lib.concatStringsSep "," [
-          "127.0.0.1"
-          "::1"
-        ];
-      in
-      {
-        wantedBy = [ "multi-user.target" ];
-        after = [
-          "nextcloud-setup.service"
-          "docker-collabora.service"
-        ];
-        requires = [ "docker-collabora.service" ];
-
-        path = with pkgs; [ curl ];
-
-        script = ''
-          while ! curl -s http://[::1]:9980/hosting/discovery > /dev/null; do
-            sleep 3
-          done
-
-          ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_url --value ${lib.escapeShellArg wopi_url}
-          ${occ}/bin/nextcloud-occ config:app:set richdocuments public_wopi_url --value ${lib.escapeShellArg public_wopi_url}
-          ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_allowlist --value ${lib.escapeShellArg wopi_allowlist}
-          ${occ}/bin/nextcloud-occ richdocuments:setup
-        '';
-
-        serviceConfig = {
-          Type = "oneshot";
-          TimeoutStartSec = "5min";
-        };
-      };
-  */
 }

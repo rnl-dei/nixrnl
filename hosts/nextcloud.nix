@@ -6,7 +6,7 @@
     os.nixos
     type.vm
     nextcloud
-    certificates
+    webserver
   ];
 
   # Networking
@@ -21,13 +21,13 @@
           prefixLength = 26;
         }
       ];
+
       ipv6.addresses = [
         {
-          address = "2001:690:2100:81::36";
+          address = "2001:690:2100:80::36";
           prefixLength = 64;
         }
       ];
-
     };
   };
 
