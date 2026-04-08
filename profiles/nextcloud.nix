@@ -25,16 +25,16 @@ in
     };
   */
 
-  age.secrets.dei-nextcloud-admin-pass = {
-    file = ../../secrets/dei-nextcloud-admin-pass.age;
+  age.secrets.rnl-nextcloud-admin-pass = {
+    file = ../../secrets/rnl-nextcloud-admin-pass.age;
     owner = "nextcloud";
-    path = "/var/lib/nextcloud/dei-nextcloud-admin-pass";
+    path = "/var/lib/nextcloud/nextcloud-admin-pass";
   };
 
-  age.secrets.dei-nextcloud-oidc = {
-    file = ../../secrets/dei-nextcloud-oidc.age;
+  age.secrets.rnl-nextcloud-oidc = {
+    file = ../../secrets/nextcloud-oidc.age;
     owner = "nextcloud";
-    path = "/var/lib/nextcloud/dei-nextcloud-oidc";
+    path = "/var/lib/nextcloud/nextcloud-oidc";
   };
 
   services.nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
@@ -43,17 +43,19 @@ in
     forceSSL = true;
   };
 
-  services.nginx.virtualHosts."${config.virtualisation.oci-containers.containers.collabora.environment.server_name
-  }" =
-    {
-      serverName = "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://[::1]:9980";
-        proxyWebsockets = true;
+  /*
+    services.nginx.virtualHosts."${config.virtualisation.oci-containers.containers.collabora.environment.server_name
+    }" =
+      {
+        serverName = "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
+        enableACME = true;
+        forceSSL = true;
+        locations."/" = {
+          proxyPass = "http://[::1]:9980";
+          proxyWebsockets = true;
+        };
       };
-    };
+  */
 
   services.nextcloud = {
     enable = true;
@@ -140,7 +142,7 @@ in
         soft_auto_provision = true;
         disable_account_creation = true;
 
-        login_label = "Login via Fenix";
+        login_label = "Login via GitLab";
       };
 
     };
@@ -156,7 +158,7 @@ in
     config = {
       dbtype = "pgsql";
 
-      adminpassFile = config.age.secrets.dei-nextcloud-admin-pass.path;
+      adminpassFile = config.age.secrets.nextcloud-admin-pass.path;
       adminuser = "admin";
       /*
         # S3 Object Storage for File Storage Backend
@@ -204,7 +206,7 @@ in
       in
       ''
         # Configure OIDC provider
-        source ${config.age.secrets.dei-nextcloud-oidc.path}
+        source ${config.age.secrets.nextcloud-oidc.path}
 
         ${nextcloudOcc} user_oidc:provider ${providerId} \
           --clientid="$OIDC_CLIENT_ID" \
