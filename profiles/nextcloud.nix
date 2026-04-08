@@ -17,6 +17,12 @@ let
       };
 in
 {
+  age.secrets.nextcloud-secrets = {
+    file = ../secrets/rnl-nextcloud-secrets.age;
+    owner = "nextcloud";
+    path = "/var/lib/nextcloud/nextcloud-secrets";
+  };
+
   age.secrets.nextcloud-admin-pass = {
     file = ../secrets/rnl-nextcloud-admin-pass.age;
     owner = "nextcloud";
@@ -139,6 +145,19 @@ in
 
       adminpassFile = config.age.secrets.nextcloud-admin-pass.path;
       adminuser = "admin";
+
+      objectstore.s3 = {
+        enable = true;
+
+        useSsl = false;
+        usePathStyle = true;
+        verify_bucket_exists = false;
+
+        hostname = "193.136.164.35:7480";
+        bucket = "rnl-nextcloud";
+        secretFile = config.age.secrets.nextcloud-secrets.path; # will be replaced at runtime
+        key = "placeholder"; # will be overwritten at runtime
+      };
     };
   };
 
