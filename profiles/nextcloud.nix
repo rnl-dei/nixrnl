@@ -155,8 +155,8 @@ in
 
         hostname = "193.136.164.35:7480";
         bucket = "rnl-nextcloud";
-        secretFile = config.age.secrets.nextcloud-secrets.path; # will be replaced at runtime
-        key = "placeholder"; # will be overwritten at runtime
+        secretFile = config.age.secrets.nextcloud-secrets.path;
+        key = "O7AMB0WCIHPEZDAXZZOI"; # access key id, normally public
       };
     };
   };
