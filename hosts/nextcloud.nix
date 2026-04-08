@@ -6,6 +6,7 @@
     os.nixos
     type.vm
     nextcloud
+    certificates
   ];
 
   # Networking

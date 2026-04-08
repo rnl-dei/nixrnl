@@ -9,7 +9,7 @@ let
     import
       (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+        sha256 = "sha256:0p22chwcyksj099af40210i299jvmp33757qmm1nfma872k8pwmw";
       })
       {
         system = pkgs.system;
@@ -25,14 +25,14 @@ in
     };
   */
 
-  age.secrets.rnl-nextcloud-admin-pass = {
-    file = ../../secrets/rnl-nextcloud-admin-pass.age;
+  age.secrets.nextcloud-admin-pass = {
+    file = ../secrets/rnl-nextcloud-admin-pass.age;
     owner = "nextcloud";
     path = "/var/lib/nextcloud/nextcloud-admin-pass";
   };
 
-  age.secrets.rnl-nextcloud-oidc = {
-    file = ../../secrets/nextcloud-oidc.age;
+  age.secrets.nextcloud-oidc = {
+    file = ../secrets/rnl-nextcloud-oidc.age;
     owner = "nextcloud";
     path = "/var/lib/nextcloud/nextcloud-oidc";
   };
