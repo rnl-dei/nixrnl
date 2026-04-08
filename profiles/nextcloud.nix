@@ -177,6 +177,8 @@ in
           --scope="openid email profile" \
           --mapping-uid="nickname"
 
+        # Configure Student and Faculty storage quotas
+
         ${nextcloudOcc} -- group_default_quota:set \
           Faculty 5GB
 
