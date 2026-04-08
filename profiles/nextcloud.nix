@@ -189,12 +189,12 @@ in
         # Configure OIDC provider
         source ${config.age.secrets.nextcloud-oidc.path}
 
-        ${nextcloudOcc} -- user_oidc:provider ${providerId} \
-          --clientid "$OIDC_CLIENT_ID" \
-          --clientsecret "$OIDC_CLIENT_SECRET" \
-          --discoveryuri "${discoveryUrl}" \
-          --scope "openid email profile" \
-          --mapping-uid "nickname"
+        ${nextcloudOcc} user_oidc:provider ${providerId} \
+          --clientid="$OIDC_CLIENT_ID" \
+          --clientsecret="$OIDC_CLIENT_SECRET" \
+          --discoveryuri="${discoveryUrl}" \
+          --scope="openid email profile" \
+          --mapping-uid="nickname"
 
         ${nextcloudOcc} -- group_default_quota:set \
           Faculty 5GB
