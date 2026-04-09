@@ -15,7 +15,6 @@
     locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
   };
 
-  # TODO: fill all placeholders
   services.gitlab = {
     enable = true;
 
