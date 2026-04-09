@@ -38,6 +38,9 @@
         SMTPServer = config.rnl.mailserver.host;
         SMTPPort = toString config.rnl.mailserver.port;
       };
+      GfycatSettings = {
+        Enable = true;
+      };
     };
 
     plugins = with pkgs.mattermostPlugins; [
