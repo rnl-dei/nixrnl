@@ -15,20 +15,100 @@
     locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
   };
 
+  age.secrets = {
+    "database-password" = {
+      file = ../secrets/gitlab/database-password.age;
+      owner = "git";
+    };
+
+    "root-password" = {
+      file = ../secrets/gitlab/root-password.age;
+      owner = "git";
+    };
+
+    "base-secret" = {
+      file = ../secrets/gitlab/base-secret.age;
+      owner = "git";
+    };
+
+    "db-secret" = {
+      file = ../secrets/gitlab/db-secret.age;
+      owner = "git";
+    };
+
+    "otp-secret" = {
+      file = ../secrets/gitlab/otp-secret.age;
+      owner = "git";
+    };
+
+    "jws-secret" = {
+      file = ../secrets/gitlab/jws-secret.age;
+      owner = "git";
+    };
+
+    "active-record-primary" = {
+      file = ../secrets/gitlab/active-record-primary.age;
+      owner = "git";
+    };
+
+    "active-record-deterministic" = {
+      file = ../secrets/gitlab/active-record-deterministic.age;
+      owner = "git";
+    };
+
+    "active-record-salt" = {
+      file = ../secrets/gitlab/active-record-salt.age;
+      owner = "git";
+    };
+
+    "gitlab-oauth" = {
+      file = ../secrets/gitlab/oauth-secret.age;
+      owner = "git";
+    };
+
+    "imap-password" = {
+      file = ../secrets/gitlab/imap-password.age;
+      owner = "git";
+    };
+
+    "dsa-key" = {
+      file = ../secrets/gitlab/ssh-dsa-priv.age;
+      path = "/etc/ssh/gitlab_ssh_host_dsa_key";
+    };
+
+    "ecdsa-key" = {
+      file = ../secrets/gitlab/ssh-ecdsa-priv.age;
+      path = "/etc/ssh/gitlab_ssh_host_ecdsa_key";
+    };
+
+    "ed25519-key" = {
+      file = ../secrets/gitlab/ssh-ed25519-priv.age;
+      path = "/etc/ssh/gitlab_ssh_host_ed25519_key";
+    };
+
+    "rsa-key" = {
+      file = ../secrets/gitlab/ssh-rsa-priv.age;
+      path = "/etc/ssh/gitlab_ssh_host_rsa_key";
+    };
+  };
+
   services.gitlab = {
     enable = true;
 
     databaseCreateLocally = true;
     https = true;
 
-    databasePasswordFile = "placeholder";
-    initialRootPasswordFile = "placeholder";
+    databasePasswordFile = "${config.age.secrets."database-password".path}";
+    initialRootPasswordFile = "${config.age.secrets."root-password".path}";
 
     secrets = {
-      secretFile = "placeholder";
-      otpFile = "placeholder";
-      dbFile = "placeholder";
-      jwsFile = "placeholder";
+      secretFile = "${config.age.secrets."base-secret".path}";
+      dbFile = "${config.age.secrets."db-secret".path}";
+      otpFile = "${config.age.secrets."otp-secret".path}";
+      jwsFile = "${config.age.secrets."jws-secret".path}";
+      activeRecordPrimaryKeyFile = "${config.age.secrets."active-record-primary".path}";
+      activeRecordDeterministicKeyFile = "${config.age.secrets."active-record-deterministic".path}";
+      activeRecordSaltFile = "${config.age.secrets."active-record-salt".path}";
     };
 
     registry = {
@@ -46,12 +126,11 @@
       domain = "gitlab-staging.rnl.tecnico.ulisboa.pt";
       enable = true;
       opensslVerifyMode = "none";
-      passwordFile = "placeholder";
     };
 
     extraConfig = {
       incoming_email_password = {
-        _secret = "placeholder";
+        _secret = "${config.age.secrets."imap-password".path}";
       };
 
       omniauth = {
@@ -76,7 +155,7 @@
             label = "Técnico ID";
             app_id = "851490151334311";
             app_secret = {
-              _secret = "placeholder";
+              _secret = "${config.age.secrets."gitlab-oauth".path}";
             };
             args = {
 
@@ -158,7 +237,6 @@
     '';
   };
 
-  # PLACEHOLDER: add the secrets to the following paths
   services.openssh = {
     enable = true;
     hostKeys =

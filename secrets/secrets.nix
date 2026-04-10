@@ -44,6 +44,7 @@ let
   dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
   dolly = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUCwy4EIMsdjFtfRI0F78+WDgA7g0/5W1ZdiFcri7v2";
+  gitlab = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMqe9H33V4EmwlJ+9hDQQLTh0OjLUjxdTO47JOkIDotk";
   hagrid = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN9MnzWv7ulk6w3YTEIW5XuW6CzpMd43qFYpfsQ3zt7k";
   hedgedoc = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpzgegXNKlCuGmJExDkrfWDAa6kyREPLvNMc1N927yJ";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
@@ -94,6 +95,23 @@ in
   "gitlab-runners/dei-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/dms-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/rnl-runner.age".publicKeys = users ++ [ operario-nix ];
+
+  # GitLab secrets
+  "gitlab/database-password.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/root-password.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/base-secret.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/otp-secret.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/db-secret.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/jws-secret.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/active-record-primary.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/active-record-deterministic.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/active-record-salt.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/imap-password.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/oauth-secret.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/ssh-dsa-priv.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/ssh-ecdsa-priv.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/ssh-ed25519-priv.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/ssh-rsa-priv.age".publicKeys = users ++ [ gitlab ];
 
   # Secrets
   "abuseipdb-api-key.age".publicKeys = users ++ [
