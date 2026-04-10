@@ -5,6 +5,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+    gitlab
   ];
 
   # Networking
