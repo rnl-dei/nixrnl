@@ -1,4 +1,9 @@
-{ config, profiles, ... }:
+{
+  config,
+  profiles,
+  pkgs,
+  ...
+}:
 {
   imports = with profiles; [
     webserver
@@ -13,6 +18,11 @@
     enableACME = true;
     forceSSL = true;
     locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
+  };
+
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_16;
   };
 
   age.secrets = {
@@ -61,6 +71,16 @@
       owner = "git";
     };
 
+    "registry-cert" = {
+      file = ../secrets/gitlab/registry-cert.age;
+      owner = "git";
+    };
+
+    "registry-key" = {
+      file = ../secrets/gitlab/registry-key.age;
+      owner = "git";
+    };
+
     "gitlab-oauth" = {
       file = ../secrets/gitlab/oauth-secret.age;
       owner = "git";
@@ -98,6 +118,7 @@
     databaseCreateLocally = true;
     https = true;
 
+    databaseUsername = "git";
     databasePasswordFile = "${config.age.secrets."database-password".path}";
     initialRootPasswordFile = "${config.age.secrets."root-password".path}";
 
@@ -115,6 +136,8 @@
       enable = true;
       externalAddress = "registry-staging.rnl.tecnico.ulisboa.pt";
       defaultForProjects = false;
+      certFile = "${config.age.secrets."registry-cert".path}";
+      keyFile = "${config.age.secrets."registry-key".path}";
     };
 
     port = 443;

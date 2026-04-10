@@ -106,6 +106,8 @@ in
   "gitlab/active-record-primary.age".publicKeys = users ++ [ gitlab ];
   "gitlab/active-record-deterministic.age".publicKeys = users ++ [ gitlab ];
   "gitlab/active-record-salt.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/registry-cert.age".publicKeys = users ++ [ gitlab ];
+  "gitlab/registry-key.age".publicKeys = users ++ [ gitlab ];
   "gitlab/imap-password.age".publicKeys = users ++ [ gitlab ];
   "gitlab/oauth-secret.age".publicKeys = users ++ [ gitlab ];
   "gitlab/ssh-dsa-priv.age".publicKeys = users ++ [ gitlab ];
