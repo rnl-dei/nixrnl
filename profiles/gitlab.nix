@@ -1,4 +1,4 @@
-{ profiles, ... }:
+{ config, profiles, ... }:
 {
   imports = with profiles; [
     webserver
@@ -239,23 +239,24 @@
 
   services.openssh = {
     enable = true;
-    hostKeys =
+    hostKeys = [
       {
         path = "/etc/ssh/gitlab_ssh_host_dsa_key";
         type = "dsa";
       }
-        {
-          path = "/etc/ssh/gitlab_ssh_host_ecdsa_key";
-          type = "ecdsa";
-        }
-        {
-          path = "/etc/ssh/gitlab_ssh_host_ed25519_key";
-          type = "ed25519";
-        }
-        {
-          path = "/etc/ssh/gitlab_ssh_host_rsa_key";
-          type = "rsa";
-        };
+      {
+        path = "/etc/ssh/gitlab_ssh_host_ecdsa_key";
+        type = "ecdsa";
+      }
+      {
+        path = "/etc/ssh/gitlab_ssh_host_ed25519_key";
+        type = "ed25519";
+      }
+      {
+        path = "/etc/ssh/gitlab_ssh_host_rsa_key";
+        type = "rsa";
+      }
+    ];
   };
 
   environment.etc = {
