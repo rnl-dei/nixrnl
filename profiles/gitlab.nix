@@ -73,12 +73,14 @@
 
     "registry-cert" = {
       file = ../secrets/gitlab/registry-cert.age;
-      owner = "git";
+      owner = "docker-registry";
+      group = "docker-registry";
     };
 
     "registry-key" = {
       file = ../secrets/gitlab/registry-key.age;
-      owner = "git";
+      owner = "docker-registry";
+      group = "docker-registry";
     };
 
     "gitlab-oauth" = {
@@ -138,11 +140,18 @@
       defaultForProjects = false;
       certFile = "${config.age.secrets."registry-cert".path}";
       keyFile = "${config.age.secrets."registry-key".path}";
+      package = pkgs.gitlab-container-registry;
+      externalPort = 5050;
     };
+
+    packages.gitlab = pkgs.gitlab-ee;
 
     port = 443;
 
+    group = "git";
     user = "git"; # try to avoid ssh issues with default user "gitlab"
+
+    puma.workers = 31;
 
     smtp = {
       address = "comsat.rnl.tecnico.ulisboa.pt";
@@ -152,9 +161,40 @@
     };
 
     extraConfig = {
+      gitlab_default_theme = 7;
+
+      gitlab_default_projects_features_issues = true;
+      gitlab_default_projects_features_merge_requests = true;
+      gitlab_default_projects_features_wiki = false;
+      gitlab_default_projects_features_snippets = false;
+      gitlab_default_projects_features_builds = true;
+
+      gitlab_email_enabled = true;
+      gitlab_email_from = "noreply@gitlab.rnl.tecnico.ulisboa.pt";
+      gitlab_email_display_name = "GitLab @ RNL";
+      gitlab_email_reply_to = "noreply@gitlab.rnl.tecnico.ulisboa.pt";
+      incoming_email_enabled = true;
+      incoming_email_address = "gitlab-incoming@rnl.tecnico.ulisboa.pt";
+
+      #### IMAP Settings
+      incoming_email_email = "gitlab-incoming";
+      incoming_email_host = "comsat.rnl.tecnico.ulisboa.pt";
+      incoming_email_port = 993;
+      incoming_email_ssl = true;
+      incoming_email_start_tls = false;
+      service_desk_email_delivery_method = "sidekiq";
+      incoming_email_mailbox_name = "inbox";
+      incoming_email_expunge_deleted = true;
+      incoming_email_delivery_method = "sidekiq";
+
       incoming_email_password = {
         _secret = "${config.age.secrets."imap-password".path}";
       };
+
+      password_authentication_enabled_for_web_ui = false;
+      password_authentication_enabled_for_git_http = false;
+
+      impersonation_enabled = true;
 
       omniauth = {
         enabled = true;
@@ -207,57 +247,24 @@
           }
         ];
       };
-    };
 
-    extraGitlabRb = ''
-      gitlab_rails['gitlab_default_theme'] = 7
+      prometheus_monitoring = {
+        enable = true;
+      };
 
-      ### Default project feature settings
-      gitlab_rails['gitlab_default_projects_features_issues'] = true
-      gitlab_rails['gitlab_default_projects_features_merge_requests'] = true
-      gitlab_rails['gitlab_default_projects_features_wiki'] = false
-      gitlab_rails['gitlab_default_projects_features_snippets'] = false
-      gitlab_rails['gitlab_default_projects_features_builds'] = true
-
-      gitlab_rails['gitlab_email_enabled'] = true
-      ##! If your SMTP server does not like the default 'From: gitlab@gitlab.example.com'
-      ##! can change the 'From' with this setting.
-      gitlab_rails['gitlab_email_from'] = 'noreply@gitlab.rnl.tecnico.ulisboa.pt'
-      gitlab_rails['gitlab_email_display_name'] = 'GitLab @ RNL'
-      gitlab_rails['gitlab_email_reply_to'] = 'noreply@gitlab.rnl.tecnico.ulisboa.pt'
-
-      ### Reply by email
-      ###! Allow users to comment on issues and merge requests by replying to
-      ###! notification emails.
-      ###! Docs: https://docs.gitlab.com/ee/administration/reply_by_email.html
-      gitlab_rails['incoming_email_enabled'] = true
-      gitlab_rails['incoming_email_address'] = "gitlab-incoming@rnl.tecnico.ulisboa.pt"
-
-      #### IMAP Settings
-      gitlab_rails['incoming_email_email'] = "gitlab-incoming"
-      gitlab_rails['incoming_email_host'] = "comsat.rnl.tecnico.ulisboa.pt"
-      gitlab_rails['incoming_email_port'] = 993
-      gitlab_rails['incoming_email_ssl'] = true
-      gitlab_rails['incoming_email_start_tls'] = false
-      gitlab_rails['service_desk_email_delivery_method'] = "sidekiq"
-      gitlab_rails['incoming_email_mailbox_name'] = "inbox"
-      gitlab_rails['incoming_email_expunge_deleted'] = true
-      gitlab_rails['incoming_email_delivery_method'] = "sidekiq"
-
-      gitlab_rails['impersonation_enabled'] = true
-
-      ### Monitoring
-      prometheus_monitoring['enable'] = true
-      gitlab_rails['monitoring_whitelist'] = ['193.136.164.82', '2001:690:2100:81::82'] # Tardis IPs
+      monitoring_whitelist = [
+        "193.136.164.82"
+        "2001:690:2100:81::82"
+      ]; # Tardis IPs
 
       ### GitLab user privileges
-      gitlab_rails['gitlab_username_changing_enabled'] = false
+      gitlab_username_changing_enabled = false;
 
-      # disable unused features
-      gitlab_rails['geo_registry_replication_enabled'] = false
-      gitlab_rails['gitlab_kas_enabled'] = false
-      gitlab_rails['terraform_state_enabled'] = false
-    '';
+      # Disable unused features
+      geo_registry_replication_enabled = false;
+      gitlab_kas_enabled = false;
+      terraform_state_enabled = false;
+    };
   };
 
   services.openssh = {
