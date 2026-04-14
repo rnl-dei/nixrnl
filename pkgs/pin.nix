@@ -7,12 +7,12 @@
 }:
 stdenv.mkDerivation rec {
   pname = "pin";
-  version = "3.27";
-  urlVersion = "${version}-98718-gbeaa5d51e";
+  version = "4.2";
+  urlVersion = "${version}-99776-g21d818fa2";
 
   src = fetchurl {
-    url = "http://software.intel.com/sites/landingpage/pintool/downloads/${pname}-${urlVersion}-gcc-linux.tar.gz";
-    sha256 = "sha256-59RNJWaGMgB9WhCeUDNBXpHbVDuM6eZliToF6FK2dwc=";
+    url = "http://software.intel.com/sites/landingpage/pintool/downloads/${pname}-external-${urlVersion}-gcc-linux.tar.gz";
+    sha256 = "sha256-GUos7FFnggNFLs4Nnoy7GBnrbhIh8DQQkcSSSPOE2Gk=";
   };
 
   buildInputs = [ stdenv.cc.cc.lib ];
@@ -24,9 +24,6 @@ stdenv.mkDerivation rec {
     sed -i 's/\/usr\/bin\/ar/\/usr\/bin\/env ar/' source/tools/Config/unix.vars
     cp -r ./* $out
     ln -s $out/pin $out/intel64/bin/* $out/bin
-
-    echo "{ pkgs ? import <nixpkgs> {} }: pkgs.mkShell { nativeBuildInputs = [ pkgs.gcc11 ];}" \
-    > $out/source/tools/shell.nix
   '';
 
   meta = with lib; {
