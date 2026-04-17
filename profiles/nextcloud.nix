@@ -112,7 +112,7 @@ in
         appName = "sociallogin";
         appVersion = "6.4.2";
         url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/6.4.2/nextcloud-social-login-6.4.2.tar.bz2";
-        sha256 = "sha256-3gqdHGcgpto0BHfAwM1NB3XYKYFdJbLKQAff+NS3p00=";
+        sha256 = "sha256-JHq78AOL5rYI2fcM5R9CWN+8bGj+dKSdjDMIaQBV+Hw=";
         license = "agpl3Plus";
       };
 
