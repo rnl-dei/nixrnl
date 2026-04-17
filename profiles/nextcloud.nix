@@ -182,13 +182,13 @@ in
       in
       ''
         ${nextcloudOcc} -- group_default_quota:set \
-          DEFAULT 0GB
-
-        ${nextcloudOcc} -- group_default_quota:set \
-          Student 1GB
+          DEFAULT 0B
 
         ${nextcloudOcc} -- group_default_quota:set \
           Faculty 5GB
+
+        ${nextcloudOcc} -- group_default_quota:set \
+          Student 1GB
       '';
   };
 
