@@ -189,6 +189,9 @@ in
 
         ${nextcloudOcc} -- group_default_quota:set \
           Student 1GB
+
+        ${nextcloudOcc} -- group_default_quota:set \
+          admin 100000GB
       '';
   };
 
