@@ -61,12 +61,12 @@ let
         int:
         let
           hexDigits = {
-            "10" = "A";
-            "11" = "B";
-            "12" = "C";
-            "13" = "D";
-            "14" = "E";
-            "15" = "F";
+            "10" = "a";
+            "11" = "b";
+            "12" = "c";
+            "13" = "d";
+            "14" = "e";
+            "15" = "f";
           };
           toHexDigit = d: if d < 10 then toString d else hexDigits.${toString d};
           shiftRight = d: shiftBy: if shiftBy <= 0 then d else shiftRight (d / 2) (shiftBy - 1);

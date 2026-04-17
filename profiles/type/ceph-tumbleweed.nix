@@ -8,47 +8,92 @@ let
     {
       vlan,
       uuid,
-      ip ? "127.0.0.1/32",
+      id,
+      bridge,
     }:
     ''
       [connection]
       id=${vlan}
       uuid=${uuid}
       type=vlan
+      master=${bridge}
       interface-name=${vlan}
+      port-type=bridge
       timestamp=1771067691
 
       [ethernet]
 
       [vlan]
       flags=1
-      id=30
-      parent=bond0
+      id=${id}
+      parent=br0
 
       [ipv4]
-      address1=${ip}
-      method=manual
+      method=disabled
 
       [ipv6]
       addr-gen-mode=default
-      method=auto
+      method=disabled
+      [bridge-port]
+    ''
+  );
+
+  generateBridge = (
+    {
+      bridge,
+      uuid,
+    }:
+    ''
+      [connection]
+      id=${bridge}
+      uuid=${uuid}
+      type=bridge
+      interface-name=${bridge}
+      timestamp=1774050110
+
+      [ethernet]
+
+      [bridge]
+
+      [ipv4]
+      method=disabled
+
+      [ipv6]
+      addr-gen-mode=default
+      method=disabled
 
       [proxy]
     ''
   );
 in
 {
-  # FIXME:
-  # This makes the function available to any module that imports this profile
   _module.args.generateVlans =
-    list:
+    vlans: ids: bridges:
     builtins.listToAttrs (
-      map (vlan: {
+      lib.imap0 (i: vlan: {
         name = "NetworkManager/system-connections/${vlan}.nmconnection";
         value = {
+          mode = "0600";
           text = generateVlan {
             vlan = vlan;
             uuid = lib.rnl.generateUUID vlan;
+            id = builtins.elemAt ids i;
+            bridge = builtins.elemAt bridges i;
+          };
+        };
+      }) vlans
+    );
+
+  _module.args.generateBridges =
+    list:
+    builtins.listToAttrs (
+      map (bridge: {
+        name = "NetworkManager/system-connections/${bridge}.nmconnection";
+        value = {
+          mode = "0600";
+          text = generateBridge {
+            bridge = bridge;
+            uuid = lib.rnl.generateUUID bridge;
           };
         };
       }) list
@@ -56,13 +101,13 @@ in
 
   environment.etc = {
     "ssh/sshd_config.d/99-custom-keys.conf" = {
-      mode = "644";
+      mode = "0644";
       text = ''
         AuthorizedKeysFile .ssh/authorized_keys /etc/ssh/authorized_keys.d/%u
       '';
     };
     "ssh/authorized_keys.d/root" = {
-      mode = "644";
+      mode = "0644";
       text = lib.strings.concatStringsSep "\n" (
         rnl-keys.rnl-keys
         ++ [
