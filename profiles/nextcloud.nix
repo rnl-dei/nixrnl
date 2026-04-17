@@ -68,7 +68,6 @@ in
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
-        user_oidc
         calendar
         contacts
         files_automatedtagging
@@ -108,6 +107,15 @@ in
         license = "agpl3Plus";
       };
 
+      sociallogin = pkgs.fetchNextcloudApp {
+        # use fork of sociallogin to try and step over their implementation incompatibilities
+        appName = "sociallogin";
+        appVersion = "6.4.2";
+        url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/debug-prints/nextcloud-social-login-debug-prints.tar.gz";
+        sha256 = "sha256-O2QVATcWsHRHmXLM4QyTWtzfdVsaY6lYq1+VvGFY8L1=";
+        license = "agpl3Plus";
+      };
+
       group_default_quota = pkgs.fetchNextcloudApp {
         appName = "group_default_quota";
         appVersion = "0.1.14";
@@ -126,14 +134,6 @@ in
 
       loglevel = 2;
       log_type = "file";
-
-      user_oidc = {
-        auto_provision = true;
-        soft_auto_provision = true;
-        disable_account_creation = true;
-
-        login_label = "Login via GitLab";
-      };
 
     };
 
@@ -179,23 +179,8 @@ in
     script =
       let
         nextcloudOcc = "${config.services.nextcloud.occ}/bin/nextcloud-occ";
-
-        # OIDC stuff
-        providerId = "GitLab";
-        discoveryUrl = "https://gitlab.rnl.tecnico.ulisboa.pt/.well-known/openid-configuration";
-
       in
       ''
-        # Configure OIDC provider
-        source ${config.age.secrets.nextcloud-oidc.path}
-
-        ${nextcloudOcc} user_oidc:provider ${providerId} \
-          --clientid="$OIDC_CLIENT_ID" \
-          --clientsecret="$OIDC_CLIENT_SECRET" \
-          --discoveryuri="${discoveryUrl}" \
-          --scope="openid email profile" \
-          --mapping-uid="nickname"
-
         ${nextcloudOcc} -- group_default_quota:set \
           Faculty 5GB
 
