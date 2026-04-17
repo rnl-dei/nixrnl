@@ -111,8 +111,8 @@ in
         # use fork of sociallogin to try and step over their implementation incompatibilities
         appName = "sociallogin";
         appVersion = "6.4.2";
-        url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/debug-prints/nextcloud-social-login-debug-prints.tar.gz";
-        sha256 = "sha256-O2QVATcWsHRHmXLM4QyTWtzfdVsaY6lYq1+VvGFY8L1=";
+        url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/67a39a78cb27f1179cc6ee9d7c5d66bdb7407127/nextcloud-social-login-67a39a78cb27f1179cc6ee9d7c5d66bdb7407127.tar.gz";
+        sha256 = "sha256-3gqdHGcgpto0BHfAwM1NB3XYKYFdJbLKQAff+NS3p00=";
         license = "agpl3Plus";
       };
 
