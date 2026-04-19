@@ -249,7 +249,6 @@ let
           hostPath
           #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
-          inputs.system-manager.nixosModules.system-manager
           inputs.agenix.nixosModules.age
         ]
         ++ extraModules;
