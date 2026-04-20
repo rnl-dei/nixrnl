@@ -7,6 +7,7 @@
 This repository contains the infrastructure setup for [RNL](https://rnl.tecnico.ulisboa.pt) (Rede das Novas Licenciaturas) using Nix[OS], a purely functional Linux distribution built on the Nix package manager.
 The infrastructure is designed to support the various components and services required for running servers and labs at [DEI](https://dei.tecnico.ulisboa.pt).
 
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
