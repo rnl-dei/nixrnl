@@ -16,8 +16,10 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7KctWVyAfwcA4g6v9Bucvs+KWChhd2f3vRpHr3JSKY alcafache@nixos"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJiZ9mdGa3A27CMnS9y+YObLAJYkUFQJVFKrVW1D+g9 joao.sergio@apaz"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHvLx61S/EayEzpVLvvFfwa58mIImMIU/PuAUes/t2RT leonardo.neves@virtus"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDMMw9d91MxgIrOfr5ucAJaIVUCBRog93x21SEbLlGOh leonardo.neves@laptop"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN5+deDNLsW+PjJ6fCo4WMqyQm6xA0lbfDkJ3IWg16y0 paulo.chen@alucard"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFlyAPbpCY33eSGsbohPS824PvrEYUGf2v2ORuKBfIo6 miguel.carvalho@mlc"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGHmS7ji4vNClidZ52EHNPb+gsMMLKAgx1AIrcdyKyv/ miguel.carvalho@laptop"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqHh9LuuxoEpgRVcJy8BrYtvJm4oxdwUPU5BQkKO41h jose.araujo@zmws"
   ];
 
