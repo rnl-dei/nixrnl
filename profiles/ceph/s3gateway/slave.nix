@@ -34,10 +34,10 @@
                   auth_pass Humiliate-Simple1-Douche-Collision
               }
               virtual_ipaddress {
-                  193.136.164.35/26 dev public
+                  193.136.164.35/26 dev pub
               }
               virtual_routes {
-                  default via 193.136.164.62 dev public
+                  default via 193.136.164.62 dev pub
               }
           }
 
