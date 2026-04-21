@@ -1,4 +1,4 @@
-{ config, profiles, ... }:
+{ profiles, ... }:
 {
   imports = with profiles; [
     core.rnl
@@ -12,22 +12,21 @@
     defaultGateway.address = "193.136.164.62";
     defaultGateway6.address = "2001:690:2100:80::ffff:1";
 
-    interfaces.enp1s0 ={
+    interfaces.enp1s0 = {
       ipv4.addresses = [
         {
-        address = "192.136.164.4";
-        prefixLength = 26;
+          address = "192.136.164.4";
+          prefixLength = 26;
         }
       ];
       ipv6.addresses = [
         {
-        address = "2001:690:2100:80::4";
-        prefixLength = 64;
+          address = "2001:690:2100:80::4";
+          prefixLength = 64;
         }
       ];
 
     };
-
 
   };
 
