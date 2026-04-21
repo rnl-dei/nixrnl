@@ -86,20 +86,21 @@
           address = "193.136.164.5";
           prefixLength = 26;
         }
-        {
-          address = "193.136.164.4";
-          prefixLength = 26;
-        }
+        #TODO remover isto maybe
+        # {
+        #   address = "193.136.164.4";
+        #   prefixLength = 26;
+        # }
       ];
       ipv6.addresses = [
         {
           address = "2001:690:2100:80::5";
           prefixLength = 64;
         }
-        {
-          address = "2001:690:2100:80::4";
-          prefixLength = 64;
-        }
+        # {
+        #   address = "2001:690:2100:80::4";
+        #   prefixLength = 64;
+        # }
       ];
     };
 
@@ -108,24 +109,6 @@
   };
 
   users.users.root.hashedPassword = "$6$q5qLU8WwsJfRTYGI$IlbfIYFhGS.Lozdd5Cund.7iKgGgdJzXMUCzitl4V.Q5VLR.Ow7sUsZda9hVwYpLHnFcVRGMG6V71omooyRI80";
-
-  # NFS
-  systemd.tmpfiles.rules = [ "d /mnt/data/cirrus/users 0775 nobody nogroup -" ];
-  services.nfs.server = {
-    enable = true;
-    # allow borg and labs to mount cirrus
-    exports = ''
-      /mnt/data/cirrus 193.136.164.138(rw,async,no_subtree_check,no_root_squash)
-      /mnt/data/cirrus 2001:690:2100:83::138(rw,async,no_subtree_check,no_root_squash)
-      /mnt/data/cirrus 193.136.154.0/25(rw,async,no_subtree_check,no_root_squash)
-      /mnt/data/cirrus 2001:690:2100:84::/64(rw,async,no_subtree_check,no_root_squash)
-    '';
-  };
-  networking.firewall.allowedTCPPorts = [ 2049 ];
-  boot.kernel.sysctl = {
-    "net.ipv6.conf.default.accept_ra" = 0;
-    "net.ipv6.conf.pub.accept_ra" = 1;
-  };
 
   #NTP
   services.ntp = {
