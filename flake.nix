@@ -12,6 +12,12 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    #System manager for non NixOS based systems (aka OpenSuse hypervisors)
+    system-manager.url = "github:numtide/system-manager";
+
+    #HACK: stopped because userborn is wack with nixpkgs
+    # system-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     # NixOS Anywhere used by dev shell to deploy to remote machines
     nixos-anywhere.url = "github:numtide/nixos-anywhere";
     nixos-anywhere.inputs.nixpkgs.follows = "nixpkgs";
@@ -76,6 +82,7 @@
             inputs
             profiles
             pkgs
+            systemConfigs
             nixosConfigurations
             ;
           lib = self;
@@ -85,10 +92,11 @@
       overlays = lib.rnl.mkOverlays ./overlays;
       pkgs = lib.rnl.mkPkgs overlays;
       nixosConfigurations = lib.rnl.mkHosts ./hosts;
+      systemConfigs = lib.rnl.mkHypers ./hypervisors;
       profiles = lib.rnl.mkProfiles ./profiles;
     in
     {
-      inherit nixosConfigurations overlays;
+      inherit nixosConfigurations systemConfigs overlays;
 
       devShells.x86_64-linux.default = pkgs.mkShell {
         inherit (self.checks.x86_64-linux.pre-commit-check) shellHook;

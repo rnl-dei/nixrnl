@@ -3,6 +3,7 @@
   pkgs,
   lib,
   config,
+  rnl-keys,
   ...
 }:
 let
@@ -154,17 +155,7 @@ in
   users.mutableUsers = false; # Disable manual user management
   users.users.root = {
     description = lib.mkForce "Root user to be used by RNL admins";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7tve12K34nhNgVYZ6VgQBRrJs10v+hClpyzpXTIb/n @raijin"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif @raidou"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY @pikachu"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKEEja9gFy3l2Yd8cbPlAIDjdkXZXTLdmfHYstN4wgF/ @geoff"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjU844+uGu7dgVOE4YHU6+VWd/PgX5J2C0fcNnVyeYi @lilb"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrco+nZ1DgpsNHntTzMeo626GglxwLKks3XL82XD0kZ @aurelius"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe @teto"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHk16LFBL889mUIOfJ2qubsa9bO/loUbbC2/hRbtuwxo @hugopc"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR @rnl-simaolavos"
-    ];
+    openssh.authorizedKeys.keys = rnl-keys.rnl-keys;
   };
 
   # Configure email

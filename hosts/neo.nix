@@ -1,4 +1,8 @@
-{ config, profiles, ... }:
+{
+  config,
+  profiles,
+  ...
+}:
 {
   imports = with profiles; [
     core.rnl
@@ -30,6 +34,10 @@
         "/dev/disk/by-id/ata-TOSHIBA_MG08ACA16TE_74D0A0GNFVGG"
       ];
     };
+  };
+
+  nixpkgs.config = {
+    build-users-group = "nixbld";
   };
 
   # Networking
