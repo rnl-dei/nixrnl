@@ -7,7 +7,7 @@
     type.vm
   ];
 
-  rnl.labels.location = "neo";
+  rnl.labels.location = "atlas";
 
   rnl.virtualisation.guest = {
     description = "Worker2 do sistema RATES";

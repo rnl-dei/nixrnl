@@ -106,7 +106,7 @@
             FENIX_ALLOWED_USERS_TO_CREATE_ELECTIONS = lib.concatStringsSep "," [
               "ist23745" # Lurdes
               "ist23000" # JLuis
-              "ist1103252" # JPereira
+              "ist1109803" # HPereira
             ];
 
             DEBUG = "0";

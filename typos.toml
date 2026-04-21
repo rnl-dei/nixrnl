@@ -12,6 +12,9 @@ extend-ignore-re = [
     # ignore MAC addresses (sometimes they trigger it)
     'mac = "[a-fA-F0-9:]+";',
 
+    # ignore SSH public key lines (base64 payload may look like typos)
+    '"ssh-(ed25519|rsa|ecdsa-[^ ]+) [A-Za-z0-9+/=]+ [^"]+"',
+
     # ignore maintainers list (PT names sometimes trigger it)
     '(?s)\s*maintainers\s*=\s*\[[-"a-zA-Z0-9_. \n]*\]\s*;'
 ]
