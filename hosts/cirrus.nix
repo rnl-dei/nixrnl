@@ -15,13 +15,13 @@
     interfaces.enp1s0 = {
       ipv4.addresses = [
         {
-          address = "192.136.164.4";
+          address = "192.136.164.38";
           prefixLength = 26;
         }
       ];
       ipv6.addresses = [
         {
-          address = "2001:690:2100:80::4";
+          address = "2001:690:2100:80::38";
           prefixLength = 64;
         }
       ];
