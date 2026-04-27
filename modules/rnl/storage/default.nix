@@ -26,6 +26,9 @@ in
     };
   };
 
+  imports = [
+    ./nfs.nix
+  ];
   config = mkIf cfg.enable {
     assertions = [
       {
