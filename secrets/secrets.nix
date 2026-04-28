@@ -13,7 +13,7 @@ let
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
   caixote = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKDqUCaBZ5e2e8k05ba/17fAYdDjXU3dTx/D5rg3JISu";
-  # cirrus = "";
+  cirrus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPneADjjfXzp1X6l93P8cwh8liKg12MbdHs5TT1spQxF";
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
   dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
@@ -140,6 +140,5 @@ in
   "www-tv-client-secret-env.age".publicKeys = users ++ [ www ];
   "www-tv-cms-secret-env.age".publicKeys = users ++ [ www ];
 
-  # "ceph-secret".publicKeys = users ++ [cirrus];
-  "ceph-secret.age".publicKeys = users;
+  "ceph-secret.age".publicKeys = users ++ [ cirrus ];
 }

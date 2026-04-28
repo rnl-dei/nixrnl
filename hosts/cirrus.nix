@@ -1,4 +1,4 @@
-{ profiles, ... }:
+{ config, profiles, ... }:
 {
   imports = with profiles; [
     core.rnl
@@ -29,13 +29,14 @@
     };
   };
 
-  # age.secrets.ceph = {
-  #   file = ../secrets/ceph-secret.age;
-  #   mode = "600";
-  # };
+  age.secrets.ceph = {
+    file = ../secrets/ceph-secret.age;
+    mode = "600";
+  };
+
   rnl.nfs = {
     enable = true;
-    # cephSecretPath = config.age.secrets.ceph.path;
+    cephSecretPath = config.age.secrets.ceph.path;
   };
 
   rnl.labels.location = "neo";
