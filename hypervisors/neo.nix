@@ -8,6 +8,7 @@
   imports = with profiles; [
     type.ceph-tumbleweed
     ceph.s3gateway.master
+    ceph.s3gateway.backup
   ];
 
   environment.etc =
