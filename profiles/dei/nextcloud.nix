@@ -4,18 +4,6 @@
   lib,
   ...
 }:
-let
-  ncPkgs =
-    import
-      (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
-      })
-      {
-        system = pkgs.system;
-        config.allowUnfree = true;
-      };
-in
 {
   age.secrets.dei-nextcloud-secretFile = {
     file = ../../secrets/dei-nextcloud-secretFile.age;
@@ -56,7 +44,7 @@ in
   services.nextcloud = {
     enable = true;
 
-    package = ncPkgs.nextcloud33;
+    package = pkgs.nextcloud;
 
     hostName = "drive.blatta.rnl.tecnico.ulisboa.pt";
 
