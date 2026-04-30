@@ -1,4 +1,4 @@
-{ profiles, ... }:
+{ config, profiles, ... }:
 {
   imports = with profiles; [
     core.rnl
