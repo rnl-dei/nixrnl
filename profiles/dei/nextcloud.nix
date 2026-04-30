@@ -56,13 +56,7 @@ in
   services.nextcloud = {
     enable = true;
 
-    package =
-      let
-        base = ncPkgs.nextcloud33;
-      in
-      base {
-        override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
-      };
+    package = ncPkgs.nextcloud33;
 
     hostName = "drive.blatta.rnl.tecnico.ulisboa.pt";
 
