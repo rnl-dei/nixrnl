@@ -237,14 +237,13 @@ in
   };
 
   virtualisation.oci-containers.containers."elasticsearch" = {
-    image = "docker.elastic.co/elasticsearch/elasticsearch:9.3.1"; # Official ES 8 image
+    image = "docker.elastic.co/elasticsearch/elasticsearch:9.3.1";
 
-    # Map the container's 9200 port to your custom 31011 port
-    ports = [ "0.0.0.0:31011:9200" ];
+    ports = [ "0.0.0.0:9200:9200" ];
 
     environment = {
       "discovery.type" = "single-node";
-      "xpack.security.enabled" = "false"; # Crucial: disables HTTPS/password reqs for local Nextcloud
+      "xpack.security.enabled" = "false";
       "ES_JAVA_OPTS" = "-Xms1g -Xmx8g";
     };
 
