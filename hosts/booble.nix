@@ -6,6 +6,8 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+
+    dei.nextcloud
   ];
   rnl.virtualisation.guest = {
     description = "DEI Nextcloud and Immich";
@@ -30,8 +32,19 @@
           prefixLength = 64;
         }
       ];
-
     };
+
+    hosts = {
+      "127.0.0.1" = [
+        "${config.services.nextcloud.hostName}"
+        "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}"
+      ];
+      "::1" = [
+        "${config.services.nextcloud.hostName}"
+        "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}"
+      ];
+    };
+
   };
 
   rnl.labels.location = "neo";
