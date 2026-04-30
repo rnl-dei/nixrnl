@@ -4,6 +4,18 @@
   lib,
   ...
 }:
+let
+  ncPkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+      })
+      {
+        system = pkgs.system;
+        config.allowUnfree = true;
+      };
+in
 {
   age.secrets.dei-nextcloud-secretFile = {
     file = ../../secrets/dei-nextcloud-secretFile.age;
@@ -44,7 +56,14 @@
   services.nextcloud = {
     enable = true;
 
-    package = pkgs.nextcloud;
+    package =
+      let
+        base = ncPkgs.nextcloud33;
+      in
+      base
+      // {
+        override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
+      };
 
     hostName = "drive.blatta.rnl.tecnico.ulisboa.pt";
 
