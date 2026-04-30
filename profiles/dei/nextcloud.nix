@@ -65,7 +65,7 @@ in
         override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
       };
 
-    hostName = "drive.blatta.rnl.tecnico.ulisboa.pt";
+    hostName = "drive.booble.rnl.tecnico.ulisboa.pt";
 
     maxUploadSize = "16G";
     https = true;
@@ -223,7 +223,7 @@ in
 
     environment = {
       aliasgroup1 = "https://${config.services.nextcloud.hostName}";
-      server_name = "collabora.blatta.rnl.tecnico.ulisboa.pt";
+      server_name = "collabora.booble.rnl.tecnico.ulisboa.pt";
 
       DONT_GEN_SSL_CERT = "1";
 
