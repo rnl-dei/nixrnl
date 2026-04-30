@@ -6,6 +6,7 @@
     filesystems.simple-uefi
     os.nixos
     type.vm
+    webserver
 
     dei.nextcloud
   ];
