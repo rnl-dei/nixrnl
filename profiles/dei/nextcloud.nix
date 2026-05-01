@@ -227,6 +227,23 @@ in
     };
   };
 
+  programs.nix-ld.enable = true;
+
+  services.phpfpm.pools.nextcloud.phpEnv."PATH" = lib.mkForce (
+    lib.makeBinPath (
+      with pkgs;
+      [
+        poppler_utils
+        openssl
+        jre
+        pdftk
+        which
+        perl
+      ]
+    )
+    + ":/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin"
+  );
+
   systemd.services.phpfpm-nextcloud.path = with pkgs; [
     jre
     pdftk
