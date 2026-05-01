@@ -233,5 +233,6 @@ in
     jre
     pdftk
     openssl
+    poppler_utils
   ];
 }
