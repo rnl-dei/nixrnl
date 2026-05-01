@@ -226,21 +226,4 @@ in
       RestartSec = "10s";
     };
   };
-
-  programs.nix-ld.enable = true;
-
-  systemd.services.phpfpm-nextcloud.path = with pkgs; [
-    jre
-    pdftk
-    openssl
-    util-linux
-  ];
-
-  environment.systemPackages = with pkgs; [
-    util-linux
-  ];
-
-  systemd.tmpfiles.rules = [
-    "L /usr/bin/runuser - - - - ${pkgs.util-linux}/bin/runuser"
-  ];
 }
