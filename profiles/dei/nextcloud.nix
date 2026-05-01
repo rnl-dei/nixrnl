@@ -220,10 +220,6 @@ in
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
-      User = "nextcloud";
-      Group = "nextcloud";
-      # The --quiet flag is important to prevent the log files from exploding
-      # with the "waiting" UI updates you saw in your terminal.
       ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ fulltextsearch:live --quiet";
       Restart = "always";
       RestartSec = "10s";
