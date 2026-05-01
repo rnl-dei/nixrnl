@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 let
@@ -181,43 +180,6 @@ in
     };
   };
 
-  # There are some settings that are not possible to set via the Nextcloud config,
-  # so we create a systemd service that runs once after Nextcloud setup to apply them
-  # all this to have an "declarative" configuration via Nix
-  systemd.services.nextcloud-runtime-config = {
-    description = "Nextcloud runtime settings (OIDC)";
-    after = [ "nextcloud-setup.service" ];
-    requires = [ "nextcloud-setup.service" ];
-    wantedBy = [ "multi-user.target" ];
-
-    path = with pkgs; [ openssl ]; # Ensure OpenSSL is available to the OCC script environment
-
-    serviceConfig = {
-      Type = "oneshot";
-    };
-
-    script =
-      let
-        nextcloudOcc = "${config.services.nextcloud.occ}/bin/nextcloud-occ";
-
-        # OIDC stuff
-        providerId = "Fenix";
-        discoveryUrl = "https://gitlab.rnl.tecnico.ulisboa.pt/.well-known/openid-configuration";
-
-      in
-      ''
-        # Configure OIDC provider
-        source ${config.age.secrets.dei-nextcloud-oidc.path}
-
-        ${nextcloudOcc} user_oidc:provider ${providerId} \
-          --clientid="$OIDC_CLIENT_ID" \
-          --clientsecret="$OIDC_CLIENT_SECRET" \
-          --discoveryuri="${discoveryUrl}" \
-          --scope="openid email profile" \
-          --mapping-uid="nickname"
-      '';
-  };
-
   virtualisation.oci-containers.containers.collabora = {
     image = "collabora/code:latest";
 
@@ -248,40 +210,23 @@ in
 
   };
 
-  systemd.services.nextcloud-config-collabora =
-    let
-      inherit (config.services.nextcloud) occ;
-      wopi_url = "http://[::1]:9980";
-      public_wopi_url = "https://${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
-      wopi_allowlist = lib.concatStringsSep "," [
-        "127.0.0.1"
-        "::1"
-      ];
-    in
-    {
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "nextcloud-setup.service"
-        "docker-collabora.service"
-      ];
-      requires = [ "docker-collabora.service" ];
+  systemd.services.nextcloud-fulltext-live = {
+    description = "Nextcloud Full Text Search Live Indexer";
+    after = [
+      "nextcloud-setup.service"
+      "podman-elasticsearch.service"
+      "postgresql.service"
+    ];
+    wantedBy = [ "multi-user.target" ];
 
-      path = with pkgs; [ curl ];
-
-      script = ''
-        while ! curl -s http://[::1]:9980/hosting/discovery > /dev/null; do
-          sleep 3
-        done
-
-        ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_url --value ${lib.escapeShellArg wopi_url}
-        ${occ}/bin/nextcloud-occ config:app:set richdocuments public_wopi_url --value ${lib.escapeShellArg public_wopi_url}
-        ${occ}/bin/nextcloud-occ config:app:set richdocuments wopi_allowlist --value ${lib.escapeShellArg wopi_allowlist}
-        ${occ}/bin/nextcloud-occ richdocuments:setup
-      '';
-
-      serviceConfig = {
-        Type = "oneshot";
-        TimeoutStartSec = "5min";
-      };
+    serviceConfig = {
+      User = "nextcloud";
+      Group = "nextcloud";
+      # The --quiet flag is important to prevent the log files from exploding
+      # with the "waiting" UI updates you saw in your terminal.
+      ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ fulltextsearch:live --quiet";
+      Restart = "always";
+      RestartSec = "10s";
     };
+  };
 }
