@@ -38,6 +38,7 @@ let
         overlays = [
           (_self: _super: {
             unstable = import inputs.unstable argsPkgs;
+            labspkgs = import inputs.labspkgs argsPkgs;
             allowOpenSSL = import inputs.nixpkgs (
               argsPkgs // { config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; }
             );
@@ -228,16 +229,18 @@ let
     *
   */
 
+
   mkHost =
     hostname:
     {
       system,
       hostPath,
+      pkgs,
       extraModules ? [ ],
       ...
     }:
     lib.nixosSystem {
-      inherit system pkgs lib;
+      inherit system pkgs lib; 
       specialArgs = {
         rnl-keys = import ../profiles/core/keys.nix;
         inherit profiles inputs nixosConfigurations;
@@ -247,7 +250,6 @@ let
         ++ [
           { networking.hostName = hostname; }
           hostPath
-          #inputs.rnl-config.nixosModules.rnl
           inputs.disko.nixosModules.disko
           inputs.agenix.nixosModules.age
         ]
@@ -272,6 +274,7 @@ let
     *
   */
   mkHosts =
+    pkgs:
     hostsDir:
     lib.listToAttrs (
       lib.lists.flatten (
@@ -288,7 +291,7 @@ let
               cfg = {
                 inherit
                   hostPath
-                  pkgs
+                  pkgs 
                   profiles
                   inputs
                   ;
@@ -324,7 +327,6 @@ let
           (lib.filterAttrs (path: _: !(lib.hasPrefix "_" path)) (builtins.readDir hostsDir))
       )
     );
-
   /*
     *
     Synopsis: mkSecrets secretsDir

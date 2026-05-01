@@ -2,8 +2,9 @@
   description = "NixOS @ RNL";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    labspkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
     # Comment out because it's not used
     # rnl-config.url = "git+ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config";
@@ -91,7 +92,8 @@
 
       overlays = lib.rnl.mkOverlays ./overlays;
       pkgs = lib.rnl.mkPkgs overlays;
-      nixosConfigurations = lib.rnl.mkHosts ./hosts;
+      nixosConfigurations = (lib.rnl.mkHosts pkgs ./hosts) // 
+        (lib.rnl.mkHosts pkgs.labspkgs ./labs);
       systemConfigs = lib.rnl.mkHypers ./hypervisors;
       profiles = lib.rnl.mkProfiles ./profiles;
     in
