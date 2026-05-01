@@ -240,4 +240,7 @@ in
     util-linux
   ];
 
+  systemd.tmpfiles.rules = [
+    "L /usr/bin/runuser - - - - ${pkgs.util-linux}/bin/runuser"
+  ];
 }
