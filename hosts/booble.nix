@@ -46,10 +46,6 @@
       ];
     };
 
-    firewall.allowedTCPPorts = [
-      80
-      443
-    ];
   };
 
   rnl.labels.location = "neo";
