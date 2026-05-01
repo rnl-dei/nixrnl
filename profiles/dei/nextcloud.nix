@@ -230,7 +230,7 @@ in
 
   programs.nix-ld.enable = true;
 
-  services.phpfpm.pools.nextcloud.phpEnv."PATH" = lib.mkForce (
+  services.phpfpm.pools.nextcloud.phpEnv."PATH" = lib.mkAfter (
     lib.makeBinPath (
       with pkgs;
       [
