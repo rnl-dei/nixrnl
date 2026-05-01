@@ -251,4 +251,8 @@ in
     openssl
   ];
 
+  environment.systemPackages = with pkgs; [
+    util-linux
+  ];
+
 }
