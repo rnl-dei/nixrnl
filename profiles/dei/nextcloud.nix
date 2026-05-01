@@ -226,4 +226,10 @@ in
       RestartSec = "10s";
     };
   };
+
+  systemd.services.phpfpm-nextcloud.path = with pkgs; [
+    jre
+    pdftk
+    openssl
+  ];
 }
