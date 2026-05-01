@@ -206,6 +206,7 @@ in
     environment = {
       "discovery.type" = "single-node";
       "xpack.security.enabled" = "false";
+      "ES_JAVA_OPTS" = "-Xms1g -Xmx8g";
     };
 
   };
