@@ -227,6 +227,8 @@ in
     };
   };
 
+  programs.nix-ld.enable = true;
+
   systemd.services.phpfpm-nextcloud.path = with pkgs; [
     jre
     pdftk
