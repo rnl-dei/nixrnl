@@ -72,6 +72,7 @@
     {
       self,
       nixpkgs,
+      labspkgs,
       pre-commit-hooks,
       ...
     }@inputs:
@@ -89,11 +90,32 @@
           lib = self;
         }
       );
+      # kernelOverlay = self: super: {
+      #   linuxPackages = inputs.nixpkgs.legacyPackages."x86_64-linux".linuxPackages;
+      # };
+
+      libTest = labspkgs.lib.extend (
+        self: _super:
+        import ./lib {
+          inherit
+            inputs
+            profiles
+            systemConfigs
+            nixosConfigurations
+            ;
+          pkgs = labspkgs;
+          lib = self;
+        }
+      );
 
       overlays = lib.rnl.mkOverlays ./overlays;
-      pkgs = lib.rnl.mkPkgs overlays;
-      nixosConfigurations = (lib.rnl.mkHosts pkgs ./hosts) // 
-        (lib.rnl.mkHosts pkgs.labspkgs ./labs);
+      overlaysTest = libTest.rnl.mkOverlays ./overlays;
+
+      pkgs = lib.rnl.mkPkgs inputs.nixpkgs overlays;
+      pkgsTest = libTest.rnl.mkPkgs inputs.labspkgs (overlaysTest // { inherit kernelOverlay; });
+
+      nixosConfigurations = (lib.rnl.mkHosts pkgs ./hosts) // (libTest.rnl.mkHosts pkgsTest ./labs);
+
       systemConfigs = lib.rnl.mkHypers ./hypervisors;
       profiles = lib.rnl.mkProfiles ./profiles;
     in

@@ -59,6 +59,20 @@
   # Disable immediate shutdown when power button is pressed
   services.logind.extraConfig = "HandlePowerKey=ignore";
 
+  # use a recent kernel
+  boot.kernelPackages = pkgs.linuxPackagesFor (
+    pkgs.linuxKernel.kernels.linux_latest.override {
+      argsOverride = rec {
+        src = pkgs.fetchurl {
+          url = "mirror://kernel/linux/kernel/v${lib.versions.major version}.x/linux-${version}.tar.xz";
+          sha256 = "sha256-41rJmfQKaHRJPY1g8z8RUNeomuWEHEKNqCJX+80HCu0=";
+        };
+        version = "6.12.85";
+        modDirVersion = "6.12.85";
+      };
+    }
+  );
+
   # Allow profiling of system metrics (Required to the CPD course)
   boot.kernel.sysctl = {
     "kernel.perf_event_paranoid" = 0;

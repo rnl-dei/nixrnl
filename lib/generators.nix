@@ -26,25 +26,22 @@ let
     *
   */
   mkPkgs =
-    overlays:
+    pkgs: overlays:
     let
       argsPkgs = {
         system = "x86_64-linux"; # FIXME: Allow other systems
         config.allowUnfree = true;
       };
     in
-    import inputs.nixpkgs (
+    import pkgs (
       {
         overlays = [
           (_self: _super: {
             unstable = import inputs.unstable argsPkgs;
-            labspkgs = import inputs.labspkgs argsPkgs;
-            allowOpenSSL = import inputs.nixpkgs (
+            allowOpenSSL = import pkgs (
               argsPkgs // { config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; }
             );
-            allowSquid = import inputs.nixpkgs (
-              argsPkgs // { config.permittedInsecurePackages = [ "squid-5.9" ]; }
-            );
+            allowSquid = import pkgs (argsPkgs // { config.permittedInsecurePackages = [ "squid-5.9" ]; });
           })
         ]
         ++ lib.attrValues overlays;
@@ -229,7 +226,6 @@ let
     *
   */
 
-
   mkHost =
     hostname:
     {
@@ -240,7 +236,7 @@ let
       ...
     }:
     lib.nixosSystem {
-      inherit system pkgs lib; 
+      inherit system pkgs lib;
       specialArgs = {
         rnl-keys = import ../profiles/core/keys.nix;
         inherit profiles inputs nixosConfigurations;
@@ -248,7 +244,10 @@ let
       modules =
         (lib.collect builtins.isPath (lib.rnl.rakeLeaves ../modules))
         ++ [
-          { networking.hostName = hostname; }
+          {
+            networking.hostName = hostname;
+            nix.registry.nixpkgs.to.path = lib.mkForce pkgs.path; # FIXME: GROSS
+          }
           hostPath
           inputs.disko.nixosModules.disko
           inputs.agenix.nixosModules.age
@@ -274,8 +273,7 @@ let
     *
   */
   mkHosts =
-    pkgs:
-    hostsDir:
+    pkgs: hostsDir:
     lib.listToAttrs (
       lib.lists.flatten (
         lib.mapAttrsToList
@@ -291,7 +289,7 @@ let
               cfg = {
                 inherit
                   hostPath
-                  pkgs 
+                  pkgs
                   profiles
                   inputs
                   ;
