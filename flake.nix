@@ -29,6 +29,10 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     agenix.inputs.systems.follows = "systems";
 
+    #Email Server
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
+    simple-nixos-mailserver.inputs.nixpkgs.follows = "nixpkgs";
+
     # Required for command-not-found
     flake-programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
     flake-programs-sqlite.inputs.nixpkgs.follows = "nixpkgs";
