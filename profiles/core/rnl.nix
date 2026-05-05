@@ -223,6 +223,8 @@ in
     configurationLimit = 5;
   };
   boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+  # HACK: copy.fail mitigation
+  boot.kernelParams = [ "modprobe.blacklist=algif_aead" ];
 
   rnl.labels.core = lib.mkDefault "rnl";
 }
