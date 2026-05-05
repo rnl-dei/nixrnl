@@ -34,6 +34,16 @@ in
     path = "/var/lib/nextcloud/dei-nextcloud-oidc";
   };
 
+  age.secrets.dei-spreed-backend-secret = {
+    file = ../../secrets/dei-spreed-backend-secret.age;
+    owner = "nextcloud-spreed-signaling";
+  };
+
+  age.secrets.dei-coturn-secret = {
+    file = ../../secrets/dei-coturn-secret.age;
+    owner = "turnserver";
+  };
+
   services.nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
     serverName = "${config.services.nextcloud.hostName}";
     enableACME = true;
@@ -51,6 +61,21 @@ in
         proxyWebsockets = true;
       };
     };
+
+  services.nginx.virtualHosts."${config.services.coturn.realm}" = {
+    serverName = "${config.services.coturn.realm}";
+    enableACME = true;
+    forceSSL = true;
+  };
+
+  services.nginx.virtualHosts."signaling.booble.rnl.tecnico.ulisboa.pt" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8080";
+      proxyWebsockets = true;
+    };
+  };
 
   services.nextcloud = {
     enable = true;
@@ -179,6 +204,69 @@ in
       };
     };
   };
+
+  # NATS is used for the Spreed WebRTC signaling server
+  services.nats = {
+    enable = true;
+    port = 4222;
+  };
+
+  # Coturn configuration for WebRTC support in Spreed
+  services.coturn = {
+    enable = true;
+    no-cli = true;
+    use-auth-secret = true;
+    static-auth-secret-file = config.age.secrets.dei-coturn-secret.path;
+    realm = "turn.booble.rnl.tecnico.ulisboa.pt";
+
+    cert = "${config.security.acme.certs."turn.booble.rnl.tecnico.ulisboa.pt".directory}/fullchain.pem";
+    pkey = "${config.security.acme.certs."turn.booble.rnl.tecnico.ulisboa.pt".directory}/key.pem";
+
+    extraConfig = ''
+      listening-port=3478
+      tls-listening-port=5349
+    '';
+  };
+
+  # Spreed WebRTC signaling server for Nextcloud Talk
+  services.nextcloud-spreed-signaling = {
+    enable = true;
+    backends = {
+      nextcloud = {
+        urls = [ "https://${config.services.nextcloud.hostName}" ];
+        secretFile = config.age.secrets.dei-spreed-backend-secret.path;
+      };
+    };
+    settings = {
+      nats = {
+        url = "nats://127.0.0.1:4222";
+      };
+      turn = {
+        apikeyFile = config.age.secrets.dei-coturn-secret.path;
+        secretFile = config.age.secrets.dei-spreed-backend-secret.path;
+        servers = [
+          "turn:turn.booble.rnl.tecnico.ulisboa.pt:3478?transport=udp"
+          "turn:turn.booble.rnl.tecnico.ulisboa.pt:3478?transport=tcp"
+        ];
+      };
+    };
+  };
+
+  # Allow necessary ports for Coturn and Spreed WebRTC signaling server
+  networking.firewall.allowedTCPPorts = [
+    3478
+    5349
+  ];
+  networking.firewall.allowedUDPPorts = [
+    3478
+    5349
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 49152;
+      to = 65535;
+    }
+  ];
 
   virtualisation.oci-containers.containers.collabora = {
     image = "collabora/code:latest";
