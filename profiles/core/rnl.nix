@@ -224,7 +224,7 @@ in
   };
   boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
   # HACK: copy.fail mitigation
-  boot.kernelParams = [ "modprobe.blacklist=algif_aead" ];
+  boot.extraModprobeConfig = "install algif_aead /bin/false";
 
   rnl.labels.core = lib.mkDefault "rnl";
 }
