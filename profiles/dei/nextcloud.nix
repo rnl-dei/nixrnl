@@ -89,7 +89,7 @@ in
         override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
       };
 
-    hostName = "drive.booble.rnl.tecnico.ulisboa.pt";
+    hostName = "drive.dei.tecnico.ulisboa.pt";
 
     maxUploadSize = "16G";
     https = true;
