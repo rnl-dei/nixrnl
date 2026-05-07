@@ -69,7 +69,9 @@ let
            --name="$ENVIRONMENT_NAME" \
            --volume "$DUMP_FILE:/docker-entrypoint-initdb.d/$DUMP_FILE_NAME:ro" \
            --env-file="$ENV_FILE" \
-           $IMG_NAME 
+           $IMG_NAME \
+           --character-set-server=utf8mb4 \
+           --collation-server=utf8mb4_unicode_ci
         
         docker container start "$ENVIRONMENT_NAME"
       }
@@ -372,6 +374,12 @@ in
         description = "Environment variables common to all DMS deployments";
       };
 
+      extraEnvironment = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Extra environment variables to set for all DMS deployments";
+      };
+
       environmentFile = mkOption {
         type = types.path;
         default = "${cfg.dataDir}/common/dms.env";
@@ -382,6 +390,39 @@ in
   imports = [ ./caddy.nix ];
 
   config = mkIf cfg.enable {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      # Required for the Playwright Node.js driver and browsers
+      alsa-lib
+      libgbm
+      at-spi2-atk
+      at-spi2-core
+      atk
+      cairo
+      cups
+      dbus
+      expat
+      fontconfig
+      freetype
+      glib
+      gtk3
+      libdrm
+      libGL
+      libxkbcommon
+      mesa
+      nspr
+      nss
+      pango
+      systemd
+      xorg.libX11
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrandr
+      xorg.libxcb
+    ];
+
     virtualisation = {
       containers.enable = true;
     };
@@ -432,7 +473,12 @@ in
         nix # nix-env
       ];
 
-      environment = cfg.backend.environment;
+      environment =
+        cfg.backend.environment
+        // cfg.backend.extraEnvironment
+        // {
+          PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+        };
 
       serviceConfig = {
         User = user;

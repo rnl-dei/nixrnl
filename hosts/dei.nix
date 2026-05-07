@@ -55,8 +55,8 @@ in
     createdBy = "nuno.alves";
     maintainers = [ "dei" ];
 
-    vcpu = 4;
-    memory = 4096;
+    vcpu = 6;
+    memory = 8192;
 
     interfaces = [ { source = "pub"; } ];
     disks = [
