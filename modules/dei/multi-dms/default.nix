@@ -436,7 +436,7 @@ in
       "Z /var/lib/nixos-containers 0771 ${user} root - -"
     ];
 
-    environment.systemPackages = with pkgs; [ tesseract ] ++ (config.environment.systemPackages or [ ]);
+    environment.systemPackages = with pkgs; [ tesseract ];
 
     services.caddy.extraConfig = ''
       import ${caddyConfigsDir}/*

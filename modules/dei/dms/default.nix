@@ -345,7 +345,7 @@ in
       }) sites;
     };
 
-    environment.systemPackages = with pkgs; [ tesseract ] ++ (config.environment.systemPackages or [ ]);
+    environment.systemPackages = with pkgs; [ tesseract ];
 
     systemd.services = mapAttrs' (siteName: siteCfg: {
       name = siteCfg.serviceName;
