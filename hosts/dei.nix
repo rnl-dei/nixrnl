@@ -24,8 +24,8 @@ in
     # dei.gallery # old photo storage (photoprism)
     dei.immich
 
-    dei.nextcloud
-    dei.nextcloud-s3
+    #dei.nextcloud
+    #dei.nextcloud-s3
   ];
 
   # Networking
@@ -348,5 +348,9 @@ in
   # Add specific ssh key for thesis student
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkgxDz3Z1k23/QMM1vYTcb2BvGb4/X3NmoxwEZM4Ntb joao_ferreira"
+  ];
+
+  security.pki.certificates = [
+    (builtins.readFile ./ceph-ca.crt)
   ];
 }

@@ -11,7 +11,7 @@ let
       (pkgs.fetchFromGitHub {
         owner = "NixOS";
         repo = "nixpkgs";
-        rev = "818d778";
+        rev = "818d778d82358513ffb17f9705d13b5e7ec180b5";
         sha256 = "sha256-gZM60xxr2p7+V5aHAutgjhGitxD71QacwA/P/Z4RUnw=";
       })
       {

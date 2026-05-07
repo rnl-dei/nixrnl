@@ -12,14 +12,12 @@ let
     {
       mountPoint = "[BLATTA] DMS File Repository";
       bucket = "blatta";
-      groups = [ "DEI" ];
+      groups = [ ];
     }
     {
       mountPoint = "DMS File Repository";
       bucket = "dei-prod";
       groups = [
-        "DEI"
-        "Secretaria"
       ];
     }
   ];

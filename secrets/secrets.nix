@@ -112,7 +112,6 @@ in
   "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ dei ];
-  "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ dei ];
   "dei-garage-env-file.env.age".publicKeys =
     users
     ++ deiUsers

@@ -263,6 +263,39 @@ in
   };
 
   config = mkIf (sites != { }) {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      # Required for the Playwright Node.js driver and browsers
+      alsa-lib
+      libgbm
+      at-spi2-atk
+      at-spi2-core
+      atk
+      cairo
+      cups
+      dbus
+      expat
+      fontconfig
+      freetype
+      glib
+      gtk3
+      libdrm
+      libGL
+      libxkbcommon
+      mesa
+      nspr
+      nss
+      pango
+      systemd
+      xorg.libX11
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrandr
+      xorg.libxcb
+    ];
+
     systemd.tmpfiles.rules =
       flatten (
         mapAttrsToList (_: siteCfg: [
@@ -318,9 +351,15 @@ in
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
-        environment = siteCfg.backend.environment;
+        environment =
+          siteCfg.backend.environment
+          // siteCfg.backend.extraEnvironment
+          // {
+            PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+          };
+
         script = ''
-          ${siteCfg.backend.command}
+          exec ${siteCfg.backend.command}
         '';
 
         serviceConfig = {
