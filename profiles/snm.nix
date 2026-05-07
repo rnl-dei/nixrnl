@@ -1,38 +1,53 @@
-{ config, ... }:
+{ config, lib, ... }:
+
+let
+  mailDomain = "rnl.tecnico.ulisboa.pt";
+
+  extractUser =
+    input:
+    let
+      parts = builtins.match "([^:]+):(.*)" input;
+    in
+    if parts == null then
+      null
+    else
+      {
+        name = "${builtins.elemAt parts 0}@${mailDomain}";
+        value = {
+          hashedPassword = builtins.elemAt parts 1;
+        };
+      };
+
+  rawContent = builtins.readFile config.age.secrets.email-users.path;
+
+  # Split into lines, filtering out empty ones
+  lines = builtins.filter (s: s != "") (lib.splitString "\n" rawContent);
+
+  # Transform the list of lines into the attribute set SNM expects
+  generatedAccounts = builtins.listToAttrs (
+    builtins.filter (x: x != null) (builtins.map extractUser lines)
+  );
+
+in
 {
+  age.secrets.users = {
+    file = ../secrets/email-users.age;
+    mode = "600";
+  };
 
   # https://letsencrypt.org/repository/#let-s-encrypt-subscriber-agreement
   security.acme.acceptTerms = true;
-
-  # Allow incoming HTTP connections
   networking.firewall.allowedTCPPorts = [ 80 ];
-
-  # Enable ACME HTTP-01 challenge with nginx
   services.nginx.virtualHosts.${config.mailserver.fqdn}.enableACME = true;
 
   mailserver = {
     enable = true;
     stateVersion = 4;
     fqdn = "mail.rnl.tecnico.ulisboa.pt";
-    domains = [ "rnl.tecnico.ulisboa.pt" ];
+    domains = [ mailDomain ];
 
-    # Reference the existing ACME configuration created by nginx
     x509.useACMEHost = config.mailserver.fqdn;
 
-    # A list of all login accounts. To create the password hashes, use
-    # nix-shell -p mkpasswd --run 'mkpasswd -s'
-    accounts = {
-      "user1@example.com" = {
-        # Reads the password hash from a file on the server
-        hashedPasswordFile = "/a/file/containing/a/hashed/password";
-
-        # Additional addresses delivered to this mailbox
-        aliases = [ "postmaster@example.com" ];
-      };
-      "user2@example.com" = {
-        # Provides the password hash inline
-        hashedPassword = "$y$j9T$JqqefR6flaaJBRjD4KVZc1$QM6h4Spr5.yn/FuIT.ydTV22daEbiVd8ZprV/POtPgB";
-      };
-    };
+    accounts = generatedAccounts;
   };
 }

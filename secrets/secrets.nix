@@ -143,4 +143,5 @@ in
   "kutt-env.age".publicKeys = users ++ [ kutt ];
   "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
   "kutt-registry.age".publicKeys = users ++ [ kutt ];
+  "email-users.age".publicKeys = users;
 }
