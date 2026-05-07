@@ -129,6 +129,7 @@ let
               DB_PORT = toString config.database.port;
               DB_NAME = config.database.name;
               DB_USERNAME = config.database.user;
+              TESSDATA_PREFIX = "${pkgs.tesseract}/share/tessdata";
             };
             description = "Environment variables to set for the DMS service";
           };
@@ -140,7 +141,6 @@ let
           };
 
           environmentFile = mkOption {
-            type = types.path;
             default = "${config.stateDir}/dms.env";
             description = "Path to the environment file (useful for secrets)";
           };
@@ -263,6 +263,39 @@ in
   };
 
   config = mkIf (sites != { }) {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      # Required for the Playwright Node.js driver and browsers
+      alsa-lib
+      libgbm
+      at-spi2-atk
+      at-spi2-core
+      atk
+      cairo
+      cups
+      dbus
+      expat
+      fontconfig
+      freetype
+      glib
+      gtk3
+      libdrm
+      libGL
+      libxkbcommon
+      mesa
+      nspr
+      nss
+      pango
+      systemd
+      xorg.libX11
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrandr
+      xorg.libxcb
+    ];
+
     systemd.tmpfiles.rules =
       flatten (
         mapAttrsToList (_: siteCfg: [
@@ -311,6 +344,8 @@ in
       }) sites;
     };
 
+    environment.systemPackages = with pkgs; [ tesseract ];
+
     systemd.services = mapAttrs' (siteName: siteCfg: {
       name = siteCfg.serviceName;
       value = {
@@ -318,9 +353,16 @@ in
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
-        environment = siteCfg.backend.environment;
+        environment =
+          siteCfg.backend.environment
+          // siteCfg.backend.extraEnvironment
+          // {
+            PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+          };
+
         script = ''
-          ${siteCfg.backend.command}
+          export LD_LIBRARY_PATH="${pkgs.tesseract}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          exec ${siteCfg.backend.command}
         '';
 
         serviceConfig = {
