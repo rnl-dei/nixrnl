@@ -129,6 +129,7 @@ let
               DB_PORT = toString config.database.port;
               DB_NAME = config.database.name;
               DB_USERNAME = config.database.user;
+              TESSDATA_PREFIX = "${config.stateDir}/tessdata";
             };
             description = "Environment variables to set for the DMS service";
           };
@@ -343,6 +344,8 @@ in
         };
       }) sites;
     };
+
+    environment.systemPackages = with pkgs; [ tesseract ] ++ (config.environment.systemPackages or [ ]);
 
     systemd.services = mapAttrs' (siteName: siteCfg: {
       name = siteCfg.serviceName;

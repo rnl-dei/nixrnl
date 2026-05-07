@@ -370,6 +370,7 @@ in
           DB_USERNAME = "dms";
           FILES_DIR = "${environmentDirSystemd}/data";
           FILES_PUBLIC = "${environmentDirSystemd}/www";
+          TESSDATA_PREFIX = "${environmentDirSystemd}/tessdata";
         };
         description = "Environment variables common to all DMS deployments";
       };
@@ -434,6 +435,8 @@ in
       "Z /etc/nixos-containers 0771 ${user} root - -"
       "Z /var/lib/nixos-containers 0771 ${user} root - -"
     ];
+
+    environment.systemPackages = with pkgs; [ tesseract ] ++ (config.environment.systemPackages or [ ]);
 
     services.caddy.extraConfig = ''
       import ${caddyConfigsDir}/*
