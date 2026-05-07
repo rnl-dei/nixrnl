@@ -158,6 +158,7 @@ let
   startScript = pkgs.writeShellApplication {
     name = "multi-dms-start";
     text = ''
+      export LD_LIBRARY_PATH="${pkgs.tesseract}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
       exec ${cfg.backend.command}
     '';
   };
@@ -370,7 +371,7 @@ in
           DB_USERNAME = "dms";
           FILES_DIR = "${environmentDirSystemd}/data";
           FILES_PUBLIC = "${environmentDirSystemd}/www";
-          TESSDATA_PREFIX = "${environmentDirSystemd}/tessdata";
+          TESSDATA_PREFIX = "${pkgs.tesseract}/share/tessdata";
         };
         description = "Environment variables common to all DMS deployments";
       };

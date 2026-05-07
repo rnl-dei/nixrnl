@@ -129,7 +129,7 @@ let
               DB_PORT = toString config.database.port;
               DB_NAME = config.database.name;
               DB_USERNAME = config.database.user;
-              TESSDATA_PREFIX = "${config.stateDir}/tessdata";
+              TESSDATA_PREFIX = "${pkgs.tesseract}/share/tessdata";
             };
             description = "Environment variables to set for the DMS service";
           };
@@ -141,7 +141,6 @@ let
           };
 
           environmentFile = mkOption {
-            type = types.path;
             default = "${config.stateDir}/dms.env";
             description = "Path to the environment file (useful for secrets)";
           };
@@ -362,6 +361,7 @@ in
           };
 
         script = ''
+          export LD_LIBRARY_PATH="${pkgs.tesseract}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
           exec ${siteCfg.backend.command}
         '';
 
