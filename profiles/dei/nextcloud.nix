@@ -4,6 +4,10 @@
   ...
 }:
 let
+  unstableTarball = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+    sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+  };
   ncPkgs =
     import
       (builtins.fetchTarball {
@@ -16,6 +20,10 @@ let
       };
 in
 {
+  imports = [
+    "${unstableTarball}/nixos/modules/services/networking/nextcloud-spreed-signaling.nix"
+  ];
+
   age.secrets.dei-nextcloud-secretFile = {
     file = ../../secrets/dei-nextcloud-secretFile.age;
     owner = "nextcloud";
@@ -42,6 +50,13 @@ in
   age.secrets.dei-coturn-secret = {
     file = ../../secrets/dei-coturn-secret.age;
     owner = "turnserver";
+    group = "nextcloud-spreed-signaling";
+    mode = "0440";
+  };
+
+  age.secrets.dei-spreed-session-secret = {
+    file = ../../secrets/dei-spreed-session-secret.age;
+    owner = "nextcloud-spreed-signaling";
   };
 
   services.nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
@@ -72,7 +87,7 @@ in
     enableACME = true;
     forceSSL = true;
     locations."/" = {
-      proxyPass = "http://127.0.0.1:8080";
+      proxyPass = "http://localhost:8080";
       proxyWebsockets = true;
     };
   };
@@ -231,6 +246,7 @@ in
   # Spreed WebRTC signaling server for Nextcloud Talk
   services.nextcloud-spreed-signaling = {
     enable = true;
+    package = ncPkgs.nextcloud-spreed-signaling;
     backends = {
       nextcloud = {
         urls = [ "https://${config.services.nextcloud.hostName}" ];
@@ -238,8 +254,11 @@ in
       };
     };
     settings = {
+      http = {
+        listen = "0.0.0.0:8080"; # Change this line
+      };
       nats = {
-        url = "nats://127.0.0.1:4222";
+        url = [ "nats://127.0.0.1:4222" ];
       };
       turn = {
         apikeyFile = config.age.secrets.dei-coturn-secret.path;
@@ -248,6 +267,13 @@ in
           "turn:turn.booble.rnl.tecnico.ulisboa.pt:3478?transport=udp"
           "turn:turn.booble.rnl.tecnico.ulisboa.pt:3478?transport=tcp"
         ];
+      };
+      clients = {
+        internalsecretFile = config.age.secrets.dei-spreed-backend-secret.path;
+      };
+      sessions = {
+        hashkeyFile = config.age.secrets.dei-spreed-session-secret.path;
+        blockkeyFile = config.age.secrets.dei-spreed-session-secret.path;
       };
     };
   };
@@ -316,6 +342,7 @@ in
   };
 
   programs.nix-ld.enable = true;
+  documentation.nixos.enable = false;
 
   systemd.services.phpfpm-nextcloud.path = with pkgs; [
     jre
