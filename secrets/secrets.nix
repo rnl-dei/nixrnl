@@ -11,6 +11,7 @@ let
   # Public SSH host keys of hosts
   agl = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL98Q+pb8cNodccH6ta9pKDNF4NdU8GdNg0xjAOe9Aj4";
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
+  booble = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKpmy/EVWBIKOjHWMNvPIY8B73tolIHgBoDZlCgVQZz6";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
   caixote = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKDqUCaBZ5e2e8k05ba/17fAYdDjXU3dTx/D5rg3JISu";
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
@@ -38,6 +39,7 @@ in
   # Host keys only need to be accessible by the deploy machines
   "host-keys/agl.age".publicKeys = deployMachines;
   "host-keys/blatta.age".publicKeys = deployMachines;
+  "host-keys/booble.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
   "host-keys/caixote.age".publicKeys = deployMachines;
   "host-keys/dealer.age".publicKeys = deployMachines;
@@ -88,6 +90,12 @@ in
   "hedgedoc-fenix-api.age".publicKeys = users ++ [ hedgedoc ];
   "helios-env.age".publicKeys = users ++ [ selene ];
   "immich-json.age".publicKeys = users ++ deiUsers ++ [ dei ];
+  "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-spreed-backend-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-spreed-session-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-coturn-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "ist-delegate-election-env.age".publicKeys = users ++ [ selene ];
   "moodle-agl-db-password.age".publicKeys = users ++ [ agl ];
   "moodle-lga-db-password.age".publicKeys = users ++ [ lga ];
