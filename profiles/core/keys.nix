@@ -9,8 +9,6 @@
   ];
 
   dei-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC85hF9SnRkDs8XNStdFp4rbbaIcgsLH/BzngQQPpiWO lucks@mac"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYLt5UeiBkoTy2IlCmCXxiVBznJRAdNldRbZQUsylkz lucas@marte"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEtMB91hKq09Ddo5gQAQKaPSVgTjynaB8gHLf0DTY7K hugo.s.pereira@tecnico.ulisboa.pt-laptop"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIClrL9lcMtX0vWyN/BG63/sC89nGaceaMfjMJG6sysLE vicente@msi"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7KctWVyAfwcA4g6v9Bucvs+KWChhd2f3vRpHr3JSKY alcafache@nixos"
@@ -20,7 +18,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN5+deDNLsW+PjJ6fCo4WMqyQm6xA0lbfDkJ3IWg16y0 paulo.chen@alucard"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFlyAPbpCY33eSGsbohPS824PvrEYUGf2v2ORuKBfIo6 miguel.carvalho@mlc"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGHmS7ji4vNClidZ52EHNPb+gsMMLKAgx1AIrcdyKyv/ miguel.carvalho@laptop"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqHh9LuuxoEpgRVcJy8BrYtvJm4oxdwUPU5BQkKO41h jose.araujo@zmws"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC2DRBpPu3BlNBr9wL9l51/SGY9xMEbaWIuRHWwYTfP+ zmws@nixos"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1gmUIkYieT3UCbznEmyzsUW8dUzie1++00k1LgjDH3 jose.araujo@laptop"
   ];
 
 }
