@@ -40,6 +40,7 @@ in
   "host-keys/blatta.age".publicKeys = deployMachines;
   "host-keys/borg.age".publicKeys = deployMachines;
   "host-keys/caixote.age".publicKeys = deployMachines;
+  "host-keys/comsat-nix.age".publicKeys = deployMachines;
   "host-keys/dealer.age".publicKeys = deployMachines;
   "host-keys/dei.age".publicKeys = deployMachines;
   "host-keys/dollars.age".publicKeys = deployMachines;

@@ -248,7 +248,7 @@ let
           { networking.hostName = hostname; }
           hostPath
           #inputs.rnl-config.nixosModules.rnl
-          inputs.simple-nixos-mailserver.nixosModules.snm
+          inputs.simple-nixos-mailserver.nixosModule
           inputs.disko.nixosModules.disko
           inputs.agenix.nixosModules.age
         ]

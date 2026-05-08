@@ -30,7 +30,7 @@
     agenix.inputs.systems.follows = "systems";
 
     #Email Server
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
     simple-nixos-mailserver.inputs.nixpkgs.follows = "nixpkgs";
 
     # Required for command-not-found
