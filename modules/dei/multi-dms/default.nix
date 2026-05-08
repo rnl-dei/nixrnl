@@ -69,7 +69,9 @@ let
            --name="$ENVIRONMENT_NAME" \
            --volume "$DUMP_FILE:/docker-entrypoint-initdb.d/$DUMP_FILE_NAME:ro" \
            --env-file="$ENV_FILE" \
-           $IMG_NAME 
+           $IMG_NAME \
+           --character-set-server=utf8mb4 \
+           --collation-server=utf8mb4_unicode_ci
         
         docker container start "$ENVIRONMENT_NAME"
       }
@@ -156,6 +158,7 @@ let
   startScript = pkgs.writeShellApplication {
     name = "multi-dms-start";
     text = ''
+      export LD_LIBRARY_PATH="${pkgs.tesseract}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
       exec ${cfg.backend.command}
     '';
   };
@@ -368,8 +371,15 @@ in
           DB_USERNAME = "dms";
           FILES_DIR = "${environmentDirSystemd}/data";
           FILES_PUBLIC = "${environmentDirSystemd}/www";
+          TESSDATA_PREFIX = "${pkgs.tesseract}/share/tessdata";
         };
         description = "Environment variables common to all DMS deployments";
+      };
+
+      extraEnvironment = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Extra environment variables to set for all DMS deployments";
       };
 
       environmentFile = mkOption {
@@ -382,6 +392,39 @@ in
   imports = [ ./caddy.nix ];
 
   config = mkIf cfg.enable {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      # Required for the Playwright Node.js driver and browsers
+      alsa-lib
+      libgbm
+      at-spi2-atk
+      at-spi2-core
+      atk
+      cairo
+      cups
+      dbus
+      expat
+      fontconfig
+      freetype
+      glib
+      gtk3
+      libdrm
+      libGL
+      libxkbcommon
+      mesa
+      nspr
+      nss
+      pango
+      systemd
+      xorg.libX11
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrandr
+      xorg.libxcb
+    ];
+
     virtualisation = {
       containers.enable = true;
     };
@@ -393,6 +436,8 @@ in
       "Z /etc/nixos-containers 0771 ${user} root - -"
       "Z /var/lib/nixos-containers 0771 ${user} root - -"
     ];
+
+    environment.systemPackages = with pkgs; [ tesseract ];
 
     services.caddy.extraConfig = ''
       import ${caddyConfigsDir}/*
@@ -432,7 +477,12 @@ in
         nix # nix-env
       ];
 
-      environment = cfg.backend.environment;
+      environment =
+        cfg.backend.environment
+        // cfg.backend.extraEnvironment
+        // {
+          PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+        };
 
       serviceConfig = {
         User = user;
