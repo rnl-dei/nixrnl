@@ -169,8 +169,8 @@
                 };
                 doCheck = false;
               })
-              pkgs.python3Packages.graphviz
-              pkgs.graphviz
+              pkgs.labspkgs.python3Packages.graphviz
+              pkgs.labspkgs.graphviz
             ];
           })
           (buildPythonPackage rec {
@@ -183,7 +183,7 @@
             doCheck = false;
             propagatedBuildInputs = [
               # Specify dependencies
-              pkgs.python3Packages.numpy
+              pkgs.labspkgs.python3Packages.numpy
               (buildPythonPackage rec {
                 pname = "keras-transformer";
                 version = "0.40.0";
@@ -204,7 +204,7 @@
                     doCheck = false;
                     propagatedBuildInputs = [
                       # Specify dependencies
-                      pkgs.python3Packages.numpy
+                      pkgs.labspkgs.python3Packages.numpy
                     ];
                   })
                   (buildPythonPackage rec {
@@ -217,7 +217,7 @@
                     doCheck = false;
                     propagatedBuildInputs = [
                       # Specify dependencies
-                      pkgs.python3Packages.numpy
+                      pkgs.labspkgs.python3Packages.numpy
                     ];
                   })
                   (buildPythonPackage rec {
@@ -230,7 +230,7 @@
                     doCheck = false;
                     propagatedBuildInputs = [
                       # Specify dependencies
-                      pkgs.python3Packages.numpy
+                      pkgs.labspkgs.python3Packages.numpy
                     ];
                   })
                   (buildPythonPackage rec {
@@ -253,7 +253,7 @@
                         doCheck = false;
                         propagatedBuildInputs = [
                           # Specify dependencies
-                          pkgs.python3Packages.numpy
+                          pkgs.labspkgs.python3Packages.numpy
                         ];
                       })
                     ];
@@ -268,7 +268,7 @@
                     doCheck = false;
                     propagatedBuildInputs = [
                       # Specify dependencies
-                      pkgs.python3Packages.numpy
+                      pkgs.labspkgs.python3Packages.numpy
                     ];
                   })
                   # Test SSOF Jan 2026
