@@ -10,7 +10,7 @@
     profiles.containers.apptainer
   ];
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs.labspkgs; [
     # Browser
     firefox
     chromium
@@ -78,7 +78,7 @@
     sbcl
 
     # PPla
-    unstable.minizinc
+    pkgs.unstable.minizinc
 
     # SD
     eclipses.eclipse-java
@@ -286,7 +286,7 @@
             ];
           })
         ]
-        ++ [ unstable.python3Packages.keras ]
+        ++ [ pkgs.unstable.python3Packages.keras ]
       )
     ))
   ];
