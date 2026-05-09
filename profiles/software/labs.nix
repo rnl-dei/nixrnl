@@ -35,10 +35,10 @@
     awscli2
     jdk11
     jq
-    pin
+    pkgs.pin
 
     # CPD
-    intel-oneapi-vtune
+    pkgs.intel-oneapi-vtune
     mpi
     mpi.dev
 
