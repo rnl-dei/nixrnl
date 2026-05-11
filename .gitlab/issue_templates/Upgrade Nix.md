@@ -9,12 +9,11 @@ Hosts in general should be upgraded by the order stated, which accounts for test
 
 ### Labs
 
-[ ] Labs
-[ ] Borg
-[ ] Dollars
-[ ] Dolly
-[ ] Nexus1
-[ ] Nexus2
+[ ] cirrus
+[ ] All labs (lab3 should be the last due to Nvidia trash.)
+[ ] dollars
+[ ] dolly
+[ ] borg
 
 ### Hypervisors
 
@@ -33,10 +32,10 @@ Hosts in general should be upgraded by the order stated, which accounts for test
 [ ] vault
 [ ] ns1
 [ ] ns2
+[ ] hagrid
 [ ] papyrus
 [ ] tardis
 [ ] dealer
-[ ] hagrid
 [ ] weaver
 [ ] doorstep
 [ ] caixote
@@ -62,6 +61,8 @@ See [Wiki Link](https://worksinprogress.co/) for more information.
 
 ### Other Services
 
+[ ] nexus1
+[ ] nexus2
 [ ] selene
 [ ] hedgedoc
 [ ] kutt
