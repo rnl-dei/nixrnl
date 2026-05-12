@@ -158,23 +158,24 @@ in
     openssh.authorizedKeys.keys = rnl-keys.rnl-keys;
   };
 
+  # FIXME:
   # Configure email
-  programs.msmtp = {
-    enable = true;
-    setSendmail = true;
-    defaults = {
-      from = "%U@%C";
-      domain = config.networking.fqdn;
-    };
-    accounts = {
-      "default" = {
-        host = config.rnl.mailserver.host;
-        port = config.rnl.mailserver.port;
-        tls = "off";
-        tls_starttls = "off";
-      };
-    };
-  };
+  # programs.msmtp = {
+  #   enable = true;
+  #   setSendmail = true;
+  #   defaults = {
+  #     from = "%U@%C";
+  #     domain = config.networking.fqdn;
+  #   };
+  #   accounts = {
+  #     "default" = {
+  #       host = config.rnl.mailserver.host;
+  #       port = config.rnl.mailserver.port;
+  #       tls = "off";
+  #       tls_starttls = "off";
+  #     };
+  #   };
+  # };
 
   # Add certificates
   security.pki.certificateFiles = [ "${RNLCert}" ];

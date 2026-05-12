@@ -1,7 +1,12 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
 
 let
-  mailDomain = "teste.rnl.tecnico.ulisboa.pt";
+  mailDomain = "comsat-nix.rnl.tecnico.ulisboa.pt";
 
   extractUser =
     input:
@@ -32,6 +37,11 @@ let
 
 in
 {
+
+  imports = [
+    inputs.simple-nixos-mailserver.nixosModule
+  ];
+
   age.secrets.users = {
     file = ../secrets/email-users.age;
     mode = "600";
@@ -42,12 +52,12 @@ in
 
   mailserver = {
     enable = true;
-    stateVersion = 4;
-    fqdn = "comsat-nix.rnl.tecnico.ulisboa.pt";
+    # stateVersion = 4;
+    fqdn = "comsat-nix.rnl.tecnico.ulisboa.pt.";
     domains = [ mailDomain ];
 
-    x509.useACMEHost = config.mailserver.fqdn;
+    # x509.useACMEHost = config.mailserver.fqdn;
 
-    accounts = generatedAccounts;
+    loginAccounts = generatedAccounts;
   };
 }
