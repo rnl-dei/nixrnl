@@ -13,6 +13,7 @@ let
   blatta = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKt+NXmZ23wpIl5QJ35xRmLPAuLcdEGC3+wgdU0qkhJV";
   borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLCDWGT0Uv6Q2fgTTtLMDM3nTyeV5mGCIiH6zx+KI2b";
   caixote = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKDqUCaBZ5e2e8k05ba/17fAYdDjXU3dTx/D5rg3JISu";
+  comsat-nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGB2xpGxMssnH0a/eg2mQHupbbsNWBMw/9keBMHU3Whe";
   dealer = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONb9VAC3HNLUR4aTLJUVh0lgWiifYZ8BGrvrVHbzA/5";
   dei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILHc78fOD5TKPNbpNwELDU2+ocBBt3XZ3SWZ/qETR/0J";
   dollars = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWWs0qnnsgKT78qjKo7LQ4BAoiL6N9bbxuBJswHqjrw";
@@ -144,5 +145,5 @@ in
   "kutt-env.age".publicKeys = users ++ [ kutt ];
   "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
   "kutt-registry.age".publicKeys = users ++ [ kutt ];
-  "email-users.age".publicKeys = users;
+  "email-users.age".publicKeys = users ++ [ comsat-nix ];
 }

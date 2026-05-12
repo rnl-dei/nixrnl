@@ -1,7 +1,7 @@
 { config, lib, ... }:
 
 let
-  mailDomain = "rnl.tecnico.ulisboa.pt";
+  mailDomain = "teste.rnl.tecnico.ulisboa.pt";
 
   extractUser =
     input:
@@ -18,7 +18,9 @@ let
         };
       };
 
-  rawContent = builtins.readFile config.age.secrets.email-users.path;
+  secretPath = config.age.secrets.users.path;
+
+  rawContent = if builtins.pathExists secretPath then builtins.readFile secretPath else "";
 
   # Split into lines, filtering out empty ones
   lines = builtins.filter (s: s != "") (lib.splitString "\n" rawContent);
@@ -35,15 +37,13 @@ in
     mode = "600";
   };
 
-  # https://letsencrypt.org/repository/#let-s-encrypt-subscriber-agreement
-  security.acme.acceptTerms = true;
   networking.firewall.allowedTCPPorts = [ 80 ];
   services.nginx.virtualHosts.${config.mailserver.fqdn}.enableACME = true;
 
   mailserver = {
     enable = true;
     stateVersion = 4;
-    fqdn = "mail.rnl.tecnico.ulisboa.pt";
+    fqdn = "comsat-nix.rnl.tecnico.ulisboa.pt";
     domains = [ mailDomain ];
 
     x509.useACMEHost = config.mailserver.fqdn;
