@@ -2,6 +2,7 @@
   config,
   lib,
   inputs,
+  pkgs,
   ...
 }:
 
@@ -23,9 +24,15 @@ let
         };
       };
 
-  secretPath = config.age.secrets.users.path;
-
-  rawContent = if builtins.pathExists secretPath then builtins.readFile secretPath else "";
+  rawContent = builtins.readFile (
+    pkgs.runCommand "decrypt"
+      {
+        nativeBuildInputs = [ pkgs.rage ];
+      }
+      ''
+        rage --decrypt ${../secrets/email-users.age} -i /etc/ssh/ssh_host_ed25519_key > $out
+      ''
+  );
 
   # Split into lines, filtering out empty ones
   lines = builtins.filter (s: s != "") (lib.splitString "\n" rawContent);
@@ -34,7 +41,6 @@ let
   generatedAccounts = builtins.listToAttrs (
     builtins.filter (x: x != null) (builtins.map extractUser lines)
   );
-
 in
 {
 
@@ -53,11 +59,15 @@ in
   mailserver = {
     enable = true;
     # stateVersion = 4;
-    fqdn = "comsat-nix.rnl.tecnico.ulisboa.pt.";
+    fqdn = "comsat-nix.rnl.tecnico.ulisboa.pt";
     domains = [ mailDomain ];
 
-    # x509.useACMEHost = config.mailserver.fqdn;
+    certificateScheme = "selfsigned";
 
-    loginAccounts = generatedAccounts;
+    loginAccounts =
+      assert builtins.trace "${builtins.toJSON generatedAccounts}" generatedAccounts != null;
+      generatedAccounts;
+
   };
+  # security.acme.acceptTerms = true;
 }

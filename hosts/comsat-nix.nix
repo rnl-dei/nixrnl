@@ -6,7 +6,7 @@
     os.nixos
     type.vm
     snm
-    webserver
+    # webserver
   ];
 
   #Networking
