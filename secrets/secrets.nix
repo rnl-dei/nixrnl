@@ -95,6 +95,7 @@ in
   "dei-nextcloud-admin-pass.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "dei-nextcloud-oidc.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "dei-nextcloud-secretFile.age".publicKeys = users ++ deiUsers ++ [ booble ];
+  "dei-onlyoffice-jwt.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "dei-spreed-backend-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "dei-spreed-session-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
   "dei-coturn-secret.age".publicKeys = users ++ deiUsers ++ [ booble ];
