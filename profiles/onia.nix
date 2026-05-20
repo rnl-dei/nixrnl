@@ -99,7 +99,8 @@
       ssl_bump bump all
 
       # Mooshak
-      acl whitelistdomain dstdomain https://portal.onia.pt
+      acl whitelistdomain dstdomain .onia.pt 
+      acl whitelistdomain dstdomain onia.pt
 
       acl safeports port 80 # http
       acl safeports port 443 # https
