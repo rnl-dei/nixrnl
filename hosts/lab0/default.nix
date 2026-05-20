@@ -5,7 +5,7 @@
     filesystems.labs
     os.nixos
     type.lab
-    oni
+    onia
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
