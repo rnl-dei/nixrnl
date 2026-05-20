@@ -25,12 +25,15 @@
 
   # Enable DHCP
   networking.useDHCP = lib.mkForce true;
-  networking.dhcpcd.extraConfig = ''
-    duid ll   # Allow DHCP server to assign a static IPv6 using the MAC address
-  '';
 
   # Disable Nix
   nix.settings.allowed-users = [ "root" ];
+
+  # Enable autologin for evaluation user
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "onia";
+  };
 
   # Firewall
   networking.firewall.enable = lib.mkForce false;
@@ -73,6 +76,10 @@
           # accept traffic originated from us
           ct state {established, related} accept
 
+          # Gitlab @ RNL
+          ip daddr 193.136.164.19 accept
+          ip daddr 193.136.164.27 accept
+
           # Allow DNS
           ip daddr 193.136.164.1 udp dport domain accept
           ip daddr 193.136.164.2 udp dport domain accept
@@ -98,9 +105,12 @@
     configText = ''
       ssl_bump bump all
 
-      # Mooshak
-      acl whitelistdomain dstdomain .onia.pt 
+      # Onia
+      acl whitelistdomain dstdomain .onia.pt
       acl whitelistdomain dstdomain onia.pt
+
+      # Gitlab
+      acl whitelistdomain dstdomain gitlab.rnl.tecnico.ulisboa.pt
 
       acl safeports port 80 # http
       acl safeports port 443 # https
@@ -113,8 +123,8 @@
 
       # Application logs to syslog, access and store logs have specific files
       cache_log       syslog
-      access_log      stdio:/var/log/squid/access.log
-      cache_store_log stdio:/var/log/squid/store.log
+      access_log      /var/log/squid/access.log
+      cache_store_log /var/log/squid/store.log
 
       # Run as user and group squid
       cache_effective_user squid squid
@@ -163,6 +173,27 @@
     };
 
   rnl.windows-labs.enable = lib.mkForce false;
+
+  systemd.services."create-obs-studio-conf" =
+    let
+      repoLink = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/obs-studio-conf.git";
+    in
+    {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      description = "Deploy OBS config";
+      script = ''
+        set -euo pipefail
+        mkdir -p /home/onia/.config
+        rm -rf /home/onia/.config/obs-studio
+        ${pkgs.git}/bin/git clone ${repoLink} /home/onia/.config/obs-studio
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "onia";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
 
   # Change TTL to identify ONI machines
   boot.kernel.sysctl."net.ipv4.ip_default_ttl" = 126;
