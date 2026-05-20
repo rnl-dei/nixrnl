@@ -5,8 +5,7 @@
     filesystems.labs
     os.nixos
     type.lab
-    labs
-    cluster.client
+    onia
   ];
 
   # Disable IPv6 since there is a bug on the network card

@@ -5,8 +5,7 @@
     filesystems.labs
     os.nixos
     type.lab
-    labs
-    cluster.client
+    onia
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];

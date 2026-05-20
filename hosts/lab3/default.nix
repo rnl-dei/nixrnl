@@ -6,7 +6,7 @@
     os.nixos
     type.lab
     labs
-    cluster.client
+    onia
     nvidia
   ];
 
