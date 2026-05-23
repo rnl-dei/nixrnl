@@ -1,11 +1,11 @@
 { profiles, ... }:
+# miau
 {
   imports = with profiles; [
     core.rnl
     filesystems.labs
     os.nixos
     type.lab
-    labs
     onia
     nvidia
   ];
