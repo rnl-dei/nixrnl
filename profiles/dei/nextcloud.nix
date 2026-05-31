@@ -182,7 +182,9 @@ in
     };
 
     settings = {
-      overwriteProtocol = "https";
+      overwriteprotocol = "https";
+      overwritehost = "drive.dei.tecnico.ulisboa.pt";
+      "overwrite.cli.url" = "https://drive.dei.tecnico.ulisboa.pt/";
 
       default_phone_region = "PT";
 
@@ -197,6 +199,7 @@ in
         disable_account_creation = true;
 
         login_label = "Login via Fenix";
+        allow_multiple_user_backends = false;
       };
 
       eurooffice = {
