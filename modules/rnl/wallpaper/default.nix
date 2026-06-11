@@ -51,11 +51,11 @@ in
         # Download wallpaper
         ${pkgs.curl}/bin/curl -sL "$url" -o "$path" || cp "$defaultWallpaper" "$path"
         chmod 644 "$path"
-
+        # TODO, HANDLING THIS PROPERLY
         # Restart display manager if no one is logged in on graphical tty
-        if [[ -z "$(who | grep tty${toString config.services.xserver.tty})" ]]; then
-          systemctl restart display-manager
-        fi
+        # if [[ -z "$(who | grep tty{toString config.services.xserver.tty})" ]]; then
+        #   systemctl restart display-manager
+        # fi
       '';
     };
   };

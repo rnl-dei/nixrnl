@@ -2,8 +2,9 @@
   description = "NixOS @ RNL";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    labspkgs.url = "github:nixos/nixpkgs/nixos-25.05";
 
     # Comment out because it's not used
     # rnl-config.url = "git+ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config";

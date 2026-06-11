@@ -38,6 +38,7 @@ let
         overlays = [
           (_self: _super: {
             unstable = import inputs.unstable argsPkgs;
+            labspkgs = import inputs.labspkgs argsPkgs;
             allowOpenSSL = import inputs.nixpkgs (
               argsPkgs // { config.permittedInsecurePackages = [ "openssl-1.1.1w" ]; }
             );

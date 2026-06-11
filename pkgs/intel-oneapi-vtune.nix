@@ -24,7 +24,8 @@
   pango,
   systemd,
   stdenv,
-  wrapGAppsHook,
+  # DANGEROUS
+  wrapGAppsHook3,
   xorg,
   zlib,
   ...
@@ -43,7 +44,8 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     autoPatchelfHook
     dpkg
-    wrapGAppsHook
+    #DANGEROUS
+    wrapGAppsHook3
   ];
 
   buildInputs = [

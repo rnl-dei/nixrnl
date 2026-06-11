@@ -4,12 +4,8 @@
       "inputs": {
         "darwin": "darwin",
         "home-manager": "home-manager",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": [
-          "systems"
-        ]
+        "nixpkgs": ["nixpkgs"],
+        "systems": ["systems"]
       },
       "locked": {
         "lastModified": 1750173260,
@@ -27,10 +23,7 @@
     },
     "darwin": {
       "inputs": {
-        "nixpkgs": [
-          "agenix",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["agenix", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1744478979,
@@ -49,9 +42,7 @@
     },
     "disko": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": ["nixpkgs"]
       },
       "locked": {
         "lastModified": 1753140376,
@@ -101,10 +92,7 @@
     },
     "flake-parts": {
       "inputs": {
-        "nixpkgs-lib": [
-          "nixos-anywhere",
-          "nixpkgs"
-        ]
+        "nixpkgs-lib": ["nixos-anywhere", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1748821116,
@@ -122,11 +110,7 @@
     },
     "flake-parts_2": {
       "inputs": {
-        "nixpkgs-lib": [
-          "system-manager",
-          "userborn",
-          "nixpkgs"
-        ]
+        "nixpkgs-lib": ["system-manager", "userborn", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1768135262,
@@ -144,12 +128,8 @@
     },
     "flake-programs-sqlite": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "utils": [
-          "flake-utils"
-        ]
+        "nixpkgs": ["nixpkgs"],
+        "utils": ["flake-utils"]
       },
       "locked": {
         "lastModified": 1753778024,
@@ -167,9 +147,7 @@
     },
     "flake-utils": {
       "inputs": {
-        "systems": [
-          "systems"
-        ]
+        "systems": ["systems"]
       },
       "locked": {
         "lastModified": 1731533236,
@@ -187,10 +165,7 @@
     },
     "gitignore": {
       "inputs": {
-        "nixpkgs": [
-          "pre-commit-hooks",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["pre-commit-hooks", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1709087332,
@@ -231,10 +206,7 @@
     },
     "home-manager": {
       "inputs": {
-        "nixpkgs": [
-          "agenix",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["agenix", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1745494811,
@@ -252,12 +224,8 @@
     },
     "ist-delegate-election": {
       "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "flake-utils": ["flake-utils"],
+        "nixpkgs": ["nixpkgs"]
       },
       "locked": {
         "lastModified": 1762904259,
@@ -273,12 +241,25 @@
         "type": "github"
       }
     },
+    "labspkgs": {
+      "locked": {
+        "lastModified": 1753489912,
+        "narHash": "sha256-uDCFHeXdRIgJpYmtcUxGEsZ+hYlLPBhR83fdU+vbC1s=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "13e8d35b7d6028b7198f8186bc0347c6abaa2701",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
-        "nixpkgs": [
-          "poetry2nix",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["poetry2nix", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1729742964,
@@ -296,10 +277,7 @@
     },
     "nix-vm-test": {
       "inputs": {
-        "nixpkgs": [
-          "nixos-anywhere",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["nixos-anywhere", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1748765518,
@@ -317,21 +295,13 @@
     },
     "nixos-anywhere": {
       "inputs": {
-        "disko": [
-          "disko"
-        ],
+        "disko": ["disko"],
         "flake-parts": "flake-parts",
         "nix-vm-test": "nix-vm-test",
         "nixos-images": "nixos-images",
-        "nixos-stable": [
-          "nixpkgs"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "treefmt-nix": [
-          "treefmt-nix"
-        ]
+        "nixos-stable": ["nixpkgs"],
+        "nixpkgs": ["nixpkgs"],
+        "treefmt-nix": ["treefmt-nix"]
       },
       "locked": {
         "lastModified": 1753778741,
@@ -349,14 +319,8 @@
     },
     "nixos-images": {
       "inputs": {
-        "nixos-stable": [
-          "nixos-anywhere",
-          "nixos-stable"
-        ],
-        "nixos-unstable": [
-          "nixos-anywhere",
-          "nixpkgs"
-        ]
+        "nixos-stable": ["nixos-anywhere", "nixos-stable"],
+        "nixos-unstable": ["nixos-anywhere", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1749086071,
@@ -374,16 +338,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1753489912,
-        "narHash": "sha256-uDCFHeXdRIgJpYmtcUxGEsZ+hYlLPBhR83fdU+vbC1s=",
+        "lastModified": 1780952837,
+        "narHash": "sha256-Fwd1+spDtQ0hDyBwme6ufG3n4mY0UrjjFdYHv+G/Hds=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "13e8d35b7d6028b7198f8186bc0347c6abaa2701",
+        "rev": "e820eb4a444b46a19b2e03e8dfd2359439ff30fe",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-25.05",
+        "ref": "nixos-25.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -406,9 +370,7 @@
     },
     "opensessions": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": ["nixpkgs"]
       },
       "locked": {
         "lastModified": 1734542715,
@@ -426,19 +388,11 @@
     },
     "poetry2nix": {
       "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
+        "flake-utils": ["flake-utils"],
         "nix-github-actions": "nix-github-actions",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": [
-          "systems"
-        ],
-        "treefmt-nix": [
-          "treefmt-nix"
-        ]
+        "nixpkgs": ["nixpkgs"],
+        "systems": ["systems"],
+        "treefmt-nix": ["treefmt-nix"]
       },
       "locked": {
         "lastModified": 1743690424,
@@ -458,9 +412,7 @@
       "inputs": {
         "flake-compat": "flake-compat",
         "gitignore": "gitignore",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": ["nixpkgs"]
       },
       "locked": {
         "lastModified": 1750779888,
@@ -478,17 +430,9 @@
     },
     "pre-commit-hooks-nix": {
       "inputs": {
-        "flake-compat": [
-          "system-manager",
-          "userborn",
-          "flake-compat"
-        ],
+        "flake-compat": ["system-manager", "userborn", "flake-compat"],
         "gitignore": "gitignore_2",
-        "nixpkgs": [
-          "system-manager",
-          "userborn",
-          "nixpkgs"
-        ]
+        "nixpkgs": ["system-manager", "userborn", "nixpkgs"]
       },
       "locked": {
         "lastModified": 1769069492,
@@ -511,6 +455,7 @@
         "flake-programs-sqlite": "flake-programs-sqlite",
         "flake-utils": "flake-utils",
         "ist-delegate-election": "ist-delegate-election",
+        "labspkgs": "labspkgs",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs",
         "opensessions": "opensessions",
@@ -575,9 +520,7 @@
     },
     "treefmt-nix": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": ["nixpkgs"]
       },
       "locked": {
         "lastModified": 1753772294,
@@ -611,15 +554,9 @@
     },
     "userborn": {
       "inputs": {
-        "flake-compat": [
-          "system-manager",
-          "flake-compat"
-        ],
+        "flake-compat": ["system-manager", "flake-compat"],
         "flake-parts": "flake-parts_2",
-        "nixpkgs": [
-          "system-manager",
-          "nixpkgs"
-        ],
+        "nixpkgs": ["system-manager", "nixpkgs"],
         "pre-commit-hooks-nix": "pre-commit-hooks-nix",
         "systems": "systems"
       },
@@ -640,12 +577,8 @@
     },
     "wolbridge": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "poetry2nix": [
-          "poetry2nix"
-        ]
+        "nixpkgs": ["nixpkgs"],
+        "poetry2nix": ["poetry2nix"]
       },
       "locked": {
         "lastModified": 1723934575,

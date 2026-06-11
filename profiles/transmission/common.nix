@@ -8,6 +8,8 @@
   services.transmission = {
     enable = true;
     openFirewall = true;
+    # NIXPKGS WARNS OF POSSIBLE DATA LOSS; TEST BEFOREHAND
+    package = pkgs.transmission_4;
     openRPCPort = true;
     settings = {
       # rpc-username and rpc-password

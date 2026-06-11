@@ -18,7 +18,7 @@
   ];
 
   programs.nix-ld.enable = true;
-
+  programs.command-not-found.enable = true;
   nix.settings = {
     substituters = [
       "https://proxy.cache.rnl.tecnico.ulisboa.pt?priority=38"
@@ -57,7 +57,9 @@
   users.users.root.hashedPassword = "$y$j9T$kLiDSrbLRV1LUo5yxocDv.$v5cptSarCIF4y.h6R5JTl8TLgfncHE8ZXKignjsF2i2";
 
   # Disable immediate shutdown when power button is pressed
-  services.logind.extraConfig = "HandlePowerKey=ignore";
+  services.logind.settings.Login = {
+    HandlePowerKey = "ignore";
+  };
 
   # Allow profiling of system metrics (Required to the CPD course)
   boot.kernel.sysctl = {
