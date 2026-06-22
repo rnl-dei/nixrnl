@@ -21,7 +21,8 @@
     # Enable recommended settings
     recommendedOptimisation = true;
     recommendedTlsSettings = true;
-    recommendedZstdSettings = true;
+    # This is recommended removed by the nixos team, remove?
+    experimentalZstdSettings = true;
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
 
