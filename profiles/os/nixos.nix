@@ -12,6 +12,7 @@
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
       unstable.flake = inputs.unstable;
+      labspkgs.flake = inputs.labspkgs;
     };
 
     # Set flake inputs as NIX_PATH channels.
