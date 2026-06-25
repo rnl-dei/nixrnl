@@ -6,13 +6,13 @@
 let
   unstableTarball = builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-    sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+    sha256 = "1vq77hlx8mi3z03pw2nf6r5h7473r1p9yxyf58ym3fh01zppmfln";
   };
   ncPkgs =
     import
       (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+        sha256 = "1vq77hlx8mi3z03pw2nf6r5h7473r1p9yxyf58ym3fh01zppmfln";
       })
       {
         system = pkgs.system;
@@ -59,7 +59,7 @@ in
     owner = "nextcloud-spreed-signaling";
   };
 
-  age.secrets.dei-onlyoffice-jwt = {
+  age.secrets.dei-eurooffice-jwt = {
     file = ../../secrets/dei-onlyoffice-jwt.age;
   };
 
@@ -69,7 +69,7 @@ in
     forceSSL = true;
   };
 
-  services.nginx.virtualHosts."onlyoffice.${config.networking.fqdn}" = {
+  services.nginx.virtualHosts."eurooffice.${config.networking.fqdn}" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {
@@ -120,7 +120,7 @@ in
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
-        onlyoffice
+        #onlyoffice
         user_oidc
         deck
         tasks
@@ -171,6 +171,14 @@ in
         license = "agpl3Plus";
       };
 
+      eurooffice = pkgs.fetchNextcloudApp {
+        appName = "eurooffice";
+        appVersion = "11.0.0";
+        url = "https://github.com/nextcloud-releases/eurooffice/releases/download/v11.0.0/eurooffice-v11.0.0.tar.gz";
+        sha256 = "06pxys91nsvcp57a8i9xyyg5z1zl96anr394bmhchlapsnpgkjsn";
+        license = "agpl3Plus";
+      };
+
     };
 
     settings = {
@@ -191,8 +199,8 @@ in
         login_label = "Login via Fenix";
       };
 
-      onlyoffice = {
-        DocumentServerUrl = "https://onlyoffice.${config.networking.fqdn}/";
+      eurooffice = {
+        DocumentServerUrl = "https://eurooffice.${config.networking.fqdn}/";
         DocumentServerInternalUrl = "http://127.0.0.1:8081/";
         StorageUrl = "https://${config.services.nextcloud.hostName}/";
       };
@@ -301,12 +309,12 @@ in
     }
   ];
 
-  virtualisation.oci-containers.containers.onlyoffice = {
-    image = "onlyoffice/documentserver:latest";
+  virtualisation.oci-containers.containers.eurooffice = {
+    image = "ghcr.io/euro-office/documentserver:latest";
     ports = [ "127.0.0.1:8081:80" ];
 
     environmentFiles = [
-      config.age.secrets.dei-onlyoffice-jwt.path
+      config.age.secrets.dei-eurooffice-jwt.path
     ];
 
     environment = {
