@@ -11,7 +11,7 @@
   disabledModules = [ "services/web-apps/netbox.nix" ];
 
   services.netbox = {
-    enable = true;
+    enable = false;
     package = pkgs.unstable.netbox;
     plugins = py3Pkgs: with py3Pkgs; [ ];
     settings = {
