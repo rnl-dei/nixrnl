@@ -45,7 +45,7 @@
 
     # Wolbridge
     wolbridge.url = "git+https://gitlab.rnl.tecnico.ulisboa.pt/rnl/infra/wolbridge";
-    wolbridge.inputs.nixpkgs.follows = "nixpkgs";
+    wolbridge.inputs.nixpkgs.follows = "labspkgs";
     wolbridge.inputs.poetry2nix.follows = "poetry2nix";
 
     ist-delegate-election.inputs.flake-utils.follows = "flake-utils";
