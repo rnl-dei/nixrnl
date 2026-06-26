@@ -3,8 +3,8 @@
   lib,
   mkYarnPackage,
   configFile ? null,
-  nodejs ? nodejs-18_x,
-  nodejs-18_x,
+  nodejs ? nodejs_20,
+  nodejs_20,
   ...
 }:
 mkYarnPackage rec {
