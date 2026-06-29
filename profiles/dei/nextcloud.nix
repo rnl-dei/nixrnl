@@ -6,13 +6,13 @@
 let
   unstableTarball = builtins.fetchTarball {
     url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-    sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+    sha256 = "1vq77hlx8mi3z03pw2nf6r5h7473r1p9yxyf58ym3fh01zppmfln";
   };
   ncPkgs =
     import
       (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "0szij1c0cl4xvjhzb0cwvskkl54dyw11skb9hgmnhamcmmsm6bji";
+        sha256 = "1vq77hlx8mi3z03pw2nf6r5h7473r1p9yxyf58ym3fh01zppmfln";
       })
       {
         system = pkgs.system;
@@ -59,26 +59,24 @@ in
     owner = "nextcloud-spreed-signaling";
   };
 
+  age.secrets.dei-eurooffice-jwt = {
+    file = ../../secrets/dei-onlyoffice-jwt.age;
+  };
+
   services.nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
     serverName = "${config.services.nextcloud.hostName}";
     enableACME = true;
     forceSSL = true;
-    extraConfig = ''
-      client_max_body_size ${config.services.nextcloud.maxUploadSize};
-    '';
   };
 
-  services.nginx.virtualHosts."${config.virtualisation.oci-containers.containers.collabora.environment.server_name
-  }" =
-    {
-      serverName = "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}";
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://[::1]:9980";
-        proxyWebsockets = true;
-      };
+  services.nginx.virtualHosts."eurooffice.${config.networking.fqdn}" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8081";
+      proxyWebsockets = true;
     };
+  };
 
   services.nginx.virtualHosts."${config.services.coturn.realm}" = {
     serverName = "${config.services.coturn.realm}";
@@ -86,7 +84,7 @@ in
     forceSSL = true;
   };
 
-  services.nginx.virtualHosts."signaling.booble.${config.networking.fqdn}" = {
+  services.nginx.virtualHosts."signaling.${config.networking.fqdn}" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {
@@ -122,7 +120,7 @@ in
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
         groupfolders
-        richdocuments
+        #onlyoffice
         user_oidc
         deck
         tasks
@@ -173,6 +171,14 @@ in
         license = "agpl3Plus";
       };
 
+      eurooffice = pkgs.fetchNextcloudApp {
+        appName = "eurooffice";
+        appVersion = "11.0.0";
+        url = "https://github.com/nextcloud-releases/eurooffice/releases/download/v11.0.0/eurooffice-v11.0.0.tar.gz";
+        sha256 = "06pxys91nsvcp57a8i9xyyg5z1zl96anr394bmhchlapsnpgkjsn";
+        license = "agpl3Plus";
+      };
+
     };
 
     settings = {
@@ -191,6 +197,12 @@ in
         disable_account_creation = true;
 
         login_label = "Login via Fenix";
+      };
+
+      eurooffice = {
+        DocumentServerUrl = "https://eurooffice.${config.networking.fqdn}/";
+        DocumentServerInternalUrl = "http://127.0.0.1:8081/";
+        StorageUrl = "https://${config.services.nextcloud.hostName}/";
       };
 
     };
@@ -235,12 +247,10 @@ in
     no-cli = true;
     use-auth-secret = true;
     static-auth-secret-file = config.age.secrets.dei-coturn-secret.path;
-    realm = "turn.booble.${config.networking.fqdn}";
+    realm = "turn.${config.networking.fqdn}";
 
-    cert = "${
-      config.security.acme.certs."turn.booble.${config.networking.fqdn}".directory
-    }/fullchain.pem";
-    pkey = "${config.security.acme.certs."turn.booble.${config.networking.fqdn}".directory}/key.pem";
+    cert = "${config.security.acme.certs."turn.${config.networking.fqdn}".directory}/fullchain.pem";
+    pkey = "${config.security.acme.certs."turn.${config.networking.fqdn}".directory}/key.pem";
 
     extraConfig = ''
       listening-port=3478
@@ -269,8 +279,8 @@ in
         apikeyFile = config.age.secrets.dei-coturn-secret.path;
         secretFile = config.age.secrets.dei-spreed-backend-secret.path;
         servers = [
-          "turn:turn.booble.${config.networking.fqdn}:3478?transport=udp"
-          "turn:turn.booble.${config.networking.fqdn}:3478?transport=tcp"
+          "turn:turn.${config.networking.fqdn}:3478?transport=udp"
+          "turn:turn.${config.networking.fqdn}:3478?transport=tcp"
         ];
       };
       clients = {
@@ -299,21 +309,20 @@ in
     }
   ];
 
-  virtualisation.oci-containers.containers.collabora = {
-    image = "collabora/code:latest";
+  virtualisation.oci-containers.containers.eurooffice = {
+    image = "ghcr.io/euro-office/documentserver:latest";
+    ports = [ "127.0.0.1:8081:80" ];
+
+    environmentFiles = [
+      config.age.secrets.dei-eurooffice-jwt.path
+    ];
 
     environment = {
-      aliasgroup1 = "https://${config.services.nextcloud.hostName}";
-      server_name = "collabora.booble.${config.networking.fqdn}";
-
-      DONT_GEN_SSL_CERT = "1";
-
-      extra_params = "--o:ssl.enable=false --o:ssl.termination=true --o:net.listen=loopback";
+      USE_UNAUTHORIZED_STORAGE = "true";
     };
 
     extraOptions = [
-      "--cap-add=MKNOD"
-      "--network=host"
+      "--add-host=${config.services.nextcloud.hostName}:host-gateway"
     ];
   };
 

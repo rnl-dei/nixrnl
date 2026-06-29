@@ -1,4 +1,4 @@
-{ config, profiles, ... }:
+{ profiles, ... }:
 {
   imports = with profiles; [
     core.rnl
@@ -34,18 +34,6 @@
         }
       ];
     };
-
-    hosts = {
-      "127.0.0.1" = [
-        "${config.services.nextcloud.hostName}"
-        "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}"
-      ];
-      "::1" = [
-        "${config.services.nextcloud.hostName}"
-        "${config.virtualisation.oci-containers.containers.collabora.environment.server_name}"
-      ];
-    };
-
   };
 
   rnl.labels.location = "neo";
