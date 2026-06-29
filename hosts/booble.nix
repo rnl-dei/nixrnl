@@ -9,6 +9,7 @@
     webserver
 
     dei.nextcloud
+    dei.nextcloud-simple
   ];
   rnl.virtualisation.guest = {
     description = "DEI Nextcloud and Immich";
