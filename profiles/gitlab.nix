@@ -9,6 +9,15 @@
     webserver
   ];
 
+  nixpkgs.overlays = [
+    (final: _prev: {
+      gitlab-ee-pinned = import (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/359c442b7d1f6229c1dc978116d32d6c07fe8440.tar.gz";
+        sha256 = "sha256:0rbaxymznpr2gfl5a9jyii5nlpjc9k2lrwlw2h5ccinds58c202k";
+      }) { inherit (final) system; };
+    })
+  ];
+
   services.nginx.virtualHosts.gitlab-staging = {
     serverName = "gitlab-staging.rnl.tecnico.ulisboa.pt";
     serverAliases = [
@@ -144,7 +153,7 @@
       externalPort = 5050;
     };
 
-    packages.gitlab = pkgs.gitlab-ee;
+    packages.gitlab = pkgs.gitlab-ee-pinned;
 
     port = 443;
 
