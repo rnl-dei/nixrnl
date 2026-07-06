@@ -179,6 +179,13 @@ in
         license = "agpl3Plus";
       };
 
+      files_mindmap = pkgs.fetchNextcloudApp {
+        appName = "files_mindmap";
+        appVersion = "0.1.0-beta.4";
+        url = "https://github.com/nextcloud-releases/files_mindmap/releases/download/v0.1.0-beta.4/files_mindmap-v0.1.0-beta.4.tar.gz";
+        sha256 = "sha256-vIvAyLAZZfJXZlXvOihrUXgn2DfJrSEImO+w3Xkoc6Q=";
+        license = "agpl3Plus";
+      };
     };
 
     settings = {
