@@ -1,7 +1,7 @@
 { profiles, ... }:
 {
   imports = with profiles; [
-    core.rnl
+    core.dei # permit dei to work on moodle integration
     filesystems.simple-uefi
     os.nixos
     type.vm
