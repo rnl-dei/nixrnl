@@ -72,7 +72,6 @@ in
         contacts
         files_automatedtagging
         forms
-        #user_saml // todo: contact dsi for saml support
         ;
 
       fulltextsearch = pkgs.fetchNextcloudApp {
