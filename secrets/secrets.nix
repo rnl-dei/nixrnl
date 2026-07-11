@@ -144,6 +144,7 @@ in
   "rnl-nextcloud-secrets.age".publicKeys = users ++ [ nextcloud ];
   "rnl-nextcloud-admin-pass.age".publicKeys = users ++ [ nextcloud ];
   "rnl-nextcloud-oidc.age".publicKeys = users ++ [ nextcloud ];
+  "rnl-eurooffice-jwt.age".publicKeys = users ++ deiUsers ++ [ nextcloud ];
   "rnl-slack-conf.age".publicKeys = users ++ [
     ns
     ns2

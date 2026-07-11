@@ -34,11 +34,24 @@ in
     owner = "nextcloud";
     path = "/var/lib/nextcloud/nextcloud-oidc";
   };
+  age.secrets.eurooffice-jwt = {
+    file = ../secrets/rnl-eurooffice-jwt.age;
+    path = "/var/lib/nextcloud/eurooffice-jwt";
+  };
 
   services.nginx.virtualHosts."${config.services.nextcloud.hostName}" = {
     serverName = "${config.services.nextcloud.hostName}";
     enableACME = true;
     forceSSL = true;
+  };
+
+  services.nginx.virtualHosts."eurooffice.${config.networking.fqdn}" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8081";
+      proxyWebsockets = true;
+    };
   };
 
   services.nextcloud = {
@@ -122,6 +135,14 @@ in
         sha256 = "sha256-mSmiQhmhTbuNchv1RF6rbxwZAUhYr22z5fCsGA9fh0E=";
         license = "agpl3Plus";
       };
+
+      eurooffice = pkgs.fetchNextcloudApp {
+        appName = "eurooffice";
+        appVersion = "11.0.0";
+        url = "https://github.com/nextcloud-releases/eurooffice/releases/download/v11.0.0/eurooffice-v11.0.0.tar.gz";
+        sha256 = "06pxys91nsvcp57a8i9xyyg5z1zl96anr394bmhchlapsnpgkjsn";
+        license = "agpl3Plus";
+      };
     };
 
     settings = {
@@ -134,6 +155,11 @@ in
       loglevel = 2;
       log_type = "file";
 
+      eurooffice = {
+        DocumentServerUrl = "https://eurooffice.${config.networking.fqdn}/";
+        DocumentServerInternalUrl = "http://127.0.0.1:8081/";
+        StorageUrl = "https://${config.services.nextcloud.hostName}/";
+      };
     };
 
     database.createLocally = true;
@@ -211,6 +237,23 @@ in
     extraJavaOptions = [
       "-Xms2g"
       "-Xmx2g"
+    ];
+  };
+
+  virtualisation.oci-containers.containers.eurooffice = {
+    image = "ghcr.io/euro-office/documentserver:latest";
+    ports = [ "127.0.0.1:8081:80" ];
+
+    environmentFiles = [
+      config.age.secrets.eurooffice-jwt.path
+    ];
+
+    environment = {
+      USE_UNAUTHORIZED_STORAGE = "true";
+    };
+
+    extraOptions = [
+      "--add-host=${config.services.nextcloud.hostName}:host-gateway"
     ];
   };
 
