@@ -8,6 +8,8 @@
   ############################################################
   rnl.windows-labs.enable = lib.mkForce false;
 
+  system.autoUpgrade.enable = lib.mkForce false; # Force disable auto rebuild
+
   # Warning: do not use domain names in these rules, at the risk of the
   # firewall starting before a nameserver could be fetched from the DHCP
   # server, in which case you might not have a firewall at all.
