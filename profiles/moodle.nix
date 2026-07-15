@@ -15,6 +15,8 @@ let
     syntaxhighlighter
     mergeusers
     scheduler
+    dompdf
+    collaborativefolders
   ];
 
   # Max upload size
