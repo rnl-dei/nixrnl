@@ -179,6 +179,48 @@ in
     options = [ "bind" ];
   };
 
+  # Drive (S3) backups
+  systemd.timers."backup-prod-s3" = {
+    description = "Backup dei-prod S3 into blatta S3 timer";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 02:05:00"; # 5 minutes after the database backup
+      Unit = "backup-prod-s3.service";
+    };
+  };
+
+  systemd.services."backup-prod-s3" = {
+    description = "Sync PROD S3 into blatta S3, keeping a dated snapshot";
+
+    environment = {
+      PROD_BUCKET = "dei-prod";
+      BLATTA_BUCKET = "blatta";
+    };
+
+    script = ''
+      set -euo pipefail
+      DATE=$(date +%F)
+
+      # First, copy the PROD bucket into a dated snapshot in the BLATTA bucket.
+      ${pkgs.rclone}/bin/rclone copy "dei-s3:$PROD_BUCKET" "dei-s3:$BLATTA_BUCKET/BACKUPS/$DATE" --create-empty-src-dirs
+
+      # Then, sync the PROD bucket into the BLATTA bucket, excluding the BACKUPS folder. All multi-dms share the same S3 Bucket!!!
+      ${pkgs.rclone}/bin/rclone sync "dei-s3:$PROD_BUCKET" "dei-s3:$BLATTA_BUCKET" \
+        --exclude "BACKUPS/**" \
+        --create-empty-src-dirs
+    '';
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  age.secrets."s3-credentials" = {
+    file = ../secrets/dei-s3-credentials.age;
+    path = "/root/.config/rclone/rclone.conf";
+  };
+
   # PhDMS
   dei.phdms.sites.default.serverName = "deic.dei.tecnico.ulisboa.pt";
 
