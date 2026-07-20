@@ -6,7 +6,6 @@
     os.nixos
     type.lab
     labs
-    exam
   ];
 
   # Disable IPv6 since there is a bug on the network card
