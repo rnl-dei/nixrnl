@@ -105,8 +105,11 @@
     lxmls = {
       isNormalUser = true;
       description = "User for the Summer School LXMLS";
-      hashedPassword = "$y$j9T$dCKdw8Sc2SXH8zsVvhOTC0$c4XyN20Hed3a6cfHZbeuJoICEfXb/BJPhsZDIB9Dz7/"
-      extraGroups = ["volatile" "no-ssh"];
+      hashedPassword = "$y$j9T$dCKdw8Sc2SXH8zsVvhOTC0$c4XyN20Hed3a6cfHZbeuJoICEfXb/BJPhsZDIB9Dz7/";
+      extraGroups = [
+        "volatile"
+        "no-ssh"
+      ];
     };
   };
 
