@@ -9,7 +9,6 @@
     cluster.client
     intel-gpu
     gitlab-runner.labs.es
-    exam
   ];
 
   rnl.storage.disks.root = [ "/dev/nvme0n1" ];
