@@ -5,14 +5,14 @@
 }:
 let
   unstableTarball = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/18d7ee8453c76a08cd1717b06e7c606bb43b88d9.tar.gz";
-    sha256 = "0gfa6f7rzsprinv68qdx9q00afqnzzbbg80n7mbnzyn0a6h8higg";
+    url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+    sha256 = "1jck3ri622lr6vmc1q7nq11hids0l8a6nd5ybw3ghr32if00gsr9";
   };
   ncPkgs =
     import
       (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/18d7ee8453c76a08cd1717b06e7c606bb43b88d9.tar.gz";
-        sha256 = "0gfa6f7rzsprinv68qdx9q00afqnzzbbg80n7mbnzyn0a6h8higg";
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "1jck3ri622lr6vmc1q7nq11hids0l8a6nd5ybw3ghr32if00gsr9";
       })
       {
         system = pkgs.system;
@@ -98,7 +98,7 @@ in
 
     package =
       let
-        base = ncPkgs.nextcloud33;
+        base = ncPkgs.nextcloud34;
       in
       base
       // {
@@ -133,49 +133,51 @@ in
 
       libresign = pkgs.fetchNextcloudApp {
         appName = "libresign";
-        appVersion = "13.1.3";
-        url = "https://github.com/LibreSign/libresign/releases/download/v13.1.3/libresign-v13.1.3.tar.gz";
-        sha256 = "sha256-rjyCZX1+vEs2TmMGQs8hI3ty4DbMNH5tBggvhklttiQ=";
+        appVersion = "14.1.0";
+        url = "https://github.com/LibreSign/libresign/releases/download/v14.1.0/libresign-v14.1.0.tar.gz";
+        sha256 = "sha256-EBy2jZETSon7ZXOPVrp5RDshkZ3211A9qa29fZ2ST5M=";
         license = "agpl3Plus";
       };
 
-      fulltextsearch = pkgs.fetchNextcloudApp {
-        appName = "fulltextsearch";
-        appVersion = "33.0.0";
-        url = "https://github.com/nextcloud-releases/fulltextsearch/releases/download/33.0.0/fulltextsearch-33.0.0.tar.gz";
-        sha256 = "sha256-p7b+PA9z/KHB9ZRDDbO/y6CJFJLhH0xHEFc/rr1H6yg=";
-        license = "agpl3Plus";
-      };
+      /*
+        fulltextsearch = pkgs.fetchNextcloudApp {
+          appName = "fulltextsearch";
+          appVersion = "33.0.0";
+          url = "https://github.com/nextcloud-releases/fulltextsearch/releases/download/33.0.0/fulltextsearch-33.0.0.tar.gz";
+          sha256 = "sha256-p7b+PA9z/KHB9ZRDDbO/y6CJFJLhH0xHEFc/rr1H6yg=";
+          license = "agpl3Plus";
+        };
 
-      fulltextsearch_elasticsearch = pkgs.fetchNextcloudApp {
-        appName = "fulltextsearch_elasticsearch";
-        appVersion = "33.0.0";
-        url = "https://github.com/nextcloud-releases/fulltextsearch_elasticsearch/releases/download/33.0.0/fulltextsearch_elasticsearch-33.0.0.tar.gz";
-        sha256 = "sha256-Z0A8n2XqtFkS2XpvBGrjSuGS/lkGKGoJEiR0q7UEexE=";
-        license = "agpl3Plus";
-      };
+        fulltextsearch_elasticsearch = pkgs.fetchNextcloudApp {
+          appName = "fulltextsearch_elasticsearch";
+          appVersion = "33.0.0";
+          url = "https://github.com/nextcloud-releases/fulltextsearch_elasticsearch/releases/download/33.0.0/fulltextsearch_elasticsearch-33.0.0.tar.gz";
+          sha256 = "sha256-Z0A8n2XqtFkS2XpvBGrjSuGS/lkGKGoJEiR0q7UEexE=";
+          license = "agpl3Plus";
+        };
 
-      files_fulltextsearch = pkgs.fetchNextcloudApp {
-        appName = "files_fulltextsearch";
-        appVersion = "33.0.0";
-        url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/33.0.0/files_fulltextsearch-33.0.0.tar.gz";
-        sha256 = "sha256-5KaE6PSdDaxuEliFtr3zjnFNnRzUhsJU/8M7dvtUwEs=";
-        license = "agpl3Plus";
-      };
+        files_fulltextsearch = pkgs.fetchNextcloudApp {
+          appName = "files_fulltextsearch";
+          appVersion = "33.0.0";
+          url = "https://github.com/nextcloud-releases/files_fulltextsearch/releases/download/33.0.0/files_fulltextsearch-33.0.0.tar.gz";
+          sha256 = "sha256-5KaE6PSdDaxuEliFtr3zjnFNnRzUhsJU/8M7dvtUwEs=";
+          license = "agpl3Plus";
+        };
 
-      flow = pkgs.fetchNextcloudApp {
-        appName = "flow";
-        appVersion = "1.3.0";
-        url = "https://github.com/nextcloud-releases/flow/releases/download/v1.3.0/flow-v1.3.0.tar.gz";
-        sha256 = "sha256-2KUyBb3Y1hnIRKBpaggVk09vBs+q+DlSoJAdDs+TQ18=";
-        license = "agpl3Plus";
-      };
+        flow = pkgs.fetchNextcloudApp {
+          appName = "flow";
+          appVersion = "1.3.0";
+          url = "https://github.com/nextcloud-releases/flow/releases/download/v1.3.0/flow-v1.3.0.tar.gz";
+          sha256 = "sha256-2KUyBb3Y1hnIRKBpaggVk09vBs+q+DlSoJAdDs+TQ18=";
+          license = "agpl3Plus";
+        };
+      */
 
       eurooffice = pkgs.fetchNextcloudApp {
         appName = "eurooffice";
-        appVersion = "11.0.0";
-        url = "https://github.com/nextcloud-releases/eurooffice/releases/download/v11.0.0/eurooffice-v11.0.0.tar.gz";
-        sha256 = "06pxys91nsvcp57a8i9xyyg5z1zl96anr394bmhchlapsnpgkjsn";
+        appVersion = "11.0.1";
+        url = "https://github.com/nextcloud-releases/eurooffice/releases/download/v11.0.1/eurooffice-v11.0.1.tar.gz";
+        sha256 = "sha256-HXpvyCNhlxAvrxSEu6/5u0mpg7TrTsaS2gii9mf74ns=";
         license = "agpl3Plus";
       };
 
@@ -184,6 +186,22 @@ in
         appVersion = "0.1.0-beta.4";
         url = "https://github.com/nextcloud-releases/files_mindmap/releases/download/v0.1.0-beta.4/files_mindmap-v0.1.0-beta.4.tar.gz";
         sha256 = "sha256-vIvAyLAZZfJXZlXvOihrUXgn2DfJrSEImO+w3Xkoc6Q=";
+        license = "agpl3Plus";
+      };
+
+      assistant = pkgs.fetchNextcloudApp {
+        appName = "assistant";
+        appVersion = "3.4.3";
+        url = "https://github.com/nextcloud-releases/assistant/releases/download/v3.4.3/assistant-v3.4.3.tar.gz";
+        sha256 = "sha256-dTOft/FEgkkdPl/Fp7DzSUqKReQwQR/+LDN3vqIHcME=";
+        license = "agpl3Plus";
+      };
+
+      integration_openai = pkgs.fetchNextcloudApp {
+        appName = "integration_openai";
+        appVersion = "4.5.1";
+        url = "https://github.com/nextcloud-releases/integration_openai/releases/download/v4.5.1/integration_openai-v4.5.1.tar.gz";
+        sha256 = "sha256-vt2td3UDJMm1g3BbnV3x/pf92hhuYppk95IFygRxHFY=";
         license = "agpl3Plus";
       };
     };
@@ -349,17 +367,53 @@ in
 
   };
 
-  systemd.services.nextcloud-fulltext-live = {
-    description = "Nextcloud Full Text Search Live Indexer";
+  /*
+    systemd.services.nextcloud-fulltext-live = {
+      description = "Nextcloud Full Text Search Live Indexer";
+      after = [
+        "nextcloud-setup.service"
+        "podman-elasticsearch.service"
+        "postgresql.service"
+      ];
+      wantedBy = [ "multi-user.target" ];
+
+      serviceConfig = {
+        ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ fulltextsearch:live --quiet";
+        Restart = "always";
+        RestartSec = "10s";
+      };
+    };
+  */
+
+  systemd.services."nextcloud-ai-worker-1" = {
+    description = "Nextcloud AI Worker 1";
+    wantedBy = [ "multi-user.target" ];
     after = [
       "nextcloud-setup.service"
-      "podman-elasticsearch.service"
-      "postgresql.service"
+      "phpfpm-nextcloud.service"
     ];
-    wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
-      ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ fulltextsearch:live --quiet";
+      Type = "simple";
+      User = "nextcloud";
+      ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ background-job:worker -t 60 \"OC\\\\TaskProcessing\\\\SynchronousBackgroundJob\"";
+      Restart = "always";
+      RestartSec = "10s";
+    };
+  };
+
+  systemd.services."nextcloud-ai-worker-2" = {
+    description = "Nextcloud AI Worker 2";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "nextcloud-setup.service"
+      "phpfpm-nextcloud.service"
+    ];
+
+    serviceConfig = {
+      Type = "simple";
+      User = "nextcloud";
+      ExecStart = "${config.services.nextcloud.occ}/bin/nextcloud-occ background-job:worker -t 60 \"OC\\\\TaskProcessing\\\\SynchronousBackgroundJob\"";
       Restart = "always";
       RestartSec = "10s";
     };
@@ -374,4 +428,10 @@ in
     openssl
     poppler_utils
   ];
+
+  services.ollama = {
+    enable = true;
+    host = "127.0.0.1";
+    port = 11434;
+  };
 }
