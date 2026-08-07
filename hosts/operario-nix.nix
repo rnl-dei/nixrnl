@@ -15,7 +15,7 @@
     createdBy = "vasco.morais";
 
     memory = 65536; # 64GB
-    cpu = 24;
+    vcpu = 24;
 
     interfaces = [
       {
