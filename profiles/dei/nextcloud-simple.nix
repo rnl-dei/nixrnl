@@ -7,9 +7,9 @@
 let
   ncPkgs =
     import
-      (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "1vq77hlx8mi3z03pw2nf6r5h7473r1p9yxyf58ym3fh01zppmfln";
+      (builtins.fetchZip {
+        url = "https://github.com/NixOS/nixpkgs/archive/18d7ee8453c76a08cd1717b06e7c606bb43b88d9.tar.gz";
+        sha256 = "0gfa6f7rzsprinv68qdx9q00afqnzzbbg80n7mbnzyn0a6h8higg";
       })
       {
         system = pkgs.system;
