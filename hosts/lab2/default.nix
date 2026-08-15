@@ -5,6 +5,7 @@
     filesystems.labs
     os.nixos
     type.lab
+    cluster.client
     labs
   ];
 
