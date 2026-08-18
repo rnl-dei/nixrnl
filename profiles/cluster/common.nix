@@ -78,7 +78,8 @@ in
       "lab2p[1-20] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=15360 Features=lab2,i5-11500"
       "lab3p[1-10] Sockets=1 CoresPerSocket=6 ThreadsPerCore=2 RealMemory=15360 Features=lab3,i5-10500,rtx3060ti"
       "lab4p[1-10] Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=15360 Features=lab4,i5-7500"
-      "lab5p[1-20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=2 RealMemory=15360 Features=lab5,i5-12500T"
+      "lab5p[1-18,20] Sockets=1 CoresPerSocket=4 ThreadsPerCore=2 RealMemory=15360 Features=lab5,i5-12500T"
+      "lab5p19 Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=15322 Features=lab5,Ultra5-235"
       "lab6p[1-9] Sockets=1 CoresPerSocket=6 ThreadsPerCore=1 RealMemory=15360 Features=lab6,i5-8500"
     ];
     partitionName = lib.mkDefault [
