@@ -67,7 +67,7 @@
     swi-prolog-gui
 
     # SO
-    ncurses
+    cpulimit
 
     # OC
     papi
