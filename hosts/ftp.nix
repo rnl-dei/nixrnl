@@ -1,8 +1,8 @@
 {
-  config,
-  lib,
-  profiles,
   pkgs,
+  lib,
+  config,
+  profiles,
   ...
 }:
 let
@@ -18,8 +18,8 @@ let
 
       ftp.rnl.tecnico.ulisboa.pt
 
-      IP Address: 193.136.164.6
-    IPv6 Address: 2001:690:2100:80::6
+      IP Address: 193.136.164.178
+    IPv6 Address: Not yet
 
      Rede das Novas Licenciaturas
            Tecnico Lisboa
@@ -37,33 +37,41 @@ in
 
     webserver
 
-    # TODO: check mirrorlist
-    # Mirrors
-    mirrors.archlinux
-    mirrors.cygwin
-    mirrors.debian.archive
-    mirrors.debian.cd
-    mirrors.debian.security
-    mirrors.gentoo.distfiles
-    mirrors.gentoo.portage
-    mirrors.linuxmint.isos
-    mirrors.linuxmint.packages
-    mirrors.mxlinux.isos
-    mirrors.mxlinux.packages
-    mirrors.openbsd
-    mirrors.opensuse
-    mirrors.qubesos
-    mirrors.slackware
-    mirrors.ubuntu.archive
-    mirrors.ubuntu.releases
-    mirrors.videolan
-    mirrors.zorinos
+    # WARNING: Before enabling check the mirror for notes
+
+    # TO consider
+    # fedora
+    # void
+    # alpine
+    # tails
+    # freebsd
+    # other foss software?
+
+    # No mirror files for
+    # sabayon (probably stop now that gentoo has bins?)
+    # UBCD
+
+    # mirrors.archlinux # 130 GB
+    # mirrors.debian.archive # 1.44tb
+    # mirrors.debian.cd # huge, maybe filter source?
+    #mirrors.debian.security # 155GB
+    # mirrors.cygwin # 115 gb
+    # mirrors.gentoo.distfiles # 800GB +
+    mirrors.gentoo.portage # <1Gb
+    # mirrors.linuxmint.isos # 200 GB
+    # mirrors.linuxmint.packages # 50GB
+    #mirrors.mxlinux.isos # 47 GB
+    # mirrors.mxlinux.packages # 200 GB
+    # mirrors.openbsd # 1.36 Tb
+    # mirrors.opensuse # 6.79 Tb
+    # mirrors.qubesos 1 TB
+    # mirrors.ubuntu.archive # 3.23 Tb
+    #mirrors.ubuntu.releases # 45 GB
+    # mirrors.videolan 100GB?
+    # mirrors.zorinos 183 GB and fill https://zorin.com/os/mirrors/
   ];
 
-  # TODO: Check labels;
   rnl.labels.location = "inf1-p01-a2";
-
-  # Storage
   rnl.storage = {
     disks = {
       root = [
@@ -105,7 +113,6 @@ in
       ipv4 = {
         addresses = [
           {
-            #address = "193.136.164.6"; # FTP
             address = "193.136.164.113"; # FTP
             prefixLength = 26;
           }
@@ -134,21 +141,23 @@ in
         ];
       };
     };
+
+    defaultGateway.address = "193.136.164.126";
+    defaultGateway6.address = "2001:690:2100:81::ffff:1";
   };
 
-  # TODO: New password, store in vault;
-  users.users.root.hashedPassword = "$6$kfeh.NIncaHBjal.$hBW1BCxftekx0bcwCkt3Hps2MFvMdSCk2rfTQ3Nj3nO4Xj2D7.EqwVWk9UgYqS/iGWak6d0HumgaUkQZKaNoQ1";
+  environment.systemPackages = [ pkgs.archvsync ];
 
-  environment.systemPackages = with pkgs; [ archvsync ];
+  users.users.root.hashedPassword = "$y$j9T$dWaZ5JBxtn1SQ1KMA2Su2.$naxrds5bf8uYgh24uKiBPoSrOGAtgoiaBLsNasEjje5";
 
   users.motd = motd;
 
-  # Enable FTP server with imported mirrors profiles
   rnl.ftp-server = {
     enable = true;
     motd = builtins.toFile "motd" motd;
   };
 
+  # TODO: End of website is borked (no catci)
   rnl.githook = {
     enable = true;
     hooks.ftp-site = {
@@ -157,7 +166,7 @@ in
     };
   };
 
-  # TODO: Might not work
+  # TODO: Seems to WOrk
   systemd.services."remake-ftp-site" = {
     description = "Remake FTP homepage";
     startAt = "*-*-* 02:14:00";
@@ -178,13 +187,30 @@ in
     '';
   };
 
-  systemd.tmpfiles.rules = [ "d /root/.ssh 0755 root root" ];
   age.secrets."root-at-ftp-ssh.key" = {
-    # FIXME: Dead secrets
     file = ../secrets/root-at-ftp-ssh-key.age;
     path = "/root/.ssh/id_ed25519";
     owner = "root";
   };
+
+  systemd.tmpfiles.rules = [
+    "d /root/.ssh 0750 root root"
+
+    "d /mnt/data/ftp/pub 0775 mirror mirror"
+
+    #HACK: Distro with subdirs for various mirrors dont create properly with tmpfiles.d
+    "d /mnt/data/ftp/pub/debian 0775 mirror mirror"
+    "d /mnt/data/ftp/pub/gentoo 0775 mirror mirror"
+    "d /mnt/data/ftp/pub/ubuntu 0775 mirror mirror"
+
+    # "d /mnt/data/ftp/pub/ubuntu/releases 0770 mirror mirror"
+
+    "d /mnt/data/ftp/tmp 0755 root root"
+
+    "d /mnt/data/ftp/dei 0750 root root"
+    "d /mnt/data/ftp/dei-share 0750 root root"
+    "d /mnt/data/ftp/priv 0750 root root"
+  ];
 
   services.nginx.virtualHosts.ftp = {
     default = true;
@@ -197,7 +223,9 @@ in
       autoindex on;
       autoindex_exact_size off;
 
+      if_modified_since exact;
     '';
+
     locations = {
       "~ ^/pub" = {
         alias = config.rnl.ftp-server.rootDirectory + "/";
@@ -209,39 +237,41 @@ in
       "~ ^/dei" = {
         alias = "/mnt/data/ftp/dei/";
       };
-      # TODO: We probably want to add /dei-share with password protection
-      "~ ^/labs" = {
-        alias = "/mnt/data/ftp/labs/";
-        extraConfig = ''
-          autoindex off;
-          location ~ ^/labs/(windows|software) {
-            autoindex on;
-            allow 193.136.164.192/27; # admin v4
-            allow 2001:690:2100:82::/64; # admin v6
-            allow 193.136.154.0/25; # labs v4
-            allow 193.136.154.128/26;# labs2 v4
-            allow 2001:690:2100:84::/64; # labs v6
-            deny all;
-          }
-        '';
-      };
+      # # TODO: We probably want to add /dei-share with password protection
+      # TODO: test later
+      # "~ ^/labs" = {
+      #   alias = "/mnt/data/ftp/labs/";
+      #   extraConfig = ''
+      #     autoindex off;
+      #     location ~ ^/labs/(windows|software) {
+      #       autoindex on;
+      #       allow 193.136.164.192/27; # admin v4
+      #       allow 2001:690:2100:82::/64; # admin v6
+      #       allow 193.136.154.0/25; # labs v4
+      #       allow 193.136.154.128/26;# labs2 v4
+      #       allow 2001:690:2100:84::/64; # labs v6
+      #       deny all;
+      #     }
+      #   '';
+      # };
 
       # Public but not listed, to share temporary files
       "~ ^/tmp" = {
         alias = "/mnt/data/ftp/tmp/";
         extraConfig = "autoindex off;";
       };
-      "~ ^/priv" = {
-        alias = "/mnt/data/ftp/priv/";
-        extraConfig = ''
-          # Allow access only from the RNL networks
-          allow 193.136.164.0/24;
-          allow 193.136.154.0/24;
-          allow 10.16.80.0/24;
-          allow 2001:690:2100:80::/58;
-          deny all;
-        '';
-      };
+      # TODO: check addresses and stuff
+      # "~ ^/priv" = {
+      #   alias = "/mnt/data/ftp/priv/";
+      #   extraConfig = ''
+      #     # Allow access only from the RNL networks
+      #     allow 193.136.164.0/24;
+      #     allow 193.136.154.0/24;
+      #     allow 10.16.80.0/24;
+      #     allow 2001:690:2100:80::/58;
+      #     deny all;
+      #   '';
+      # };
     };
   };
 }
