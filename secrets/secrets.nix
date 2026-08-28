@@ -158,4 +158,5 @@ in
   "kutt-env.age".publicKeys = users ++ [ kutt ];
   "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
   "kutt-registry.age".publicKeys = users ++ [ kutt ];
+  "ftp-gentoo-auth.age".publicKeys = users ++ [ ftp ];
 }
