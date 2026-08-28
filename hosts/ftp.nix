@@ -18,8 +18,9 @@ let
 
       ftp.rnl.tecnico.ulisboa.pt
 
-      IP Address: 193.136.164.178
-    IPv6 Address: Not yet
+      IP Address: 193.136.164.6
+      IPv6 Address: 2001:690:2100:80::6
+
 
      Rede das Novas Licenciaturas
            Tecnico Lisboa
@@ -75,23 +76,17 @@ in
   rnl.storage = {
     disks = {
       root = [
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E0FTMA"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E1F5M9"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E2WFW8"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E4LHFV"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E5C2UF"
-        "/dev/disk/by-id/ata-WDC_WD3000FYYZ-01UL1B2_WD-WMC1F0E6649N"
-        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5JT4L"
-        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5TSJL"
+        "/dev/disk/by-id/ata-HP_SSD_S700_500GB_HBSA31040200923"
+        "/dev/disk/by-id/ata-ADATA_SU900_2I2720065871"
 
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5TSDL"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5SE5L"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H3HKZL"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5PJWL"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5MAKL"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5J9UL"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V8KAPRHR"
-        # "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9GTY2NL"
+      ];
+      data = [
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V8KAPRHR"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9GTY2NL"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H3HKZL"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5PJWL"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5SE5L"
+        "/dev/disk/by-id/ata-WDC_WD6003FRYZ-01F0DB0_V9H5TSDL"
       ];
     };
   };
@@ -101,49 +96,29 @@ in
     hostId = "dc41255c";
 
     bonds.bond0 = {
-      #interfaces = ["eno1" "eno2"];
       interfaces = [
-        "enp2s0f0"
-        "enp2s0f1"
+        "eno1"
+        "eno2"
       ];
       driverOptions.mode = "802.3ad";
     };
 
     interfaces.bond0 = {
-      ipv4 = {
-        addresses = [
-          {
-            address = "193.136.164.113"; # FTP
-            prefixLength = 26;
-          }
-        ];
-        routes = [
-          {
-            address = "0.0.0.0";
-            prefixLength = 0;
-            via = "193.136.164.126";
-          }
-        ];
-      };
-      ipv6 = {
-        addresses = [
-          {
-            address = "2001:690:2100:81::113";
-            prefixLength = 64;
-          }
-        ];
-        routes = [
-          {
-            address = "::";
-            prefixLength = 0;
-            via = "2001:690:2100:81::ffff:1";
-          }
-        ];
-      };
+      ipv4.addresses = [
+        {
+          address = "193.136.164.6"; # FTP
+          prefixLength = 26;
+        }
+      ];
+      ipv6.addresses = [
+        {
+          address = "2001:690:2100:80::6";
+          prefixLength = 64;
+        }
+      ];
     };
-
-    defaultGateway.address = "193.136.164.126";
-    defaultGateway6.address = "2001:690:2100:81::ffff:1";
+    defaultGateway.address = "193.136.164.62";
+    defaultGateway6.address = "2001:690:2100:80::ffff:1";
   };
 
   environment.systemPackages = [ pkgs.archvsync ];
@@ -151,6 +126,10 @@ in
   users.users.root.hashedPassword = "$y$j9T$dWaZ5JBxtn1SQ1KMA2Su2.$naxrds5bf8uYgh24uKiBPoSrOGAtgoiaBLsNasEjje5";
 
   users.motd = motd;
+  environment.etc."motd" = {
+    text = motd;
+    mode = "0444";
+  };
 
   rnl.ftp-server = {
     enable = true;
@@ -217,8 +196,8 @@ in
     serverName = lib.mkDefault "${config.networking.fqdn}";
     root = config.rnl.githook.hooks.ftp-site.path + "/htdocs";
     # FIXME: Configure firewall to enable ACME
-    #enableACME = true;
-    #addSSL = true;
+    enableACME = true;
+    addSSL = true;
     extraConfig = ''
       autoindex on;
       autoindex_exact_size off;

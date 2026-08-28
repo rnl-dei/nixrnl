@@ -183,22 +183,24 @@ in
     services.rsyncd = {
       enable = cfg.enableRsync;
       settings = {
-        global = {
+        globalSection = {
           "motd file" = cfg.motd;
         };
-        pub = {
-          comment = "RNL FTP mirror";
-          path = cfg.rootDirectory;
+        sections = {
+          pub = {
+            comment = "RNL FTP mirror";
+            path = cfg.rootDirectory;
 
-          "use chroot" = true;
-          "read only" = true;
-          "max connections" = 100;
-          "uid" = "nobody";
-          "gid" = "nobody";
-          "transfer logging" = false;
-          "log format" = "%t %a %m %f %b";
+            "use chroot" = true;
+            "read only" = true;
+            "max connections" = 100;
+            "uid" = "nobody";
+            "gid" = "nobody";
+            "transfer logging" = false;
+            "log format" = "%t %a %m %f %b";
 
-          "timeout" = 300;
+            "timeout" = 300;
+          };
         };
       };
     };
