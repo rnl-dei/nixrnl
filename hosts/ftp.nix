@@ -52,22 +52,22 @@ in
     # sabayon (probably stop now that gentoo has bins?)
     # UBCD
 
-    # mirrors.archlinux # 130 GB
-    # mirrors.debian.archive # 1.44tb
-    # mirrors.debian.cd # huge, maybe filter source?
-    #mirrors.debian.security # 155GB
-    # mirrors.cygwin # 115 gb
-    # mirrors.gentoo.distfiles # 800GB +
+    mirrors.archlinux # 130 GB
+    mirrors.debian.archive # 1.44tb
+    #mirrors.debian.cd # huge, maybe filter source?
+    mirrors.debian.security # 155GB
+    mirrors.cygwin # 115 gb
+    mirrors.gentoo.distfiles # 800GB +
     mirrors.gentoo.portage # <1Gb
-    # mirrors.linuxmint.isos # 200 GB
-    # mirrors.linuxmint.packages # 50GB
-    #mirrors.mxlinux.isos # 47 GB
-    # mirrors.mxlinux.packages # 200 GB
-    # mirrors.openbsd # 1.36 Tb
-    # mirrors.opensuse # 6.79 Tb
-    # mirrors.qubesos 1 TB
-    # mirrors.ubuntu.archive # 3.23 Tb
-    #mirrors.ubuntu.releases # 45 GB
+    mirrors.linuxmint.isos # 200 GB
+    mirrors.linuxmint.packages # 50GB
+    mirrors.mxlinux.isos # 47 GB
+    mirrors.mxlinux.packages # 200 GB
+    mirrors.openbsd # 1.36 Tb
+    mirrors.opensuse # 6.79 Tb
+    mirrors.qubesos # 1 TB
+    mirrors.ubuntu.archive # 3.23 Tb
+    mirrors.ubuntu.releases # 45 GB
     # mirrors.videolan 100GB?
     # mirrors.zorinos 183 GB and fill https://zorin.com/os/mirrors/
   ];
@@ -136,7 +136,7 @@ in
     motd = builtins.toFile "motd" motd;
   };
 
-  # TODO: End of website is borked (no catci)
+  # HACK: seems to need to clone the repo once for bootstrap?
   rnl.githook = {
     enable = true;
     hooks.ftp-site = {
@@ -145,7 +145,6 @@ in
     };
   };
 
-  # TODO: Seems to WOrk
   systemd.services."remake-ftp-site" = {
     description = "Remake FTP homepage";
     startAt = "*-*-* 02:14:00";
@@ -195,7 +194,6 @@ in
     default = true;
     serverName = lib.mkDefault "${config.networking.fqdn}";
     root = config.rnl.githook.hooks.ftp-site.path + "/htdocs";
-    # FIXME: Configure firewall to enable ACME
     enableACME = true;
     addSSL = true;
     extraConfig = ''
