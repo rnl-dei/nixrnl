@@ -119,6 +119,7 @@ in
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
+  "rnl-eurooffice-jwt.age".publicKeys = users ++ deiUsers ++ [ nextcloud ];
   "rnl-nextcloud-secrets.age".publicKeys = users ++ [ nextcloud ];
   "rnl-nextcloud-admin-pass.age".publicKeys = users ++ [ nextcloud ];
   "rnl-nextcloud-oidc.age".publicKeys = users ++ [ nextcloud ];
