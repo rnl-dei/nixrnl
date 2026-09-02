@@ -23,6 +23,7 @@ let
   kutt = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsaudiuMfXo6D070OvF16g2rH83lxXjrwpqQp0x1XrB";
   labs = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5pvNnQKZ0/a5CA25a/WVi8oqSgG2q2WKfInNP4xEpP";
   lga = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBvmznnQfLbA1Jw3EPuXf48JHojUXR7tLEb/ikTG2QFB";
+  nextcloud = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII+jjGT5nkzQhxM1NFiHzfjba/tU4Eye583hc8BDDZmY";
   #nexus = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhiooSVjfJjmic617CS/I10ByRrWUL88FbPccBnr6KV";
   ns = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE4xYTAuqXBeBDEGbbw9DQKitz6O9Pr3JXj7kyktac4u";
   ns2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILp698mN2yqA1enENd003MrBciwFTAmMInWXYjT+TIMV";
@@ -51,6 +52,7 @@ in
   "host-keys/lga.age".publicKeys = deployMachines;
   "host-keys/kutt.age".publicKeys = deployMachines;
   "host-keys/neo.age".publicKeys = deployMachines;
+  "host-keys/nextcloud.age".publicKeys = deployMachines;
   "host-keys/nexus.age".publicKeys = deployMachines;
   "host-keys/operario-nix.age".publicKeys = deployMachines;
   "host-keys/papyrus.age".publicKeys = deployMachines;
@@ -117,6 +119,9 @@ in
   "open-sessions-db-uri.age".publicKeys = users ++ [ www ];
   "papyrus-private-env.age".publicKeys = users ++ [ papyrus ];
   "papyrus-wheatley-token.age".publicKeys = users ++ [ papyrus ];
+  "rnl-nextcloud-secrets.age".publicKeys = users ++ [ nextcloud ];
+  "rnl-nextcloud-admin-pass.age".publicKeys = users ++ [ nextcloud ];
+  "rnl-nextcloud-oidc.age".publicKeys = users ++ [ nextcloud ];
   "rnl-slack-conf.age".publicKeys = users ++ [
     ns
     ns2
