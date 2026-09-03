@@ -1,12 +1,12 @@
 { fetchzip, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "scheduler";
-  version = "2024122401";
+  version = "2023052300";
 
   pluginType = "mod";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/29293/${pluginType}_${name}_moodle42_${version}.zip";
+    url = "https://github.com/learnweb/moodle-mod_scheduler/archive/refs/tags/v4.0.0.zip";
     sha256 = "sha256-6ztUR5LxhtJISwU4/Z0Vcbx2rirBmIPAmYVmkU9aqTo=";
   };
 }

@@ -6,7 +6,7 @@ moodle-utils.buildMoodlePlugin rec {
   pluginType = "filter";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/24270/${pluginType}_${name}_moodle41_${version}.zip";
+    url = "https://github.com/sharpchi/moodle-filter_syntaxhighlighter/archive/refs/tags/v2021052101.zip";
     sha256 = "sha256-1bcEVFTEDygc15KcF7fB4k3hMDyrDickYGuG9T8CwX0=";
   };
 }

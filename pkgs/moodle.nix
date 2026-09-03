@@ -94,7 +94,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://download.moodle.org/download.php/direct/stable${stableVersion}/${pname}-latest-${stableVersion}.tgz";
-    hash = "sha256-lVPYRFFKco33oiTELoVMCAWUQZAjoIL0hWvxscsGCGk=";
+    hash = "sha256-PBaPQz8jEOcydOPZ1PCF/tdxOYZyfBu+e+95gBhawWs=";
   };
 
   phpConfig = writeText "config.php" ''
