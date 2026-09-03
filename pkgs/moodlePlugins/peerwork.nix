@@ -6,7 +6,7 @@ moodle-utils.buildMoodlePlugin rec {
   pluginType = "mod";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/35393/${pluginType}_${name}_moodle45_${version}.zip";
+    url = "https://github.com/amandadoughty/moodle-mod_peerwork/archive/refs/tags/4.5.0.5.zip";
     sha256 = "sha256-XQaIDFMnU0HBlIBCj4UXKeoycouhhVssqa71DiTu84o=";
   };
 

@@ -16,7 +16,6 @@ let
     mergeusers
     scheduler
     dompdf
-    collaborativefolders
   ];
 
   # Max upload size

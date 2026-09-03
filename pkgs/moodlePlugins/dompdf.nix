@@ -6,7 +6,7 @@ moodle-utils.buildMoodlePlugin rec {
   pluginType = "local";
 
   src = fetchzip {
-    url = "https://moodle.org/plugins/download.php/32603/${pluginType}_${name}_moodle44_${version}.zip";
-    sha256 = "sha256-wLXGQZoO6cLz8PY+1PrOTeblpaUiJYnBCCDU9BRqiCM=";
+    url = "https://github.com/kiklop74/moodle-local_dompdf/archive/refs/tags/v1.1.zip";
+    sha256 = "sha256-6/nr6HU/Arzk/MIbTabwm5f+VJ4IJ3Qi8VZOJ6dpGsM=";
   };
 }
