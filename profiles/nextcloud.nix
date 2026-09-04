@@ -123,9 +123,9 @@ in
       sociallogin = pkgs.fetchNextcloudApp {
         # use fork of sociallogin to try and step over their implementation incompatibilities
         appName = "sociallogin";
-        appVersion = "6.4.2";
-        url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/6.4.2/nextcloud-social-login-6.4.2.tar.bz2";
-        sha256 = "sha256-JHq78AOL5rYI2fcM5R9CWN+8bGj+dKSdjDMIaQBV+Hw=";
+        appVersion = "6.4.3";
+        url = "https://gitlab.rnl.tecnico.ulisboa.pt/rnl/nextcloud-social-login/-/archive/6.4.3/nextcloud-social-login-6.4.3.tar.bz2";
+        sha256 = "sha256-0tsTLW0TB8nd/V3IqJ3mUpT/6hL4mcG57nqP4Y3z4W0=";
         license = "agpl3Plus";
       };
 
