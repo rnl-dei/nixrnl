@@ -16,6 +16,7 @@ let
     mergeusers
     scheduler
     dompdf
+    gafmoo
   ];
 
   # Max upload size
