@@ -27,6 +27,7 @@
     vscode.fhs
     jetbrains.idea-community
     jetbrains.pycharm-community
+    arduino-ide
 
     # CMU
     android-studio
