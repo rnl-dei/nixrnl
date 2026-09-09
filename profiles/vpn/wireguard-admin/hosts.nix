@@ -464,7 +464,7 @@
   }
   {
     # Tomás Lopes - Laptop
-    publicKey = "hwAkhYJUSWO919jkZq52UC5MX3ktqhTl+E326crTtAc=";
+    publicKey = "d+0BGt54AXB04g5KCfHa1Qw3RfE0C/Vvh1CLSToPxTU=";
     lastOctet = 94;
   }
   {
