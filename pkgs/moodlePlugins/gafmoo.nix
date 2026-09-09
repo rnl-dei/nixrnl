@@ -3,7 +3,7 @@ moodle-utils.buildMoodlePlugin rec {
   name = "gafmoo";
   version = "2026090100";
 
-  pluginType = "webservice";
+  pluginType = "local";
 
   src = fetchzip {
     url = "https://gitlab.rnl.tecnico.ulisboa.pt/ist13500/gafmoo/-/archive/master/gafmoo-master.zip";
