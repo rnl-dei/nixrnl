@@ -1,11 +1,10 @@
 {
   rnl-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDU8SWaX5q+dS5bnWs4ocYORUaMpYVMAGck/rbm3lRif @raidou"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHHxUVzXang0754ZfAv+YcNKhIILHQM28L2bd8aj0YcY @pikachu"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKEEja9gFy3l2Yd8cbPlAIDjdkXZXTLdmfHYstN4wgF/ @geoff"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe @teto"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHk16LFBL889mUIOfJ2qubsa9bO/loUbbC2/hRbtuwxo @hugopc"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR @rnl-simaolavos"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHGzmHPfX/J01t2yf6yntCETQwwnHP+4kxUP+ZIcWtT6 @feldspat"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBayd0tL/Gz/Lb5aRtZ2QKHejSK+3gm0QuUF3wcQEJAE @creeper"
   ];
 
   dei-keys = [
