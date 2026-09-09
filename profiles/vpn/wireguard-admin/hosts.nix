@@ -1,5 +1,5 @@
 # Please update this number when adding a new user
-# Last octet used: 87
+# Last octet used: 95
 [
   {
     # André Aparício
@@ -462,5 +462,14 @@
     publicKey = "hwAkhYJUSWO919jkZq52UC5MX3ktqhTl+E326crTtAc=";
     lastOctet = 93;
   }
-
+  {
+    # Tomás Lopes - Laptop
+    publicKey = "hwAkhYJUSWO919jkZq52UC5MX3ktqhTl+E326crTtAc=";
+    lastOctet = 94;
+  }
+  {
+    # Rodrigo Santos - Laptop
+    publicKey = "MBXL1MOzW8MXZmKAXjMe34rj6I0BxeB2IV81EKPHSQM=";
+    lastOctet = 95;
+  }
 ]
