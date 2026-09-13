@@ -16,7 +16,6 @@ let
     mergeusers
     scheduler
     dompdf
-    topcoll
     collaborativefolders
   ];
 
