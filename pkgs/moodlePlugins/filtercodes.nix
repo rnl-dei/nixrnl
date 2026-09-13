@@ -1,7 +1,7 @@
 { fetchzip, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "filtercodes";
-  version = "2026050200";
+  version = "2025102700";
 
   pluginType = "filter";
 
