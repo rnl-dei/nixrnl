@@ -1,14 +1,12 @@
-{ fetchFromGitHub, moodle-utils, ... }:
+{ fetchzip, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "filtercodes";
   version = "2025102700";
 
   pluginType = "filter";
 
-  src = fetchFromGitHub {
-    owner = "michael-milette";
-    repo = "moodle-filter_filtercodes";
-    rev = "v2.6.1";
-    sha256 = "sha256-QpaKsdNbotnDp/aWkwI/swKKOM03pF7NzZIe9Ie/YOY=";
+  src = fetchzip {
+    url = "https://github.com/michael-milette/moodle-filter_filtercodes/archive/63cdd1269ea8d024b405d1c5f8774ee8f4d27e58.zip";
+    sha256 = "sha256-a3aR7iyuaOty08+6e7kF/kRIhgqfpp7kc661e+z3UA0=";
   };
 }
