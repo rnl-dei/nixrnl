@@ -17,6 +17,7 @@ let
     scheduler
     dompdf
     topcoll
+    collaborativefolders
   ];
 
   # Max upload size
