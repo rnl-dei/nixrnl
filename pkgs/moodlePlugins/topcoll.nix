@@ -1,14 +1,14 @@
 { fetchFromGitHub, moodle-utils, ... }:
 moodle-utils.buildMoodlePlugin rec {
   name = "topcoll";
-  version = "2022041900";
+  version = "2021051700";
 
   pluginType = "format";
 
   src = fetchFromGitHub {
     owner = "gjbarnard";
     repo = "moodle-format_topcoll";
-    rev = "V400.1.3";
-    sha256 = "sha256-r9hdHlqVQmnHHkwqvIKiEMJ1SYuzlHn64f46GXHXjdc=";
+    rev = "V3.11.1.0";
+    sha256 = "sha256-1bcEVFTEDygc15KcF7fB4k3hMDyrDickYGuG9T8CwX0=";
   };
 }
