@@ -9,6 +9,6 @@ moodle-utils.buildMoodlePlugin rec {
     owner = "kiklop74";
     repo = "moodle-local_dompdf";
     rev = "v1.5";
-    sha256 = "sha256-AAA";
+    sha256 = "sha256-wLXGQZoO6cLz8PY+1PrOTeblpaUiJYnBCCDU9BRqiCM=";
   };
 }
