@@ -16,7 +16,7 @@ let
     mergeusers
     scheduler
     dompdf
-    gafmoo
+    topcoll
   ];
 
   # Max upload size
@@ -39,6 +39,10 @@ in
       enableACME = lib.mkDefault true;
       forceSSL = lib.mkDefault true;
     };
+    extraConfig = ''
+      $CFG->draft_area_bucket_capacity = 5000;
+      $CFG->draft_area_bucket_leak = 5000;
+    '';
   };
 
   services.phpfpm.pools.moodle = {
