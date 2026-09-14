@@ -66,10 +66,12 @@ in
     mirrors.openbsd # 1.36 Tb
     mirrors.opensuse # 6.79 Tb
     mirrors.qubesos # 1 TB
+    mirrors.slackware # 200 GB
     mirrors.ubuntu.archive # 3.23 Tb
     mirrors.ubuntu.releases # 45 GB
-    # mirrors.videolan 100GB?
-    # mirrors.zorinos 183 GB and fill https://zorin.com/os/mirrors/
+    mirrors.videolan # 100GB?
+    mirrors.zorinos # 183 GB
+    #and fill https://zorin.com/os/mirrors/
   ];
 
   rnl.labels.location = "inf1-p01-a2";
@@ -133,6 +135,8 @@ in
 
   rnl.ftp-server = {
     enable = true;
+    enableRsync = true;
+    enableFTP = true;
     motd = builtins.toFile "motd" motd;
   };
 
@@ -204,11 +208,11 @@ in
     '';
 
     locations = {
-      "~ ^/pub" = {
-        alias = config.rnl.ftp-server.rootDirectory + "/";
+      "~ ^/pub/(.*)$" = {
+        alias = config.rnl.ftp-server.rootDirectory + "/$1";
       };
-      "~ ^/debian" = {
-        alias = "/mnt/data/ftp/pub/debian/";
+      "~ ^/debian(?:/(.*))?$" = {
+        alias = "/mnt/data/ftp/pub/debian/$1";
       }; # Recommended by Debian
 
       "~ ^/dei" = {
