@@ -14,6 +14,8 @@ in
 {
   imports = [ ../common.nix ];
 
+  programs.nix-ld.enable = true;
+
   # Fix to allow slurmdbd with external database
   systemd.services.slurmdbd.requires = lib.mkForce [ "munged.service" ];
 
