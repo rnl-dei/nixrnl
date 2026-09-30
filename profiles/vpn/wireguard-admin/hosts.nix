@@ -434,7 +434,7 @@
   }
   {
     # João Viegas - laptop
-    publicKey = "PWdmek1KVClfWnXGTMWEax7TDhdwDTlN87KF3VouLyA=";
+    publicKey = "+SzLN8pz/w9fOGNQl97bGTIPfraob4ieWaTjF8CspBE=";
     lastOctet = 88;
   }
   {
