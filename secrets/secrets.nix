@@ -35,6 +35,7 @@ let
   vault = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEarcNlKVSUzq6k2fTzFnMpMdGijVKvhGo/EyBvTOS4a";
   weaver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOZz5HxL83BuxsJs6Qlsd1bFNRA4CH+IERgSq1Zplu8K";
   www = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5cj7QcYEz9cSmbQS1ZbmDjQUVdsT9AsmyJdFbZNOg/ www";
+  thonkpad = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL2S5H3cM9bBDF+OzDTYYwEBAnPryR9W+1PoNsHad5yX";
 in
 {
   # Host keys only need to be accessible by the deploy machines
@@ -62,6 +63,9 @@ in
   "host-keys/vault.age".publicKeys = deployMachines;
   "host-keys/weaver.age".publicKeys = deployMachines;
   "host-keys/www.age".publicKeys = deployMachines;
+
+  # Thonkpad is specifically owned by RNL
+  "host-keys/thonkpad.age".publicKeys = users;
 
   # GitLab runners tokens (labs)
   "gitlab-runners/labs/es-labs-env.age".publicKeys = users ++ [ labs ];
@@ -161,4 +165,5 @@ in
   "kutt-env.age".publicKeys = users ++ [ kutt ];
   "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
   "kutt-registry.age".publicKeys = users ++ [ kutt ];
+  "thonkpad-vpn-key.age".publicKeys = users ++ [ thonkpad ];
 }
