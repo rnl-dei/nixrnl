@@ -161,4 +161,5 @@ in
   "kutt-env.age".publicKeys = users ++ [ kutt ];
   "kutt-postgres-env.age".publicKeys = users ++ [ kutt ];
   "kutt-registry.age".publicKeys = users ++ [ kutt ];
+  "thonk-initial-root-password.hash".publicKeys = users;
 }
