@@ -167,6 +167,7 @@ let
     name = "multi-dms-deploy";
 
     runtimeInputs = with pkgs; [
+      coreutils
       systemd
       gnugrep
       # Note: use toybox instead of busybox because busybox `date` does not
@@ -215,7 +216,7 @@ let
         fi
       }
 
-      if (! ls "$builds_dir" &>/dev/null); then
+      if [ ! -d "$builds_dir" ]; then
         error_msg "No $builds_dir directory found."
       fi
 
@@ -277,6 +278,7 @@ let
       echo "Environment URL: https://dms-$ENVIRONMENT_NAME.blatta.rnl.tecnico.ulisboa.pt"
     '';
   };
+
 in
 {
   options.dei.multi-dms = {
