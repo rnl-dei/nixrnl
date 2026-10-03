@@ -68,7 +68,7 @@
     swi-prolog-gui
 
     # SO
-    cpulimit
+    limitcpu
 
     # OC
     papi
