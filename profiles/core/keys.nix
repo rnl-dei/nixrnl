@@ -4,7 +4,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKwWOg8uO5Nhon69IDx/mXvtTzG3jmvBVRhY2nEElVHe @teto"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlDX6Z/6GI4Gi0nPjGwETQvHTmdJntP91cc9/X+hLBR @rnl-simaolavos"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHGzmHPfX/J01t2yf6yntCETQwwnHP+4kxUP+ZIcWtT6 @feldspat"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBayd0tL/Gz/Lb5aRtZ2QKHejSK+3gm0QuUF3wcQEJAE @creeper"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZx2PQMT7/QW5QQVFpyAhxaPt1PdXUOQ9kjY6tySUZn @prolite-rnl"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEDn+Gfyk+V1lOKuefWUSLs/xH/ywLnUhS7Sg8knptt8 @creeper"
   ];
 
   dei-keys = [
