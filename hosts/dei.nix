@@ -195,6 +195,7 @@ in
     environment = {
       PROD_BUCKET = "dei-prod";
       BLATTA_BUCKET = "blatta";
+      RETENTION_DAYS = "30";
     };
 
     script = ''
@@ -204,10 +205,23 @@ in
       # First, copy the PROD bucket into a dated snapshot in the BLATTA bucket.
       ${pkgs.rclone}/bin/rclone copy "dei-s3:$PROD_BUCKET" "dei-s3:$BLATTA_BUCKET/BACKUPS/$DATE" --create-empty-src-dirs
 
-      # Then, sync the PROD bucket into the BLATTA bucket, excluding the BACKUPS folder. All multi-dms share the same S3 Bucket!!!
+      # Then, sync the PROD bucket into the BLATTA bucket, excluding the BACKUPS folder.
+      # Files no longer in PROD are deleted before transferring. 
+      # All multi-dms share the same S3 Bucket!!!
       ${pkgs.rclone}/bin/rclone sync "dei-s3:$PROD_BUCKET" "dei-s3:$BLATTA_BUCKET" \
         --exclude "BACKUPS/**" \
+        --delete-before \
         --create-empty-src-dirs
+
+      # Delete snapshots older than RETENTION_DAYS
+      CUTOFF=$(date -d "-$RETENTION_DAYS days" +%F)
+      ${pkgs.rclone}/bin/rclone lsf --dirs-only "dei-s3:$BLATTA_BUCKET/BACKUPS" | while read -r dir; do
+        snapshot="''${dir%/}"
+        if [[ "$snapshot" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ && "$snapshot" < "$CUTOFF" ]]; then
+          echo "Deleting old snapshot BACKUPS/$snapshot"
+          ${pkgs.rclone}/bin/rclone purge "dei-s3:$BLATTA_BUCKET/BACKUPS/$snapshot"
+        fi
+      done
     '';
 
     serviceConfig = {
