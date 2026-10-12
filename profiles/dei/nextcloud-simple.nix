@@ -7,9 +7,9 @@
 let
   ncPkgs =
     import
-      (builtins.fetchZip {
-        url = "https://github.com/NixOS/nixpkgs/archive/18d7ee8453c76a08cd1717b06e7c606bb43b88d9.tar.gz";
-        sha256 = "0gfa6f7rzsprinv68qdx9q00afqnzzbbg80n7mbnzyn0a6h8higg";
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
+        sha256 = "1if9h4d8rkgd7a41j978swbixif81iqfd7hk302w0fbd23i9g7y4";
       })
       {
         system = pkgs.system;
@@ -112,7 +112,8 @@ in
               useSsl = false;
               usePathStyle = true;
               verify_bucket_exists = false;
-              hostname = "193.136.164.35:7480";
+              hostname = "193.136.164.35";
+              port = 7480;
               bucket = "nextcloud-bucket-simple";
               secretFile = "/run/atas-secrets/secretfile.json";
               key = "placeholder";

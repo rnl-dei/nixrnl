@@ -16,7 +16,10 @@ extend-ignore-re = [
     '"ssh-(ed25519|rsa|ecdsa-[^ ]+) [A-Za-z0-9+/=]+ [^"]+"',
 
     # ignore maintainers list (PT names sometimes trigger it)
-    '(?s)\s*maintainers\s*=\s*\[[-"a-zA-Z0-9_. \n]*\]\s*;'
+    '(?s)\s*maintainers\s*=\s*\[[-"a-zA-Z0-9_. \n]*\]\s*;',
+
+    # ignore Nix base32 hashes (fixed-output derivation hashes)
+    '[0-9abcdfghijklmnpqrsvwxyz]{32,}'
 ]
 
 [default.extend-words]
