@@ -53,6 +53,7 @@
     unzip
     wget
     zip
+    yazi
 
     # C/C++
     boost
