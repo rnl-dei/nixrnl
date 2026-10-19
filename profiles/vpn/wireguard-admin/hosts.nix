@@ -472,4 +472,9 @@
     publicKey = "MBXL1MOzW8MXZmKAXjMe34rj6I0BxeB2IV81EKPHSQM=";
     lastOctet = 95;
   }
+  {
+    # Maria Louro - Laptop
+    publicKey = "GWTbCurHGb8GHRE1qJKucz1VayZvLukuKePmfytEcT0=";
+    lastOctet = 96;
+  }
 ]
