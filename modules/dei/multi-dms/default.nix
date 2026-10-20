@@ -61,7 +61,13 @@ let
         ENV_FILE=${cfg.backend.environmentFile}
         DUMP_FILE=$(readlink -f ${cfg.dataDir}/common/latest.sql)
         DUMP_FILE_NAME="$(basename "$DUMP_FILE")"
-        
+
+        docker container rm --force --volumes "$ENVIRONMENT_NAME" > /dev/null 2>&1 || true
+        for _ in {1..30}; do
+          docker container inspect "$ENVIRONMENT_NAME" > /dev/null 2>&1 || break
+          sleep 1
+        done
+
         docker container create \
            --hostname="$ENVIRONMENT_NAME" \
            -p "$db_port":3306 \
@@ -151,7 +157,7 @@ let
 
       # Destroy database container and all its anonymous volumes.
       # Don't fail if container does not exist/is already stopped/etc.
-      docker container stop "$ENVIRONMENT_NAME" || true
+      docker container rm --force --volumes "$ENVIRONMENT_NAME" || true
     '';
   };
 
