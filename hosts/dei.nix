@@ -163,8 +163,14 @@ in
     script = ''
       set -euo pipefail
       ${pkgs.mariadb}/bin/mysqldump -u dms -p$DB_PASSWORD dms > ${backupsDir}/dms/dms_backup_$(date +%F).sql
-      # Delete all backups older than 60 days.
-      ${lib.getExe pkgs.findutils} ${backupsDir}/dms  ${backupsDir}/dms -mtime 31 -delete 
+
+      # Prune old backups according to the retention policy (see pkgs/dei-backup-prune-dates.nix)
+      ${pkgs.findutils}/bin/find ${backupsDir}/dms -maxdepth 1 -name 'dms_backup_*.sql' -printf '%f\n' \
+        | ${pkgs.gnused}/bin/sed -E 's/^dms_backup_(.*)\.sql$/\1/' \
+        | ${lib.getExe pkgs.dei-backup-prune-dates} | while read -r d; do
+          echo "Deleting old backup dms_backup_$d.sql"
+          rm -f "${backupsDir}/dms/dms_backup_$d.sql"
+        done
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -195,7 +201,6 @@ in
     environment = {
       PROD_BUCKET = "dei-prod";
       BLATTA_BUCKET = "blatta";
-      RETENTION_DAYS = "30";
     };
 
     script = ''
@@ -213,15 +218,13 @@ in
         --delete-before \
         --create-empty-src-dirs
 
-      # Delete snapshots older than RETENTION_DAYS
-      CUTOFF=$(date -d "-$RETENTION_DAYS days" +%F)
-      ${pkgs.rclone}/bin/rclone lsf --dirs-only "dei-s3:$BLATTA_BUCKET/BACKUPS" | while read -r dir; do
-        snapshot="''${dir%/}"
-        if [[ "$snapshot" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ && "$snapshot" < "$CUTOFF" ]]; then
+      # Prune old snapshots according to the retention policy (see pkgs/dei-backup-prune-dates.nix)
+      ${pkgs.rclone}/bin/rclone lsf --dirs-only "dei-s3:$BLATTA_BUCKET/BACKUPS" \
+        | ${pkgs.gnused}/bin/sed 's|/$||' \
+        | ${lib.getExe pkgs.dei-backup-prune-dates} | while read -r snapshot; do
           echo "Deleting old snapshot BACKUPS/$snapshot"
           ${pkgs.rclone}/bin/rclone purge "dei-s3:$BLATTA_BUCKET/BACKUPS/$snapshot"
-        fi
-      done
+        done
     '';
 
     serviceConfig = {

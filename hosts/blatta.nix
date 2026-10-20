@@ -92,6 +92,14 @@
         set -euo pipefail
         ${pkgs.openssh}/bin/scp blatta@dei.rnl.tecnico.ulisboa.pt:/${dbFile} /root/dms_backups/
         ln -sf /root/dms_backups/${dbFile} /root/dms_backups/latest.sql
+
+        # Prune old backups according to the retention policy (see pkgs/dei-backup-prune-dates.nix)
+        ${pkgs.findutils}/bin/find /root/dms_backups -maxdepth 1 -name 'dms_backup_*.sql' -printf '%f\n' \
+          | ${pkgs.gnused}/bin/sed -E 's/^dms_backup_(.*)\.sql$/\1/' \
+          | ${lib.getExe pkgs.dei-backup-prune-dates} | while read -r d; do
+            echo "Deleting old backup dms_backup_$d.sql"
+            rm -f "/root/dms_backups/dms_backup_$d.sql"
+          done
       '';
       serviceConfig = {
         Type = "oneshot";
