@@ -8,7 +8,8 @@
 # Retention policy:
 #  - younger than 30 days: keep everything (daily)
 #  - 30 to 90 days: keep the oldest backup of each week
-#  - older than 90 days: keep the oldest backup of each 3-week period, forever
+#  - 90 to 180 days: keep the oldest backup of each 3-week period
+#  - 180 days or older: delete everything
 # Buckets are aligned to the epoch, and the oldest backup in a bucket is the one kept,
 # so a kept backup stays kept as it ages into the next tier.
 writeShellApplication {
@@ -23,7 +24,10 @@ writeShellApplication {
     grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort -u | while read -r d; do
       day=$(( $(date -u -d "$d" +%s) / 86400 ))
       age=$(( today - day ))
-      if (( age >= 90 )); then
+      if (( age >= 180 )); then
+        echo "$d"
+        continue
+      elif (( age >= 90 )); then
         bucket="3w-$(( day / 21 ))"
       elif (( age >= 30 )); then
         bucket="1w-$(( day / 7 ))"
