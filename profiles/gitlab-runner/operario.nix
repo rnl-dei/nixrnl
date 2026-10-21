@@ -60,6 +60,18 @@ in
       description = "DEI DMS runner";
       limit = 2;
     };
+    R2DEI2 = {
+      dockerImage = alpineImage;
+      authenticationTokenConfigFile = config.age.secrets."r2dei2-runner.env".path;
+      registrationFlags = [
+        commonRegistrationFlags
+        "--docker-cpus=2"
+        "--docker-memory=2g"
+      ];
+      dockerVolumes = [ "/cache" ];
+      description = "DEI R2DEI2 Robot deploy runner";
+      limit = 1;
+    };
     ES-operario = {
       dockerImage = ubuntuImage;
       authenticationTokenConfigFile = config.age.secrets."es-runner.env".path;
@@ -93,6 +105,7 @@ in
     "co-t.env".file = ../../secrets/gitlab-runners/co-t-runner.age;
     "dei-runner.env".file = ../../secrets/gitlab-runners/dei-runner.age;
     "dms-runner.env".file = ../../secrets/gitlab-runners/dms-runner.age;
+    "r2dei2-runner.env".file = ../../secrets/gitlab-runners/r2dei2-runner.age;
     "es-runner.env".file = ../../secrets/gitlab-runners/es-runner.age;
     "rnl-runner.env".file = ../../secrets/gitlab-runners/rnl-runner.age;
   };

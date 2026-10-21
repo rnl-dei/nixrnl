@@ -72,6 +72,7 @@ in
   "gitlab-runners/es-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/dei-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/dms-runner.age".publicKeys = users ++ [ operario-nix ];
+  "gitlab-runners/r2dei2-runner.age".publicKeys = users ++ deiUsers ++ [ operario-nix ];
   "gitlab-runners/rnl-runner.age".publicKeys = users ++ [ operario-nix ];
 
   # Secrets
