@@ -388,6 +388,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-php": {
+      "locked": {
+        "lastModified": 1792615934,
+        "narHash": "sha256-MlvRfa1O5Cqc2/a+gG+l9TSuowEoCKCmrJ1d9oAVm0I=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "da6dc0e7b26060f2f71ce3ef7088fb56ee44fa36",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1775710090,
@@ -513,6 +529,7 @@
         "ist-delegate-election": "ist-delegate-election",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-php": "nixpkgs-php",
         "opensessions": "opensessions",
         "poetry2nix": "poetry2nix",
         "pre-commit-hooks": "pre-commit-hooks",
