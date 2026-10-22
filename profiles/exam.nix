@@ -64,7 +64,7 @@
 
           tcp dport { 22, 80, 443 } reject
           # Block QUIC
-          udp dport 443 reject
+          udp dport { 80, 443 } reject
           accept
         }
       }
