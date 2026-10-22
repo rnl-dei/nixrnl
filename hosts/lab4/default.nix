@@ -6,6 +6,7 @@
     os.nixos
     type.lab
     labs
+    intel-gpu
     cluster.client
   ];
 
