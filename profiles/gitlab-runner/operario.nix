@@ -72,20 +72,6 @@ in
       description = "DEI R2DEI2 Robot deploy runner";
       limit = 1;
     };
-    ES-operario = {
-      dockerImage = ubuntuImage;
-      authenticationTokenConfigFile = config.age.secrets."es-runner.env".path;
-      registrationFlags = [
-        commonRegistrationFlags
-        "--docker-cpus=16"
-        "--docker-memory=32g"
-      ];
-      dockerVolumes = [
-        "/cache"
-      ];
-      description = "ES26 runner";
-      limit = 4;
-    };
     RNL = {
       dockerImage = ubuntuImage;
       authenticationTokenConfigFile = config.age.secrets."rnl-runner.env".path;
@@ -106,7 +92,6 @@ in
     "dei-runner.env".file = ../../secrets/gitlab-runners/dei-runner.age;
     "dms-runner.env".file = ../../secrets/gitlab-runners/dms-runner.age;
     "r2dei2-runner.env".file = ../../secrets/gitlab-runners/r2dei2-runner.age;
-    "es-runner.env".file = ../../secrets/gitlab-runners/es-runner.age;
     "rnl-runner.env".file = ../../secrets/gitlab-runners/rnl-runner.age;
   };
 
