@@ -63,6 +63,8 @@
           ip daddr 193.136.164.8 tcp dport {http,https} accept
 
           tcp dport { 22, 80, 443 } reject
+          # Block QUIC
+          udp dport { 80, 443 } reject
           accept
         }
       }
