@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 {
   services.dokuwiki.sites."wiki" = {
+    # Module defaults to php81, which is EOL and vulnerable to CVE-2026-109618
+    phpPackage = pkgs.php83;
     settings = {
       # Basic
       title = "RNL Wiki";

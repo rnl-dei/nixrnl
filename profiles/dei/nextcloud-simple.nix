@@ -16,6 +16,9 @@ let
         config.allowUnfree = true;
       };
 
+  # The container's pkgs does not get our overlays, use the patched PHP from the host (overlays/php.nix)
+  hostPkgs = pkgs;
+
   hostAddr = "192.168.100.10";
   ctAddr = "192.168.100.11";
 in
@@ -81,6 +84,7 @@ in
             // {
               override = args: base.override (builtins.removeAttrs args [ "caBundle" ]);
             };
+          phpPackage = lib.mkForce hostPkgs.php83;
           hostName = "docs.dei.tecnico.ulisboa.pt";
           https = true;
           maxUploadSize = "16G";
