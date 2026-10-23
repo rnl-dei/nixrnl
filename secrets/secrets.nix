@@ -69,7 +69,6 @@ in
   # GitLab runners tokens (operario)
   "gitlab-runners/co-a-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/co-t-runner.age".publicKeys = users ++ [ operario-nix ];
-  "gitlab-runners/es-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/dei-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/dms-runner.age".publicKeys = users ++ [ operario-nix ];
   "gitlab-runners/r2dei2-runner.age".publicKeys = users ++ deiUsers ++ [ operario-nix ];
