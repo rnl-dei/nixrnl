@@ -11,7 +11,6 @@ let
     course_menu
     coderunner
     adaptive_adapted_for_coderunner
-    filtercodes
     syntaxhighlighter
     mergeusers
     scheduler
