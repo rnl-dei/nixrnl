@@ -24,32 +24,72 @@
       zones."rnl.tecnico.ulisboa.pt" = {
         master = true;
         file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
-        slaves = [ "any" ];
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
       };
       zones."rnl.ist.utl.pt" = {
         master = true;
         file = "/var/lib/dns-config/rnl.tecnico.ulisboa.pt";
-        slaves = [ "any" ];
-      };
-      zones."89.16.10.in-addr.arpa" = {
-        master = true;
-        file = "/var/lib/dns-config/10.16.89.zone";
-      };
-      zones."86.16.10.in-addr.arpa" = {
-        master = true;
-        file = "/var/lib/dns-config/10.16.86.zone";
-      };
-      zones."82.16.10.in-addr.arpa" = {
-        master = true;
-        file = "/var/lib/dns-config/10.16.82.zone";
-      };
-      zones."81.16.10.in-addr.arpa" = {
-        master = true;
-        file = "/var/lib/dns-config/10.16.81.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
       };
       zones."80.16.10.in-addr.arpa" = {
         master = true;
         file = "/var/lib/dns-config/10.16.80.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
+      };
+      zones."81.16.10.in-addr.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/10.16.81.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
+      };
+      zones."82.16.10.in-addr.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/10.16.82.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
+      };
+      zones."86.16.10.in-addr.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/10.16.86.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
+      };
+      zones."89.16.10.in-addr.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/10.16.89.zone";
+        slaves = [
+          "193.136.128.1"
+          "193.136.128.2"
+          "193.136.164.1"
+          "193.136.164.2"
+        ];
       };
       zones."154.136.193.in-addr.arpa" = {
         master = true;
@@ -74,8 +114,17 @@
       zones."8.0.0.0.0.1.2.0.9.6.0.1.0.0.2.ip6.arpa" = {
         master = true;
         file = "/var/lib/dns-config/2001:690:2100:8.zone";
+        zones."86.16.10.in-addr.arpa" = {
+          master = true;
+          file = "/var/lib/dns-config/10.16.86.zone";
+          slaves = [
+            "193.136.128.1"
+            "193.136.128.2"
+            "193.136.164.1"
+            "193.136.164.2"
+          ];
+        };
       };
-
     };
   };
 }
