@@ -75,7 +75,18 @@
         master = true;
         file = "/var/lib/dns-config/2001:690:2100:8.zone";
       };
-
+      zones."9.0.0.0.0.1.2.0.9.6.0.1.0.0.2.ip6.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/2001:690:2100:9.zone";
+      };
+      zones."a.0.0.0.0.1.2.0.9.6.0.1.0.0.2.ip6.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/2001:690:2100:a.zone";
+      };
+      zones."b.0.0.0.0.1.2.0.9.6.0.1.0.0.2.ip6.arpa" = {
+        master = true;
+        file = "/var/lib/dns-config/2001:690:2100:b.zone";
+      };
     };
   };
 }
