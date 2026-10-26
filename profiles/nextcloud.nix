@@ -9,7 +9,7 @@ let
     import
       (builtins.fetchTarball {
         url = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-        sha256 = "sha256:1jgfnvi57n79zsfljh2i4b77yj6wh028z4r3wf223am8wznzqbzj";
+        sha256 = "sha256:1l60ar0j7j7jrrg4r7j4kscrih0qn2n0lslffzflhv86lyq650r2";
       })
       {
         system = pkgs.system;
@@ -179,7 +179,8 @@ in
         usePathStyle = true;
         verify_bucket_exists = false;
 
-        hostname = "193.136.164.35:7480";
+        hostname = "193.136.164.35";
+        port = 7480;
         bucket = "rnl-nextcloud";
         secretFile = config.age.secrets.nextcloud-secrets.path;
         key = "O7AMB0WCIHPEZDAXZZOI"; # access key id, normally public
