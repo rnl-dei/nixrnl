@@ -98,6 +98,9 @@ let
     "hugo.vicente"
     "hikvision"
     "simao.lavos"
+    "vicente.araujo"
+    "tomas.lopes"
+    "rodrigo.santos"
   ];
   hashedPasswords = builtins.listToAttrs (
     map (user: {
@@ -122,6 +125,8 @@ in
   systemd.services.snm-createHashedPasswordFile = {
     enable = true;
     before = [ "dovecot2.service" ];
+    requiredBy = [ "dovecot2.service" ];
+    restartTriggers = [ config.age.secrets.users.file ];
     after = [ "agenix.service" ];
     wants = [ "agenix.service" ];
     path = [
