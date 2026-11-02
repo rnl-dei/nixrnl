@@ -3,7 +3,7 @@
   pkgs,
   ...
 }:
-let # NOTE: Test script
+let # NOTE: Confirm if can be replaced with rsync
   script = ''
     fatal() {
       echo "$1"
@@ -41,7 +41,7 @@ in
   rnl.ftp-server.mirrors.ubuntu-archive = {
     source = "rsync://archive.ubuntu.com/ubuntu";
     target.path = "/mnt/data/ftp/pub/ubuntu/archive/";
-    timer = "*-*-* 5..23/6:20:00"; # Every day at 20 minutes past the hour, 6 in 6 hours
+    timer = "*-*-* 5..23/6:00:00"; # Every day 6 in 6 hours
     script = script;
   };
 }

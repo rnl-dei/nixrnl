@@ -13,7 +13,6 @@
   };
 
   age.secrets."gentoo-distfiles-ssh.key" = {
-    # FIXME: update the key management
     file = ../../../secrets/ftp-gentoo-auth.age;
     owner = config.rnl.ftp-server.mirrors.gentoo-distfiles.user;
     group = config.rnl.ftp-server.mirrors.gentoo-distfiles.group;

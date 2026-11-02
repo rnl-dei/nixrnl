@@ -7,7 +7,7 @@
   rnl.ftp-server.mirrors.debian-cd = rec {
     source = "rsync://ftp.rnl.tecnico.ulisboa.pt/pub/debian-cd";
     target.path = "/mnt/data/ftp/pub/debian-cd";
-    timer = "*-*-* 21:00:00"; # Every day at 21:00
+    timer = "*-*-* 23:00:00"; # Every day at 23:00
     command = "${pkgs.archvsync}/bin/ftpsync";
     args = lib.mkForce [ ];
     # FIXME: exclude stupidly big files for now

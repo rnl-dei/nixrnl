@@ -28,6 +28,7 @@ stdenv.mkDerivation rec {
     let
       config = builtins.toFile "ftpsync.conf" ''
         MAILTO="infra-robots@rnl.tecnico.ulisboa.pt"
+        TRACEHOST="ftp.rnl.tecnico.ulisboa.pt"
 
         INFO_MAINTAINER="RNL <rnl@rnl.tecnico.ulisboa.pt>"
         INFO_COUNTRY=PT

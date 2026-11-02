@@ -26,6 +26,6 @@ in
       "--exclude-from ${exclude}"
       "--delete-excluded"
     ];
-    timer = "*-*-* 0..23/6:00:00"; # Every day at 3am
+    timer = "*-*-* 3:00:00"; # Every day at 3am
   };
 }
