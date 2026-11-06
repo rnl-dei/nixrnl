@@ -61,6 +61,12 @@
     enable = true;
     group = config.services.nginx.group;
     plugins = [ "python3" ];
+    package = lib.mkForce (
+      pkgs.uwsgi.override {
+        plugins = [ "python3" ];
+        python3 = pkgs.python311;
+      }
+    );
     instance =
       let
         heliosServerDir = config.rnl.githook.hooks.helios-server.path;
