@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
   pname = "archvsync";
   version = "20180513";
 
-  # FIXME: Bring these hashes to date?
+  # NOTE: might need updating sometimes but rarely updated.
   src = fetchTarball {
     url = "https://ftp-master.debian.org/ftpsync.tar.gz";
     sha256 = "sha256:0kbmabx1vh75nwxgk44np8lrdi014447kdjw8if8l9mvaszcz707";
