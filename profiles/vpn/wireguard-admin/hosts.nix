@@ -477,4 +477,9 @@
     publicKey = "GWTbCurHGb8GHRE1qJKucz1VayZvLukuKePmfytEcT0=";
     lastOctet = 96;
   }
+  {
+    # thonkpad - laptop
+    publicKey = "VCw07chPE3sldHhK7apcAXqHjnD/8YAFuR74o+iYEG0=";
+    lastOctet = 97;
+  }
 ]
