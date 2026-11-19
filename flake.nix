@@ -5,8 +5,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Patched PHP for CVE-2026-109618/CVE-2026-109619 (php2shell), see overlays/php.nix
+    # Patched PHP for CVE-2026-109618/CVE-2026-109619 (php2shell), see overlays/php.nix TODO: when mainstream use standard
     nixpkgs-php.url = "github:nixos/nixpkgs/nixos-26.05";
+
+    # fixes CVE-2026-123633 and CVE-2026-123007; TODO: when mainstream use standard
+    nixpkgs-nginx-fix.url = "github:NixOS/nixpkgs/pull/589961/head";
 
     # Comment out because it's not used
     # rnl-config.url = "git+ssh://git@gitlab.rnl.tecnico.ulisboa.pt/rnl/nixos-private-config";
