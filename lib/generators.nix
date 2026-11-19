@@ -4,6 +4,7 @@
   profiles,
   inputs,
   nixosConfigurations,
+  overlays,
   ...
 }@args:
 let
@@ -120,17 +121,18 @@ let
     {
       hostPath,
       extraModules ? [ ],
+      overlays ? args.overlays,
       ...
     }:
     inputs.system-manager.lib.makeSystemConfig {
+      overlays = if builtins.isList overlays then overlays else lib.attrValues overlays;
       specialArgs = {
         rnl-keys = import ../profiles/core/keys.nix;
         lib = extendedLib;
-        inherit profiles inputs;
+        inherit profiles inputs overlays;
       };
       modules = [
         {
-
           config = {
             environment.etc.test.text = hostname;
             nixpkgs.hostPlatform = "x86_64-linux";
@@ -178,6 +180,7 @@ let
                   pkgs
                   profiles
                   inputs
+                  overlays
                   ;
                 aliases = null;
               }

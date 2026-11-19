@@ -88,6 +88,7 @@
             inputs
             profiles
             pkgs
+            overlays
             systemConfigs
             nixosConfigurations
             ;
