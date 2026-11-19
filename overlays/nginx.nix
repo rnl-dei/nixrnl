@@ -1,6 +1,6 @@
 { inputs, ... }:
-# HACK: Pull patched Nginx from PR #589961 until the fix lands in our nixpkgs branch.
-# Remove once nixpkgs includes the update/backport.
+# HACK: nixos-25.05 is EOL; pull patched Nginx and compatible nginxModules from PR #589961
+# until nixpkgs is bumped.
 _final: prev:
 let
   patched = inputs.nixpkgs-nginx-fix.legacyPackages.${prev.system};
@@ -10,5 +10,6 @@ in
     nginx
     nginxStable
     nginxMainline
+    nginxModules
     ;
 }
